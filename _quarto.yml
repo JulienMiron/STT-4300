@@ -7,7 +7,7 @@ lang: fr
 book:
   title: "Notes de cours — STT-4300"
   subtitle: "Rappels de régression linéaire, modèles linéaires généralisés, régression non-linéaire et non-paramétrique, modèles additifs généralisés"
-  author: "Ton nom"
+  author: "Julien Miron"
   date: today
   date-format: "D MMMM YYYY"
   page-footer:

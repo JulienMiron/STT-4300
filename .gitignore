@@ -1,0 +1,7 @@
+/_book/
+/.quarto/
+.posit/
+.Rproj.user/
+.Rhistory
+.RData
+.DS_Store

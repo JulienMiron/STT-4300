@@ -1,0 +1,16 @@
+# Préface {.unnumbered}
+
+Ces notes de cours couvrent la régression linéaire, les modèles linéaires généralisés (régression logistique, régression de Poisson), les méthodes de validation et de sélection de modèles, la régularisation (ridge, lasso), les méthodes de régression non-paramétrique ($k$ plus proches voisins, estimateur de noyau, splines) et les modèles additifs généralisés (GAM).
+
+Le contenu mélange théorie statistique (en notation mathématique) et exemples de mise en œuvre pratique en langage R.
+
+## Plan du cours
+
+1. **Rappels de régression linéaire** — moindres carrés, inférence, diagnostics, AIC/BIC.
+2. **Régression logistique** — modèles pour données binaires et binomiales, fonctions de lien, estimation, courbe ROC.
+3. **Modèles linéaires généralisés** — famille exponentielle, déviance, régression de Poisson.
+4. **Prédiction et validation croisée** — taux d'erreur test, LOOCV, validation croisée à $K$ blocs.
+5. **Sélection de variables et régularisation** — ridge, lasso.
+6. **Régression non-paramétrique** — $k$NN, estimateur de noyau (Nadaraya-Watson).
+7. **Splines** — splines de régression, B-splines, splines naturelles et de lissage.
+8. **Modèles additifs généralisés (GAM)**.

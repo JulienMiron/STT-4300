@@ -1,0 +1,370 @@
+# Modèles de régression pour données binaires {#sec-logistique}
+
+Les modèles de régression linéaire ne permettent de considérer que les cas où la variable réponse $Y_i$ est normale. Cependant, dans plusieurs situations, on a une variable réponse discrète qui ne peut prendre qu'un nombre fini (ou dénombrable) de valeurs possibles. Dans ce chapitre, on s'intéresse au cas où $Y_i$ suit une loi de Bernoulli ou une loi binomiale.
+
+:::{.env-exemple}
+**Exemple.**
+
+Quatre exemples tirés de la librairie `GLMsData` de R :
+
+1. `quilpie` : observations de 1921 à 1988 de la quantité de pluie mesurée en juillet à Quilpie (Australie). La réponse vaut 1 si la quantité de pluie dépasse 10 mm et 0 sinon ; les variables explicatives concernent la pression atmosphérique (SOI).
+
+1. `nminer` : 31 observations ; la réponse vaut 1 si un mineur bruyant (oiseau) est détecté dans la parcelle et 0 sinon.
+
+1. `deposit` : 18 observations ; la réponse $Y_i$ est le nombre d'insectes tués parmi les $m_i$ insectes exposés, avec deux variables explicatives (type d'insecticide $A$, $B$ ou $C$, et dose).
+
+1. `turbines` : 11 observations ; la réponse $Y_i$ est le nombre de machines présentant des fissures parmi $m_i$ machines, en fonction du nombre d'heures de fonctionnement.
+
+:::
+
+## Données et modèle
+
+### Données individuelles (Bernoulli)
+
+Dans les deux premiers exemples, la variable réponse $Y_i \in \{0,1\}$. Les données sont sous la forme $\{(Y_i,\boldsymbol{X}_i),\, i=1,\ldots,n\}$. On dit que $Y_i$ suit une loi de Bernoulli de paramètre $\pi_i \in [0,1]$ :
+
+$$
+\begin{aligned}
+P(Y_i = y_i) &= \pi_i^{y_i}(1-\pi_i)^{1-y_i}, \quad y_i \in \{0,1\},\\
+E[Y_i] &= \mu_i = \pi_i,\\
+Var[Y_i] &= \pi_i(1-\pi_i).
+\end{aligned}
+$$
+
+On pose $\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}$ (le **prédicteur linéaire**) et on relie $\pi_i$ à $\eta_i$ par une **fonction de lien** $g$ supposée connue : $\eta_i = g(\pi_i)$, c'est-à-dire
+$$\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}).$$
+
+### Données groupées (binomiale)
+
+Dans les deux derniers exemples, $Y_i \in \{0,1,\ldots,m_i\}$, où $m_i$ est un entier connu représentant le nombre total d'expériences indépendantes ; $Y_i$ est le nombre de succès. On écrit $Y_i \sim \mathrm{Bin}(m_i,\pi_i)$ :
+
+$$
+\begin{aligned}
+P(Y_i = y_i) &= \binom{m_i}{y_i}\pi_i^{y_i}(1-\pi_i)^{m_i - y_i}, \quad y_i \in \{0,1,\ldots,m_i\},\\
+E[Y_i] &= \mu_i = m_i\pi_i,\\
+Var[Y_i] &= m_i\pi_i(1-\pi_i) = \frac{\mu_i(m_i - \mu_i)}{m_i}.
+\end{aligned}
+$$
+
+On pose de nouveau $\eta_i = g(\pi_i)$, qui peut s'écrire $\eta_i=g(\mu_i/m_i)$. À noter, on voit souvent $g(\mu_i)$, par abus de notation. Si $m_1 = \cdots = m_n = 1$, on retrouve la loi de Bernoulli : celle-ci est un cas particulier de la loi binomiale, et les développements qui suivent couvrent les deux situations.
+
+### Fonctions de lien
+
+La fonction de lien doit assurer que $\pi_i = g^{-1}(\eta_i) \in [0,1]$. Trois choix sont courants :
+
+- **Logit :** $g(u) = \mathrm{logit}(u) = \log\!\left(\dfrac{u}{1-u}\right)$, d'où $\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}$. En R : `link="logit"` dans `glm`. Il s'agit du lien le plus utilisé en régression binaire. Ceci est en partie expliqué par son interprétabilité, voir la remarque [cette remarque](#sec-cotes).
+- **Probit :** $g(u) = \Phi^{-1}(u)$, où $\Phi$ est la fonction de répartition de la $\mathcal{N}(0,1)$, d'où $\pi_i = \Phi(\eta_i)$. En R : `link="probit"`.
+- **C-log-log :** $g(u) = \log\{-\log(1-u)\}$, d'où $\pi_i = 1 - e^{-e^{\eta_i}}$. En R : `link="cloglog"`.
+
+Dans les trois cas, $g^{-1}(\cdot)$ est une fonction de répartition. En pratique, les trois liens donnent souvent des résultats très similaires.
+
+:::{.env-remarque #sec-cotes}
+**Remarque (Interprétation du lien logit).**
+
+Avec le lien logit, on a
+
+$$
+\eta_i = \ln\left(\frac{\pi_i}{1-\pi_i}\right)
+$$
+
+et donc,
+
+$$
+e^{\eta_i} = \frac{\pi_i}{1-\pi_i}.
+$$
+
+**Les cotes (odds).** Le rapport ci-dessus a une interprétation concrète : c'est la **cote** (*odds*), notée $o_i$ :
+
+$$
+o_i = \frac{\pi_i}{1-\pi_i} = \frac{P(Y_i=1)}{P(Y_i=0)}.
+$$
+
+Autrement dit, la cote compare la probabilité que l'événement se produise ($Y_i=1$) à la probabilité qu'il ne se produise pas ($Y_i=0$). Par exemple :
+
+- si $\pi_i = 0{,}5$, alors $o_i = 1$ : autant de chances que l'événement arrive ou n'arrive pas ;
+
+- si $\pi_i = 0{,}75$, alors $o_i = 3$ : l'événement a 3 fois plus de chances de se produire que de ne pas se produire.
+
+**Interprétation du coefficient $\beta_j$.** Dans le modèle,
+
+$$
+\eta_i = \beta_0 + \beta_1 X_1 + \cdots + \beta_j X_j + \cdots
+$$
+
+Si on augmente $X_j$ d'une unité, toutes les autres variables restant constantes, $\eta_i$ augmente de $\beta_j$. Comme $o_i = e^{\eta_i}$, cette augmentation se traduit par une *multiplication* de la cote :
+
+$$
+o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i^{\text{ancien}} \cdot e^{\beta_j}.
+$$
+
+Une augmentation unitaire de $X_j$ multiplie donc la cote par $e^{\beta_j}$ ; $e^{\beta_j}$ est le **rapport de cotes** (*odds ratio*).
+
+On distingue trois cas :
+
+- si $e^{\beta_j} > 1$ : augmenter $X_j$ augmente la cote (et donc $P(Y_i=1)$) ;
+
+- si $e^{\beta_j} < 1$ : augmenter $X_j$ diminue la cote ;
+
+- si $e^{\beta_j} = 1$ (c'est-à-dire $\beta_j = 0$) : $X_j$ n'a pas d'effet sur la cote.
+
+:::
+
+## Inférence statistique
+
+### Estimation des paramètres $\boldsymbol{\beta}$
+
+**Point de départ : la vraisemblance.**
+On observe $n$ variables $Y_i \sim \text{Binomiale}(m_i, \pi_i)$. La fonction de log-vraisemblance s'écrit
+
+$$
+\ell(\boldsymbol{\pi}; \boldsymbol{y}) = \sum_{i=1}^n \log\left[P(Y_i = y_i)\right]
+= \sum_{i=1}^n \left\{ \log\binom{m_i}{y_i} + y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) \right\}.
+$$
+
+**Lien avec $\beta$.**
+Cette fonction dépend de $\beta$ *indirectement*, via $\pi_i$ : rappelons que
+
+$$
+\pi_i = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}),
+$$
+
+où $g^{-1}$ est l'inverse de la fonction de lien (par exemple la fonction logistique si $g$ est le lien logit).
+
+**Reparamétrisation en termes de $\mu_i$.**
+Il est parfois plus commode de travailler avec $\mu_i = m_i \pi_i$ (l'espérance de $Y_i$) plutôt qu'avec $\pi_i$ directement. En substituant $\pi_i = \mu_i/m_i$ dans la log-vraisemblance et en isolant tous les termes qui ne dépendent pas de $\beta$ (regroupés dans la constante $K$, qui contient le terme $\log\binom{m_i}{y_i}$), on obtient une forme équivalente mais plus simple :
+
+$$
+\ell(\boldsymbol{\mu}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ y_i \log(\mu_i) + (m_i - y_i)\log(m_i - \mu_i) \right\} + K,
+$$
+
+où $\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top$ et $K$ ne dépend pas de $\beta$ (donc n'affecte pas la maximisation).
+
+:::{.env-remarque}
+**Remarque (Log-vraisemblance avec le lien logit.).**
+
+Avec le lien logit, $\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}$ et $1-\pi_i = \dfrac{1}{1+e^{\eta_i}}$, où
+
+$$
+\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.
+$$
+
+On a alors
+
+$$
+\log(\pi_i) = \eta_i - \log(1+e^{\eta_i}), \qquad \log(1-\pi_i) = -\log(1+e^{\eta_i}),
+$$
+
+de sorte que
+
+$$
+y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) = y_i \eta_i - m_i \log(1+e^{\eta_i}).
+$$
+
+La log-vraisemblance se réécrit donc directement en fonction de $\boldsymbol{\beta}$ :
+
+$$
+\ell(\boldsymbol{\beta}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ \log\binom{m_i}{y_i} + y_i \eta_i - m_i \log\left(1+e^{\eta_i}\right) \right\}.
+$$
+
+:::
+
+**Estimation.**
+L'estimateur du maximum de vraisemblance $\hat{\boldsymbol{\beta}}$ est la valeur de $\boldsymbol{\beta}$ qui maximise $\ell$. Contrairement à la régression linéaire classique, il n'existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien $g$. On doit donc résoudre le problème numériquement, typiquement par l'algorithme des moindres carrés pondérés itératifs (IRLS -- *Iteratively Reweighted Least Squares*), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.
+
+**Matrice d'information de Fisher.**
+On calcule ensuite la matrice d'information de Fisher $I$, dont l'élément $(j,k)$ est
+
+$$
+I_{jk} = -\left.\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k}\right|_{\hat{\boldsymbol{\beta}}}.
+$$
+
+La matrice de variance-covariance de $\hat{\boldsymbol\beta}$ est estimée par
+
+$$
+v(\hat{\boldsymbol\beta}) = I^{-1},
+$$
+
+et la distribution asymptotique de $\hat{\boldsymbol\beta}$ est approximée par
+
+$$
+\hat{\boldsymbol\beta} \;\dot\sim\; \mathcal{N}\{\boldsymbol\beta,\, v(\hat{\boldsymbol\beta})\}.
+$$
+
+**Forme explicite dans le cas binomial.**
+On montre que
+
+$$
+v(\hat{\boldsymbol\beta}) = (X^\top W X)^{-1},
+$$
+
+où $W$ est une matrice diagonale d'entrées
+
+$$
+w_i = \frac{\hat\mu_i (m_i - \hat\mu_i)}{m_i},
+$$
+
+avec
+
+$$
+\hat\mu_i = m_i \hat\pi_i = m_i\, g^{-1}(\hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}).
+$$
+
+:::{.env-remarque}
+**Remarque (Cas du lien logit).**
+
+Avec le lien logit, $\hat\pi_i = \dfrac{e^{\hat\eta_i}}{1+e^{\hat\eta_i}}$, où $\hat\eta_i = \hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}$. L'entrée $w_i$ se simplifie alors en
+
+$$
+w_i = \frac{\hat\mu_i(m_i - \hat\mu_i)}{m_i} = m_i\, \hat\pi_i(1-\hat\pi_i).
+$$
+
+:::
+
+### Tests d'hypothèses et intervalles de confiance
+
+Les intervalles de confiance et tests concernant les $\beta_j$ sont obtenus par la méthode de **Wald**. Un intervalle de confiance à $100\times(1-\alpha)%$ pour $\beta_j$ est
+$$\left[\hat\beta_j - z_{\alpha/2}\sqrt{v(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{v(\hat\beta_j)}\right],$$
+où $z_\gamma$ est le quantile de la $\mathcal{N}(0,1)$ défini par $P(Z > z_\gamma) = \gamma$.
+
+Pour tester $H_0: \beta_j = 0$ contre $H_1: \beta_j\neq 0$, on rejette $H_0$ au seuil $\alpha$ si $|z_{obs}| > z_{\alpha/2}$, avec $z_{obs} = \hat\beta_j/\sqrt{v(\hat\beta_j)}$. Le seuil observé ($p$-valeur) est $\alpha^* = 2P(Z > |z_{obs}|)$.
+
+### Intervalle de confiance pour une probabilité prédite
+
+Pour $X^* = (1, X_1^*,\ldots,X_p^*)^\top$, on estime $\pi^*$ par $\hat\pi^* = g^{-1}({X^*}^\top\hat\beta)$. Deux approches :
+
+1. **Transformation de l'intervalle sur $\eta^*$** : un IC pour ${X^*}^\top\beta$ est
+$$\left[{X^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{v({X^*}^\top\hat\beta)}\right], \qquad v({X^*}^\top\hat\beta) = {X^*}^\top v(\hat\beta)\, X^*,$$
+et on applique $g^{-1}$ aux deux bornes. Cet intervalle respecte toujours $[0,1]$.
+
+1. **Règle du delta** : $v(\hat\pi^*) = h({X^*}^\top\hat\beta)\, v({X^*}^\top\hat\beta)$ avec $h(u) = \{\partial g^{-1}(u)/\partial u\}^2$, d'où l'IC approximatif $\left[\hat\pi^* \pm z_{\alpha/2}\sqrt{v(\hat\pi^*)}\right]$.
+
+Les deux méthodes donnent en pratique des résultats très similaires.
+
+:::{.env-exemple}
+**Exemple (Jeu de données `turbines`).**
+
+On ajuste le modèle avec les trois fonctions de lien :
+
+```r
+modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="logit"))
+modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="probit"))
+modele.cloglog <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="cloglog"))
+```
+
+Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. Les intervalles de confiance se calculent avec `predict(..., se.fit=TRUE)` sur l'échelle du lien (méthode 1) ou avec `type="response"` (méthode 2).
+:::
+
+## Sélection de modèles
+
+### Déviance
+
+Considérons le **modèle saturé** avec $n$ paramètres $\{\tilde\mu_1,\ldots,\tilde\mu_n\}$ et sans variables explicatives ; ses estimateurs du maximum de vraisemblance sont $\{y_1,\ldots,y_n\}$. La statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est
+$$D = 2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hat\mu_i}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hat\mu_i}\right)\right\} = \sum_{i=1}^n d_i.$$
+$D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'observation $i$. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'adéquation du modèle et à comparer des modèles.
+
+### Comparaison de modèles emboîtés
+
+Pour comparer deux modèles emboîtés de déviances $D_1$ (complet) et $D_2$ (réduit), la statistique de test est $\chi^2 = D_2 - D_1$. Sous $H_0$ (le modèle réduit est adéquat), $\chi^2$ suit une loi du khi-deux à $d$ degrés de liberté, où $d$ est la différence du nombre de paramètres.
+
+:::{.env-exemple}
+**Exemple (`turbines`, termes quadratique et cubique).**
+
+On teste $H_0: \beta_2 = \beta_3 = 0$ (modèle avec `Hours` seulement contre modèle avec termes en `Hours`$^2$ et `Hours`$^3$) :
+
+```r
+stat.test <- deviance(modele.reduit) - deviance(modele.complet)
+p.valeur  <- 1 - pchisq(stat.test, df=2)   # 0.4767
+```
+
+On ne rejette pas $H_0$ : le modèle réduit est adéquat.
+:::
+
+### Comparaison de modèles non emboîtés : AIC et BIC
+
+Comme pour les modèles linéaires, on utilise
+$$AIC = -2\,l(\hat\mu;y) + 2(p+1), \qquad BIC = -2\,l(\hat\mu;y) + \log(n)(p+1).$$
+Le modèle ayant le plus petit $AIC$ (ou $BIC$) est préférable. En R : `extractAIC(modele)` et `extractAIC(modele, k=log(n))`.
+
+### Sélection automatique
+
+Les méthodes pas à pas *forward*, *backward* et *stepwise* fonctionnent exactement comme pour les modèles linéaires (fonction `step` avec l'argument `direction`). Sur le jeu de données `deposit`, les trois procédures retiennent le modèle incluant le type d'insecticide, la dose et le terme quadratique de la dose.
+
+## Validation et diagnostic de modèles
+
+### Résidus
+
+On distingue deux types de résidus :
+
+- **Résidus déviance** : $r_{D,i} = \mathrm{signe}(y_i - \hat\mu_i)\sqrt{d_i}$, avec
+$$d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hat\mu_i}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hat\mu_i}\right)\right\}.$$
+
+- **Résidus de Pearson** :
+$$r_{P,i} = \frac{y_i - m_i\hat\pi_i}{\sqrt{m_i\hat\pi_i(1-\hat\pi_i)}} = \frac{y_i - \hat\mu_i}{\sqrt{\hat\mu_i(m_i-\hat\mu_i)/m_i}}.$$
+
+### Tests d'adéquation globale
+
+Deux statistiques permettent de tester l'adéquation globale : la déviance $D = \sum_i r_{D,i}^2$ et la statistique du khi-deux de Pearson
+$$\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hat\mu_i)^2}{\hat\mu_i(m_i - \hat\mu_i)}.$$
+Lorsque tous les $m_i \to \infty$, $D$ et $\chi^2_P$ convergent en loi vers une $\chi^2_{n-(p+1)}$ si le modèle est bien spécifié.
+
+:::{.env-remarque}
+**Remarque.**
+
+Ces tests ne sont valides que pour des **données groupées** avec des $m_i$ élevés, car ils reposent sur un résultat asymptotique en $m_i$. Ils sont inutilisables pour des données individuelles (Bernoulli).
+:::
+
+### Graphiques et extra-variabilité
+
+Les graphiques des résidus en fonction des numéros d'observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une **extra-variabilité** (*overdispersion*) : $E[Y_i] = m_i\pi_i$ mais $Var[Y_i] > m_i\pi_i(1-\pi_i)$. On pose alors $Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)$ et on estime $\phi$ par $\chi^2_P/(n-(p+1))$. En cas d'extra-variabilité, on spécifie `family=quasibinomial()` au lieu de `family=binomial()` dans `glm`.
+
+Pour vérifier la linéarité du prédicteur, on trace le nuage de points $\{(\hat\pi_i, \tilde\pi_i)\}$, où $\hat\pi_i = g^{-1}(\hat\eta_i)$ et $\tilde\pi_i = y_i/m_i$ : si le modèle est bien spécifié, les points doivent être autour de la droite $y=x$.
+
+### Observations aberrantes et valeurs influentes
+
+Le principe est identique à la régression linéaire. Les définitions des leviers, résidus standardisés et studentisés diffèrent, mais ces quantités ont la même interprétation. Il en va de même pour la distance de Cook, les DFBETAS et les DFFITS.
+
+## Spécificité, sensibilité et courbe ROC {#sec-roc}
+
+Pour des données individuelles, l'adéquation est difficile à évaluer, mais on peut mesurer la **capacité prédictive** du modèle. On ajuste le modèle et on calcule les probabilités prédites $\hat\pi_i = g^{-1}(\hat\eta_i)$.
+
+Fixons un seuil $u \in [0,1]$ (souvent $u=1/2$). On classe $\hat y_i = 1$ si $\hat\pi_i > u$ et $\hat y_i = 0$ sinon. On mesure la capacité prédictive par :
+
+$$
+\begin{aligned}
+\text{Spécificité (taux de vrais négatifs) :}\quad & Spec = P(\hat y = 0 \mid y = 0),\\
+\text{Sensibilité (taux de vrais positifs) :}\quad & Sens = P(\hat y = 1 \mid y = 1).
+\end{aligned}
+$$
+
+Pour un $u$ fixé, on les estime par
+$$\widehat{Spec}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hat\pi_i < u)\,\&\,(y_i = 0)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 0\}}},
+\qquad
+\widehat{Sens}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hat\pi_i > u)\,\&\,(y_i = 1)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 1\}}}.$$
+
+En faisant varier $u$ sur une grille $\{u_1 = 0, u_2, \ldots, u_B = 1\}$ et en traçant les points $\{(1-\widehat{Spec}(u_b),\, \widehat{Sens}(u_b))\}$, on obtient la **courbe ROC**. L'**aire sous la courbe** (AUC) quantifie la capacité prédictive :
+$$\mbox{AUC} \in \begin{cases}
+[0.9,\,1] & \mbox{modèle excellent},\\
+[0.8,\,0.9) & \mbox{modèle bon},\\
+[0.7,\,0.8) & \mbox{modèle moyen},\\
+[0.6,\,0.7) & \mbox{modèle mauvais},\\
+[0.5,\,0.6) & \mbox{modèle très faible}.
+\end{cases}$$
+
+:::{.env-exemple}
+**Exemple (`quilpie`).**
+
+Avec la variable explicative SOI et le lien logit :
+
+```r
+modele <- glm(y ~ SOI, family=binomial, data=quilpie)
+library(clinfun)
+courbe.roc <- roc.curve(marker=as.vector(fitted(modele)),
+                        status=quilpie$y, method=c("empirical"))
+# AUC = 0.784, s.e. = 0.057
+```
+
+L'aire sous la courbe est de 0.78 : le modèle est bon.
+:::

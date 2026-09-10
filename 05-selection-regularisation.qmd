@@ -1,0 +1,76 @@
+# Sélection de variables et régularisation {#sec-regularisation}
+
+## Sélection de variables : rappel
+
+Les chapitres précédents ont présenté deux familles d'outils de sélection de variables :
+
+- les **tests pour modèles emboîtés** (test $F$ en régression linéaire, différence de déviances pour les MLG) ;
+
+- les **critères d'information** $AIC$ et $BIC$, combinés aux procédures pas à pas *forward*, *backward* et *stepwise*, pour les modèles non emboîtés ou lorsque le nombre de sous-modèles ($2^p$) est trop grand pour une recherche exhaustive.
+
+La régression régularisée, présentée ci-dessous, offre une troisième approche qui effectue simultanément l'estimation et (pour le lasso) la sélection de variables.
+
+## Régression régularisée
+
+Considérons le modèle de régression
+$$Y_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip} + \epsilon_i, \qquad \epsilon_i \sim \mathcal{N}(0,\sigma^2).$$
+L'estimateur des moindres carrés $\hat\beta$ est sans biais et de variance minimale parmi les estimateurs sans biais. Cependant, rien ne garantit qu'il possède la plus petite **erreur quadratique moyenne** :
+$$E\left[(\beta_j - \hat\beta_j)^2\right] = \mbox{biais}(\hat\beta_j)^2 + Var(\hat\beta_j).$$
+
+La régression régularisée impose une pénalité au critère des moindres carrés : on minimise
+$$l_\lambda(\beta) = l(\beta) + \lambda\, g(\beta_1,\ldots,\beta_p),$$
+où $g$ est une fonction de pénalité connue et $\lambda \geq 0$ est le **coefficient de pénalité**. La pénalité **réduit la variance** des estimateurs au prix d'un **biais** ; avec un choix judicieux de $g$ et de $\lambda$, on diminue l'erreur quadratique moyenne et on obtient des prédictions plus précises. C'est le **compromis biais-variance**.
+
+:::{.env-remarque}
+**Remarque.**
+
+L'ordonnée à l'origine $\beta_0$ n'est pas pénalisée. Par ailleurs, les variables explicatives sont généralement standardisées avant l'ajustement, car la pénalité n'est pas invariante à l'échelle des variables.
+:::
+
+### Régression ridge
+
+La régression ridge minimise
+$$l^{(R)}_\lambda(\beta) = \sum_{i=1}^n\left\{Y_i - (\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip})\right\}^2 + \lambda\sum_{j=1}^p\beta_j^2.$$
+En écriture matricielle, $l^{(R)}_\lambda(\beta) = (Y - X\beta)^\top(Y-X\beta) + \lambda\,\beta^\top\tilde I_p\,\beta$, où $\tilde I_p$ est diagonale de taille $p+1$ avec un 0 en première position (pas de pénalité sur $\beta_0$) et des 1 ailleurs. La solution est explicite :
+$$\boxed{\hat\beta^{(R)}_\lambda = (X^\top X + \lambda\tilde I_p)^{-1}X^\top Y}$$
+et on en déduit
+
+$$
+\begin{aligned}
+E[\hat\beta^{(R)}_\lambda] &= (X^\top X + \lambda\tilde I_p)^{-1}X^\top X\beta \neq \beta,\\
+Var[\hat\beta^{(R)}_\lambda] &= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X^\top X(X^\top X + \lambda\tilde I_p)^{-1}.
+\end{aligned}
+$$
+
+L'estimateur est donc biaisé, sauf si $\lambda = 0$. Lorsque $\lambda = 0$, $\hat\beta^{(R)}_\lambda = \hat\beta$ ; lorsque $\lambda\to\infty$, tous les $\hat\beta^{(R)}_{j,\lambda}$ ($j\geq1$) tendent vers 0 et l'ordonnée à l'origine tend vers $\bar Y$. On parle d'un phénomène de **rétrécissement** (*shrinkage*).
+
+:::{.env-exemple}
+**Exemple (`Hitters`, librairie `ISLR`).**
+
+La réponse est le salaire d'un joueur de baseball (19 variables explicatives). En R, la régression ridge s'ajuste avec `glmnet(x, y, alpha=0)`. Avec $\lambda = e^6$, on observe $\sum_j[\hat\beta^{(R)}_{j,\lambda}]^2 = 5721$ contre $\sum_j\hat\beta_j^2 = 18469$ pour les moindres carrés : rétrécissement marqué. Sur une partition entraînement/test, le taux d'erreur test passe de $124\,716$ (moindres carrés) à $91\,274$ (ridge), soit une diminution de près de 27%.
+:::
+
+### Régression lasso
+
+La régression lasso minimise
+$$l^{(L)}_\lambda(\beta) = \sum_{i=1}^n\left\{Y_i - (\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip})\right\}^2 + \lambda\sum_{j=1}^p|\beta_j|.$$
+Il n'existe pas d'expression explicite pour $\hat\beta^{(L)}_\lambda$, mais des algorithmes d'optimisation efficaces existent (en R : `glmnet(x, y, alpha=1)`).
+
+La caractéristique clé du lasso : pour les grandes valeurs de $\lambda$, certains coefficients $\hat\beta^{(L)}_{j,\lambda}$ deviennent **identiquement égaux à 0**. Le lasso effectue donc une **sélection de variables** automatique, intuitive et naturelle. Comme pour ridge : quand $\lambda$ croît, le biais croît et la variance diminue.
+
+:::{.env-exemple}
+**Exemple (`Hitters`, suite).**
+
+Avec $\lambda = e^2$, le lasso annule les coefficients de `HmRun`, `Runs`, `RBI`, `CAtBat`, `CHits`, `Assists` et `NewLeagueN` : le modèle retenu ne contient plus que 12 variables.
+:::
+
+### Sélection du paramètre $\lambda$
+
+La méthode la plus intuitive est basée sur le taux d'erreur test, estimé par **validation croisée** pour une grille de valeurs de $\lambda$ ; on choisit la valeur qui minimise le taux d'erreur test. En R :
+
+```r
+reg.ridge.select <- cv.glmnet(x, y, alpha=0, lambda=grille.lambda)
+reg.ridge.select$lambda.min
+```
+
+Sur les données `Hitters`, on obtient $\lambda = e^{2.2}$ pour ridge et $\lambda = e^3$ pour le lasso.

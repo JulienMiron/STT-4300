@@ -1,0 +1,113 @@
+# Rappels de régression linéaire
+
+## Le modèle linéaire
+
+On dispose de données $\{(Y_i, \boldsymbol{X}_i),\, i=1,\ldots,n\}$, où $Y_i$ est la variable réponse (continue) et $\boldsymbol{X}_i=(1,x_{i1},\ldots,x_{ip})^\top$ est un vecteur de $p$ variables explicatives^[En régression, les variables explicatives sont souvent supposées connues (bien qu'on puisse les traiter comme étant des variables aléatoires). On utilise les majuscules pour les vecteurs ici, même s'ils sont composés de constantes et non de variables aléatoires.]. Le modèle de régression linéaire multiple s'écrit :
+$$Y_i = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} + \epsilon_i, \qquad i=1,\ldots,n,$$
+où $\beta_0,\beta_1,\ldots,\beta_p$ sont les coefficients de régression et les erreurs $\epsilon_i$ sont indépendantes et identiquement distribuées selon $\mathcal{N}(0,\sigma^2)$.
+
+En écriture matricielle, on a $\boldsymbol{Y} = \boldsymbol{X\beta} + \epsilon$, où $\boldsymbol{Y}=(Y_1,\ldots,Y_n)^\top$, $\boldsymbol{\beta}=(\beta_0,\ldots,\beta_p)^\top$, $\boldsymbol{\epsilon}=(\epsilon_1,\ldots,\epsilon_n)^\top$ et $\boldsymbol{X}$ est la matrice de design (*design matrix*)^[Tout au long du document, certains termes seront traduits. Comme la plupart des références scientifiques en statistique sont en anglais, il peut être utile de connaître le terme en anglais afin de le reconnaître plus rapidement.] de dimension $n\times(p+1)$ dont la première colonne ne contient que des 1 pour inclure l'ordonnée à l'origine :
+$$\boldsymbol{X} =
+ \begin{pmatrix}  \boldsymbol{X}_1^\top \\  \vdots  \\   \boldsymbol{X}_n^\top\end{pmatrix}=\begin{pmatrix} 1 & x_{11} & \cdots & x_{1p} \\ \vdots & \vdots & & \vdots \\ 1 & x_{n1} & \cdots & x_{np}\end{pmatrix}.$$
+
+Sous ces hypothèses, on a $\mu_i =E[Y_i|x_{i1},\hdots, x_{ip}] =  \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip}$ et $Var[Y_i] = \sigma^2$ (homoscédasticité).
+
+## Estimation par moindres carrés
+
+On estime $\beta$ en minimisant la somme des carrés des écarts :
+$$SS_E =\sum_{i=1}^n\epsilon_i^2= \sum_{i=1}^n \left\{Y_i - (\beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip})\right\}^2 = (\boldsymbol{Y}-\boldsymbol{X\beta})^\top(\boldsymbol{Y}-\boldsymbol{X\beta})=\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}.$$
+
+La solution explicite est
+$$\boxed{\hat{\boldsymbol{\beta}} = (\boldsymbol{X}^\top \boldsymbol{X})^{-1} \boldsymbol{X}^\top \boldsymbol{Y}}$$
+et l'estimateur obtenu vérifie
+$$\hat{\boldsymbol{\beta}} \sim \mathcal{N}\left\{\boldsymbol{\beta},\, \sigma^2 (\boldsymbol{X}^\top \boldsymbol{X})^{-1}\right\}.$$
+
+Sous l'hypothèse de normalité des erreurs, l'estimateur des moindres carrés coïncide avec l'estimateur du maximum de vraisemblance. Il est sans biais et de variance minimale parmi les estimateurs linéaires sans biais (théorème de Gauss-Markov).
+
+Les valeurs prédites sont $\hat{\boldsymbol{Y}} = \boldsymbol{X\hat{\beta}} = \boldsymbol{HY}$, où $\boldsymbol{H} = \boldsymbol{X(X^\top X)^{-1}X^\top}$ est la matrice chapeau (*hat matrix*). Les éléments diagonaux $h_i = H_{ii}$ sont les **leviers** (*leverage*) des observations. L'estimateur sans biais usuel de $\sigma^2$ est
+$$\hat\sigma^2 = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n-(p+1)}.$$
+L'estimateur du maximum de vraisemblance de $\sigma^2$ est $$\hat\sigma^2_{MV} = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n}.$$
+
+## Inférence statistique
+
+### Intervalles de confiance et tests sur les coefficients
+
+Un intervalle de confiance à $100\times(1-\alpha)%$ pour $\beta_j$ est donné par
+$$\left[\hat\beta_j - t_{\alpha/2,\,n-(p+1)}\, se(\hat\beta_j)\,;\ \hat\beta_j + t_{\alpha/2,\,n-(p+1)}\, se(\hat\beta_j)\right],$$
+où $se(\hat\beta_j) = \sqrt{\hat\sigma^2 \left[(\boldsymbol{X^\top X})^{-1}\right]_{j+1,j+1}}$, où $\left[(\boldsymbol{X^\top X})^{-1}\right]_{j+1,j+1}$ correspond au $(j+1)^e$ élément de la diagonale de la matrice $(\boldsymbol{X^\top X})^{-1}$, et $t_{\gamma,\nu}$ est le quantile d'ordre $1-\gamma$ de la loi de Student à $\nu$ degrés de liberté.
+
+Pour tester $H_0: \beta_j = 0$ contre $H_1 : \beta_j \neq 0$, on utilise la statistique $t_{obs} = \hat\beta_j / se(\hat\beta_j)$, qui suit une loi $t_{n-(p+1)}$ sous $H_0$. On rejette $H_0$ au seuil $\alpha$ si $|t_{obs}| > t_{\alpha/2,\,n-(p+1)}$.
+
+### Test F et comparaison de modèles emboîtés
+
+Deux modèles sont emboîtés si l'un est complètement inclus dans l'autre. Pour comparer un modèle réduit emboîté (à $q+1$ paramètres) à un modèle complet (à $p+1$ paramètres, $q < p$), on utilise la statistique
+$$F_{obs} = \frac{(SSE_{r\acute{e}duit} - SSE_{complet})/(p-q)}{SSE_{complet}/(n-(p+1))},$$
+qui suit une loi $F_{p-q,\, n-(p+1)}$ sous l'hypothèse nulle que le modèle réduit est adéquat.
+
+### Coefficient de détermination
+
+Le coefficient de détermination
+$$R^2 = 1 - \frac{SSE}{SST}, \qquad SST = \sum_{i=1}^n (Y_i - \bar Y)^2,$$
+mesure la proportion de la variabilité de $Y$ expliquée par le modèle. Comme $R^2$ augmente automatiquement avec le nombre de variables, on utilise plutôt le $R^2$ ajusté en régression linéaire multiple :
+$$R^2_{adj} = 1 - \frac{SSE/(n-(p+1))}{SST/(n-1)}.$$
+
+## Prédiction
+
+Pour une nouvelle observation $\boldsymbol{X}^* = (1, x_1^*,\ldots,x_p^*)^\top$, la valeur prédite est $\hat Y^* = \boldsymbol{X}^{*\top}\hat{\boldsymbol{\beta}}$ et $Var[\hat Y^*] = \sigma^2 {\boldsymbol{X}^*}^\top (\boldsymbol{X}^\top \boldsymbol{X})^{-1} \boldsymbol{X}^*$. On distingue :
+
+- l'intervalle de confiance pour $E[Y^*|x_1^*,\ldots,x_p^*]$ :
+$${\boldsymbol{X}^*}^\top\hat{\boldsymbol{\beta}}\pm t_{\alpha/2,\,n-(p+1)}\,\hat\sigma\sqrt{{\boldsymbol{X}^*}^\top (\boldsymbol{X}^\top \boldsymbol{X})^{-1} \boldsymbol{X}^*}\,;$$
+
+- l'intervalle de prédiction pour une observation individuelle $Y^*$ en $\boldsymbol{X}^*$ :
+$${\boldsymbol{X}^*}^\top\hat{\boldsymbol{\beta}} \pm t_{\alpha/2,\,n-(p+1)}\,\hat\sigma\sqrt{{\boldsymbol{X}^*}^\top (\boldsymbol{X}^\top \boldsymbol{X})^{-1} \boldsymbol{X}^*}.$$
+
+## Diagnostics du modèle
+
+### Résidus
+
+Les **résidus** sont $e_i = Y_i - \hat Y_i$. Les résidus standardisés sont $r_i = e_i / (\hat\sigma\sqrt{1-h_i})$ et les résidus studentisés sont calculés en excluant l'observation $i$ de l'estimation de $\sigma$. L'inspection graphique des résidus permet de vérifier :
+
+- la linéarité (résidus vs valeurs ajustées : aucune tendance) ;
+
+- l'homoscédasticité (dispersion constante des résidus) ;
+
+- la normalité (diagramme quantile-quantile) ;
+
+- l'indépendance (résidus dans l'ordre des observations).
+
+### Observations aberrantes et influentes
+
+Le levier $h_i$ mesure le potentiel d'influence de l'observation $i$ ; une valeur dépassant $2(p+1)/n$ mérite examen. La distance de Cook,
+$$D_i = \frac{r_i^2}{p+1}\cdot\frac{h_i}{1-h_i},$$
+mesure l'influence globale de l'observation $i$ sur les coefficients estimés. Les **DFBETAS** et **DFFITS** mesurent respectivement l'effet du retrait de l'observation $i$ sur chaque coefficient et sur la valeur ajustée $\hat Y_i$.
+
+$$
+\begin{aligned}
+**DFBETA**_i=\hat{\boldsymbol{\beta}}- \hat{\boldsymbol{\beta}}_{(-i)}=\frac{(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}_i^\top e_i}{1-h_i}
+\end{aligned}
+$$
+
+## Sélection de variables : AIC et BIC
+
+Pour comparer des modèles (emboîtés ou non), on utilise les critères d'information
+
+$$
+\begin{aligned}
+AIC &= -2\, l(\hat\beta;\, y) + 2\,(p+1),\\
+BIC &= -2\, l(\hat\beta;\, y) + \log(n)\,(p+1),
+\end{aligned}
+$$
+
+où $l(\hat\beta; y)$ est la log-vraisemblance maximisée. Le modèle ayant le plus petit $AIC$ (ou $BIC$) est préférable. Le $BIC$ pénalise plus fortement les modèles complexes dès que $n \geq 8$.
+
+Les procédures de sélection automatique *forward* (ajout progressif), *backward* (retrait progressif) et *stepwise* (mixte) explorent l'espace des modèles en se basant sur ces critères ; en R, on utilise la fonction `step`.
+
+## Limites du modèle linéaire
+
+Le modèle linéaire classique repose sur deux hypothèses restrictives :
+
+1. la variable réponse est continue et normalement distribuée ;
+
+1. la relation entre $E[Y]$ et les variables explicatives est linéaire.
+
+Dans de nombreuses applications, la réponse est binaire (défaut de paiement, présence d'une maladie), un dénombrement (nombre de cas de cancer), ou la relation est fortement non linéaire. Les chapitres suivants présentent des extensions qui lèvent ces restrictions : les modèles linéaires généralisés (@sec-logistique et @sec-mlg), puis les méthodes non-paramétriques et additives (@sec-knn à @sec-gam).

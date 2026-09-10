@@ -1,0 +1,75 @@
+# Régression non-paramétrique : $k$ plus proches voisins et estimateur de noyau {#sec-knn}
+
+Considérons le jeu de données `Auto` : la réponse $Y$ est `mpg` et la variable explicative $X$ est le poids de la voiture (`weight`). Le nuage de points montre que la relation entre $X$ et $Y$ n'est clairement pas linéaire. Ce chapitre présente des approches **non-paramétriques** pour étudier une telle relation, sans postuler de forme fonctionnelle.
+
+## Estimateur des $k$ plus proches voisins
+
+### Définition
+
+On suppose que la relation entre $X$ et $Y$ s'écrit
+$$Y_i = f(X_i) + \epsilon_i,$$
+où $f$ est une fonction inconnue à estimer et $\epsilon_i$ vérifie $E[\epsilon_i\mid X_i] = 0$. On suppose $f$ assez lisse (deux fois dérivable). Sous ces hypothèses,
+$$f(x) = E[Y\mid X = x].$$
+On suppose de plus $X$ continue, de sorte que $P(X_i = X_{i'}) = 0$ si $i\neq i'$.
+
+L'estimateur des $k$ plus proches voisins ($k$NN) est
+$$\hat f(x) = \frac{1}{k}\sum_{i\in N_k(x)} Y_i,$$
+où $N_k(x)$ est l'ensemble des indices des $k$ plus proches voisins de $x$ : on pose $d_i(x) = (X_i - x)^2$, on ordonne $d_{(1)}(x) < \cdots < d_{(n)}(x)$, et $N_k(x)$ contient les indices $i$ tels que $d_i(x) \leq d_{(k)}(x)$.
+
+En R : fonction `knn.reg` de la librairie `FNN`.
+
+### Compromis biais-variance et choix de $k$
+
+Le comportement de $\hat f$ dépend fortement de $k$. Lorsque $X_i$ est proche de $x$, un développement de Taylor donne
+$$E[\hat f(x)] \approx f(x) + f'(x)\,\frac{1}{k}\sum_{i\in N_k(x)}(E[X_i] - x) + \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2.$$
+Si les $X_i$ sont symétriquement distribués autour de $x$, le terme du premier ordre s'annule et
+$$\mbox{biais}[\hat f(x)] \approx \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2,$$
+quantité qui **croît avec $k$** (les voisins sont de plus en plus éloignés). D'autre part, si $Var[\epsilon_i] = \sigma^2$, alors
+$$Var[\hat f(x)] = \frac{\sigma^2}{k},$$
+qui **décroît avec $k$**. Il faut donc sélectionner le $k$ qui minimise l'erreur quadratique moyenne
+$$\mbox{biais}^2[\hat f(x)] + Var[\hat f(x)].$$
+En pratique, on sélectionne $k$ par **validation croisée** (le critère `PRESS` de `knn.reg` correspond au LOOCV). Sur les données `Auto`, on obtient $k_{\min} = 45$.
+
+### Plusieurs variables explicatives et distance de Mahalanobis
+
+Avec deux variables explicatives, le modèle devient $Y_i = f(X_{i1}, X_{i2}) + \epsilon_i$ et l'estimateur $k$NN est identique, seule la définition de la distance change. La distance euclidienne
+$$d_i(x) = (X_{i1} - x_1)^2 + (X_{i2} - x_2)^2$$
+pose problème si les ordres de grandeur des variables diffèrent (p. ex.\ poids en kg de 1500 à 5000 et cylindrée en pouces$^3$ de 60 à 500) : la variable de plus grande amplitude domine. On pondère alors par l'inverse de la matrice de variance-covariance empirique :
+$$d_i(x) = \begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix}^{\!\top} V^{-1}\begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix},
+\qquad V = \begin{pmatrix} s_1^2 & s_{12} \\ s_{12} & s_2^2\end{pmatrix}.$$
+C'est la **distance de Mahalanobis**, qui se généralise directement à $p$ variables continues.
+
+## Estimateur de noyau (Nadaraya-Watson)
+
+### Des voisins aux noyaux
+
+L'estimateur $k$NN peut s'écrire
+$$\hat f(x) = \frac{\sum_{i=1}^n \mathbf{1}_{\{i\in N_k(x)\}}Y_i}{\sum_{i=1}^n \mathbf{1}_{\{i\in N_k(x)\}}}.$$
+On peut définir le voisinage autrement : $x$ et $X_i$ sont voisins si $|X_i - x| \leq h$, où $h > 0$ est un **paramètre de fenêtre** jouant le même rôle que $k$. On obtient
+$$\hat f(x) = \frac{\sum_{i=1}^n K\!\left(\frac{X_i - x}{h}\right)Y_i}{\sum_{i=1}^n K\!\left(\frac{X_i - x}{h}\right)} = \sum_{i=1}^n w_i(x)\,Y_i,$$
+où $K(u) = \mathbf{1}_{\{|u|<1\}}$ est appelé **noyau** et
+$$w_i(x) = \frac{K\!\left(\frac{X_i - x}{h}\right)}{\sum_{j=1}^n K\!\left(\frac{X_j - x}{h}\right)}$$
+sont des poids positifs de somme 1.
+
+Avec le noyau uniforme, la contribution d'une observation passe brusquement de $1/A$ à 0 lorsque $x$ sort de son voisinage : $\hat f$ est **discontinue**. L'idée de l'**estimateur de Nadaraya-Watson** est d'utiliser des poids qui diminuent de façon continue au fur et à mesure que $x$ s'éloigne de $X_i$ : on prend par exemple le **noyau gaussien** $K(u) = e^{-u^2/2}$, qui donne des poids continus et un estimateur $\hat f_{NW}$ continu.
+
+En R : `locpoly(x=X, y=Y, degree=0, bandwidth=h)` de la librairie `KernSmooth`.
+
+### Choix du paramètre de fenêtre $h$
+
+Comme pour $k$NN : un $h$ trop petit produit une courbe très oscillante (variance élevée), un $h$ trop grand écrase la structure (biais élevé). On choisit $h$ par validation croisée. En excluant une observation à la fois, on montre que le critère s'écrit
+$$cv.n = \frac{1}{n}\sum_{i=1}^n\left(\frac{Y_i - \hat f(X_i)}{1 - w_i(X_i)}\right)^2.$$
+Sur les données `Auto` avec le noyau gaussien, on obtient $h_{\min} = 110$.
+
+## Régression non-paramétrique et classification
+
+Considérons le jeu de données `Default` (librairie `ISLR`, $n = 10\,000$) : la réponse binaire $Y_i$ vaut 1 si le sujet fait défaut sur sa carte de crédit, la variable explicative est le solde à payer. Le modèle est $g(x) = P(Y = 1\mid X = x)$, qu'on estime par $k$NN :
+$$\hat g(x) = \frac{1}{k}\sum_{i\in N_k(x)}Y_i \in [0,1].$$
+
+Pour choisir $k$, deux critères de validation croisée :
+
+1. **Taux d'erreur test** : on pose $\hat Y_i = \mathbf{1}_{\{\hat f_{-i}(X_i) > u\}}$ (avec $u = 1/2$ en pratique) et on minimise
+$$\frac{1}{n}\sum_{i=1}^n\mathbf{1}_{\{y_i\neq\hat y_i\}}.$$
+Sur `Default`, on obtient $k = 190$. Le résultat dépend toutefois du seuil arbitraire $u$ (avec $u = 1/4$ : $k = 290$ ; avec $u = 3/4$ : $k = 50$).
+
+1. **Aire sous la courbe ROC** : on choisit le $k$ qui **maximise** l'AUC (librairie `pROC`), critère qui ne dépend d'aucun seuil. Sur `Default`, on obtient $k = 200$, proche du résultat précédent avec $u = 1/2$.

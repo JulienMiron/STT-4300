@@ -1,0 +1,50 @@
+project:
+  type: book
+  output-dir: _book
+
+lang: fr
+
+book:
+  title: "Notes de cours — STT-4300"
+  subtitle: "Rappels de régression linéaire, modèles linéaires généralisés, régression non-linéaire et non-paramétrique, modèles additifs généralisés"
+  author: "Ton nom"
+  date: today
+  date-format: "D MMMM YYYY"
+  page-footer:
+    left: "Notes de cours STT-4300"
+    right: "Généré avec Quarto"
+  repo-url: https://github.com/ton-utilisateur/notes-stt4300
+  repo-actions: [edit, issue]
+  sidebar:
+    style: docked
+    collapse-level: 1
+  chapters:
+    - index.qmd
+    - 01-regression-lineaire.qmd
+    - 02-regression-logistique.qmd
+    - 03-modeles-lineaires-generalises.qmd
+    - 04-prediction-validation-croisee.qmd
+    - 05-selection-regularisation.qmd
+    - 06-knn-noyau.qmd
+    - 07-splines.qmd
+    - 08-gam.qmd
+
+crossref:
+  chapters: true
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: false
+    smooth-scroll: true
+  pdf:
+    documentclass: scrreprt
+    toc: true
+    number-sections: true
+    keep-tex: false
+
+editor: source

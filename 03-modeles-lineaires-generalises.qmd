@@ -1,0 +1,173 @@
+# Modèles linéaires généralisés {#sec-mlg}
+
+La régression linéaire et la régression logistique partagent plusieurs concepts : inférence sur les coefficients $\beta$, sélection de modèles, diagnostics. Ce chapitre en donne une présentation unifiée : on suppose que la distribution de la variable réponse appartient à la **famille exponentielle**, qui inclut notamment les lois normale, de Bernoulli, binomiale, de Poisson et gamma.
+
+## Famille exponentielle
+
+### Définition
+
+:::{.env-definition}
+**Définition.**
+
+La distribution de la variable aléatoire $Y$ appartient à la famille exponentielle si sa fonction de probabilité (densité si $Y$ est continue, fonction de masse si $Y$ est discrète) s'écrit
+$$f_Y(y) = a(y,\phi)\exp\left\{\frac{y\theta - b(\theta)}{\phi}\right\},$$
+où $\theta$ est le **paramètre canonique** et $\phi$ le **paramètre de dispersion**.
+:::
+
+:::{.env-propriete #sec-famexp}
+**Propriété.**
+
+Si $Y$ appartient à la famille exponentielle, alors
+$$E[Y] = \mu = b'(\theta) \qquad \mbox{et} \qquad Var[Y] = \phi\, b''(\theta) = \phi\, V(\mu),$$
+où $V(u) = b''\!\left[(b')^{-1}(u)\right]$ est la **fonction de variance**.
+:::
+
+Le paramètre canonique est donc directement lié à l'espérance de $Y$, et le paramètre de dispersion module la variance. Pour certaines distributions (Bernoulli, binomiale, Poisson), $\phi$ est fixé à 1.
+
+### Exemples
+
+- **Loi normale** $Y\sim\mathcal{N}(\mu,\sigma^2)$ :
+$$f_Y(y) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{\frac{y\mu - \mu^2/2}{\sigma^2} - \frac{y^2}{2\sigma^2}\right\},$$
+d'où $\theta = \mu$, $\phi = \sigma^2$, $b(\theta) = \theta^2/2$, $a(y,\phi) = (2\pi\sigma^2)^{-1/2}e^{-y^2/(2\sigma^2)}$. On vérifie $E[Y] = \theta = \mu$, $Var[Y] = \sigma^2$ et $V(\mu) = 1$.
+
+- **Loi binomiale** $Y\sim\mathrm{Bin}(m,\pi)$ :
+$$P(Y=y) = \binom{m}{y}\exp\left\{y\log\!\left(\frac{\pi}{1-\pi}\right) + m\log(1-\pi)\right\},$$
+d'où $\theta = \log\{\pi/(1-\pi)\}$ (donc $\pi = e^\theta/(1+e^\theta)$), $\phi = 1$, $a(y,\phi) = \binom{m}{y}$ et $b(\theta) = m\log(1+e^\theta)$. On vérifie $E[Y] = m\pi$, $Var[Y] = m\pi(1-\pi)$ et $V(\mu) = \mu(m-\mu)/m$.
+
+- **Loi de Poisson** $Y\sim\mathcal{P}(\lambda)$ :
+$$P(Y=y) = \frac{1}{y!}\exp\left\{y\log(\lambda) - \lambda\right\},$$
+d'où $\theta = \log(\lambda)$, $\phi = 1$, $a(y,\phi) = 1/y!$ et $b(\theta) = e^\theta$. On vérifie $E[Y] = Var[Y] = \lambda$ et $V(\mu) = \mu$.
+
+- **Loi gamma** $Y\sim\mathrm{Gamma}(\alpha,\beta)$, reparamétrée avec $\mu = \alpha\beta$ et $\phi = 1/\alpha$ : on obtient $\theta = -1/\mu$, $b(\theta) = -\log(-\theta)$, d'où $E[Y] = -1/\theta = \mu$, $Var[Y] = \phi\mu^2$ et $V(\mu) = \mu^2$.
+
+Le tableau suivant résume ces résultats :
+
+| Distribution | $\theta$ | $\phi$ | $b(\theta)$ | $V(\mu)$ |
+|---|---|---|---|---|
+| $\mathcal{N}(\mu,\sigma^2)$ | $\mu$ | $\sigma^2$ | $\theta^2/2$ | $1$ |
+| $\mathrm{Bin}(m,\pi)$ | $\log\{\pi/(1-\pi)\}$ | $1$ | $m\log(1+e^\theta)$ | $\mu(m-\mu)/m$ |
+| $\mathcal{P}(\lambda)$ | $\log(\lambda)$ | $1$ | $e^\theta$ | $\mu$ |
+| $\mathrm{Gamma}(\mu,\phi)$ | $-1/\mu$ | $\phi$ | $-\log(-\theta)$ | $\mu^2$ |
+
+### Déviance
+
+Posons $t(y,\mu) = y\theta - b(\theta)$ et $d(y,\mu) = 2\{t(y,y) - t(y,\mu)\}$. On a
+$$\frac{\partial d(y,\mu)}{\partial\theta} = -\{y - b'(\theta)\} \qquad \mbox{et} \qquad \frac{\partial^2 d(y,\mu)}{\partial\theta^2} = b''(\theta) = V(\mu) > 0.$$
+La dérivée s'annule lorsque $\mu = y$ : la quantité $d(y,\mu)$ est donc toujours positive et ne s'annule que si $\mu = y$. Pour la loi normale, $d(y,\mu) = (y-\mu)^2$ : la déviance généralise la somme des carrés des résidus.
+
+On montre que $d(Y,\mu)/\phi$ suit approximativement une $\chi^2_1$. Pour des variables indépendantes $\{Y_1,\ldots,Y_n\}$ de paramètres $(\mu_i,\phi)$ (dispersion commune), la **déviance** et la **déviance standardisée** sont
+$$D(y,\mu) = \sum_{i=1}^n d(y_i,\mu_i) \qquad\mbox{et}\qquad D^*(y,\mu) = \frac{D(y,\mu)}{\phi} \ \stackrel{approx.}{\sim}\ \chi^2_n.$$
+
+## Définition d'un MLG
+
+Un modèle linéaire généralisé est composé de **trois composantes** :
+
+1. **Composante aléatoire** : $Y_i$ suit une distribution de la famille exponentielle de paramètres $(\theta_i, \phi)$ ; chaque observation possède son propre paramètre canonique $\theta_i$, mais le paramètre de dispersion $\phi$ est commun. Ainsi $E[Y_i] = \mu_i = b'(\theta_i)$ et $Var[Y_i] = \phi\, V(\mu_i)$.
+
+1. **Composante systématique** : $\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}$ (prédicteur linéaire).
+
+1. **Fonction de lien** : $g(\mu_i) = \eta_i$, avec $g$ monotone et dérivable. La fonction de lien est dite **canonique** si $g[b'(u)] = u$ pour tout $u$, c'est-à-dire si elle assure $\eta_i = \theta_i$.
+
+Les paramètres du modèle sont $\beta$ et $\phi$. Cas particuliers : régression linéaire (normale, lien identité), régression logistique (binomiale, lien logit), régression Poisson (Poisson, lien log).
+
+## Estimation des paramètres
+
+La log-vraisemblance des données $\Delta = \{(Y_i,X_i)\}$ s'écrit
+$$l(\beta,\phi\mid\Delta) = \sum_{i=1}^n\log[a(y_i,\phi)] + \frac{1}{\phi}\sum_{i=1}^n[y_i\theta_i - b(\theta_i)] = l_1(\phi) + \frac{1}{\phi}\, l_2(\beta).$$
+L'estimateur du maximum de vraisemblance $\hat\beta$ maximise $l_2(\beta)$ (il ne dépend pas de $\phi$). Sa distribution asymptotique est
+$$\hat\beta \sim \mathcal{N}\left\{\beta,\ \phi\,(X^\top W X)^{-1}\right\},$$
+où $W = \mathrm{diag}\{W_1,\ldots,W_n\}$ avec
+$$W_i = \frac{1}{V(\hat\mu_i)\left[g'(\hat\mu_i)\right]^2},$$
+$\hat\mu_i = g^{-1}(\hat\eta_i)$ et $\hat\eta_i = \hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}$.
+
+### Estimation de $\phi$
+
+Si $\phi$ est fixé (logistique, Poisson), la procédure s'arrête ici. Sinon (normale, gamma), on doit estimer $\phi$. L'EMV de $\phi$ est biaisé en petits échantillons ; on lui préfère des estimateurs par la méthode des moments. On calcule
+$$X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{V(\hat\mu_i)} \qquad\mbox{et}\qquad D(y,\hat\mu),$$
+qui, divisées par $\phi$, suivent approximativement une $\chi^2_{n-(p+1)}$. On en déduit les estimateurs de **Pearson** et de **déviance** :
+$$\tilde\phi_P = \frac{X^2}{n-(p+1)}, \qquad \tilde\phi_D = \frac{D(y,\hat\mu)}{n-(p+1)}.$$
+L'estimateur de Pearson possède un biais négligeable et est robuste à une mauvaise spécification de la distribution ; c'est l'estimateur par défaut de la fonction `glm` de R. L'estimateur déviance a une faible variance, mais peut être sensible lorsque des valeurs de $y$ sont proches des limites de leur support.
+
+## Inférence statistique
+
+### Cas $\phi$ fixé
+
+Un intervalle de confiance à $(1-\alpha)100%$ pour $\beta_j$ est
+$$\left[\hat\beta_j - z_{\alpha/2}\sqrt{\phi\, v_j}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\phi\, v_j}\right],$$
+où $v_j$ est le $(j+1)^{\text{ème}}$ élément diagonal de $(X^\top W X)^{-1}$.
+
+Pour une observation future $X^*$, avec $\eta^* = {X^*}^\top\beta$ et $\mu^* = g^{-1}(\eta^*)$, on a $Var[\hat\eta^*] = \phi\,{X^*}^\top(X^\top W X)^{-1}X^*$, d'où l'IC pour $\eta^*$ :
+$$\left[{X^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\phi\,{X^*}^\top(X^\top WX)^{-1}X^*}\right],$$
+et l'IC pour $\mu^*$ obtenu en appliquant $g^{-1}$ aux deux bornes.
+
+Pour comparer deux modèles emboîtés $A$ (réduit) et $B$ (complet), la statistique
+$$X_{obs} = \frac{D_A(y,\hat\mu) - D_B(y,\hat\mu)}{\phi}$$
+suit une $\chi^2_d$ sous l'hypothèse que le modèle réduit est vrai ($d$ = différence du nombre de paramètres). On rejette au seuil $\alpha$ si $X_{obs} > \chi^2_{d,\alpha}$.
+
+### Cas $\phi$ inconnu
+
+On remplace $\phi$ par $\tilde\phi_P$ et les quantiles de la $\mathcal{N}(0,1)$ par ceux de la loi de Student à $n-(p+1)$ degrés de liberté :
+$$\left[\hat\beta_j - t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\,;\ \hat\beta_j + t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\right].$$
+Pour la comparaison de modèles emboîtés, la statistique devient
+$$X_{obs} = \frac{\{D_A(y,\hat\mu) - D_B(y,\hat\mu)\}/d}{\tilde\phi_P}\ \sim\ F_{d,\,n-(p+1)} \quad\mbox{sous } H_0.$$
+
+## Sélection et validation de modèles
+
+Les procédures pas à pas *backward*, *forward* et *stepwise* restent valides pour tout MLG, sur la base de
+$$AIC = -2\,l(\hat\beta,\tilde\phi_P\mid\Delta) + 2(p+1), \qquad BIC = -2\,l(\hat\beta,\tilde\phi_P\mid\Delta) + \log(n)(p+1).$$
+De même, les outils de validation (résidus, DFBETAS, DFFITS, distance de Cook) vus pour les régressions linéaire et logistique restent valides pour l'ensemble des MLG.
+
+## Exemple détaillé : la régression Poisson {#sec-poisson}
+
+La variable réponse $Y_i \in \mathbb{N}$ dénote un dénombrement (nombre de nouveaux cas d'une maladie, nombre d'absences, etc.). La régression Poisson suppose $Y_i \sim \mathcal{P}(\mu_i)$ :
+$$P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.$$
+
+Avec la fonction de lien canonique $g(\mu_i) = \log(\mu_i)$, on a
+$$\mu_i = e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}} = e^{\beta_0}\times\left\{e^{\beta_1}\right\}^{X_{i1}}\times\cdots\times\left\{e^{\beta_p}\right\}^{X_{ip}}.$$
+
+:::{.env-remarque}
+**Remarque (Interprétation).**
+
+Si $X_{ij}$ augmente de 1, $\mu_i$ est **multiplié** par $e^{\beta_j}$. Si $\beta_j > 0$, alors $e^{\beta_j} > 1$ et $\mu_i$ croît.
+:::
+
+La log-vraisemblance est
+$$l(\beta) = \sum_{i=1}^n\left\{y_i(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}) - e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}}\right\} + K,$$
+et la distribution asymptotique de $\hat\beta$ est $\mathcal{N}\{\beta,\,(X^\top WX)^{-1}\}$, où $W = \mathrm{diag}(w_i)$ avec $w_i = \hat\mu_i = e^{\hat\eta_i}$.
+
+La déviance individuelle est
+$$d(y,\mu) = 2\left\{y\log\!\left(\frac{y}{\mu}\right) - (y - \mu)\right\}$$
+et l'adéquation se vérifie avec
+$$X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\mbox{et}\qquad D = \sum_{i=1}^n d(y_i,\hat\mu_i),$$
+qui suivent approximativement une $\chi^2_{n-(p+1)}$ si le modèle est bien adapté.
+
+### Variables explicatives *offset*
+
+Considérons le jeu de données `danishlc` (librairie `GLMsData`) : nombre de nouveaux cas de cancer du poumon par ville (4 villes) et tranche d'âge (6 tranches), avec la population $m_i$ de chaque strate.
+
+Lorsque la probabilité individuelle est très petite (ici $\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}$), une régression logistique n'est pas appropriée. On modélise plutôt l'espérance du **taux** $Y_i/m_i$ :
+$$\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
+\quad\Longleftrightarrow\quad
+\log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.$$
+Le terme $\log(m_i)$ est une variable explicative dont le coefficient est **fixé à 1** : on parle de variable **offset**. Un offset est utile lorsque l'espérance de $Y_i$ est proportionnelle à une autre variable (population, durée d'exposition, effort).
+
+```r
+modele.additif <- glm(Cases ~ offset(log(Pop)) + City + Age,
+                      family=poisson, data=danishlc)
+```
+
+Les tests par différence de déviances montrent une différence significative entre les tranches d'âge, mais pas entre les villes.
+
+### Variabilité extra-Poissonienne
+
+En pratique, il arrive que $Var[Y_i] > E[Y_i]$ (**surdispersion**). Deux stratégies :
+
+**Approche quasi-Poisson.** On spécifie seulement les deux premiers moments : $E[Y_i] = \mu_i$ et $Var[Y_i] = \phi\,\mu_i$. On obtient les mêmes estimateurs $\hat\beta$ que la régression Poisson, mais $Var(\hat\beta)$ est multipliée par $\tilde\phi_P = X^2/(n-(p+1))$. En R : `family=quasipoisson`. Cette approche permet des IC et des tests sur $\beta$, mais **n'implique pas de vraisemblance** : l'$AIC$ et le $BIC$ ne sont pas définis.
+
+**Loi binomiale négative.** On dit que $Y_i$ suit une loi binomiale négative de paramètres $\mu_i$ et $\alpha$ si
+$$P(Y_i = y_i) = \frac{\Gamma(y_i + 1/\alpha)}{\Gamma(y_i+1)\Gamma(1/\alpha)}\left(\frac{1/\alpha}{\mu_i + 1/\alpha}\right)^{1/\alpha}\left(\frac{\mu_i}{\mu_i + 1/\alpha}\right)^{y_i}, \quad y_i = 0,1,2,\ldots,\ \alpha > 0.$$
+On a $E[Y_i] = \mu_i$ et $Var[Y_i] = \mu_i + \alpha\mu_i^2$ ; la loi de Poisson est retrouvée quand $\alpha \to 0$. Avec $\mu_i = e^{x_i^\top\beta}$, les coefficients gardent la même interprétation que la régression Poisson. En R : `glm.nb` de la librairie `MASS`.
+
+Ce modèle permet de tester $H_0 : \alpha = 0$. On calcule $Q_{obs} = D_0 - D_1$ (déviances des modèles Poisson et binomiale négative). Comme on teste $\alpha$ à la frontière de son domaine,
+$$Q \sim \tfrac{1}{2}\chi^2_0 + \tfrac{1}{2}\chi^2_1 \quad\mbox{sous } H_0,$$
+et le seuil observé est $\alpha^* = P(\chi^2_1 > Q_{obs})/2$. Sur les données `danishlc`, $\alpha^* = 0.143$ : pas de variabilité extra-Poissonienne détectée.

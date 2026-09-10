@@ -1,0 +1,106 @@
+# Modèles additifs et modèles additifs généralisés (GAM) {#sec-gam}
+
+## Motivation
+
+Les méthodes non-paramétriques des @sec-knn et @sec-splines fonctionnent bien avec une ou deux variables explicatives, mais se heurtent au **fléau de la dimension** lorsque $p$ est grand : les voisinages deviennent vides et le nombre de fonctions de base explose. Les **modèles additifs** offrent un compromis entre la flexibilité des méthodes non-paramétriques et l'interprétabilité des modèles linéaires : on remplace la partie linéaire par une somme de fonctions univariées,
+$$Y_i = \alpha + f_1(X_{i1}) + f_2(X_{i2}) + \cdots + f_p(X_{ip}) + \epsilon_i,$$
+où chaque $f_j$ est une fonction lisse inconnue.
+
+*Laissons les données nous montrer la forme fonctionnelle appropriée.*
+
+Chaque $f_j$ est représentée par une base de splines (@sec-splines) : $f_j(x) = \sum_{k=1}^{K_j} b_{jk}(x)\,\beta_{jk}$. Pour assurer l'**identifiabilité** (une constante peut être transférée entre $\alpha$ et les $f_j$), on impose la contrainte de centrage
+$$\sum_{i=1}^n f_j(X_{ij}) = 0, \qquad j = 1,\ldots,p.$$
+
+## Estimation par moindres carrés pénalisés
+
+Plutôt que de choisir soigneusement le nombre de nœ uds de chaque base, on prend des bases « suffisamment riches » et on pénalise la rugosité de chaque fonction : on minimise
+$$\left\|Y - X\beta\right\|^2 + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta,$$
+où $X$ regroupe toutes les fonctions de base évaluées aux observations, et $S_j$ est la matrice de pénalité de la $j^{\text{ème}}$ fonction ($\beta^\top S_j\beta = \int f_j''(t)^2dt$). La solution est explicite :
+$$\hat\beta = \Bigl(X^\top X + \sum_{j=1}^p\lambda_j S_j\Bigr)^{-1}X^\top Y.$$
+Chaque paramètre de lissage $\lambda_j$ contrôle le compromis régularité/fidélité de la fonction $f_j$ : $\lambda_j\to\infty$ force $f_j$ à être linéaire, $\lambda_j = 0$ laisse $f_j$ libre (risque de surajustement).
+
+### Matrice d'influence et degrés de liberté effectifs
+
+Les valeurs ajustées s'écrivent $\hat Y = AY$ avec $A = X(X^\top X + \sum_j\lambda_j S_j)^{-1}X^\top$. Les **degrés de liberté effectifs** du modèle sont $\mathrm{Tr}(A)$ ; on peut les décomposer par fonction $f_j$, ce qui donne une mesure interprétable de la complexité de chaque effet. La pénalisation induit un biais : $E(\hat\beta)\neq\beta$, exactement comme pour ridge.
+
+### Choix des paramètres de lissage
+
+Les $\lambda_j$ sont choisis en minimisant un estimateur de l'erreur de prédiction :
+
+- **Validation croisée ordinaire (OCV)** :
+$$OCV(\lambda) = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat f_\lambda(x_i)}{1 - A_{ii}}\right)^2\,;$$
+
+- **Validation croisée généralisée (GCV)**, qui remplace les $A_{ii}$ par leur moyenne :
+$$GCV(\lambda) = \frac{n\sum_i(y_i - \hat f_\lambda(x_i))^2}{\left(n - \mathrm{Tr}(A)\right)^2}.$$
+
+### Inférence
+
+De la forme ridge de l'estimateur, on tire $\hat\beta\sim\mathcal{N}(E(\hat\beta),\, V_\beta)$ avec $V_\beta = \sigma^2(X^\top X + \sum_j\lambda_j S_j)^{-1}X^\top X(X^\top X + \sum_j\lambda_j S_j)^{-1}$ ; l'approche bayésienne (pénalité = loi a priori gaussienne sur $\beta$) donne la forme plus simple $V_\beta = \sigma^2(X^\top X + \sum_j\lambda_j S_j)^{-1}$, dont les intervalles de crédibilité
+$$\hat f_j(x) \pm z_{\alpha/2}\sqrt{\widehat{Var}[\hat f_j(x)]}$$
+possèdent de bonnes propriétés de couverture fréquentistes. Pour tester $H_0: f_j = 0$, on utilise des statistiques de type Wald basées sur $\hat\beta_j^\top V_{\beta_j}^{-1}\hat\beta_j$, référées à une $\chi^2$ ($\phi$ connu) ou une $F$ ($\phi$ inconnu).
+
+## Modèles additifs généralisés
+
+Comme pour les MLG, on combine la structure additive avec les distributions de la famille exponentielle : $Y_i$ suit une loi de la famille exponentielle avec $E[Y_i] = \mu_i$ et
+$$g(\mu_i) = \alpha + f_1(X_{i1}) + \cdots + f_p(X_{ip}),$$
+où $g$ est une fonction de lien. Cas particuliers : GAM logistique (réponse binaire), GAM Poisson (dénombrements, avec offset au besoin).
+
+L'estimation se fait en minimisant la **déviance pénalisée** :
+$$\hat\beta = \arg\min_\beta\left\{D(y,\mu) + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta\right\},$$
+où $D(y,\mu)$ est la déviance du @sec-mlg.
+
+### Algorithme d'ajustement (moindres carrés pondérés itératifs pénalisés)
+
+L'ajustement combine l'algorithme des moindres carrés pondérés itératifs des MLG et le lissage pénalisé. À l'itération $m$ :
+
+1. construire la variable dépendante ajustée
+$$z_i^{(m)} = \eta_i^{(m)} + (y_i - \mu_i^{(m)})\left(\frac{\partial\eta_i}{\partial\mu_i}\right)^{(m)}\,;$$
+
+1. construire les poids
+$$w_i^{(m)} = \frac{1}{V(\mu_i^{(m)})}\left(\frac{\partial\mu_i}{\partial\eta_i}\right)^2_{(m)}\,;$$
+
+1. ajuster un modèle additif pénalisé pondéré à $z^{(m)}$ ;
+
+1. répéter jusqu'à convergence.
+
+### Choix des paramètres de lissage et comparaison de modèles
+
+- Si $\phi$ est connu (logistique, Poisson) : critère **UBRE** (équivalent au $C_p$ de Mallows)
+$$UBRE(\lambda) = \frac{D(y,\hat\mu)}{n} + \frac{2\phi\,\mathrm{Tr}(A)}{n}\,;$$
+
+- si $\phi$ est inconnu : **GCV**
+$$GCV(\lambda) = \frac{n\,D(y,\hat\mu)}{\left(n - \mathrm{Tr}(A)\right)^2}.$$
+
+Pour comparer des modèles : $AIC = -2\,l(\hat\beta;y) + 2\,\mathrm{Tr}(A)$ (les degrés de liberté effectifs remplacent le nombre de paramètres), GCV, ou proportion de déviance expliquée $(D_{null} - D)/D_{null}$. Plus petit $AIC$ ou $GCV$ = meilleur modèle.
+
+### En pratique avec R
+
+La librairie `mgcv` ajuste les GAM avec sélection automatique des paramètres de lissage :
+
+```r
+library(mgcv)
+## Modèle additif gaussien
+mod1 <- gam(mpg ~ s(weight) + s(horsepower), data=Auto)
+## GAM logistique
+mod2 <- gam(y ~ s(SOI), family=binomial, data=quilpie)
+## GAM Poisson avec offset
+mod3 <- gam(Cases ~ s(AgeNum) + City + offset(log(Pop)),
+            family=poisson, data=danishlc)
+summary(mod1)   # tests approximatifs de f_j = 0, DLE par fonction
+plot(mod1)      # courbes estimées avec bandes de confiance
+```
+
+La fonction `summary` rapporte, pour chaque fonction lisse, ses degrés de liberté effectifs et un test approximatif de nullité ; `plot` trace chaque $\hat f_j$ avec ses bandes de confiance. Une fonction dont les degrés de liberté effectifs sont proches de 1 peut être remplacée par un terme linéaire : le GAM sert ainsi aussi d'outil diagnostique pour guider la spécification d'un MLG paramétrique.
+
+## Synthèse du cours
+
+Le tableau suivant situe les principales méthodes du cours selon la nature de la réponse et la forme de la relation avec les variables explicatives :
+
+| | **Relation linéaire** | **Relation flexible** |
+|---|---|---|
+| Réponse normale | régression linéaire (+ ridge/lasso) | polynômes, splines, $k$NN, Nadaraya-Watson, modèle additif |
+| Réponse binaire | régression logistique | GAM logistique, $k$NN |
+| Dénombrement | régression Poisson | GAM Poisson |
+| Famille exponentielle | MLG | GAM |
+
+Dans tous les cas, l'**estimation de l'erreur de prévision** (validation croisée) fournit le fil conducteur pour choisir la complexité du modèle : le degré du polynôme, le nombre de voisins $k$, la fenêtre $h$, le coefficient de pénalité $\lambda$ ou les paramètres de lissage $\lambda_j$.

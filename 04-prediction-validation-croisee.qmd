@@ -1,0 +1,67 @@
+# Prédiction, mesures de performance et validation croisée {#sec-cv}
+
+## Adéquation versus précision de prédiction
+
+Considérons le jeu de données `Auto` (librairie `ISLR`, $n = 392$) : la réponse est `mpg` (miles par gallon) et la variable explicative est la puissance `horsepower`. On veut choisir parmi les modèles :
+
+$$
+\begin{aligned}
+\mbox{Modèle 1 : } Y_i &= \beta_0 + \beta_1 X_i + \epsilon_i,\\
+\mbox{Modèle 2 : } Y_i &= \beta_0 + \beta_1 X_i + \beta_2\log(X_i) + \epsilon_i,\\
+\mbox{Modèle 3 : } Y_i &= \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \epsilon_i,\\
+\mbox{Modèle 4 : } Y_i &= \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \beta_3 X_i^3 + \epsilon_i.
+\end{aligned}
+$$
+
+Pour chaque modèle, on peut calculer $SSE = \sum_i(Y_i - \hat Y_i)^2$, l'$AIC$, le $BIC$, ou effectuer des tests pour modèles emboîtés : toutes ces procédures cherchent le modèle avec le meilleur **ajustement** aux données.
+
+Supposons plutôt qu'on veuille prédire la réponse $Y_0$ d'une nouvelle observation $X_0$ : on cherche alors le modèle qui minimise $E[(Y_0 - \hat Y_0)^2]$. Les deux critères (adéquation et précision de la prédiction) sont différents et peuvent être contradictoires : avec $n$ points, un polynôme d'ordre $n-1$ a une adéquation parfaite ($SSE = 0$) mais sera inutile pour prédire des valeurs futures (**surajustement**).
+
+On distingue donc :
+
+- le **taux d'erreur d'entraînement**, évalué par $SSE$, qui mesure l'adéquation aux données observées ;
+
+- le **taux d'erreur test**, qui mesure la précision de prédiction pour une observation future.
+
+## Validation croisée
+
+### Approche par ensemble de validation
+
+On partage le jeu de données en deux parties : un **jeu d'entraînement** (pour estimer les paramètres) et un **jeu test** (pour estimer le taux d'erreur test). Avec $n_1$ observations d'entraînement et $n_2 = n - n_1$ observations test :
+$$\widehat{Err}_{test} = \frac{1}{n_2}\sum_{i = n_1+1}^{n}(Y_i - \hat Y_i)^2,$$
+où $\hat Y_i$ est calculé avec les paramètres estimés sur le jeu d'entraînement.
+
+Cette approche a deux défauts : (i) la partition est arbitraire, ce qui introduit de la variabilité ; (ii) on n'estime $\beta$ qu'avec une fraction des données, ce qui augmente la variance de $\hat\beta$. Pour le premier défaut, on peut répéter la partition aléatoirement un grand nombre de fois et moyenner les erreurs obtenues.
+
+### Validation croisée avec exclusion d'une observation (LOOCV)
+
+Pour remédier au deuxième défaut, pour $i = 1,\ldots,n$, on estime $\beta$ avec toutes les observations **sauf** la $i^{\text{ème}}$ et on calcule $\hat y_{i,(-i)}$. Le critère est
+$$VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(y_i - \hat y_{i,(-i)}\right)^2.$$
+
+:::{.env-propriete}
+**Propriété (Formule explicite pour la régression linéaire).**
+
+$$VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat y_i}{1 - h_i}\right)^2,$$
+où $h_i$ est le levier de l'observation $i$. Il n'est donc pas nécessaire d'ajuster $n$ régressions : un seul ajustement suffit.
+:::
+
+### Validation croisée à $K$ blocs
+
+Pour d'autres modèles (notamment les MLG), le calcul de $VC_{(n)}$ requiert l'ajustement de $n$ modèles, ce qui peut être coûteux. On considère alors la validation croisée à $K$ blocs (en pratique $K = 5$ ou $K = 10$). On partage le jeu de données en $K$ parties de tailles quasiment égales $A_1,\ldots,A_K$. Pour $k = 1,\ldots,K$, on estime $\beta$ à partir de toutes les données sauf $A_k$ et on calcule
+$$MSE_k = \frac{1}{n_k}\sum_{i\in A_k}\left\{y_i - \hat y_{i,(-k)}\right\}^2,$$
+où $n_k$ est la taille de $A_k$. On estime le taux d'erreur test par
+$$VC_{(K)} = \frac{1}{K}\sum_{k=1}^K MSE_k.$$
+
+En R, la fonction `cv.glm` de la librairie `boot` calcule $VC_{(n)}$ (par défaut) et $VC_{(K)}$ (argument `K`).
+
+:::{.env-exemple}
+**Exemple (`Auto`).**
+
+Sur les quatre modèles polynomiaux, la validation croisée ($VC_{(n)}$, $VC_{(5)}$ et $VC_{(10)}$) désigne systématiquement le modèle 3 (quadratique) comme le meilleur pour la prédiction ($VC_{(n)} \approx 19.25$), alors que l'approche par ensemble de validation unique pouvait suggérer le modèle 4.
+:::
+
+## Mesures de performance pour la classification
+
+Pour une réponse binaire, le taux d'erreur test devient le **taux de mauvaise classification**
+$$\frac{1}{n}\sum_{i=1}^n \mathbf{1}_{\{y_i \neq \hat y_i\}},$$
+avec $\hat y_i = \mathbf{1}_{\{\hat\pi_i > u\}}$ pour un seuil $u$ (souvent $1/2$). Les notions de **sensibilité**, **spécificité**, **courbe ROC** et **AUC** présentées à la @sec-roc fournissent des mesures de performance qui ne dépendent pas du choix d'un seuil unique : l'AUC est notamment utilisée comme critère de validation croisée en classification (voir @sec-knn).

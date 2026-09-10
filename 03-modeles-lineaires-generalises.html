@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Modèles linéaires généralisés – Notes de cours — STT-4300</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04-prediction-validation-croisee.html" rel="next">
+<link href="./02-regression-logistique.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-344fa3802add84f408a7c53690416683.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-modeles-lineaires-generalises.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Notes de cours — STT-4300</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ton-utilisateur/notes-stt4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-regression-lineaire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Rappels de régression linéaire</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#famille-exponentielle" id="toc-famille-exponentielle" class="nav-link active" data-scroll-target="#famille-exponentielle"><span class="header-section-number">3.1</span> Famille exponentielle</a>
+  <ul class="collapse">
+  <li><a href="#définition" id="toc-définition" class="nav-link" data-scroll-target="#définition"><span class="header-section-number">3.1.1</span> Définition</a></li>
+  <li><a href="#exemples" id="toc-exemples" class="nav-link" data-scroll-target="#exemples"><span class="header-section-number">3.1.2</span> Exemples</a></li>
+  <li><a href="#déviance" id="toc-déviance" class="nav-link" data-scroll-target="#déviance"><span class="header-section-number">3.1.3</span> Déviance</a></li>
+  </ul></li>
+  <li><a href="#définition-dun-mlg" id="toc-définition-dun-mlg" class="nav-link" data-scroll-target="#définition-dun-mlg"><span class="header-section-number">3.2</span> Définition d’un MLG</a></li>
+  <li><a href="#estimation-des-paramètres" id="toc-estimation-des-paramètres" class="nav-link" data-scroll-target="#estimation-des-paramètres"><span class="header-section-number">3.3</span> Estimation des paramètres</a>
+  <ul class="collapse">
+  <li><a href="#estimation-de-phi" id="toc-estimation-de-phi" class="nav-link" data-scroll-target="#estimation-de-phi"><span class="header-section-number">3.3.1</span> Estimation de <span class="math inline">\(\phi\)</span></a></li>
+  </ul></li>
+  <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">3.4</span> Inférence statistique</a>
+  <ul class="collapse">
+  <li><a href="#cas-phi-fixé" id="toc-cas-phi-fixé" class="nav-link" data-scroll-target="#cas-phi-fixé"><span class="header-section-number">3.4.1</span> Cas <span class="math inline">\(\phi\)</span> fixé</a></li>
+  <li><a href="#cas-phi-inconnu" id="toc-cas-phi-inconnu" class="nav-link" data-scroll-target="#cas-phi-inconnu"><span class="header-section-number">3.4.2</span> Cas <span class="math inline">\(\phi\)</span> inconnu</a></li>
+  </ul></li>
+  <li><a href="#sélection-et-validation-de-modèles" id="toc-sélection-et-validation-de-modèles" class="nav-link" data-scroll-target="#sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</a></li>
+  <li><a href="#sec-poisson" id="toc-sec-poisson" class="nav-link" data-scroll-target="#sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression Poisson</a>
+  <ul class="collapse">
+  <li><a href="#variables-explicatives-offset" id="toc-variables-explicatives-offset" class="nav-link" data-scroll-target="#variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></a></li>
+  <li><a href="#variabilité-extra-poissonienne" id="toc-variabilité-extra-poissonienne" class="nav-link" data-scroll-target="#variabilité-extra-poissonienne"><span class="header-section-number">3.6.2</span> Variabilité extra-Poissonienne</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/ton-utilisateur/notes-stt4300/edit/main/03-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/ton-utilisateur/notes-stt4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-mlg" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>La régression linéaire et la régression logistique partagent plusieurs concepts : inférence sur les coefficients <span class="math inline">\(\beta\)</span>, sélection de modèles, diagnostics. Ce chapitre en donne une présentation unifiée : on suppose que la distribution de la variable réponse appartient à la <strong>famille exponentielle</strong>, qui inclut notamment les lois normale, de Bernoulli, binomiale, de Poisson et gamma.</p>
+<section id="famille-exponentielle" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="famille-exponentielle"><span class="header-section-number">3.1</span> Famille exponentielle</h2>
+<section id="définition" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="définition"><span class="header-section-number">3.1.1</span> Définition</h3>
+<div class="env-definition">
+<p><strong>Définition.</strong></p>
+<p>La distribution de la variable aléatoire <span class="math inline">\(Y\)</span> appartient à la famille exponentielle si sa fonction de probabilité (densité si <span class="math inline">\(Y\)</span> est continue, fonction de masse si <span class="math inline">\(Y\)</span> est discrète) s’écrit <span class="math display">\[f_Y(y) = a(y,\phi)\exp\left\{\frac{y\theta - b(\theta)}{\phi}\right\},\]</span> où <span class="math inline">\(\theta\)</span> est le <strong>paramètre canonique</strong> et <span class="math inline">\(\phi\)</span> le <strong>paramètre de dispersion</strong>.</p>
+</div>
+<div id="sec-famexp" class="env-propriete">
+<p><strong>Propriété.</strong></p>
+<p>Si <span class="math inline">\(Y\)</span> appartient à la famille exponentielle, alors <span class="math display">\[E[Y] = \mu = b'(\theta) \qquad \mbox{et} \qquad Var[Y] = \phi\, b''(\theta) = \phi\, V(\mu),\]</span> où <span class="math inline">\(V(u) = b''\!\left[(b')^{-1}(u)\right]\)</span> est la <strong>fonction de variance</strong>.</p>
+</div>
+<p>Le paramètre canonique est donc directement lié à l’espérance de <span class="math inline">\(Y\)</span>, et le paramètre de dispersion module la variance. Pour certaines distributions (Bernoulli, binomiale, Poisson), <span class="math inline">\(\phi\)</span> est fixé à 1.</p>
+</section>
+<section id="exemples" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="exemples"><span class="header-section-number">3.1.2</span> Exemples</h3>
+<ul>
+<li><p><strong>Loi normale</strong> <span class="math inline">\(Y\sim\mathcal{N}(\mu,\sigma^2)\)</span> : <span class="math display">\[f_Y(y) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{\frac{y\mu - \mu^2/2}{\sigma^2} - \frac{y^2}{2\sigma^2}\right\},\]</span> d’où <span class="math inline">\(\theta = \mu\)</span>, <span class="math inline">\(\phi = \sigma^2\)</span>, <span class="math inline">\(b(\theta) = \theta^2/2\)</span>, <span class="math inline">\(a(y,\phi) = (2\pi\sigma^2)^{-1/2}e^{-y^2/(2\sigma^2)}\)</span>. On vérifie <span class="math inline">\(E[Y] = \theta = \mu\)</span>, <span class="math inline">\(Var[Y] = \sigma^2\)</span> et <span class="math inline">\(V(\mu) = 1\)</span>.</p></li>
+<li><p><strong>Loi binomiale</strong> <span class="math inline">\(Y\sim\mathrm{Bin}(m,\pi)\)</span> : <span class="math display">\[P(Y=y) = \binom{m}{y}\exp\left\{y\log\!\left(\frac{\pi}{1-\pi}\right) + m\log(1-\pi)\right\},\]</span> d’où <span class="math inline">\(\theta = \log\{\pi/(1-\pi)\}\)</span> (donc <span class="math inline">\(\pi = e^\theta/(1+e^\theta)\)</span>), <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(a(y,\phi) = \binom{m}{y}\)</span> et <span class="math inline">\(b(\theta) = m\log(1+e^\theta)\)</span>. On vérifie <span class="math inline">\(E[Y] = m\pi\)</span>, <span class="math inline">\(Var[Y] = m\pi(1-\pi)\)</span> et <span class="math inline">\(V(\mu) = \mu(m-\mu)/m\)</span>.</p></li>
+<li><p><strong>Loi de Poisson</strong> <span class="math inline">\(Y\sim\mathcal{P}(\lambda)\)</span> : <span class="math display">\[P(Y=y) = \frac{1}{y!}\exp\left\{y\log(\lambda) - \lambda\right\},\]</span> d’où <span class="math inline">\(\theta = \log(\lambda)\)</span>, <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(a(y,\phi) = 1/y!\)</span> et <span class="math inline">\(b(\theta) = e^\theta\)</span>. On vérifie <span class="math inline">\(E[Y] = Var[Y] = \lambda\)</span> et <span class="math inline">\(V(\mu) = \mu\)</span>.</p></li>
+<li><p><strong>Loi gamma</strong> <span class="math inline">\(Y\sim\mathrm{Gamma}(\alpha,\beta)\)</span>, reparamétrée avec <span class="math inline">\(\mu = \alpha\beta\)</span> et <span class="math inline">\(\phi = 1/\alpha\)</span> : on obtient <span class="math inline">\(\theta = -1/\mu\)</span>, <span class="math inline">\(b(\theta) = -\log(-\theta)\)</span>, d’où <span class="math inline">\(E[Y] = -1/\theta = \mu\)</span>, <span class="math inline">\(Var[Y] = \phi\mu^2\)</span> et <span class="math inline">\(V(\mu) = \mu^2\)</span>.</p></li>
+</ul>
+<p>Le tableau suivant résume ces résultats :</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Distribution</th>
+<th><span class="math inline">\(\theta\)</span></th>
+<th><span class="math inline">\(\phi\)</span></th>
+<th><span class="math inline">\(b(\theta)\)</span></th>
+<th><span class="math inline">\(V(\mu)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\mathcal{N}(\mu,\sigma^2)\)</span></td>
+<td><span class="math inline">\(\mu\)</span></td>
+<td><span class="math inline">\(\sigma^2\)</span></td>
+<td><span class="math inline">\(\theta^2/2\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathrm{Bin}(m,\pi)\)</span></td>
+<td><span class="math inline">\(\log\{\pi/(1-\pi)\}\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(m\log(1+e^\theta)\)</span></td>
+<td><span class="math inline">\(\mu(m-\mu)/m\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\mathcal{P}(\lambda)\)</span></td>
+<td><span class="math inline">\(\log(\lambda)\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(e^\theta\)</span></td>
+<td><span class="math inline">\(\mu\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathrm{Gamma}(\mu,\phi)\)</span></td>
+<td><span class="math inline">\(-1/\mu\)</span></td>
+<td><span class="math inline">\(\phi\)</span></td>
+<td><span class="math inline">\(-\log(-\theta)\)</span></td>
+<td><span class="math inline">\(\mu^2\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="déviance" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="déviance"><span class="header-section-number">3.1.3</span> Déviance</h3>
+<p>Posons <span class="math inline">\(t(y,\mu) = y\theta - b(\theta)\)</span> et <span class="math inline">\(d(y,\mu) = 2\{t(y,y) - t(y,\mu)\}\)</span>. On a <span class="math display">\[\frac{\partial d(y,\mu)}{\partial\theta} = -\{y - b'(\theta)\} \qquad \mbox{et} \qquad \frac{\partial^2 d(y,\mu)}{\partial\theta^2} = b''(\theta) = V(\mu) &gt; 0.\]</span> La dérivée s’annule lorsque <span class="math inline">\(\mu = y\)</span> : la quantité <span class="math inline">\(d(y,\mu)\)</span> est donc toujours positive et ne s’annule que si <span class="math inline">\(\mu = y\)</span>. Pour la loi normale, <span class="math inline">\(d(y,\mu) = (y-\mu)^2\)</span> : la déviance généralise la somme des carrés des résidus.</p>
+<p>On montre que <span class="math inline">\(d(Y,\mu)/\phi\)</span> suit approximativement une <span class="math inline">\(\chi^2_1\)</span>. Pour des variables indépendantes <span class="math inline">\(\{Y_1,\ldots,Y_n\}\)</span> de paramètres <span class="math inline">\((\mu_i,\phi)\)</span> (dispersion commune), la <strong>déviance</strong> et la <strong>déviance standardisée</strong> sont <span class="math display">\[D(y,\mu) = \sum_{i=1}^n d(y_i,\mu_i) \qquad\mbox{et}\qquad D^*(y,\mu) = \frac{D(y,\mu)}{\phi} \ \stackrel{approx.}{\sim}\ \chi^2_n.\]</span></p>
+</section>
+</section>
+<section id="définition-dun-mlg" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="définition-dun-mlg"><span class="header-section-number">3.2</span> Définition d’un MLG</h2>
+<p>Un modèle linéaire généralisé est composé de <strong>trois composantes</strong> :</p>
+<ol type="1">
+<li><p><strong>Composante aléatoire</strong> : <span class="math inline">\(Y_i\)</span> suit une distribution de la famille exponentielle de paramètres <span class="math inline">\((\theta_i, \phi)\)</span> ; chaque observation possède son propre paramètre canonique <span class="math inline">\(\theta_i\)</span>, mais le paramètre de dispersion <span class="math inline">\(\phi\)</span> est commun. Ainsi <span class="math inline">\(E[Y_i] = \mu_i = b'(\theta_i)\)</span> et <span class="math inline">\(Var[Y_i] = \phi\, V(\mu_i)\)</span>.</p></li>
+<li><p><strong>Composante systématique</strong> : <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span> (prédicteur linéaire).</p></li>
+<li><p><strong>Fonction de lien</strong> : <span class="math inline">\(g(\mu_i) = \eta_i\)</span>, avec <span class="math inline">\(g\)</span> monotone et dérivable. La fonction de lien est dite <strong>canonique</strong> si <span class="math inline">\(g[b'(u)] = u\)</span> pour tout <span class="math inline">\(u\)</span>, c’est-à-dire si elle assure <span class="math inline">\(\eta_i = \theta_i\)</span>.</p></li>
+</ol>
+<p>Les paramètres du modèle sont <span class="math inline">\(\beta\)</span> et <span class="math inline">\(\phi\)</span>. Cas particuliers : régression linéaire (normale, lien identité), régression logistique (binomiale, lien logit), régression Poisson (Poisson, lien log).</p>
+</section>
+<section id="estimation-des-paramètres" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="estimation-des-paramètres"><span class="header-section-number">3.3</span> Estimation des paramètres</h2>
+<p>La log-vraisemblance des données <span class="math inline">\(\Delta = \{(Y_i,X_i)\}\)</span> s’écrit <span class="math display">\[l(\beta,\phi\mid\Delta) = \sum_{i=1}^n\log[a(y_i,\phi)] + \frac{1}{\phi}\sum_{i=1}^n[y_i\theta_i - b(\theta_i)] = l_1(\phi) + \frac{1}{\phi}\, l_2(\beta).\]</span> L’estimateur du maximum de vraisemblance <span class="math inline">\(\hat\beta\)</span> maximise <span class="math inline">\(l_2(\beta)\)</span> (il ne dépend pas de <span class="math inline">\(\phi\)</span>). Sa distribution asymptotique est <span class="math display">\[\hat\beta \sim \mathcal{N}\left\{\beta,\ \phi\,(X^\top W X)^{-1}\right\},\]</span> où <span class="math inline">\(W = \mathrm{diag}\{W_1,\ldots,W_n\}\)</span> avec <span class="math display">\[W_i = \frac{1}{V(\hat\mu_i)\left[g'(\hat\mu_i)\right]^2},\]</span> <span class="math inline">\(\hat\mu_i = g^{-1}(\hat\eta_i)\)</span> et <span class="math inline">\(\hat\eta_i = \hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}\)</span>.</p>
+<section id="estimation-de-phi" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="estimation-de-phi"><span class="header-section-number">3.3.1</span> Estimation de <span class="math inline">\(\phi\)</span></h3>
+<p>Si <span class="math inline">\(\phi\)</span> est fixé (logistique, Poisson), la procédure s’arrête ici. Sinon (normale, gamma), on doit estimer <span class="math inline">\(\phi\)</span>. L’EMV de <span class="math inline">\(\phi\)</span> est biaisé en petits échantillons ; on lui préfère des estimateurs par la méthode des moments. On calcule <span class="math display">\[X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{V(\hat\mu_i)} \qquad\mbox{et}\qquad D(y,\hat\mu),\]</span> qui, divisées par <span class="math inline">\(\phi\)</span>, suivent approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span>. On en déduit les estimateurs de <strong>Pearson</strong> et de <strong>déviance</strong> : <span class="math display">\[\tilde\phi_P = \frac{X^2}{n-(p+1)}, \qquad \tilde\phi_D = \frac{D(y,\hat\mu)}{n-(p+1)}.\]</span> L’estimateur de Pearson possède un biais négligeable et est robuste à une mauvaise spécification de la distribution ; c’est l’estimateur par défaut de la fonction <code>glm</code> de R. L’estimateur déviance a une faible variance, mais peut être sensible lorsque des valeurs de <span class="math inline">\(y\)</span> sont proches des limites de leur support.</p>
+</section>
+</section>
+<section id="inférence-statistique" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">3.4</span> Inférence statistique</h2>
+<section id="cas-phi-fixé" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="cas-phi-fixé"><span class="header-section-number">3.4.1</span> Cas <span class="math inline">\(\phi\)</span> fixé</h3>
+<p>Un intervalle de confiance à <span class="math inline">\((1-\alpha)100%\)</span> pour <span class="math inline">\(\beta_j\)</span> est <span class="math display">\[\left[\hat\beta_j - z_{\alpha/2}\sqrt{\phi\, v_j}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\phi\, v_j}\right],\]</span> où <span class="math inline">\(v_j\)</span> est le <span class="math inline">\((j+1)^{\text{ème}}\)</span> élément diagonal de <span class="math inline">\((X^\top W X)^{-1}\)</span>.</p>
+<p>Pour une observation future <span class="math inline">\(X^*\)</span>, avec <span class="math inline">\(\eta^* = {X^*}^\top\beta\)</span> et <span class="math inline">\(\mu^* = g^{-1}(\eta^*)\)</span>, on a <span class="math inline">\(Var[\hat\eta^*] = \phi\,{X^*}^\top(X^\top W X)^{-1}X^*\)</span>, d’où l’IC pour <span class="math inline">\(\eta^*\)</span> : <span class="math display">\[\left[{X^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\phi\,{X^*}^\top(X^\top WX)^{-1}X^*}\right],\]</span> et l’IC pour <span class="math inline">\(\mu^*\)</span> obtenu en appliquant <span class="math inline">\(g^{-1}\)</span> aux deux bornes.</p>
+<p>Pour comparer deux modèles emboîtés <span class="math inline">\(A\)</span> (réduit) et <span class="math inline">\(B\)</span> (complet), la statistique <span class="math display">\[X_{obs} = \frac{D_A(y,\hat\mu) - D_B(y,\hat\mu)}{\phi}\]</span> suit une <span class="math inline">\(\chi^2_d\)</span> sous l’hypothèse que le modèle réduit est vrai (<span class="math inline">\(d\)</span> = différence du nombre de paramètres). On rejette au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(X_{obs} &gt; \chi^2_{d,\alpha}\)</span>.</p>
+</section>
+<section id="cas-phi-inconnu" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="cas-phi-inconnu"><span class="header-section-number">3.4.2</span> Cas <span class="math inline">\(\phi\)</span> inconnu</h3>
+<p>On remplace <span class="math inline">\(\phi\)</span> par <span class="math inline">\(\tilde\phi_P\)</span> et les quantiles de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> par ceux de la loi de Student à <span class="math inline">\(n-(p+1)\)</span> degrés de liberté : <span class="math display">\[\left[\hat\beta_j - t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\,;\ \hat\beta_j + t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\right].\]</span> Pour la comparaison de modèles emboîtés, la statistique devient <span class="math display">\[X_{obs} = \frac{\{D_A(y,\hat\mu) - D_B(y,\hat\mu)\}/d}{\tilde\phi_P}\ \sim\ F_{d,\,n-(p+1)} \quad\mbox{sous } H_0.\]</span></p>
+</section>
+</section>
+<section id="sélection-et-validation-de-modèles" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</h2>
+<p>Les procédures pas à pas <em>backward</em>, <em>forward</em> et <em>stepwise</em> restent valides pour tout MLG, sur la base de <span class="math display">\[AIC = -2\,l(\hat\beta,\tilde\phi_P\mid\Delta) + 2(p+1), \qquad BIC = -2\,l(\hat\beta,\tilde\phi_P\mid\Delta) + \log(n)(p+1).\]</span> De même, les outils de validation (résidus, DFBETAS, DFFITS, distance de Cook) vus pour les régressions linéaire et logistique restent valides pour l’ensemble des MLG.</p>
+</section>
+<section id="sec-poisson" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression Poisson</h2>
+<p>La variable réponse <span class="math inline">\(Y_i \in \mathbb{N}\)</span> dénote un dénombrement (nombre de nouveaux cas d’une maladie, nombre d’absences, etc.). La régression Poisson suppose <span class="math inline">\(Y_i \sim \mathcal{P}(\mu_i)\)</span> : <span class="math display">\[P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.\]</span></p>
+<p>Avec la fonction de lien canonique <span class="math inline">\(g(\mu_i) = \log(\mu_i)\)</span>, on a <span class="math display">\[\mu_i = e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}} = e^{\beta_0}\times\left\{e^{\beta_1}\right\}^{X_{i1}}\times\cdots\times\left\{e^{\beta_p}\right\}^{X_{ip}}.\]</span></p>
+<div class="env-remarque">
+<p><strong>Remarque (Interprétation).</strong></p>
+<p>Si <span class="math inline">\(X_{ij}\)</span> augmente de 1, <span class="math inline">\(\mu_i\)</span> est <strong>multiplié</strong> par <span class="math inline">\(e^{\beta_j}\)</span>. Si <span class="math inline">\(\beta_j &gt; 0\)</span>, alors <span class="math inline">\(e^{\beta_j} &gt; 1\)</span> et <span class="math inline">\(\mu_i\)</span> croît.</p>
+</div>
+<p>La log-vraisemblance est <span class="math display">\[l(\beta) = \sum_{i=1}^n\left\{y_i(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}) - e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}}\right\} + K,\]</span> et la distribution asymptotique de <span class="math inline">\(\hat\beta\)</span> est <span class="math inline">\(\mathcal{N}\{\beta,\,(X^\top WX)^{-1}\}\)</span>, où <span class="math inline">\(W = \mathrm{diag}(w_i)\)</span> avec <span class="math inline">\(w_i = \hat\mu_i = e^{\hat\eta_i}\)</span>.</p>
+<p>La déviance individuelle est <span class="math display">\[d(y,\mu) = 2\left\{y\log\!\left(\frac{y}{\mu}\right) - (y - \mu)\right\}\]</span> et l’adéquation se vérifie avec <span class="math display">\[X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\mbox{et}\qquad D = \sum_{i=1}^n d(y_i,\hat\mu_i),\]</span> qui suivent approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien adapté.</p>
+<section id="variables-explicatives-offset" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></h3>
+<p>Considérons le jeu de données <code>danishlc</code> (librairie <code>GLMsData</code>) : nombre de nouveaux cas de cancer du poumon par ville (4 villes) et tranche d’âge (6 tranches), avec la population <span class="math inline">\(m_i\)</span> de chaque strate.</p>
+<p>Lorsque la probabilité individuelle est très petite (ici <span class="math inline">\(\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}\)</span>), une régression logistique n’est pas appropriée. On modélise plutôt l’espérance du <strong>taux</strong> <span class="math inline">\(Y_i/m_i\)</span> : <span class="math display">\[\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
+\quad\Longleftrightarrow\quad
+\log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.\]</span> Le terme <span class="math inline">\(\log(m_i)\)</span> est une variable explicative dont le coefficient est <strong>fixé à 1</strong> : on parle de variable <strong>offset</strong>. Un offset est utile lorsque l’espérance de <span class="math inline">\(Y_i\)</span> est proportionnelle à une autre variable (population, durée d’exposition, effort).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family=</span>poisson, <span class="at">data=</span>danishlc)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Les tests par différence de déviances montrent une différence significative entre les tranches d’âge, mais pas entre les villes.</p>
+</section>
+<section id="variabilité-extra-poissonienne" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="variabilité-extra-poissonienne"><span class="header-section-number">3.6.2</span> Variabilité extra-Poissonienne</h3>
+<p>En pratique, il arrive que <span class="math inline">\(Var[Y_i] &gt; E[Y_i]\)</span> (<strong>surdispersion</strong>). Deux stratégies :</p>
+<p><strong>Approche quasi-Poisson.</strong> On spécifie seulement les deux premiers moments : <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \phi\,\mu_i\)</span>. On obtient les mêmes estimateurs <span class="math inline">\(\hat\beta\)</span> que la régression Poisson, mais <span class="math inline">\(Var(\hat\beta)\)</span> est multipliée par <span class="math inline">\(\tilde\phi_P = X^2/(n-(p+1))\)</span>. En R : <code>family=quasipoisson</code>. Cette approche permet des IC et des tests sur <span class="math inline">\(\beta\)</span>, mais <strong>n’implique pas de vraisemblance</strong> : l’<span class="math inline">\(AIC\)</span> et le <span class="math inline">\(BIC\)</span> ne sont pas définis.</p>
+<p><strong>Loi binomiale négative.</strong> On dit que <span class="math inline">\(Y_i\)</span> suit une loi binomiale négative de paramètres <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\alpha\)</span> si <span class="math display">\[P(Y_i = y_i) = \frac{\Gamma(y_i + 1/\alpha)}{\Gamma(y_i+1)\Gamma(1/\alpha)}\left(\frac{1/\alpha}{\mu_i + 1/\alpha}\right)^{1/\alpha}\left(\frac{\mu_i}{\mu_i + 1/\alpha}\right)^{y_i}, \quad y_i = 0,1,2,\ldots,\ \alpha &gt; 0.\]</span> On a <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \mu_i + \alpha\mu_i^2\)</span> ; la loi de Poisson est retrouvée quand <span class="math inline">\(\alpha \to 0\)</span>. Avec <span class="math inline">\(\mu_i = e^{x_i^\top\beta}\)</span>, les coefficients gardent la même interprétation que la régression Poisson. En R : <code>glm.nb</code> de la librairie <code>MASS</code>.</p>
+<p>Ce modèle permet de tester <span class="math inline">\(H_0 : \alpha = 0\)</span>. On calcule <span class="math inline">\(Q_{obs} = D_0 - D_1\)</span> (déviances des modèles Poisson et binomiale négative). Comme on teste <span class="math inline">\(\alpha\)</span> à la frontière de son domaine, <span class="math display">\[Q \sim \tfrac{1}{2}\chi^2_0 + \tfrac{1}{2}\chi^2_1 \quad\mbox{sous } H_0,\]</span> et le seuil observé est <span class="math inline">\(\alpha^* = P(\chi^2_1 &gt; Q_{obs})/2\)</span>. Sur les données <code>danishlc</code>, <span class="math inline">\(\alpha^* = 0.143\)</span> : pas de variabilité extra-Poissonienne détectée.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./02-regression-logistique.html" class="pagination-link" aria-label="Modèles de régression pour données binaires">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04-prediction-validation-croisee.html" class="pagination-link" aria-label="Prédiction, mesures de performance et validation croisée">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Notes de cours STT-4300</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ton-utilisateur/notes-stt4300/edit/main/03-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/ton-utilisateur/notes-stt4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

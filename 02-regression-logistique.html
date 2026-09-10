@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Modèles de régression pour données binaires – Notes de cours — STT-4300</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./03-modeles-lineaires-generalises.html" rel="next">
+<link href="./01-regression-lineaire.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-344fa3802add84f408a7c53690416683.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-regression-logistique.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Notes de cours — STT-4300</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ton-utilisateur/notes-stt4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-regression-lineaire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Rappels de régression linéaire</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#données-et-modèle" id="toc-données-et-modèle" class="nav-link active" data-scroll-target="#données-et-modèle"><span class="header-section-number">2.1</span> Données et modèle</a>
+  <ul class="collapse">
+  <li><a href="#données-individuelles-bernoulli" id="toc-données-individuelles-bernoulli" class="nav-link" data-scroll-target="#données-individuelles-bernoulli"><span class="header-section-number">2.1.1</span> Données individuelles (Bernoulli)</a></li>
+  <li><a href="#données-groupées-binomiale" id="toc-données-groupées-binomiale" class="nav-link" data-scroll-target="#données-groupées-binomiale"><span class="header-section-number">2.1.2</span> Données groupées (binomiale)</a></li>
+  <li><a href="#fonctions-de-lien" id="toc-fonctions-de-lien" class="nav-link" data-scroll-target="#fonctions-de-lien"><span class="header-section-number">2.1.3</span> Fonctions de lien</a></li>
+  </ul></li>
+  <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">2.2</span> Inférence statistique</a>
+  <ul class="collapse">
+  <li><a href="#estimation-des-paramètres-boldsymbolbeta" id="toc-estimation-des-paramètres-boldsymbolbeta" class="nav-link" data-scroll-target="#estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">2.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></a></li>
+  <li><a href="#tests-dhypothèses-et-intervalles-de-confiance" id="toc-tests-dhypothèses-et-intervalles-de-confiance" class="nav-link" data-scroll-target="#tests-dhypothèses-et-intervalles-de-confiance"><span class="header-section-number">2.2.2</span> Tests d’hypothèses et intervalles de confiance</a></li>
+  <li><a href="#intervalle-de-confiance-pour-une-probabilité-prédite" id="toc-intervalle-de-confiance-pour-une-probabilité-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.3</span> Intervalle de confiance pour une probabilité prédite</a></li>
+  </ul></li>
+  <li><a href="#sélection-de-modèles" id="toc-sélection-de-modèles" class="nav-link" data-scroll-target="#sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</a>
+  <ul class="collapse">
+  <li><a href="#déviance" id="toc-déviance" class="nav-link" data-scroll-target="#déviance"><span class="header-section-number">2.3.1</span> Déviance</a></li>
+  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</a></li>
+  <li><a href="#comparaison-de-modèles-non-emboîtés-aic-et-bic" id="toc-comparaison-de-modèles-non-emboîtés-aic-et-bic" class="nav-link" data-scroll-target="#comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</a></li>
+  <li><a href="#sélection-automatique" id="toc-sélection-automatique" class="nav-link" data-scroll-target="#sélection-automatique"><span class="header-section-number">2.3.4</span> Sélection automatique</a></li>
+  </ul></li>
+  <li><a href="#validation-et-diagnostic-de-modèles" id="toc-validation-et-diagnostic-de-modèles" class="nav-link" data-scroll-target="#validation-et-diagnostic-de-modèles"><span class="header-section-number">2.4</span> Validation et diagnostic de modèles</a>
+  <ul class="collapse">
+  <li><a href="#résidus" id="toc-résidus" class="nav-link" data-scroll-target="#résidus"><span class="header-section-number">2.4.1</span> Résidus</a></li>
+  <li><a href="#tests-dadéquation-globale" id="toc-tests-dadéquation-globale" class="nav-link" data-scroll-target="#tests-dadéquation-globale"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</a></li>
+  <li><a href="#graphiques-et-extra-variabilité" id="toc-graphiques-et-extra-variabilité" class="nav-link" data-scroll-target="#graphiques-et-extra-variabilité"><span class="header-section-number">2.4.3</span> Graphiques et extra-variabilité</a></li>
+  <li><a href="#observations-aberrantes-et-valeurs-influentes" id="toc-observations-aberrantes-et-valeurs-influentes" class="nav-link" data-scroll-target="#observations-aberrantes-et-valeurs-influentes"><span class="header-section-number">2.4.4</span> Observations aberrantes et valeurs influentes</a></li>
+  </ul></li>
+  <li><a href="#sec-roc" id="toc-sec-roc" class="nav-link" data-scroll-target="#sec-roc"><span class="header-section-number">2.5</span> Spécificité, sensibilité et courbe ROC</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/ton-utilisateur/notes-stt4300/edit/main/02-regression-logistique.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/ton-utilisateur/notes-stt4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-logistique" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Les modèles de régression linéaire ne permettent de considérer que les cas où la variable réponse <span class="math inline">\(Y_i\)</span> est normale. Cependant, dans plusieurs situations, on a une variable réponse discrète qui ne peut prendre qu’un nombre fini (ou dénombrable) de valeurs possibles. Dans ce chapitre, on s’intéresse au cas où <span class="math inline">\(Y_i\)</span> suit une loi de Bernoulli ou une loi binomiale.</p>
+<div class="env-exemple">
+<p><strong>Exemple.</strong></p>
+<p>Quatre exemples tirés de la librairie <code>GLMsData</code> de R :</p>
+<ol type="1">
+<li><p><code>quilpie</code> : observations de 1921 à 1988 de la quantité de pluie mesurée en juillet à Quilpie (Australie). La réponse vaut 1 si la quantité de pluie dépasse 10 mm et 0 sinon ; les variables explicatives concernent la pression atmosphérique (SOI).</p></li>
+<li><p><code>nminer</code> : 31 observations ; la réponse vaut 1 si un mineur bruyant (oiseau) est détecté dans la parcelle et 0 sinon.</p></li>
+<li><p><code>deposit</code> : 18 observations ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre d’insectes tués parmi les <span class="math inline">\(m_i\)</span> insectes exposés, avec deux variables explicatives (type d’insecticide <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> ou <span class="math inline">\(C\)</span>, et dose).</p></li>
+<li><p><code>turbines</code> : 11 observations ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre de machines présentant des fissures parmi <span class="math inline">\(m_i\)</span> machines, en fonction du nombre d’heures de fonctionnement.</p></li>
+</ol>
+</div>
+<section id="données-et-modèle" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="données-et-modèle"><span class="header-section-number">2.1</span> Données et modèle</h2>
+<section id="données-individuelles-bernoulli" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="données-individuelles-bernoulli"><span class="header-section-number">2.1.1</span> Données individuelles (Bernoulli)</h3>
+<p>Dans les deux premiers exemples, la variable réponse <span class="math inline">\(Y_i \in \{0,1\}\)</span>. Les données sont sous la forme <span class="math inline">\(\{(Y_i,\boldsymbol{X}_i),\, i=1,\ldots,n\}\)</span>. On dit que <span class="math inline">\(Y_i\)</span> suit une loi de Bernoulli de paramètre <span class="math inline">\(\pi_i \in [0,1]\)</span> :</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(Y_i = y_i) &amp;= \pi_i^{y_i}(1-\pi_i)^{1-y_i}, \quad y_i \in \{0,1\},\\
+E[Y_i] &amp;= \mu_i = \pi_i,\\
+Var[Y_i] &amp;= \pi_i(1-\pi_i).
+\end{aligned}
+\]</span></p>
+<p>On pose <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span> (le <strong>prédicteur linéaire</strong>) et on relie <span class="math inline">\(\pi_i\)</span> à <span class="math inline">\(\eta_i\)</span> par une <strong>fonction de lien</strong> <span class="math inline">\(g\)</span> supposée connue : <span class="math inline">\(\eta_i = g(\pi_i)\)</span>, c’est-à-dire <span class="math display">\[\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}).\]</span></p>
+</section>
+<section id="données-groupées-binomiale" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="données-groupées-binomiale"><span class="header-section-number">2.1.2</span> Données groupées (binomiale)</h3>
+<p>Dans les deux derniers exemples, <span class="math inline">\(Y_i \in \{0,1,\ldots,m_i\}\)</span>, où <span class="math inline">\(m_i\)</span> est un entier connu représentant le nombre total d’expériences indépendantes ; <span class="math inline">\(Y_i\)</span> est le nombre de succès. On écrit <span class="math inline">\(Y_i \sim \mathrm{Bin}(m_i,\pi_i)\)</span> :</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(Y_i = y_i) &amp;= \binom{m_i}{y_i}\pi_i^{y_i}(1-\pi_i)^{m_i - y_i}, \quad y_i \in \{0,1,\ldots,m_i\},\\
+E[Y_i] &amp;= \mu_i = m_i\pi_i,\\
+Var[Y_i] &amp;= m_i\pi_i(1-\pi_i) = \frac{\mu_i(m_i - \mu_i)}{m_i}.
+\end{aligned}
+\]</span></p>
+<p>On pose de nouveau <span class="math inline">\(\eta_i = g(\pi_i)\)</span>, qui peut s’écrire <span class="math inline">\(\eta_i=g(\mu_i/m_i)\)</span>. À noter, on voit souvent <span class="math inline">\(g(\mu_i)\)</span>, par abus de notation. Si <span class="math inline">\(m_1 = \cdots = m_n = 1\)</span>, on retrouve la loi de Bernoulli : celle-ci est un cas particulier de la loi binomiale, et les développements qui suivent couvrent les deux situations.</p>
+</section>
+<section id="fonctions-de-lien" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="fonctions-de-lien"><span class="header-section-number">2.1.3</span> Fonctions de lien</h3>
+<p>La fonction de lien doit assurer que <span class="math inline">\(\pi_i = g^{-1}(\eta_i) \in [0,1]\)</span>. Trois choix sont courants :</p>
+<ul>
+<li><strong>Logit :</strong> <span class="math inline">\(g(u) = \mathrm{logit}(u) = \log\!\left(\dfrac{u}{1-u}\right)\)</span>, d’où <span class="math inline">\(\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}\)</span>. En R : <code>link="logit"</code> dans <code>glm</code>. Il s’agit du lien le plus utilisé en régression binaire. Ceci est en partie expliqué par son interprétabilité, voir la remarque <a href="#sec-cotes">cette remarque</a>.</li>
+<li><strong>Probit :</strong> <span class="math inline">\(g(u) = \Phi^{-1}(u)\)</span>, où <span class="math inline">\(\Phi\)</span> est la fonction de répartition de la <span class="math inline">\(\mathcal{N}(0,1)\)</span>, d’où <span class="math inline">\(\pi_i = \Phi(\eta_i)\)</span>. En R : <code>link="probit"</code>.</li>
+<li><strong>C-log-log :</strong> <span class="math inline">\(g(u) = \log\{-\log(1-u)\}\)</span>, d’où <span class="math inline">\(\pi_i = 1 - e^{-e^{\eta_i}}\)</span>. En R : <code>link="cloglog"</code>.</li>
+</ul>
+<p>Dans les trois cas, <span class="math inline">\(g^{-1}(\cdot)\)</span> est une fonction de répartition. En pratique, les trois liens donnent souvent des résultats très similaires.</p>
+<div id="sec-cotes" class="env-remarque">
+<p><strong>Remarque (Interprétation du lien logit).</strong></p>
+<p>Avec le lien logit, on a</p>
+<p><span class="math display">\[
+\eta_i = \ln\left(\frac{\pi_i}{1-\pi_i}\right)
+\]</span></p>
+<p>et donc,</p>
+<p><span class="math display">\[
+e^{\eta_i} = \frac{\pi_i}{1-\pi_i}.
+\]</span></p>
+<p><strong>Les cotes (odds).</strong> Le rapport ci-dessus a une interprétation concrète : c’est la <strong>cote</strong> (<em>odds</em>), notée <span class="math inline">\(o_i\)</span> :</p>
+<p><span class="math display">\[
+o_i = \frac{\pi_i}{1-\pi_i} = \frac{P(Y_i=1)}{P(Y_i=0)}.
+\]</span></p>
+<p>Autrement dit, la cote compare la probabilité que l’événement se produise (<span class="math inline">\(Y_i=1\)</span>) à la probabilité qu’il ne se produise pas (<span class="math inline">\(Y_i=0\)</span>). Par exemple :</p>
+<ul>
+<li><p>si <span class="math inline">\(\pi_i = 0{,}5\)</span>, alors <span class="math inline">\(o_i = 1\)</span> : autant de chances que l’événement arrive ou n’arrive pas ;</p></li>
+<li><p>si <span class="math inline">\(\pi_i = 0{,}75\)</span>, alors <span class="math inline">\(o_i = 3\)</span> : l’événement a 3 fois plus de chances de se produire que de ne pas se produire.</p></li>
+</ul>
+<p><strong>Interprétation du coefficient <span class="math inline">\(\beta_j\)</span>.</strong> Dans le modèle,</p>
+<p><span class="math display">\[
+\eta_i = \beta_0 + \beta_1 X_1 + \cdots + \beta_j X_j + \cdots
+\]</span></p>
+<p>Si on augmente <span class="math inline">\(X_j\)</span> d’une unité, toutes les autres variables restant constantes, <span class="math inline">\(\eta_i\)</span> augmente de <span class="math inline">\(\beta_j\)</span>. Comme <span class="math inline">\(o_i = e^{\eta_i}\)</span>, cette augmentation se traduit par une <em>multiplication</em> de la cote :</p>
+<p><span class="math display">\[
+o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i^{\text{ancien}} \cdot e^{\beta_j}.
+\]</span></p>
+<p>Une augmentation unitaire de <span class="math inline">\(X_j\)</span> multiplie donc la cote par <span class="math inline">\(e^{\beta_j}\)</span> ; <span class="math inline">\(e^{\beta_j}\)</span> est le <strong>rapport de cotes</strong> (<em>odds ratio</em>).</p>
+<p>On distingue trois cas :</p>
+<ul>
+<li><p>si <span class="math inline">\(e^{\beta_j} &gt; 1\)</span> : augmenter <span class="math inline">\(X_j\)</span> augmente la cote (et donc <span class="math inline">\(P(Y_i=1)\)</span>) ;</p></li>
+<li><p>si <span class="math inline">\(e^{\beta_j} &lt; 1\)</span> : augmenter <span class="math inline">\(X_j\)</span> diminue la cote ;</p></li>
+<li><p>si <span class="math inline">\(e^{\beta_j} = 1\)</span> (c’est-à-dire <span class="math inline">\(\beta_j = 0\)</span>) : <span class="math inline">\(X_j\)</span> n’a pas d’effet sur la cote.</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="inférence-statistique" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">2.2</span> Inférence statistique</h2>
+<section id="estimation-des-paramètres-boldsymbolbeta" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">2.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></h3>
+<p><strong>Point de départ : la vraisemblance.</strong> On observe <span class="math inline">\(n\)</span> variables <span class="math inline">\(Y_i \sim \text{Binomiale}(m_i, \pi_i)\)</span>. La fonction de log-vraisemblance s’écrit</p>
+<p><span class="math display">\[
+\ell(\boldsymbol{\pi}; \boldsymbol{y}) = \sum_{i=1}^n \log\left[P(Y_i = y_i)\right]
+= \sum_{i=1}^n \left\{ \log\binom{m_i}{y_i} + y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) \right\}.
+\]</span></p>
+<p><strong>Lien avec <span class="math inline">\(\beta\)</span>.</strong> Cette fonction dépend de <span class="math inline">\(\beta\)</span> <em>indirectement</em>, via <span class="math inline">\(\pi_i\)</span> : rappelons que</p>
+<p><span class="math display">\[
+\pi_i = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}),
+\]</span></p>
+<p>où <span class="math inline">\(g^{-1}\)</span> est l’inverse de la fonction de lien (par exemple la fonction logistique si <span class="math inline">\(g\)</span> est le lien logit).</p>
+<p><strong>Reparamétrisation en termes de <span class="math inline">\(\mu_i\)</span>.</strong> Il est parfois plus commode de travailler avec <span class="math inline">\(\mu_i = m_i \pi_i\)</span> (l’espérance de <span class="math inline">\(Y_i\)</span>) plutôt qu’avec <span class="math inline">\(\pi_i\)</span> directement. En substituant <span class="math inline">\(\pi_i = \mu_i/m_i\)</span> dans la log-vraisemblance et en isolant tous les termes qui ne dépendent pas de <span class="math inline">\(\beta\)</span> (regroupés dans la constante <span class="math inline">\(K\)</span>, qui contient le terme <span class="math inline">\(\log\binom{m_i}{y_i}\)</span>), on obtient une forme équivalente mais plus simple :</p>
+<p><span class="math display">\[
+\ell(\boldsymbol{\mu}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ y_i \log(\mu_i) + (m_i - y_i)\log(m_i - \mu_i) \right\} + K,
+\]</span></p>
+<p>où <span class="math inline">\(\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top\)</span> et <span class="math inline">\(K\)</span> ne dépend pas de <span class="math inline">\(\beta\)</span> (donc n’affecte pas la maximisation).</p>
+<div class="env-remarque">
+<p><strong>Remarque (Log-vraisemblance avec le lien logit.).</strong></p>
+<p>Avec le lien logit, <span class="math inline">\(\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}\)</span> et <span class="math inline">\(1-\pi_i = \dfrac{1}{1+e^{\eta_i}}\)</span>, où</p>
+<p><span class="math display">\[
+\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.
+\]</span></p>
+<p>On a alors</p>
+<p><span class="math display">\[
+\log(\pi_i) = \eta_i - \log(1+e^{\eta_i}), \qquad \log(1-\pi_i) = -\log(1+e^{\eta_i}),
+\]</span></p>
+<p>de sorte que</p>
+<p><span class="math display">\[
+y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) = y_i \eta_i - m_i \log(1+e^{\eta_i}).
+\]</span></p>
+<p>La log-vraisemblance se réécrit donc directement en fonction de <span class="math inline">\(\boldsymbol{\beta}\)</span> :</p>
+<p><span class="math display">\[
+\ell(\boldsymbol{\beta}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ \log\binom{m_i}{y_i} + y_i \eta_i - m_i \log\left(1+e^{\eta_i}\right) \right\}.
+\]</span></p>
+</div>
+<p><strong>Estimation.</strong> L’estimateur du maximum de vraisemblance <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> est la valeur de <span class="math inline">\(\boldsymbol{\beta}\)</span> qui maximise <span class="math inline">\(\ell\)</span>. Contrairement à la régression linéaire classique, il n’existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien <span class="math inline">\(g\)</span>. On doit donc résoudre le problème numériquement, typiquement par l’algorithme des moindres carrés pondérés itératifs (IRLS – <em>Iteratively Reweighted Least Squares</em>), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.</p>
+<p><strong>Matrice d’information de Fisher.</strong> On calcule ensuite la matrice d’information de Fisher <span class="math inline">\(I\)</span>, dont l’élément <span class="math inline">\((j,k)\)</span> est</p>
+<p><span class="math display">\[
+I_{jk} = -\left.\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k}\right|_{\hat{\boldsymbol{\beta}}}.
+\]</span></p>
+<p>La matrice de variance-covariance de <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> est estimée par</p>
+<p><span class="math display">\[
+v(\hat{\boldsymbol\beta}) = I^{-1},
+\]</span></p>
+<p>et la distribution asymptotique de <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> est approximée par</p>
+<p><span class="math display">\[
+\hat{\boldsymbol\beta} \;\dot\sim\; \mathcal{N}\{\boldsymbol\beta,\, v(\hat{\boldsymbol\beta})\}.
+\]</span></p>
+<p><strong>Forme explicite dans le cas binomial.</strong> On montre que</p>
+<p><span class="math display">\[
+v(\hat{\boldsymbol\beta}) = (X^\top W X)^{-1},
+\]</span></p>
+<p>où <span class="math inline">\(W\)</span> est une matrice diagonale d’entrées</p>
+<p><span class="math display">\[
+w_i = \frac{\hat\mu_i (m_i - \hat\mu_i)}{m_i},
+\]</span></p>
+<p>avec</p>
+<p><span class="math display">\[
+\hat\mu_i = m_i \hat\pi_i = m_i\, g^{-1}(\hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}).
+\]</span></p>
+<div class="env-remarque">
+<p><strong>Remarque (Cas du lien logit).</strong></p>
+<p>Avec le lien logit, <span class="math inline">\(\hat\pi_i = \dfrac{e^{\hat\eta_i}}{1+e^{\hat\eta_i}}\)</span>, où <span class="math inline">\(\hat\eta_i = \hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}\)</span>. L’entrée <span class="math inline">\(w_i\)</span> se simplifie alors en</p>
+<p><span class="math display">\[
+w_i = \frac{\hat\mu_i(m_i - \hat\mu_i)}{m_i} = m_i\, \hat\pi_i(1-\hat\pi_i).
+\]</span></p>
+</div>
+</section>
+<section id="tests-dhypothèses-et-intervalles-de-confiance" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="tests-dhypothèses-et-intervalles-de-confiance"><span class="header-section-number">2.2.2</span> Tests d’hypothèses et intervalles de confiance</h3>
+<p>Les intervalles de confiance et tests concernant les <span class="math inline">\(\beta_j\)</span> sont obtenus par la méthode de <strong>Wald</strong>. Un intervalle de confiance à <span class="math inline">\(100\times(1-\alpha)%\)</span> pour <span class="math inline">\(\beta_j\)</span> est <span class="math display">\[\left[\hat\beta_j - z_{\alpha/2}\sqrt{v(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{v(\hat\beta_j)}\right],\]</span> où <span class="math inline">\(z_\gamma\)</span> est le quantile de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> défini par <span class="math inline">\(P(Z &gt; z_\gamma) = \gamma\)</span>.</p>
+<p>Pour tester <span class="math inline">\(H_0: \beta_j = 0\)</span> contre <span class="math inline">\(H_1: \beta_j\neq 0\)</span>, on rejette <span class="math inline">\(H_0\)</span> au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(|z_{obs}| &gt; z_{\alpha/2}\)</span>, avec <span class="math inline">\(z_{obs} = \hat\beta_j/\sqrt{v(\hat\beta_j)}\)</span>. Le seuil observé (<span class="math inline">\(p\)</span>-valeur) est <span class="math inline">\(\alpha^* = 2P(Z &gt; |z_{obs}|)\)</span>.</p>
+</section>
+<section id="intervalle-de-confiance-pour-une-probabilité-prédite" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.3</span> Intervalle de confiance pour une probabilité prédite</h3>
+<p>Pour <span class="math inline">\(X^* = (1, X_1^*,\ldots,X_p^*)^\top\)</span>, on estime <span class="math inline">\(\pi^*\)</span> par <span class="math inline">\(\hat\pi^* = g^{-1}({X^*}^\top\hat\beta)\)</span>. Deux approches :</p>
+<ol type="1">
+<li><p><strong>Transformation de l’intervalle sur <span class="math inline">\(\eta^*\)</span></strong> : un IC pour <span class="math inline">\({X^*}^\top\beta\)</span> est <span class="math display">\[\left[{X^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{v({X^*}^\top\hat\beta)}\right], \qquad v({X^*}^\top\hat\beta) = {X^*}^\top v(\hat\beta)\, X^*,\]</span> et on applique <span class="math inline">\(g^{-1}\)</span> aux deux bornes. Cet intervalle respecte toujours <span class="math inline">\([0,1]\)</span>.</p></li>
+<li><p><strong>Règle du delta</strong> : <span class="math inline">\(v(\hat\pi^*) = h({X^*}^\top\hat\beta)\, v({X^*}^\top\hat\beta)\)</span> avec <span class="math inline">\(h(u) = \{\partial g^{-1}(u)/\partial u\}^2\)</span>, d’où l’IC approximatif <span class="math inline">\(\left[\hat\pi^* \pm z_{\alpha/2}\sqrt{v(\hat\pi^*)}\right]\)</span>.</p></li>
+</ol>
+<p>Les deux méthodes donnent en pratique des résultats très similaires.</p>
+<div class="env-exemple">
+<p><strong>Exemple (Jeu de données <code>turbines</code>).</strong></p>
+<p>On ajuste le modèle avec les trois fonctions de lien :</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>modele.logit   <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>modele.probit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"probit"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>modele.cloglog <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"cloglog"</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Les trois liens mènent à des coefficients significatifs et à des courbes prédites <span class="math inline">\(\hat\pi^*\)</span> très similaires. Les intervalles de confiance se calculent avec <code>predict(..., se.fit=TRUE)</code> sur l’échelle du lien (méthode 1) ou avec <code>type="response"</code> (méthode 2).</p>
+</div>
+</section>
+</section>
+<section id="sélection-de-modèles" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</h2>
+<section id="déviance" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="déviance"><span class="header-section-number">2.3.1</span> Déviance</h3>
+<p>Considérons le <strong>modèle saturé</strong> avec <span class="math inline">\(n\)</span> paramètres <span class="math inline">\(\{\tilde\mu_1,\ldots,\tilde\mu_n\}\)</span> et sans variables explicatives ; ses estimateurs du maximum de vraisemblance sont <span class="math inline">\(\{y_1,\ldots,y_n\}\)</span>. La statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est <span class="math display">\[D = 2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hat\mu_i}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hat\mu_i}\right)\right\} = \sum_{i=1}^n d_i.\]</span> <span class="math inline">\(D\)</span> est la <strong>déviance</strong> du modèle et <span class="math inline">\(d_i\)</span> la déviance individuelle de l’observation <span class="math inline">\(i\)</span>. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l’adéquation du modèle et à comparer des modèles.</p>
+</section>
+<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</h3>
+<p>Pour comparer deux modèles emboîtés de déviances <span class="math inline">\(D_1\)</span> (complet) et <span class="math inline">\(D_2\)</span> (réduit), la statistique de test est <span class="math inline">\(\chi^2 = D_2 - D_1\)</span>. Sous <span class="math inline">\(H_0\)</span> (le modèle réduit est adéquat), <span class="math inline">\(\chi^2\)</span> suit une loi du khi-deux à <span class="math inline">\(d\)</span> degrés de liberté, où <span class="math inline">\(d\)</span> est la différence du nombre de paramètres.</p>
+<div class="env-exemple">
+<p><strong>Exemple (<code>turbines</code>, termes quadratique et cubique).</strong></p>
+<p>On teste <span class="math inline">\(H_0: \beta_2 = \beta_3 = 0\)</span> (modèle avec <code>Hours</code> seulement contre modèle avec termes en <code>Hours</code><span class="math inline">\(^2\)</span> et <code>Hours</code><span class="math inline">\(^3\)</span>) :</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stat.test <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.reduit) <span class="sc">-</span> <span class="fu">deviance</span>(modele.complet)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>p.valeur  <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(stat.test, <span class="at">df=</span><span class="dv">2</span>)   <span class="co"># 0.4767</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<p>On ne rejette pas <span class="math inline">\(H_0\)</span> : le modèle réduit est adéquat.</p>
+</div>
+</section>
+<section id="comparaison-de-modèles-non-emboîtés-aic-et-bic" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</h3>
+<p>Comme pour les modèles linéaires, on utilise <span class="math display">\[AIC = -2\,l(\hat\mu;y) + 2(p+1), \qquad BIC = -2\,l(\hat\mu;y) + \log(n)(p+1).\]</span> Le modèle ayant le plus petit <span class="math inline">\(AIC\)</span> (ou <span class="math inline">\(BIC\)</span>) est préférable. En R : <code>extractAIC(modele)</code> et <code>extractAIC(modele, k=log(n))</code>.</p>
+</section>
+<section id="sélection-automatique" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="sélection-automatique"><span class="header-section-number">2.3.4</span> Sélection automatique</h3>
+<p>Les méthodes pas à pas <em>forward</em>, <em>backward</em> et <em>stepwise</em> fonctionnent exactement comme pour les modèles linéaires (fonction <code>step</code> avec l’argument <code>direction</code>). Sur le jeu de données <code>deposit</code>, les trois procédures retiennent le modèle incluant le type d’insecticide, la dose et le terme quadratique de la dose.</p>
+</section>
+</section>
+<section id="validation-et-diagnostic-de-modèles" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="validation-et-diagnostic-de-modèles"><span class="header-section-number">2.4</span> Validation et diagnostic de modèles</h2>
+<section id="résidus" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="résidus"><span class="header-section-number">2.4.1</span> Résidus</h3>
+<p>On distingue deux types de résidus :</p>
+<ul>
+<li><p><strong>Résidus déviance</strong> : <span class="math inline">\(r_{D,i} = \mathrm{signe}(y_i - \hat\mu_i)\sqrt{d_i}\)</span>, avec <span class="math display">\[d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hat\mu_i}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hat\mu_i}\right)\right\}.\]</span></p></li>
+<li><p><strong>Résidus de Pearson</strong> : <span class="math display">\[r_{P,i} = \frac{y_i - m_i\hat\pi_i}{\sqrt{m_i\hat\pi_i(1-\hat\pi_i)}} = \frac{y_i - \hat\mu_i}{\sqrt{\hat\mu_i(m_i-\hat\mu_i)/m_i}}.\]</span></p></li>
+</ul>
+</section>
+<section id="tests-dadéquation-globale" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="tests-dadéquation-globale"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</h3>
+<p>Deux statistiques permettent de tester l’adéquation globale : la déviance <span class="math inline">\(D = \sum_i r_{D,i}^2\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hat\mu_i)^2}{\hat\mu_i(m_i - \hat\mu_i)}.\]</span> Lorsque tous les <span class="math inline">\(m_i \to \infty\)</span>, <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span> convergent en loi vers une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien spécifié.</p>
+<div class="env-remarque">
+<p><strong>Remarque.</strong></p>
+<p>Ces tests ne sont valides que pour des <strong>données groupées</strong> avec des <span class="math inline">\(m_i\)</span> élevés, car ils reposent sur un résultat asymptotique en <span class="math inline">\(m_i\)</span>. Ils sont inutilisables pour des données individuelles (Bernoulli).</p>
+</div>
+</section>
+<section id="graphiques-et-extra-variabilité" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="graphiques-et-extra-variabilité"><span class="header-section-number">2.4.3</span> Graphiques et extra-variabilité</h3>
+<p>Les graphiques des résidus en fonction des numéros d’observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une <strong>extra-variabilité</strong> (<em>overdispersion</em>) : <span class="math inline">\(E[Y_i] = m_i\pi_i\)</span> mais <span class="math inline">\(Var[Y_i] &gt; m_i\pi_i(1-\pi_i)\)</span>. On pose alors <span class="math inline">\(Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)\)</span> et on estime <span class="math inline">\(\phi\)</span> par <span class="math inline">\(\chi^2_P/(n-(p+1))\)</span>. En cas d’extra-variabilité, on spécifie <code>family=quasibinomial()</code> au lieu de <code>family=binomial()</code> dans <code>glm</code>.</p>
+<p>Pour vérifier la linéarité du prédicteur, on trace le nuage de points <span class="math inline">\(\{(\hat\pi_i, \tilde\pi_i)\}\)</span>, où <span class="math inline">\(\hat\pi_i = g^{-1}(\hat\eta_i)\)</span> et <span class="math inline">\(\tilde\pi_i = y_i/m_i\)</span> : si le modèle est bien spécifié, les points doivent être autour de la droite <span class="math inline">\(y=x\)</span>.</p>
+</section>
+<section id="observations-aberrantes-et-valeurs-influentes" class="level3" data-number="2.4.4">
+<h3 data-number="2.4.4" class="anchored" data-anchor-id="observations-aberrantes-et-valeurs-influentes"><span class="header-section-number">2.4.4</span> Observations aberrantes et valeurs influentes</h3>
+<p>Le principe est identique à la régression linéaire. Les définitions des leviers, résidus standardisés et studentisés diffèrent, mais ces quantités ont la même interprétation. Il en va de même pour la distance de Cook, les DFBETAS et les DFFITS.</p>
+</section>
+</section>
+<section id="sec-roc" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="sec-roc"><span class="header-section-number">2.5</span> Spécificité, sensibilité et courbe ROC</h2>
+<p>Pour des données individuelles, l’adéquation est difficile à évaluer, mais on peut mesurer la <strong>capacité prédictive</strong> du modèle. On ajuste le modèle et on calcule les probabilités prédites <span class="math inline">\(\hat\pi_i = g^{-1}(\hat\eta_i)\)</span>.</p>
+<p>Fixons un seuil <span class="math inline">\(u \in [0,1]\)</span> (souvent <span class="math inline">\(u=1/2\)</span>). On classe <span class="math inline">\(\hat y_i = 1\)</span> si <span class="math inline">\(\hat\pi_i &gt; u\)</span> et <span class="math inline">\(\hat y_i = 0\)</span> sinon. On mesure la capacité prédictive par :</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Spécificité (taux de vrais négatifs) :}\quad &amp; Spec = P(\hat y = 0 \mid y = 0),\\
+\text{Sensibilité (taux de vrais positifs) :}\quad &amp; Sens = P(\hat y = 1 \mid y = 1).
+\end{aligned}
+\]</span></p>
+<p>Pour un <span class="math inline">\(u\)</span> fixé, on les estime par <span class="math display">\[\widehat{Spec}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hat\pi_i &lt; u)\,\&amp;\,(y_i = 0)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 0\}}},
+\qquad
+\widehat{Sens}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hat\pi_i &gt; u)\,\&amp;\,(y_i = 1)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 1\}}}.\]</span></p>
+<p>En faisant varier <span class="math inline">\(u\)</span> sur une grille <span class="math inline">\(\{u_1 = 0, u_2, \ldots, u_B = 1\}\)</span> et en traçant les points <span class="math inline">\(\{(1-\widehat{Spec}(u_b),\, \widehat{Sens}(u_b))\}\)</span>, on obtient la <strong>courbe ROC</strong>. L’<strong>aire sous la courbe</strong> (AUC) quantifie la capacité prédictive : <span class="math display">\[\mbox{AUC} \in \begin{cases}
+[0.9,\,1] &amp; \mbox{modèle excellent},\\
+[0.8,\,0.9) &amp; \mbox{modèle bon},\\
+[0.7,\,0.8) &amp; \mbox{modèle moyen},\\
+[0.6,\,0.7) &amp; \mbox{modèle mauvais},\\
+[0.5,\,0.6) &amp; \mbox{modèle très faible}.
+\end{cases}\]</span></p>
+<div class="env-exemple">
+<p><strong>Exemple (<code>quilpie</code>).</strong></p>
+<p>Avec la variable explicative SOI et le lien logit :</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family=</span>binomial, <span class="at">data=</span>quilpie)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clinfun)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(<span class="at">marker=</span><span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">status=</span>quilpie<span class="sc">$</span>y, <span class="at">method=</span><span class="fu">c</span>(<span class="st">"empirical"</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># AUC = 0.784, s.e. = 0.057</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<p>L’aire sous la courbe est de 0.78 : le modèle est bon.</p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./01-regression-lineaire.html" class="pagination-link" aria-label="Rappels de régression linéaire">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Rappels de régression linéaire</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./03-modeles-lineaires-generalises.html" class="pagination-link" aria-label="Modèles linéaires généralisés">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Notes de cours STT-4300</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ton-utilisateur/notes-stt4300/edit/main/02-regression-logistique.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/ton-utilisateur/notes-stt4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

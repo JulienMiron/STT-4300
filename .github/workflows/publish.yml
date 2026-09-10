@@ -27,7 +27,7 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Render book
-        run: quarto render
+        run: quarto render --to html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

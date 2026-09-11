@@ -105,8 +105,8 @@ library(GLMsData)
 data(danishlc)
 danishlc$AgeNum <- as.numeric(danishlc$Age)
 
-## GAM Poisson avec offset
-mod3 <- gam(Cases ~ s(AgeNum) + City + offset(log(Pop)),
+## GAM Poisson avec offset (k limité : seulement 6 tranches d'âge uniques)
+mod3 <- gam(Cases ~ s(AgeNum, k=5) + City + offset(log(Pop)),
             family=poisson, data=danishlc)
 summary(mod3)
 ```

@@ -329,7 +329,7 @@ Si on regarde les valeurs-p des tests des rapports de vraisemblance pour les deu
 
 ```{r hauck-donner-rv}
 mod_normal_reduit <- glm(y ~ 1, data = dat_normal, family = binomial)
-anova(mod_separe_reduit, mod_separe, test = "Chisq")
+anova(mod_normal_reduit, mod_normal, test = "Chisq")
 
 
 mod_separe_reduit <- glm(y ~ 1, data = dat_separe, family = binomial)

@@ -2,11 +2,9 @@
 
 Ces notes de cours couvrent la régression linéaire, les modèles linéaires généralisés (régression logistique, régression de Poisson), les méthodes de validation et de sélection de modèles, la régularisation (ridge, lasso), les méthodes de régression non-paramétrique ($k$ plus proches voisins, estimateur de noyau, splines) et les modèles additifs généralisés (GAM).
 
-Le contenu mélange théorie statistique (en notation mathématique) et exemples de mise en œuvre pratique en langage R.
-
 Si vous constatez des coquilles ou des erreurs, merci de m'envoyer [un courriel](mailto:julien.miron@mat.ulaval.ca).
 
-## Remerciements
+## Remerciements {.unnumbered}
 
 Ces notes s'appuient en partie sur du matériel de cours développé respectivement par Lajmi Lakhal Chaieb,
 Thierry Duchesne, Michel Carbon, de l'Université Laval et Eva Cantoni de l'Université de Genève.

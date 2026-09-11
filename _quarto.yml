@@ -4,14 +4,15 @@ project:
 
 lang: fr
 language: 
-  title-block-author-single: "Auteur"
+  title-block-modified: "Dernière modification"
+
+date-modified: last-modified
+date-format: "D MMMM YYYY"
 
 book:
   title: "STT-4300 - Régression II"
-  subtitle: "Rappels de régression linéaire, modèles linéaires généralisés, régression non-linéaire et non-paramétrique, modèles additifs généralisés"
+  #subtitle: "Rappels de régression linéaire, modèles linéaires généralisés, régression non-linéaire et non-paramétrique, modèles additifs généralisés"
   author: "Julien Miron"
-  date: today
-  date-format: "D MMMM YYYY"
   page-footer:
     left: "Notes de cours STT-4300"
     right: "Généré avec Quarto"

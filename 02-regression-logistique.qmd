@@ -107,6 +107,7 @@ On distingue trois cas :
 :::
 
 ```{r}
+#| echo: false
 #| warning: false
 library(ggplot2)
 library(dplyr)

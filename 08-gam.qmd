@@ -89,7 +89,7 @@ summary(mod1)   # tests approximatifs de f_j = 0, DLE par fonction
 plot(mod1)      # courbes estimées avec bandes de confiance
 ```
 
-```{webr-r}
+```{r}
 #| message: false
 library(GLMsData)
 data(quilpie)
@@ -99,7 +99,7 @@ mod2 <- gam(y ~ s(SOI), family=binomial, data=quilpie)
 summary(mod2)
 ```
 
-```{r}
+```{webr-r}
 #| message: false
 library(GLMsData)
 data(danishlc)

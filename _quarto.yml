@@ -36,7 +36,8 @@ crossref:
 
 format:
   html:
-    filters: - webr
+    filters: 
+      - webr
     theme: cosmo
     css: styles.css
     toc: true

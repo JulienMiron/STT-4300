@@ -357,7 +357,7 @@ Les deux méthodes donnent en pratique des résultats très similaires.
 
 On ajuste le modèle avec les trois fonctions de lien :
 
-```{r}
+```{webr-r}
 #| message: false
 library(GLMsData)
 data(turbines)
@@ -373,7 +373,7 @@ summary(modele.probit)$coefficients
 summary(modele.cloglog)$coefficients
 ```
 
-```{r courbe-prob-turbines}
+```{webr-r courbe-prob-turbines}
 #| warning: false
 library(ggplot2)
 library(dplyr)

@@ -106,6 +106,7 @@ On distingue trois cas :
 
 :::
 
+Voici une comparaison des probabilités prédites pour les trois liens, en fonction de $\eta_i$.
 ```{r}
 #| echo: false
 #| warning: false
@@ -134,7 +135,7 @@ resultats |>
   pivot_longer(cols = c(logit, probit, cloglog), names_to = "lien", values_to = "p") |>
   ggplot(aes(x = X, y = p, color = lien)) +
   geom_line(linewidth = 1) +
-  labs(x = Tex("Valeur de $\\eta$"), y = "Probabilité",
+  labs(x = TeX("Valeur de $\\eta$"), y = "Probabilité",
        color = "Fonction de lien",
        title = "Comparaison des fonctions de lien inverses") +
   theme_minimal()

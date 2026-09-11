@@ -28,3 +28,10 @@
   font-size: 1.1em;
   margin-bottom: 0.3em;
 }
+
+.quarto-title-block .quarto-title-meta {
+  font-size: 1.2em;
+  /* display: grid !important;
+  grid-template-columns: 1fr !important;
+  row-gap: 0.5em !important; */
+}

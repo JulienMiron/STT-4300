@@ -171,7 +171,7 @@ window.Quarto = {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">STT-4300 - Régression II</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/ton-utilisateur/notes-stt4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/JulienMiron/STT-4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -275,7 +275,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#sec-roc" id="toc-sec-roc" class="nav-link" data-scroll-target="#sec-roc"><span class="header-section-number">2.5</span> Spécificité, sensibilité et courbe ROC</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/ton-utilisateur/notes-stt4300/edit/main/02-regression-logistique.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/ton-utilisateur/notes-stt4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/02-regression-logistique.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -345,6 +345,16 @@ Var[Y_i] &amp;= m_i\pi_i(1-\pi_i) = \frac{\mu_i(m_i - \mu_i)}{m_i}.
 <li><strong>C-log-log :</strong> <span class="math inline">\(g(u) = \log\{-\log(1-u)\}\)</span>, d’où <span class="math inline">\(\pi_i = 1 - e^{-e^{\eta_i}}\)</span>. En R : <code>link="cloglog"</code>.</li>
 </ul>
 <p>Dans les trois cas, <span class="math inline">\(g^{-1}(\cdot)\)</span> est une fonction de répartition. En pratique, les trois liens donnent souvent des résultats très similaires.</p>
+<p>Voici une comparaison des probabilités prédites pour les trois liens, en fonction de <span class="math inline">\(\eta_i\)</span>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <div id="sec-cotes" class="env-remarque" data-titre="Interprétation du lien logit">
 <p><span class="env-titre">Remarque — Interprétation du lien logit</span></p>
 <p>Avec le lien logit, on a</p>
@@ -380,16 +390,6 @@ o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i
 <li><p>si <span class="math inline">\(e^{\beta_j} = 1\)</span> (c’est-à-dire <span class="math inline">\(\beta_j = 0\)</span>) : <span class="math inline">\(X_j\)</span> n’a pas d’effet sur la cote.</p></li>
 </ul>
 </div>
-<p>Voici une comparaison des probabilités prédites pour les trois liens, en fonction de <span class="math inline">\(\eta_i\)</span>.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
 </section>
 </section>
 <section id="inférence-statistique" class="level2" data-number="2.2">
@@ -411,9 +411,8 @@ o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i
 \ell(\boldsymbol{\mu}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ y_i \log(\mu_i) + (m_i - y_i)\log(m_i - \mu_i) \right\} + K,
 \]</span></p>
 <p>où <span class="math inline">\(\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top\)</span> et <span class="math inline">\(K\)</span> ne dépend pas de <span class="math inline">\(\beta\)</span> (donc n’affecte pas la maximisation).</p>
-<div class="env-remarque">
-<p><span class="env-titre">Remarque</span></p>
-<p><strong>Remarque (Log-vraisemblance avec le lien logit.).</strong></p>
+<div class="env-remarque" data-titre="Log-vraisemblance avec le lien logit">
+<p><span class="env-titre">Remarque — Log-vraisemblance avec le lien logit</span></p>
 <p>Avec le lien logit, <span class="math inline">\(\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}\)</span> et <span class="math inline">\(1-\pi_i = \dfrac{1}{1+e^{\eta_i}}\)</span>, où</p>
 <p><span class="math display">\[
 \eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.
@@ -1280,7 +1279,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ton-utilisateur/notes-stt4300/edit/main/02-regression-logistique.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/ton-utilisateur/notes-stt4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/02-regression-logistique.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

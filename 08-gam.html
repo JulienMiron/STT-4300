@@ -292,7 +292,7 @@ window.Quarto = {
 </section>
 <section id="estimation-par-moindres-carrés-pénalisés" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="estimation-par-moindres-carrés-pénalisés"><span class="header-section-number">8.2</span> Estimation par moindres carrés pénalisés</h2>
-<p>Plutôt que de choisir soigneusement le nombre de nœ uds de chaque base, on prend des bases « suffisamment riches » et on pénalise la rugosité de chaque fonction : on minimise <span class="math display">\[\left\|Y - X\beta\right\|^2 + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta,\]</span> où <span class="math inline">\(X\)</span> regroupe toutes les fonctions de base évaluées aux observations, et <span class="math inline">\(S_j\)</span> est la matrice de pénalité de la <span class="math inline">\(j^{\text{ème}}\)</span> fonction (<span class="math inline">\(\beta^\top S_j\beta = \int f_j''(t)^2dt\)</span>). La solution est explicite : <span class="math display">\[\hat\beta = \Bigl(X^\top X + \sum_{j=1}^p\lambda_j S_j\Bigr)^{-1}X^\top Y.\]</span> Chaque paramètre de lissage <span class="math inline">\(\lambda_j\)</span> contrôle le compromis régularité/fidélité de la fonction <span class="math inline">\(f_j\)</span> : <span class="math inline">\(\lambda_j\to\infty\)</span> force <span class="math inline">\(f_j\)</span> à être linéaire, <span class="math inline">\(\lambda_j = 0\)</span> laisse <span class="math inline">\(f_j\)</span> libre (risque de surajustement).</p>
+<p>Plutôt que de choisir soigneusement le nombre de nœuds de chaque base, on prend des bases « suffisamment riches » et on pénalise la rugosité de chaque fonction : on minimise <span class="math display">\[\left\|Y - X\beta\right\|^2 + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta,\]</span> où <span class="math inline">\(X\)</span> regroupe toutes les fonctions de base évaluées aux observations, et <span class="math inline">\(S_j\)</span> est la matrice de pénalité de la <span class="math inline">\(j^{\text{ème}}\)</span> fonction (<span class="math inline">\(\beta^\top S_j\beta = \int f_j''(t)^2dt\)</span>). La solution est explicite : <span class="math display">\[\hat\beta = \Bigl(X^\top X + \sum_{j=1}^p\lambda_j S_j\Bigr)^{-1}X^\top Y.\]</span> Chaque paramètre de lissage <span class="math inline">\(\lambda_j\)</span> contrôle le compromis régularité/fidélité de la fonction <span class="math inline">\(f_j\)</span> : <span class="math inline">\(\lambda_j\to\infty\)</span> force <span class="math inline">\(f_j\)</span> à être linéaire, <span class="math inline">\(\lambda_j = 0\)</span> laisse <span class="math inline">\(f_j\)</span> libre (risque de surajustement).</p>
 <section id="matrice-dinfluence-et-degrés-de-liberté-effectifs" class="level3" data-number="8.2.1">
 <h3 data-number="8.2.1" class="anchored" data-anchor-id="matrice-dinfluence-et-degrés-de-liberté-effectifs"><span class="header-section-number">8.2.1</span> Matrice d’influence et degrés de liberté effectifs</h3>
 <p>Les valeurs ajustées s’écrivent <span class="math inline">\(\hat Y = AY\)</span> avec <span class="math inline">\(A = X(X^\top X + \sum_j\lambda_j S_j)^{-1}X^\top\)</span>. Les <strong>degrés de liberté effectifs</strong> du modèle sont <span class="math inline">\(\mathrm{Tr}(A)\)</span> ; on peut les décomposer par fonction <span class="math inline">\(f_j\)</span>, ce qui donne une mesure interprétable de la complexité de chaque effet. La pénalisation induit un biais : <span class="math inline">\(E(\hat\beta)\neq\beta\)</span>, exactement comme pour ridge.</p>
@@ -335,16 +335,119 @@ window.Quarto = {
 <section id="en-pratique-avec-r" class="level3" data-number="8.3.3">
 <h3 data-number="8.3.3" class="anchored" data-anchor-id="en-pratique-avec-r"><span class="header-section-number">8.3.3</span> En pratique avec R</h3>
 <p>La librairie <code>mgcv</code> ajuste les GAM avec sélection automatique des paramètres de lissage :</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Modèle additif gaussien</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">gam</span>(mpg <span class="sc">~</span> <span class="fu">s</span>(weight) <span class="sc">+</span> <span class="fu">s</span>(horsepower), <span class="at">data=</span>Auto)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## GAM logistique</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">gam</span>(y <span class="sc">~</span> <span class="fu">s</span>(SOI), <span class="at">family=</span>binomial, <span class="at">data=</span>quilpie)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## GAM Poisson avec offset</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">gam</span>(Cases <span class="sc">~</span> <span class="fu">s</span>(AgeNum) <span class="sc">+</span> City <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">family=</span>poisson, <span class="at">data=</span>danishlc)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod1)   <span class="co"># tests approximatifs de f_j = 0, DLE par fonction</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod1)      <span class="co"># courbes estimées avec bandes de confiance</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Modèle additif gaussien</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">gam</span>(mpg <span class="sc">~</span> <span class="fu">s</span>(weight) <span class="sc">+</span> <span class="fu">s</span>(horsepower), <span class="at">data=</span>Auto)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod1)   <span class="co"># tests approximatifs de f_j = 0, DLE par fonction</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: gaussian 
+Link function: identity 
+
+Formula:
+mpg ~ s(weight) + s(horsepower)
+
+Parametric coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  23.4459     0.1949   120.3   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Approximate significance of smooth terms:
+                edf Ref.df     F p-value    
+s(weight)     3.779  4.773 20.37  &lt;2e-16 ***
+s(horsepower) 6.033  7.195  9.61  &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+R-sq.(adj) =  0.755   Deviance explained = 76.2%
+GCV = 15.318  Scale est. = 14.896    n = 392</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod1)      <span class="co"># courbes estimées avec bandes de confiance</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08-gam_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="08-gam_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## GAM logistique</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">gam</span>(y <span class="sc">~</span> <span class="fu">s</span>(SOI), <span class="at">family=</span>binomial, <span class="at">data=</span>quilpie)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod2)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: binomial 
+Link function: logit 
+
+Formula:
+y ~ s(SOI)
+
+Parametric coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)  0.04296    0.27865   0.154    0.877
+
+Approximate significance of smooth terms:
+       edf Ref.df Chi.sq  p-value    
+s(SOI)   1      1  11.66 0.000639 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+R-sq.(adj) =  0.229   Deviance explained = 19.4%
+UBRE = 0.17501  Scale est. = 1         n = 68</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(danishlc)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>danishlc<span class="sc">$</span>AgeNum <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(danishlc<span class="sc">$</span>Age)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">## GAM Poisson avec offset (k limité : seulement 6 tranches d'âge uniques)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">gam</span>(Cases <span class="sc">~</span> <span class="fu">s</span>(AgeNum, <span class="at">k=</span><span class="dv">5</span>) <span class="sc">+</span> City <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">family=</span>poisson, <span class="at">data=</span>danishlc)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod3)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: poisson 
+Link function: log 
+
+Formula:
+Cases ~ s(AgeNum, k = 5) + City + offset(log(Pop))
+
+Parametric coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  -4.3776     0.1253 -34.940   &lt;2e-16 ***
+CityHorsens  -0.3176     0.1815  -1.750   0.0801 .  
+CityKolding  -0.3653     0.1878  -1.945   0.0518 .  
+CityVejle    -0.2670     0.1879  -1.421   0.1552    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Approximate significance of smooth terms:
+            edf Ref.df Chi.sq p-value    
+s(AgeNum) 3.881  3.991  85.35  &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+R-sq.(adj) =  -0.415   Deviance explained = 78.2%
+UBRE = 0.8367  Scale est. = 1         n = 24</code></pre>
+</div>
+</div>
 <p>La fonction <code>summary</code> rapporte, pour chaque fonction lisse, ses degrés de liberté effectifs et un test approximatif de nullité ; <code>plot</code> trace chaque <span class="math inline">\(\hat f_j\)</span> avec ses bandes de confiance. Une fonction dont les degrés de liberté effectifs sont proches de 1 peut être remplacée par un terme linéaire : le GAM sert ainsi aussi d’outil diagnostique pour guider la spécification d’un MLG paramétrique.</p>
 </section>
 </section>

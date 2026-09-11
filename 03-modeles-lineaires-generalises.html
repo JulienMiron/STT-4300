@@ -423,8 +423,42 @@ window.Quarto = {
 <p>Lorsque la probabilité individuelle est très petite (ici <span class="math inline">\(\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}\)</span>), une régression logistique n’est pas appropriée. On modélise plutôt l’espérance du <strong>taux</strong> <span class="math inline">\(Y_i/m_i\)</span> : <span class="math display">\[\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
 \quad\Longleftrightarrow\quad
 \log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.\]</span> Le terme <span class="math inline">\(\log(m_i)\)</span> est une variable explicative dont le coefficient est <strong>fixé à 1</strong> : on parle de variable <strong>offset</strong>. Un offset est utile lorsque l’espérance de <span class="math inline">\(Y_i\)</span> est proportionnelle à une autre variable (population, durée d’exposition, effort).</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family=</span>poisson, <span class="at">data=</span>danishlc)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(danishlc)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family=</span>poisson, <span class="at">data=</span>danishlc)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.additif)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Cases ~ offset(log(Pop)) + City + Age, family = poisson, 
+    data = danishlc)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -4.21241    0.20819 -20.233  &lt; 2e-16 ***
+CityHorsens -0.33006    0.18150  -1.818   0.0690 .  
+CityKolding -0.37155    0.18781  -1.978   0.0479 *  
+CityVejle   -0.27232    0.18785  -1.450   0.1472    
+Age40-54    -1.41965    0.25027  -5.672 1.41e-08 ***
+Age55-59    -0.31864    0.25205  -1.264   0.2062    
+Age60-64     0.09896    0.23566   0.420   0.6745    
+Age65-69     0.34805    0.23343   1.491   0.1359    
+Age70-74     0.43721    0.23929   1.827   0.0677 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 129.908  on 23  degrees of freedom
+Residual deviance:  23.447  on 15  degrees of freedom
+AIC: 137.84
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
 <p>Les tests par différence de déviances montrent une différence significative entre les tranches d’âge, mais pas entre les villes.</p>
 </section>
 <section id="variabilité-extra-poissonienne" class="level3" data-number="3.6.2">

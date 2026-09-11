@@ -297,9 +297,9 @@ X = \begin{pmatrix} 1 &amp; X_1 &amp; \cdots &amp; X_1^p\\ \vdots &amp; \vdots &
 <h2 data-number="7.3" class="anchored" data-anchor-id="régression-avec-des-splines"><span class="header-section-number">7.3</span> Régression avec des splines</h2>
 <section id="splines-de-régression" class="level3" data-number="7.3.1">
 <h3 data-number="7.3.1" class="anchored" data-anchor-id="splines-de-régression"><span class="header-section-number">7.3.1</span> Splines de régression</h3>
-<p>Les <strong>splines</strong> sont des polynômes définis par intervalles, avec des contraintes de régularité aux points de jonction (<strong>nœ uds</strong>, <em>knots</em>).</p>
+<p>Les <strong>splines</strong> sont des polynômes définis par intervalles, avec des contraintes de régularité aux points de jonction (<strong>nœuds</strong>, <em>knots</em>).</p>
 <p>Cas simple (<span class="math inline">\(K=2\)</span> intervalles, degré <span class="math inline">\(p=3\)</span>) : on divise <span class="math inline">\([A,B]\)</span> en <span class="math inline">\([c_0,c_1)\)</span> et <span class="math inline">\([c_1,c_2)\)</span> et on approxime <span class="math display">\[f(x) = \begin{cases}\beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 &amp; \mbox{si } x\in[c_0,c_1),\\ \gamma_0 + \gamma_1 x + \gamma_2 x^2 + \gamma_3 x^3 &amp; \mbox{si } x\in[c_1,c_2).\end{cases}\]</span> On a <span class="math inline">\(4+4 = 8\)</span> degrés de liberté ; en imposant que <span class="math inline">\(f\)</span> soit continue et deux fois dérivable en <span class="math inline">\(c_1\)</span> (3 contraintes), il reste <span class="math inline">\(8-3 = 5\)</span> degrés de liberté.</p>
-<p><strong>Cas général</strong> : avec <span class="math inline">\(K\)</span> intervalles et un degré <span class="math inline">\(p\)</span>, on a <span class="math inline">\(K(p+1)\)</span> paramètres et <span class="math inline">\(p(K-1)\)</span> contraintes (continuité de <span class="math inline">\(f, f',\ldots,f^{(p-1)}\)</span> aux <span class="math inline">\(K-1\)</span> nœ uds intérieurs), d’où <span class="math display">\[K(p+1) - p(K-1) = K + p \ \mbox{ degrés de liberté}.\]</span></p>
+<p><strong>Cas général</strong> : avec <span class="math inline">\(K\)</span> intervalles et un degré <span class="math inline">\(p\)</span>, on a <span class="math inline">\(K(p+1)\)</span> paramètres et <span class="math inline">\(p(K-1)\)</span> contraintes (continuité de <span class="math inline">\(f, f',\ldots,f^{(p-1)}\)</span> aux <span class="math inline">\(K-1\)</span> nœuds intérieurs), d’où <span class="math display">\[K(p+1) - p(K-1) = K + p \ \mbox{ degrés de liberté}.\]</span></p>
 </section>
 <section id="base-des-puissances-tronquées" class="level3" data-number="7.3.2">
 <h3 data-number="7.3.2" class="anchored" data-anchor-id="base-des-puissances-tronquées"><span class="header-section-number">7.3.2</span> Base des puissances tronquées</h3>
@@ -309,14 +309,53 @@ X = \begin{pmatrix} 1 &amp; X_1 &amp; \cdots &amp; X_1^p\\ \vdots &amp; \vdots &
 <section id="sec-bsplines" class="level3" data-number="7.3.3">
 <h3 data-number="7.3.3" class="anchored" data-anchor-id="sec-bsplines"><span class="header-section-number">7.3.3</span> B-splines</h3>
 <p>La base des puissances tronquées est conceptuellement simple mais numériquement instable (<span class="math inline">\(X^\top X\)</span> mal conditionnée). En pratique, les logiciels utilisent la base des <strong>B-splines</strong>, une base équivalente dont les fonctions sont à <strong>support compact</strong> : chaque <span class="math inline">\(B\)</span>-spline de degré <span class="math inline">\(p\)</span> est non nulle sur au plus <span class="math inline">\(p+1\)</span> intervalles consécutifs.</p>
-<p>Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœ uds augmentée <span class="math inline">\(\{t_j\}\)</span>, les B-splines de degré 0 sont <span class="math display">\[B_{j,0}(x) = \mathbf{1}_{\{t_j \leq x &lt; t_{j+1}\}},\]</span> et pour <span class="math inline">\(d = 1,\ldots,p\)</span> : <span class="math display">\[B_{j,d}(x) = \frac{x - t_j}{t_{j+d} - t_j}\,B_{j,d-1}(x) + \frac{t_{j+d+1} - x}{t_{j+d+1} - t_{j+1}}\,B_{j+1,d-1}(x).\]</span> Propriétés : chaque <span class="math inline">\(B_{j,p}(x) \geq 0\)</span>, <span class="math inline">\(\sum_j B_{j,p}(x) = 1\)</span> pour tout <span class="math inline">\(x\)</span> (partition de l’unité), et la matrice de plan est <strong>creuse par bandes</strong>, ce qui rend les calculs stables et rapides.</p>
+<p>Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœuds augmentée <span class="math inline">\(\{t_j\}\)</span>, les B-splines de degré 0 sont <span class="math display">\[B_{j,0}(x) = \mathbf{1}_{\{t_j \leq x &lt; t_{j+1}\}},\]</span> et pour <span class="math inline">\(d = 1,\ldots,p\)</span> : <span class="math display">\[B_{j,d}(x) = \frac{x - t_j}{t_{j+d} - t_j}\,B_{j,d-1}(x) + \frac{t_{j+d+1} - x}{t_{j+d+1} - t_{j+1}}\,B_{j+1,d-1}(x).\]</span> Propriétés : chaque <span class="math inline">\(B_{j,p}(x) \geq 0\)</span>, <span class="math inline">\(\sum_j B_{j,p}(x) = 1\)</span> pour tout <span class="math inline">\(x\)</span> (partition de l’unité), et la matrice de plan est <strong>creuse par bandes</strong>, ce qui rend les calculs stables et rapides.</p>
 <p>En R, la fonction <code>bs</code> de la librairie <code>splines</code> construit la base de B-splines cubiques :</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>modele.splines <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">bs</span>(weight, <span class="at">knots=</span><span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2800</span>,<span class="dv">3600</span>)), <span class="at">data=</span>Auto)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>modele.splines <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">bs</span>(weight, <span class="at">knots=</span><span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2800</span>,<span class="dv">3600</span>)), <span class="at">data=</span>Auto)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.splines)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mpg ~ bs(weight, knots = c(2200, 2800, 3600)), data = Auto)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-12.9031  -2.6702  -0.4887   1.9025  15.9416 
+
+Coefficients:
+                                         Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)                                31.414      2.776  11.315  &lt; 2e-16
+bs(weight, knots = c(2200, 2800, 3600))1    5.552      3.849   1.442   0.1500
+bs(weight, knots = c(2200, 2800, 3600))2   -3.249      2.645  -1.228   0.2201
+bs(weight, knots = c(2200, 2800, 3600))3   -7.891      3.153  -2.503   0.0127
+bs(weight, knots = c(2200, 2800, 3600))4  -16.826      3.059  -5.501 6.89e-08
+bs(weight, knots = c(2200, 2800, 3600))5  -17.937      3.581  -5.009 8.36e-07
+bs(weight, knots = c(2200, 2800, 3600))6  -20.172      3.621  -5.571 4.78e-08
+                                            
+(Intercept)                              ***
+bs(weight, knots = c(2200, 2800, 3600))1    
+bs(weight, knots = c(2200, 2800, 3600))2    
+bs(weight, knots = c(2200, 2800, 3600))3 *  
+bs(weight, knots = c(2200, 2800, 3600))4 ***
+bs(weight, knots = c(2200, 2800, 3600))5 ***
+bs(weight, knots = c(2200, 2800, 3600))6 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 4.174 on 385 degrees of freedom
+Multiple R-squared:  0.7185,    Adjusted R-squared:  0.7141 
+F-statistic: 163.7 on 6 and 385 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
 </section>
 <section id="splines-naturelles" class="level3" data-number="7.3.4">
 <h3 data-number="7.3.4" class="anchored" data-anchor-id="splines-naturelles"><span class="header-section-number">7.3.4</span> Splines naturelles</h3>
-<p>L’estimateur par splines peut être instable aux extrémités du domaine de <span class="math inline">\(X\)</span> (comportement erratique des polynômes au-delà des nœ uds extrêmes). Les <strong>splines naturelles</strong> remédient à ce problème : elles sont définies exactement comme les splines, à l’exception qu’on impose que la fonction soit <strong>linéaire</strong> sur les intervalles extrêmes <span class="math inline">\([c_0,c_1)\)</span> et <span class="math inline">\([c_{K-1},c_K)\)</span>. Ces contraintes supplémentaires libèrent des degrés de liberté qui peuvent être réinvestis en nœ uds intérieurs. En R : <code>lm(mpg \textasciitilde{</code> ns(weight, df=4))}.</p>
+<p>L’estimateur par splines peut être instable aux extrémités du domaine de <span class="math inline">\(X\)</span> (comportement erratique des polynômes au-delà des nœuds extrêmes). Les <strong>splines naturelles</strong> remédient à ce problème : elles sont définies exactement comme les splines, à l’exception qu’on impose que la fonction soit <strong>linéaire</strong> sur les intervalles extrêmes <span class="math inline">\([c_0,c_1)\)</span> et <span class="math inline">\([c_{K-1},c_K)\)</span>. Ces contraintes supplémentaires libèrent des degrés de liberté qui peuvent être réinvestis en nœuds intérieurs. En R : <code>lm(mpg \textasciitilde{</code> ns(weight, df=4))}.</p>
 </section>
 <section id="splines-de-lissage-splines-pénalisées" class="level3" data-number="7.3.5">
 <h3 data-number="7.3.5" class="anchored" data-anchor-id="splines-de-lissage-splines-pénalisées"><span class="header-section-number">7.3.5</span> Splines de lissage (splines pénalisées)</h3>
@@ -326,8 +365,20 @@ X = \begin{pmatrix} 1 &amp; X_1 &amp; \cdots &amp; X_1^p\\ \vdots &amp; \vdots &
 <li><p><span class="math inline">\(\lambda\to\infty\)</span> : <span class="math inline">\(f''\equiv 0\)</span>, on retrouve la droite des moindres carrés.</p></li>
 </ul>
 <p>On remarque l’analogie parfaite avec la régression ridge du <a href="05-selection-regularisation.html" class="quarto-xref"><span>Chapitre 5</span></a>. En pratique, <span class="math inline">\(\lambda\)</span> est choisi par validation croisée. En R :</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(Auto<span class="sc">$</span>weight, Auto<span class="sc">$</span>mpg, <span class="at">cv=</span><span class="cn">TRUE</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df   <span class="co"># degrés de liberté effectifs, ~10.4 sur Auto</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(Auto<span class="sc">$</span>weight, Auto<span class="sc">$</span>mpg, <span class="at">cv=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in smooth.spline(Auto$weight, Auto$mpg, cv = TRUE): cross-validation
+with non-unique 'x' values seems doubtful</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10.35561</code></pre>
+</div>
+</div>
 <div class="env-remarque">
 <p><strong>Remarque (Degrés de liberté effectifs).</strong></p>
 <p>Pour un estimateur linéaire <span class="math inline">\(\hat Y = A_\lambda Y\)</span> avec <span class="math inline">\(A_\lambda = X(X^\top X + \lambda M)^{-1}X^\top\)</span>, les <strong>degrés de liberté effectifs</strong> sont <span class="math inline">\(\mathrm{Tr}(A_\lambda)\)</span>. Ils décroissent de <span class="math inline">\(K+p\)</span> (pour <span class="math inline">\(\lambda = 0\)</span>) vers 2 (pour <span class="math inline">\(\lambda\to\infty\)</span>) et fournissent une échelle interprétable pour calibrer le lissage.</p>

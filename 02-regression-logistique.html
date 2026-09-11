@@ -468,12 +468,39 @@ w_i = \frac{\hat\mu_i(m_i - \hat\mu_i)}{m_i} = m_i\, \hat\pi_i(1-\hat\pi_i).
 <div class="env-exemple">
 <p><strong>Exemple (Jeu de données <code>turbines</code>).</strong></p>
 <p>On ajuste le modèle avec les trois fonctions de lien :</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>modele.logit   <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>modele.probit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"probit"</span>))</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>modele.cloglog <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"cloglog"</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>modele.logit   <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>modele.probit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"probit"</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>modele.cloglog <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"cloglog"</span>))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.logit)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = cbind(Fissures, Turbines - Fissures) ~ Hours, family = binomial(link = "logit"), 
+    data = turbines)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -3.9235966  0.3779589 -10.381   &lt;2e-16 ***
+Hours        0.0009992  0.0001142   8.754   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 112.670  on 10  degrees of freedom
+Residual deviance:  10.331  on  9  degrees of freedom
+AIC: 49.808
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
 <p>Les trois liens mènent à des coefficients significatifs et à des courbes prédites <span class="math inline">\(\hat\pi^*\)</span> très similaires. Les intervalles de confiance se calculent avec <code>predict(..., se.fit=TRUE)</code> sur l’échelle du lien (méthode 1) ou avec <code>type="response"</code> (méthode 2).</p>
 </div>
 </section>
@@ -490,8 +517,22 @@ w_i = \frac{\hat\mu_i(m_i - \hat\mu_i)}{m_i} = m_i\, \hat\pi_i(1-\hat\pi_i).
 <div class="env-exemple">
 <p><strong>Exemple (<code>turbines</code>, termes quadratique et cubique).</strong></p>
 <p>On teste <span class="math inline">\(H_0: \beta_2 = \beta_3 = 0\)</span> (modèle avec <code>Hours</code> seulement contre modèle avec termes en <code>Hours</code><span class="math inline">\(^2\)</span> et <code>Hours</code><span class="math inline">\(^3\)</span>) :</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stat.test <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.reduit) <span class="sc">-</span> <span class="fu">deviance</span>(modele.complet)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>p.valeur  <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(stat.test, <span class="at">df=</span><span class="dv">2</span>)   <span class="co"># 0.4767</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>modele.reduit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures) <span class="sc">~</span> Hours,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span>binomial)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>modele.complet <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures) <span class="sc">~</span> Hours <span class="sc">+</span> <span class="fu">I</span>(Hours<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(Hours<span class="sc">^</span><span class="dv">3</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span>binomial)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>stat.test <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.reduit) <span class="sc">-</span> <span class="fu">deviance</span>(modele.complet)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>p.valeur  <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(stat.test, <span class="at">df=</span><span class="dv">2</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>p.valeur</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4767217</code></pre>
+</div>
+</div>
 <p>On ne rejette pas <span class="math inline">\(H_0\)</span> : le modèle réduit est adéquat.</p>
 </div>
 </section>
@@ -555,11 +596,19 @@ w_i = \frac{\hat\mu_i(m_i - \hat\mu_i)}{m_i} = m_i\, \hat\pi_i(1-\hat\pi_i).
 <div class="env-exemple">
 <p><strong>Exemple (<code>quilpie</code>).</strong></p>
 <p>Avec la variable explicative SOI et le lien logit :</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family=</span>binomial, <span class="at">data=</span>quilpie)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clinfun)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(<span class="at">marker=</span><span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">status=</span>quilpie<span class="sc">$</span>y, <span class="at">method=</span><span class="fu">c</span>(<span class="st">"empirical"</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># AUC = 0.784, s.e. = 0.057</span></span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family=</span>binomial, <span class="at">data=</span>quilpie)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clinfun)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(<span class="at">marker=</span><span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">status=</span>quilpie<span class="sc">$</span>y, <span class="at">method=</span><span class="fu">c</span>(<span class="st">"empirical"</span>))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ROC curve with AUC = 0.7835498 and s.e. = 0.05651002 </code></pre>
+</div>
+</div>
 <p>L’aire sous la courbe est de 0.78 : le modèle est bon.</p>
 </div>
 

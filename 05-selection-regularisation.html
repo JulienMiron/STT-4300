@@ -322,8 +322,21 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <section id="sélection-du-paramètre-lambda" class="level3" data-number="5.2.3">
 <h3 data-number="5.2.3" class="anchored" data-anchor-id="sélection-du-paramètre-lambda"><span class="header-section-number">5.2.3</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></h3>
 <p>La méthode la plus intuitive est basée sur le taux d’erreur test, estimé par <strong>validation croisée</strong> pour une grille de valeurs de <span class="math inline">\(\lambda\)</span> ; on choisit la valeur qui minimise le taux d’erreur test. En R :</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>reg.ridge.select <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x, y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">lambda=</span>grille.lambda)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>reg.ridge.select<span class="sc">$</span>lambda.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(Salary <span class="sc">~</span> ., Hitters)[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Hitters<span class="sc">$</span>Salary</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>grille.lambda <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>reg.ridge.select <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x, y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">lambda=</span>grille.lambda)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>reg.ridge.select<span class="sc">$</span>lambda.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.135907</code></pre>
+</div>
+</div>
 <p>Sur les données <code>Hitters</code>, on obtient <span class="math inline">\(\lambda = e^{2.2}\)</span> pour ridge et <span class="math inline">\(\lambda = e^3\)</span> pour le lasso.</p>
 
 

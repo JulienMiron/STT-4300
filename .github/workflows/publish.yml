@@ -20,7 +20,11 @@ jobs:
 
       - name: Install R packages used in the notes
         run: |
-          install.packages(c("ggplot2", "rmarkdown", "knitr"))
+          install.packages(c(
+            "ggplot2", "rmarkdown", "knitr",
+            "GLMsData", "ISLR", "MASS", "mgcv", "splines2",
+            "glmnet", "clinfun", "boot", "FNN", "KernSmooth"
+          ))
         shell: Rscript {0}
 
       - name: Set up Quarto

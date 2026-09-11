@@ -10,14 +10,3 @@ Si vous constatez des coquilles ou des erreurs, merci de m'envoyer [un courriel]
 
 Ces notes s'appuient en partie sur du matériel de cours développé par Lajmi Lakhal Chaieb,
 Thierry Duchesne, Michel Carbon, de l'Université Laval et Eva Cantoni de l'Université de Genève.
-
-## Plan du cours
-
-1. **Rappels de régression linéaire** — moindres carrés, inférence, diagnostics, AIC/BIC.
-2. **Régression logistique** — modèles pour données binaires et binomiales, fonctions de lien, estimation, courbe ROC.
-3. **Modèles linéaires généralisés** — famille exponentielle, déviance, régression de Poisson.
-4. **Prédiction et validation croisée** — taux d'erreur test, LOOCV, validation croisée à $K$ blocs.
-5. **Sélection de variables et régularisation** — ridge, lasso.
-6. **Régression non-paramétrique** — $k$NN, estimateur de noyau (Nadaraya-Watson).
-7. **Splines** — splines de régression, B-splines, splines naturelles et de lissage.
-8. **Modèles additifs généralisés (GAM)**.

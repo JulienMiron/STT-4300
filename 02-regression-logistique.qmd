@@ -315,7 +315,8 @@ mod_normal <- glm(y ~ x, data = dat_normal, family = binomial)
 summary(mod_normal)$coefficients
 
 # Cas 2 : k = 19, séparation quasi-complète
-dat_separe <- simuler_logistique(n = 50, beta0 = 0, beta1 = 25)
+set.seed(1234)
+dat_separe <- simuler_logistique(n = 50, beta0 = 0, beta1 = 15)
 
 plot(dat_separe$x, dat_separe$y)
 

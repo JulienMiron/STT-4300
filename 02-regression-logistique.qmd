@@ -245,13 +245,18 @@ Les deux méthodes donnent en pratique des résultats très similaires.
 
 On ajuste le modèle avec les trois fonctions de lien :
 
-```r
+```{r}
+#| message: false
+library(GLMsData)
+data(turbines)
+
 modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
                       data=turbines, family=binomial(link="logit"))
 modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
                       data=turbines, family=binomial(link="probit"))
 modele.cloglog <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
                       data=turbines, family=binomial(link="cloglog"))
+summary(modele.logit)
 ```
 
 Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. Les intervalles de confiance se calculent avec `predict(..., se.fit=TRUE)` sur l'échelle du lien (méthode 1) ou avec `type="response"` (méthode 2).
@@ -274,9 +279,19 @@ Pour comparer deux modèles emboîtés de déviances $D_1$ (complet) et $D_2$ (r
 
 On teste $H_0: \beta_2 = \beta_3 = 0$ (modèle avec `Hours` seulement contre modèle avec termes en `Hours`$^2$ et `Hours`$^3$) :
 
-```r
+```{r}
+#| message: false
+library(GLMsData)
+data(turbines)
+
+modele.reduit  <- glm(cbind(Fissures,Turbines-Fissures) ~ Hours,
+                      data=turbines, family=binomial)
+modele.complet <- glm(cbind(Fissures,Turbines-Fissures) ~ Hours + I(Hours^2) + I(Hours^3),
+                      data=turbines, family=binomial)
+
 stat.test <- deviance(modele.reduit) - deviance(modele.complet)
-p.valeur  <- 1 - pchisq(stat.test, df=2)   # 0.4767
+p.valeur  <- 1 - pchisq(stat.test, df=2)
+p.valeur
 ```
 
 On ne rejette pas $H_0$ : le modèle réduit est adéquat.
@@ -358,12 +373,16 @@ $$\mbox{AUC} \in \begin{cases}
 
 Avec la variable explicative SOI et le lien logit :
 
-```r
+```{r}
+#| message: false
+library(GLMsData)
+data(quilpie)
+
 modele <- glm(y ~ SOI, family=binomial, data=quilpie)
 library(clinfun)
 courbe.roc <- roc.curve(marker=as.vector(fitted(modele)),
                         status=quilpie$y, method=c("empirical"))
-# AUC = 0.784, s.e. = 0.057
+courbe.roc
 ```
 
 L'aire sous la courbe est de 0.78 : le modèle est bon.

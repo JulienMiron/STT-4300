@@ -68,7 +68,16 @@ Avec $\lambda = e^2$, le lasso annule les coefficients de `HmRun`, `Runs`, `RBI`
 
 La méthode la plus intuitive est basée sur le taux d'erreur test, estimé par **validation croisée** pour une grille de valeurs de $\lambda$ ; on choisit la valeur qui minimise le taux d'erreur test. En R :
 
-```r
+```{r}
+#| message: false
+library(ISLR)
+library(glmnet)
+
+Hitters <- na.omit(Hitters)
+x <- model.matrix(Salary ~ ., Hitters)[, -1]
+y <- Hitters$Salary
+grille.lambda <- 10^seq(10, -2, length.out = 100)
+
 reg.ridge.select <- cv.glmnet(x, y, alpha=0, lambda=grille.lambda)
 reg.ridge.select$lambda.min
 ```

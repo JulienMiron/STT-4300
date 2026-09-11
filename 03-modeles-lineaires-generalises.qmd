@@ -151,9 +151,14 @@ $$\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \be
 \log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.$$
 Le terme $\log(m_i)$ est une variable explicative dont le coefficient est **fixé à 1** : on parle de variable **offset**. Un offset est utile lorsque l'espérance de $Y_i$ est proportionnelle à une autre variable (population, durée d'exposition, effort).
 
-```r
+```{r}
+#| message: false
+library(GLMsData)
+data(danishlc)
+
 modele.additif <- glm(Cases ~ offset(log(Pop)) + City + Age,
                       family=poisson, data=danishlc)
+summary(modele.additif)
 ```
 
 Les tests par différence de déviances montrent une différence significative entre les tranches d'âge, mais pas entre les villes.

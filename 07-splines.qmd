@@ -31,13 +31,13 @@ c'est-à-dire la moyenne des $Y_i$ dans l'intervalle $k$, et $Var[\hat\beta_k] =
 
 ### Splines de régression
 
-Les **splines** sont des polynômes définis par intervalles, avec des contraintes de régularité aux points de jonction (**nœ uds**, *knots*).
+Les **splines** sont des polynômes définis par intervalles, avec des contraintes de régularité aux points de jonction (**nœuds**, *knots*).
 
 Cas simple ($K=2$ intervalles, degré $p=3$) : on divise $[A,B]$ en $[c_0,c_1)$ et $[c_1,c_2)$ et on approxime
 $$f(x) = \begin{cases}\beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 & \mbox{si } x\in[c_0,c_1),\\ \gamma_0 + \gamma_1 x + \gamma_2 x^2 + \gamma_3 x^3 & \mbox{si } x\in[c_1,c_2).\end{cases}$$
 On a $4+4 = 8$ degrés de liberté ; en imposant que $f$ soit continue et deux fois dérivable en $c_1$ (3 contraintes), il reste $8-3 = 5$ degrés de liberté.
 
-**Cas général** : avec $K$ intervalles et un degré $p$, on a $K(p+1)$ paramètres et $p(K-1)$ contraintes (continuité de $f, f',\ldots,f^{(p-1)}$ aux $K-1$ nœ uds intérieurs), d'où
+**Cas général** : avec $K$ intervalles et un degré $p$, on a $K(p+1)$ paramètres et $p(K-1)$ contraintes (continuité de $f, f',\ldots,f^{(p-1)}$ aux $K-1$ nœuds intérieurs), d'où
 $$K(p+1) - p(K-1) = K + p \ \mbox{ degrés de liberté}.$$
 
 ### Base des puissances tronquées
@@ -56,7 +56,7 @@ et l'estimateur des moindres carrés est $\hat\beta = (X^\top X)^{-1}X^\top Y$ a
 
 La base des puissances tronquées est conceptuellement simple mais numériquement instable ($X^\top X$ mal conditionnée). En pratique, les logiciels utilisent la base des **B-splines**, une base équivalente dont les fonctions sont à **support compact** : chaque $B$-spline de degré $p$ est non nulle sur au plus $p+1$ intervalles consécutifs.
 
-Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœ uds augmentée $\{t_j\}$, les B-splines de degré 0 sont
+Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœuds augmentée $\{t_j\}$, les B-splines de degré 0 sont
 $$B_{j,0}(x) = \mathbf{1}_{\{t_j \leq x < t_{j+1}\}},$$
 et pour $d = 1,\ldots,p$ :
 $$B_{j,d}(x) = \frac{x - t_j}{t_{j+d} - t_j}\,B_{j,d-1}(x) + \frac{t_{j+d+1} - x}{t_{j+d+1} - t_{j+1}}\,B_{j+1,d-1}(x).$$
@@ -64,14 +64,19 @@ Propriétés : chaque $B_{j,p}(x) \geq 0$, $\sum_j B_{j,p}(x) = 1$ pour tout $x$
 
 En R, la fonction `bs` de la librairie `splines` construit la base de B-splines cubiques :
 
-```r
+```{r}
+#| message: false
 library(splines)
+library(ISLR)
+data(Auto)
+
 modele.splines <- lm(mpg ~ bs(weight, knots=c(2200,2800,3600)), data=Auto)
+summary(modele.splines)
 ```
 
 ### Splines naturelles
 
-L'estimateur par splines peut être instable aux extrémités du domaine de $X$ (comportement erratique des polynômes au-delà des nœ uds extrêmes). Les **splines naturelles** remédient à ce problème : elles sont définies exactement comme les splines, à l'exception qu'on impose que la fonction soit **linéaire** sur les intervalles extrêmes $[c_0,c_1)$ et $[c_{K-1},c_K)$. Ces contraintes supplémentaires libèrent des degrés de liberté qui peuvent être réinvestis en nœ uds intérieurs. En R : `lm(mpg \textasciitilde{` ns(weight, df=4))}.
+L'estimateur par splines peut être instable aux extrémités du domaine de $X$ (comportement erratique des polynômes au-delà des nœuds extrêmes). Les **splines naturelles** remédient à ce problème : elles sont définies exactement comme les splines, à l'exception qu'on impose que la fonction soit **linéaire** sur les intervalles extrêmes $[c_0,c_1)$ et $[c_{K-1},c_K)$. Ces contraintes supplémentaires libèrent des degrés de liberté qui peuvent être réinvestis en nœuds intérieurs. En R : `lm(mpg \textasciitilde{` ns(weight, df=4))}.
 
 ### Splines de lissage (splines pénalisées)
 
@@ -87,9 +92,13 @@ Le paramètre $\lambda$ contrôle la régularité de $\hat f$ :
 
 On remarque l'analogie parfaite avec la régression ridge du @sec-regularisation. En pratique, $\lambda$ est choisi par validation croisée. En R :
 
-```r
+```{r}
+#| message: false
+library(ISLR)
+data(Auto)
+
 modele.sp <- smooth.spline(Auto$weight, Auto$mpg, cv=TRUE)
-modele.sp$df   # degrés de liberté effectifs, ~10.4 sur Auto
+modele.sp$df
 ```
 
 :::{.env-remarque}

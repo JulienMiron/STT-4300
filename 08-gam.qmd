@@ -13,7 +13,7 @@ $$\sum_{i=1}^n f_j(X_{ij}) = 0, \qquad j = 1,\ldots,p.$$
 
 ## Estimation par moindres carrés pénalisés
 
-Plutôt que de choisir soigneusement le nombre de nœ uds de chaque base, on prend des bases « suffisamment riches » et on pénalise la rugosité de chaque fonction : on minimise
+Plutôt que de choisir soigneusement le nombre de nœuds de chaque base, on prend des bases « suffisamment riches » et on pénalise la rugosité de chaque fonction : on minimise
 $$\left\|Y - X\beta\right\|^2 + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta,$$
 où $X$ regroupe toutes les fonctions de base évaluées aux observations, et $S_j$ est la matrice de pénalité de la $j^{\text{ème}}$ fonction ($\beta^\top S_j\beta = \int f_j''(t)^2dt$). La solution est explicite :
 $$\hat\beta = \Bigl(X^\top X + \sum_{j=1}^p\lambda_j S_j\Bigr)^{-1}X^\top Y.$$
@@ -77,17 +77,38 @@ Pour comparer des modèles : $AIC = -2\,l(\hat\beta;y) + 2\,\mathrm{Tr}(A)$ (les
 
 La librairie `mgcv` ajuste les GAM avec sélection automatique des paramètres de lissage :
 
-```r
+```{r}
+#| message: false
 library(mgcv)
+library(ISLR)
+data(Auto)
+
 ## Modèle additif gaussien
 mod1 <- gam(mpg ~ s(weight) + s(horsepower), data=Auto)
+summary(mod1)   # tests approximatifs de f_j = 0, DLE par fonction
+plot(mod1)      # courbes estimées avec bandes de confiance
+```
+
+```{r}
+#| message: false
+library(GLMsData)
+data(quilpie)
+
 ## GAM logistique
 mod2 <- gam(y ~ s(SOI), family=binomial, data=quilpie)
+summary(mod2)
+```
+
+```{r}
+#| message: false
+library(GLMsData)
+data(danishlc)
+danishlc$AgeNum <- as.numeric(danishlc$Age)
+
 ## GAM Poisson avec offset
 mod3 <- gam(Cases ~ s(AgeNum) + City + offset(log(Pop)),
             family=poisson, data=danishlc)
-summary(mod1)   # tests approximatifs de f_j = 0, DLE par fonction
-plot(mod1)      # courbes estimées avec bandes de confiance
+summary(mod3)
 ```
 
 La fonction `summary` rapporte, pour chaque fonction lisse, ses degrés de liberté effectifs et un test approximatif de nullité ; `plot` trace chaque $\hat f_j$ avec ses bandes de confiance. Une fonction dont les degrés de liberté effectifs sont proches de 1 peut être remplacée par un terme linéaire : le GAM sert ainsi aussi d'outil diagnostique pour guider la spécification d'un MLG paramétrique.

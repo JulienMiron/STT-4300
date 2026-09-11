@@ -256,7 +256,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#estimation-des-paramètres-boldsymbolbeta" id="toc-estimation-des-paramètres-boldsymbolbeta" class="nav-link" data-scroll-target="#estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">2.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></a></li>
   <li><a href="#tests-dhypothèses-et-intervalles-de-confiance" id="toc-tests-dhypothèses-et-intervalles-de-confiance" class="nav-link" data-scroll-target="#tests-dhypothèses-et-intervalles-de-confiance"><span class="header-section-number">2.2.2</span> Tests d’hypothèses et intervalles de confiance</a></li>
-  <li><a href="#intervalle-de-confiance-pour-une-probabilité-prédite" id="toc-intervalle-de-confiance-pour-une-probabilité-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.3</span> Intervalle de confiance pour une probabilité prédite</a></li>
+  <li><a href="#comparaison-directe-des-sorties" id="toc-comparaison-directe-des-sorties" class="nav-link" data-scroll-target="#comparaison-directe-des-sorties"><span class="header-section-number">2.2.3</span> Comparaison directe des sorties</a></li>
+  <li><a href="#intervalle-de-confiance-pour-une-probabilité-prédite" id="toc-intervalle-de-confiance-pour-une-probabilité-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.4</span> Intervalle de confiance pour une probabilité prédite</a></li>
   </ul></li>
   <li><a href="#sélection-de-modèles" id="toc-sélection-de-modèles" class="nav-link" data-scroll-target="#sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</a>
   <ul class="collapse">
@@ -486,38 +487,36 @@ G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right]
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span>  <span class="co"># taille de chaque groupe</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>resultats <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="dv">1</span><span class="sc">:</span>(n <span class="sc">-</span> <span class="dv">1</span>), <span class="cf">function</span>(k) {</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Groupe x = 1 : k succès sur n (k croît jusqu'à la séparation complète)</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  y1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, k), <span class="fu">rep</span>(<span class="dv">0</span>, n <span class="sc">-</span> k))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Groupe x = 0 : référence, toujours 50 % de succès</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  y0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n <span class="sc">/</span> <span class="dv">2</span>), <span class="fu">rep</span>(<span class="dv">0</span>, n <span class="sc">/</span> <span class="dv">2</span>))</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(y1, y0),</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="at">each =</span> n)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  mod_complet <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  mod_reduit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  beta_hat <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod_complet)[<span class="st">"x"</span>]</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  et_hat   <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_complet)<span class="sc">$</span>coefficients[<span class="st">"x"</span>, <span class="st">"Std. Error"</span>]</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  wald_z2  <span class="ot">&lt;-</span> (beta_hat <span class="sc">/</span> et_hat)<span class="sc">^</span><span class="dv">2</span>          <span class="co"># statistique de Wald au carré (échelle khi-carré à 1 ddl)</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  lr_stat  <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="dv">2</span> <span class="sc">*</span> (<span class="fu">logLik</span>(mod_complet) <span class="sc">-</span> <span class="fu">logLik</span>(mod_reduit)))</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">k =</span> k, <span class="at">beta_hat =</span> beta_hat, <span class="at">wald_chisq =</span> wald_z2, <span class="at">lr_chisq =</span> lr_stat)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>resultats <span class="sc">|&gt;</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="fu">c</span>(wald_chisq, lr_chisq), <span class="at">names_to =</span> <span class="st">"test"</span>, <span class="at">values_to =</span> <span class="st">"statistique"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">test =</span> <span class="fu">recode</span>(test,</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                        <span class="at">wald_chisq =</span> <span class="st">"Wald (khi-carré)"</span>,</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lr_chisq   =</span> <span class="st">"Rapport de vraisemblance"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> beta_hat, <span class="at">y =</span> statistique, <span class="at">color =</span> test)) <span class="sc">+</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(beta)[x]), <span class="at">y =</span> <span class="st">"Statistique de test (échelle khi-carré, 1 ddl)"</span>,</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="cn">NULL</span>,</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Effet Hauck-Donner : Wald redescend, le RV continue de croître"</span>) <span class="sc">+</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  y1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, k), <span class="fu">rep</span>(<span class="dv">0</span>, n <span class="sc">-</span> k))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  y0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n <span class="sc">/</span> <span class="dv">2</span>), <span class="fu">rep</span>(<span class="dv">0</span>, n <span class="sc">/</span> <span class="dv">2</span>))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">c</span>(y1, y0),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="at">each =</span> n)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  mod_complet <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  mod_reduit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  beta_hat <span class="ot">&lt;-</span> <span class="fu">coef</span>(mod_complet)[<span class="st">"x"</span>]</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  et_hat   <span class="ot">&lt;-</span> <span class="fu">summary</span>(mod_complet)<span class="sc">$</span>coefficients[<span class="st">"x"</span>, <span class="st">"Std. Error"</span>]</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  wald_z2  <span class="ot">&lt;-</span> (beta_hat <span class="sc">/</span> et_hat)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  lr_stat  <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="dv">2</span> <span class="sc">*</span> (<span class="fu">logLik</span>(mod_complet) <span class="sc">-</span> <span class="fu">logLik</span>(mod_reduit)))</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">k =</span> k, <span class="at">beta_hat =</span> beta_hat, <span class="at">wald_chisq =</span> wald_z2, <span class="at">lr_chisq =</span> lr_stat)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>resultats <span class="sc">|&gt;</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="fu">c</span>(wald_chisq, lr_chisq), <span class="at">names_to =</span> <span class="st">"test"</span>, <span class="at">values_to =</span> <span class="st">"statistique"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">test =</span> <span class="fu">recode</span>(test,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                        <span class="at">wald_chisq =</span> <span class="st">"Wald (khi-carré)"</span>,</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>                        <span class="at">lr_chisq   =</span> <span class="st">"Rapport de vraisemblance"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> beta_hat, <span class="at">y =</span> statistique, <span class="at">color =</span> test)) <span class="sc">+</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(beta)[x]), <span class="at">y =</span> <span class="st">"Statistique de test (échelle khi-carré, 1 ddl)"</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Effet Hauck-Donner : Wald redescend, le RV continue de croître"</span>) <span class="sc">+</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -527,8 +526,54 @@ G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right]
 </div>
 </div>
 </section>
-<section id="intervalle-de-confiance-pour-une-probabilité-prédite" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.3</span> Intervalle de confiance pour une probabilité prédite</h3>
+<section id="comparaison-directe-des-sorties" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="comparaison-directe-des-sorties"><span class="header-section-number">2.2.3</span> Comparaison directe des sorties</h3>
+<p>Pour illustrer concrètement l’écart entre les deux tests, comparons un cas “normal” (<span class="math inline">\(k = 15\)</span>, pas de séparation) à un cas de séparation quasi-complète (<span class="math inline">\(k = 19\)</span>, un seul échec sur 20 dans le groupe <span class="math inline">\(x = 1\)</span>) :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ajuster_exemple <span class="ot">&lt;-</span> <span class="cf">function</span>(k, <span class="at">n =</span> <span class="dv">20</span>) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  y1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, k), <span class="fu">rep</span>(<span class="dv">0</span>, n <span class="sc">-</span> k))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  y0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, n <span class="sc">/</span> <span class="dv">2</span>), <span class="fu">rep</span>(<span class="dv">0</span>, n <span class="sc">/</span> <span class="dv">2</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">y =</span> <span class="fu">c</span>(y1, y0), <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="at">each =</span> n))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Cas 1 : k = 15, pas de séparation</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>dat_normal <span class="ot">&lt;-</span> <span class="fu">ajuster_exemple</span>(<span class="dv">15</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>mod_normal <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat_normal, <span class="at">family =</span> binomial)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_normal)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Estimate Std. Error  z value  Pr(&gt;|z|)
+(Intercept) 0.000000  0.4472136 0.000000 1.0000000
+x           1.098612  0.6831297 1.608205 0.1077904</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cas 2 : k = 19, séparation quasi-complète</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dat_separe <span class="ot">&lt;-</span> <span class="fu">ajuster_exemple</span>(<span class="dv">19</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>mod_separe <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat_separe, <span class="at">family =</span> binomial)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_separe)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Estimate Std. Error      z value    Pr(&gt;|z|)
+(Intercept) 5.461720e-16  0.4472136 1.221278e-15 1.000000000
+x           2.944439e+00  1.1191618 2.630932e+00 0.008515099</code></pre>
+</div>
+</div>
+<p>Et le test du rapport de vraisemblance correspondant pour le cas séparé, à comparer à la p-value de Wald ci-dessus :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod_separe_reduit <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> dat_separe, <span class="at">family =</span> binomial)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mod_separe_reduit, mod_separe, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: y ~ 1
+Model 2: y ~ x
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1        39     47.054                          
+2        38     35.666  1   11.387 0.0007396 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+</section>
+<section id="intervalle-de-confiance-pour-une-probabilité-prédite" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.4</span> Intervalle de confiance pour une probabilité prédite</h3>
 <p>Pour <span class="math inline">\(X^* = (1, X_1^*,\ldots,X_p^*)^\top\)</span>, on estime <span class="math inline">\(\pi^*\)</span> par <span class="math inline">\(\hat\pi^* = g^{-1}({X^*}^\top\hat\beta)\)</span>. Deux approches :</p>
 <ol type="1">
 <li><p><strong>Transformation de l’intervalle sur <span class="math inline">\(\eta^*\)</span></strong> : un IC pour <span class="math inline">\({X^*}^\top\beta\)</span> est <span class="math display">\[\left[{X^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{v({X^*}^\top\hat\beta)}\right], \qquad v({X^*}^\top\hat\beta) = {X^*}^\top v(\hat\beta)\, X^*,\]</span> et on applique <span class="math inline">\(g^{-1}\)</span> aux deux bornes. Cet intervalle respecte toujours <span class="math inline">\([0,1]\)</span>.</p></li>
@@ -539,16 +584,16 @@ G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right]
 <p><strong>Exemple (Jeu de données <code>turbines</code>).</strong></p>
 <p>On ajuste le modèle avec les trois fonctions de lien :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>modele.logit   <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>modele.probit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"probit"</span>))</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>modele.cloglog <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"cloglog"</span>))</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.logit)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>modele.logit   <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"logit"</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>modele.probit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"probit"</span>))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>modele.cloglog <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures)<span class="sc">~</span>Hours,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">"cloglog"</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.logit)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -588,17 +633,17 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <p><strong>Exemple (<code>turbines</code>, termes quadratique et cubique).</strong></p>
 <p>On teste <span class="math inline">\(H_0: \beta_2 = \beta_3 = 0\)</span> (modèle avec <code>Hours</code> seulement contre modèle avec termes en <code>Hours</code><span class="math inline">\(^2\)</span> et <code>Hours</code><span class="math inline">\(^3\)</span>) :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>modele.reduit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures) <span class="sc">~</span> Hours,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span>binomial)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>modele.complet <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures) <span class="sc">~</span> Hours <span class="sc">+</span> <span class="fu">I</span>(Hours<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(Hours<span class="sc">^</span><span class="dv">3</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span>binomial)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>stat.test <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.reduit) <span class="sc">-</span> <span class="fu">deviance</span>(modele.complet)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>p.valeur  <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(stat.test, <span class="at">df=</span><span class="dv">2</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>p.valeur</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>modele.reduit  <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures) <span class="sc">~</span> Hours,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span>binomial)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>modele.complet <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures,Turbines<span class="sc">-</span>Fissures) <span class="sc">~</span> Hours <span class="sc">+</span> <span class="fu">I</span>(Hours<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(Hours<span class="sc">^</span><span class="dv">3</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data=</span>turbines, <span class="at">family=</span>binomial)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>stat.test <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.reduit) <span class="sc">-</span> <span class="fu">deviance</span>(modele.complet)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>p.valeur  <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(stat.test, <span class="at">df=</span><span class="dv">2</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>p.valeur</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4767217</code></pre>
 </div>
@@ -667,14 +712,14 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <p><strong>Exemple (<code>quilpie</code>).</strong></p>
 <p>Avec la variable explicative SOI et le lien logit :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family=</span>binomial, <span class="at">data=</span>quilpie)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clinfun)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(<span class="at">marker=</span><span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">status=</span>quilpie<span class="sc">$</span>y, <span class="at">method=</span><span class="fu">c</span>(<span class="st">"empirical"</span>))</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family=</span>binomial, <span class="at">data=</span>quilpie)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clinfun)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(<span class="at">marker=</span><span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">status=</span>quilpie<span class="sc">$</span>y, <span class="at">method=</span><span class="fu">c</span>(<span class="st">"empirical"</span>))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ROC curve with AUC = 0.7835498 and s.e. = 0.05651002 </code></pre>
 </div>

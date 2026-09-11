@@ -250,32 +250,37 @@ $$
 :::
 
 
-```{r hauck-donner-sim}
+```{r hauck-donner-sim-continu}
 #| warning: false
 library(purrr)
 library(dplyr)
 library(ggplot2)
 
-n <- 20  # taille de chaque groupe
+simuler_logistique <- function(n, beta0 = 0, beta1 = 1) {
+  x <- rnorm(n, mean = 0, sd = 1)
+  eta <- beta0 + beta1 * x
+  p <- plogis(eta)
+  y <- rbinom(n, size = 1, prob = p)
+  data.frame(x = x, y = y)
+}
 
-resultats <- map_dfr(1:(n - 1), function(k) {
-  y1 <- c(rep(1, k), rep(0, n - k))
-  y0 <- c(rep(1, n / 2), rep(0, n / 2))
+set.seed(123)
+n <- 200
+valeurs_beta1 <- seq(0.5, 15, by = 0.5)  # vrai effet croissant -> séparation
 
-  dat <- data.frame(
-    y = c(y1, y0),
-    x = rep(c(1, 0), each = n)
-  )
+resultats <- map_dfr(valeurs_beta1, function(b1) {
+  dat <- simuler_logistique(n, beta0 = 0, beta1 = b1)
 
   mod_complet <- glm(y ~ x, data = dat, family = binomial)
   mod_reduit  <- glm(y ~ 1, data = dat, family = binomial)
 
-  beta_hat <- coef(mod_complet)["x"]
-  et_hat   <- summary(mod_complet)$coefficients["x", "Std. Error"]
-  wald_z2  <- (beta_hat / et_hat)^2
-  lr_stat  <- as.numeric(2 * (logLik(mod_complet) - logLik(mod_reduit)))
+  beta_hat   <- coef(mod_complet)["x"]
+  et_hat     <- summary(mod_complet)$coefficients["x", "Std. Error"]
+  wald_chisq <- (beta_hat / et_hat)^2
+  lr_chisq   <- as.numeric(2 * (logLik(mod_complet) - logLik(mod_reduit)))
 
-  data.frame(k = k, beta_hat = beta_hat, wald_chisq = wald_z2, lr_chisq = lr_stat)
+  data.frame(beta1_vrai = b1, beta_hat = beta_hat,
+             wald_chisq = wald_chisq, lr_chisq = lr_chisq)
 })
 
 resultats |>
@@ -287,7 +292,7 @@ resultats |>
   geom_line(linewidth = 1) +
   labs(x = expression(hat(beta)[x]), y = "Statistique de test (échelle khi-carré, 1 ddl)",
        color = NULL,
-       title = "Effet Hauck-Donner : Wald redescend, le RV continue de croître") +
+       title = "Effet Hauck-Donner avec un prédicteur continu") +
   theme_minimal()
 ```
 

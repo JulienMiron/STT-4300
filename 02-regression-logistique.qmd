@@ -297,19 +297,28 @@ Pour illustrer concrètement l'écart entre les deux tests, comparons un cas "no
 
 ```{r hauck-donner-exemples}
 #| warning: false
-ajuster_exemple <- function(k, n = 20) {
-  y1 <- c(rep(1, k), rep(0, n - k))
-  y0 <- c(rep(1, n / 2), rep(0, n / 2))
-  data.frame(y = c(y1, y0), x = rep(c(1, 0), each = n))
+
+simuler_logistique <- function(n, beta0 = 0, beta1 = 1) {
+  x <- rnorm(n, mean = 0, sd = 1)
+  eta <- beta0 + beta1 * x
+  p <- plogis(eta)          # équivalent à 1 / (1 + exp(-eta))
+  y <- rbinom(n, size = 1, prob = p)
+  data.frame(x = x, y = y)
 }
 
 # Cas 1 : k = 15, pas de séparation
-dat_normal <- ajuster_exemple(15)
+dat_normal <- simuler_logistique(n = 50, beta0 = 0, beta1 = 5)
+
+plot(dat_normal$x, dat_normal$y)
+
 mod_normal <- glm(y ~ x, data = dat_normal, family = binomial)
 summary(mod_normal)$coefficients
 
 # Cas 2 : k = 19, séparation quasi-complète
-dat_separe <- ajuster_exemple(19)
+dat_separe <- simuler_logistique(n = 50, beta0 = 0, beta1 = 25)
+
+plot(dat_separe$x, dat_separe$y)
+
 mod_separe <- glm(y ~ x, data = dat_separe, family = binomial)
 summary(mod_separe)$coefficients
 ```

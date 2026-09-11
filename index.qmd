@@ -4,6 +4,8 @@ Ces notes de cours couvrent la régression linéaire, les modèles linéaires g�
 
 Le contenu mélange théorie statistique (en notation mathématique) et exemples de mise en œuvre pratique en langage R.
 
+Si vous constatez des coquilles ou des erreurs, merci de m'envoyer [un courriel](mailto:julien.miron@mat.ulaval.ca).
+
 ## Plan du cours
 
 1. **Rappels de régression linéaire** — moindres carrés, inférence, diagnostics, AIC/BIC.

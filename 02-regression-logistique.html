@@ -552,14 +552,15 @@ G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right]
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod_normal <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat_normal, <span class="at">family =</span> binomial)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_normal)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>             Estimate Std. Error   z value     Pr(&gt;|z|)
-(Intercept) 0.3981992  0.4963605 0.8022379 0.4224153346
-x           4.3623607  1.3119086 3.3252016 0.0008835462</code></pre>
+<pre><code>              Estimate Std. Error   z value     Pr(&gt;|z|)
+(Intercept) -0.1633244  0.4182883 -0.390459 0.6961971811
+x            3.4472951  0.9402401  3.666399 0.0002459904</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cas 2 : k = 19, séparation quasi-complète</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dat_separe <span class="ot">&lt;-</span> <span class="fu">simuler_logistique</span>(<span class="at">n =</span> <span class="dv">50</span>, <span class="at">beta0 =</span> <span class="dv">0</span>, <span class="at">beta1 =</span> <span class="dv">25</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dat_separe<span class="sc">$</span>x, dat_separe<span class="sc">$</span>y)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dat_separe <span class="ot">&lt;-</span> <span class="fu">simuler_logistique</span>(<span class="at">n =</span> <span class="dv">50</span>, <span class="at">beta0 =</span> <span class="dv">0</span>, <span class="at">beta1 =</span> <span class="dv">15</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dat_separe<span class="sc">$</span>x, dat_separe<span class="sc">$</span>y)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -570,9 +571,9 @@ x           4.3623607  1.3119086 3.3252016 0.0008835462</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod_separe <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat_separe, <span class="at">family =</span> binomial)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_separe)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>              Estimate Std. Error   z value  Pr(&gt;|z|)
-(Intercept)  0.1477075  0.8017322 0.1842354 0.8538288
-x           10.7041623  5.0285774 2.1286661 0.0332819</code></pre>
+<pre><code>             Estimate Std. Error   z value  Pr(&gt;|z|)
+(Intercept)  1.028036   1.301805 0.7897003 0.4297028
+x           14.144188   7.929599 1.7837205 0.0744691</code></pre>
 </div>
 </div>
 <p>Et le test du rapport de vraisemblance correspondant pour le cas séparé, à comparer à la p-value de Wald ci-dessus :</p>
@@ -585,8 +586,8 @@ x           10.7041623  5.0285774 2.1286661 0.0332819</code></pre>
 Model 1: y ~ 1
 Model 2: y ~ x
   Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
-1        49     68.593                          
-2        48     10.123  1    58.47 2.064e-14 ***
+1        49     57.306                          
+2        48      4.990  1   52.316 4.725e-13 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>

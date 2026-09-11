@@ -2,6 +2,7 @@ project:
   type: book
   output-dir: _book
 
+
 lang: fr
 language: 
   title-block-modified: "Dernière modification"
@@ -37,8 +38,6 @@ crossref:
 
 format:
   html:
-    filters: 
-      - webr
     theme: cosmo
     css: styles.css
     toc: true
@@ -55,4 +54,5 @@ format:
 editor: source
 
 filters:
+  - webr
   - filtres/titre-environnements.lua

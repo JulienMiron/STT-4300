@@ -1,3 +1,27 @@
+:root {
+  --accent: #217e5f;       /* bleu-gris, sobre */
+  --accent-clair: #eaf1f5; /* même teinte, très pâle, pour les fonds */
+  --fond-clair: #FEFCFF;   /* corps principal */
+  --fond-fonce: #FAF7FC;   /* barre de gauche, un cran plus foncé */
+}
+
+h2 {
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.3em;
+}
+
+a {
+  color: var(--accent);
+}
+
+body {
+  background-color: var(--fond-clair);
+}
+
+
+#quarto-sidebar {
+  background-color: var(--fond-fonce);
+}
 /* Environnements de type théorème (définition, propriété, remarque, exemple) */
 .env-definition,
 .env-propriete,
@@ -14,6 +38,9 @@
 .env-propriete   { border-left-color: #31a354; background-color: #eef9f1; }
 .env-remarque     { border-left-color: #e6a817; background-color: #fdf6e3; }
 .env-exemple      { border-left-color: #9467bd; background-color: #f5f0fa; }
+
+
+
 
 .env-definition p:first-child,
 .env-propriete p:first-child,

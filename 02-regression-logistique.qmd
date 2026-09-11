@@ -243,6 +243,25 @@ summary(modele.probit)$coefficients
 summary(modele.cloglog)$coefficients
 ```
 
+::: {.callout-note collapse="true" title="Afficher les résultats"}
+```{r}
+#| echo: false
+#| message: false
+library(GLMsData)
+data(turbines)
+
+modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="logit"))
+modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="probit"))
+modele.cloglog <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="cloglog"))
+summary(modele.logit)$coefficients
+summary(modele.probit)$coefficients
+summary(modele.cloglog)$coefficients
+```
+:::
+
 ```{r}
 #| eval: false
 #| warning: false
@@ -283,22 +302,6 @@ ggplot() +
 ```
 
 ::: {.callout-note collapse="true" title="Afficher les résultats"}
-```{r}
-#| echo: false
-#| message: false
-library(GLMsData)
-data(turbines)
-
-modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="logit"))
-modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="probit"))
-modele.cloglog <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="cloglog"))
-summary(modele.logit)$coefficients
-summary(modele.probit)$coefficients
-summary(modele.cloglog)$coefficients
-```
 
 ```{r}
 #| echo: false
@@ -340,7 +343,7 @@ ggplot() +
 ```
 :::
 
-Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. Les intervalles de confiance se calculent avec `predict(..., se.fit=TRUE)` sur l'échelle du lien (méthode 1) ou avec `type="response"` (méthode 2).
+Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. 
 :::
 
 

@@ -259,9 +259,7 @@ library(ggplot2)
 n <- 20  # taille de chaque groupe
 
 resultats <- map_dfr(1:(n - 1), function(k) {
-  # Groupe x = 1 : k succès sur n (k croît jusqu'à la séparation complète)
   y1 <- c(rep(1, k), rep(0, n - k))
-  # Groupe x = 0 : référence, toujours 50 % de succès
   y0 <- c(rep(1, n / 2), rep(0, n / 2))
 
   dat <- data.frame(
@@ -274,7 +272,7 @@ resultats <- map_dfr(1:(n - 1), function(k) {
 
   beta_hat <- coef(mod_complet)["x"]
   et_hat   <- summary(mod_complet)$coefficients["x", "Std. Error"]
-  wald_z2  <- (beta_hat / et_hat)^2          # statistique de Wald au carré (échelle khi-carré à 1 ddl)
+  wald_z2  <- (beta_hat / et_hat)^2
   lr_stat  <- as.numeric(2 * (logLik(mod_complet) - logLik(mod_reduit)))
 
   data.frame(k = k, beta_hat = beta_hat, wald_chisq = wald_z2, lr_chisq = lr_stat)
@@ -291,6 +289,36 @@ resultats |>
        color = NULL,
        title = "Effet Hauck-Donner : Wald redescend, le RV continue de croître") +
   theme_minimal()
+```
+
+### Comparaison directe des sorties
+
+Pour illustrer concrètement l'écart entre les deux tests, comparons un cas "normal" ($k = 15$, pas de séparation) à un cas de séparation quasi-complète ($k = 19$, un seul échec sur 20 dans le groupe $x = 1$) :
+
+```{r hauck-donner-exemples}
+#| warning: false
+ajuster_exemple <- function(k, n = 20) {
+  y1 <- c(rep(1, k), rep(0, n - k))
+  y0 <- c(rep(1, n / 2), rep(0, n / 2))
+  data.frame(y = c(y1, y0), x = rep(c(1, 0), each = n))
+}
+
+# Cas 1 : k = 15, pas de séparation
+dat_normal <- ajuster_exemple(15)
+mod_normal <- glm(y ~ x, data = dat_normal, family = binomial)
+summary(mod_normal)$coefficients
+
+# Cas 2 : k = 19, séparation quasi-complète
+dat_separe <- ajuster_exemple(19)
+mod_separe <- glm(y ~ x, data = dat_separe, family = binomial)
+summary(mod_separe)$coefficients
+```
+
+Et le test du rapport de vraisemblance correspondant pour le cas séparé, à comparer à la p-value de Wald ci-dessus :
+
+```{r hauck-donner-rv}
+mod_separe_reduit <- glm(y ~ 1, data = dat_separe, family = binomial)
+anova(mod_separe_reduit, mod_separe, test = "Chisq")
 ```
 ### Intervalle de confiance pour une probabilité prédite
 

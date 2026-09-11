@@ -323,10 +323,15 @@ plot(dat_separe$x, dat_separe$y)
 mod_separe <- glm(y ~ x, data = dat_separe, family = binomial)
 summary(mod_separe)$coefficients
 ```
+On constate ici que la valeur-p n'est pas significative au seuil 5%.
 
-Et le test du rapport de vraisemblance correspondant pour le cas séparé, à comparer à la p-value de Wald ci-dessus :
+Si on regarde les valeurs-p des tests des rapports de vraisemblance pour les deux cas:
 
 ```{r hauck-donner-rv}
+mod_normal_reduit <- glm(y ~ 1, data = dat_normal, family = binomial)
+anova(mod_separe_reduit, mod_separe, test = "Chisq")
+
+
 mod_separe_reduit <- glm(y ~ 1, data = dat_separe, family = binomial)
 anova(mod_separe_reduit, mod_separe, test = "Chisq")
 ```

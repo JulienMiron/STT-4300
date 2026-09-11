@@ -8,5 +8,5 @@ Si vous constatez des coquilles ou des erreurs, merci de m'envoyer [un courriel]
 
 ## Remerciements
 
-Ces notes s'appuient en partie sur du matériel de cours développé par Lajmi Lakhal Chaieb,
+Ces notes s'appuient en partie sur du matériel de cours développé respectivement par Lajmi Lakhal Chaieb,
 Thierry Duchesne, Michel Carbon, de l'Université Laval et Eva Cantoni de l'Université de Genève.

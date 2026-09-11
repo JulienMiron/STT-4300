@@ -220,6 +220,130 @@ $$
 
 :::
 
+
+:::{.env-exemple}
+**Exemple (Jeu de données `turbines`).**
+
+On ajuste le modèle avec les trois fonctions de lien :
+
+```{r}
+#| eval: false
+#| message: false
+library(GLMsData)
+data(turbines)
+
+modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="logit"))
+modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="probit"))
+modele.cloglog <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="cloglog"))
+summary(modele.logit)$coefficients
+summary(modele.probit)$coefficients
+summary(modele.cloglog)$coefficients
+```
+
+```{r}
+#| eval: false
+#| warning: false
+library(ggplot2)
+library(dplyr)
+
+grille <- data.frame(
+  Hours = seq(min(turbines$Hours), max(turbines$Hours), length.out = 200)
+)
+
+predire_modele <- function(modele, nom_lien) {
+  grille |>
+    mutate(
+      p_hat = predict(modele, newdata = grille, type = "response"),
+      lien  = nom_lien
+    )
+}
+
+predictions <- bind_rows(
+  predire_modele(modele.logit,   "Logit"),
+  predire_modele(modele.probit,  "Probit"),
+  predire_modele(modele.cloglog, "Cloglog")
+)
+
+turbines_obs <- turbines |>
+  mutate(prop_observee = Fissures / Turbines)
+
+ggplot() +
+  geom_point(data = turbines_obs, aes(x = Hours, y = prop_observee, size = Turbines),
+             color = "black", alpha = 0.6) +
+  geom_line(data = predictions, aes(x = Hours, y = p_hat, color = lien),
+            linewidth = 1) +
+  labs(x = "Heures d'utilisation", y = "Probabilité de fissure estimée",
+       color = "Fonction de lien",
+       size = "Nombre de turbines",
+       title = "Comparaison des fonctions de lien logit, probit et cloglog") +
+  theme_minimal()
+```
+
+::: {.callout-note collapse="true" title="Afficher les résultats"}
+```{r}
+#| echo: false
+#| message: false
+library(GLMsData)
+data(turbines)
+
+modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="logit"))
+modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="probit"))
+modele.cloglog <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
+                      data=turbines, family=binomial(link="cloglog"))
+summary(modele.logit)$coefficients
+summary(modele.probit)$coefficients
+summary(modele.cloglog)$coefficients
+```
+
+```{r}
+#| echo: false
+#| warning: false
+library(ggplot2)
+library(dplyr)
+
+grille <- data.frame(
+  Hours = seq(min(turbines$Hours), max(turbines$Hours), length.out = 200)
+)
+
+predire_modele <- function(modele, nom_lien) {
+  grille |>
+    mutate(
+      p_hat = predict(modele, newdata = grille, type = "response"),
+      lien  = nom_lien
+    )
+}
+
+predictions <- bind_rows(
+  predire_modele(modele.logit,   "Logit"),
+  predire_modele(modele.probit,  "Probit"),
+  predire_modele(modele.cloglog, "Cloglog")
+)
+
+turbines_obs <- turbines |>
+  mutate(prop_observee = Fissures / Turbines)
+
+ggplot() +
+  geom_point(data = turbines_obs, aes(x = Hours, y = prop_observee, size = Turbines),
+             color = "black", alpha = 0.6) +
+  geom_line(data = predictions, aes(x = Hours, y = p_hat, color = lien),
+            linewidth = 1) +
+  labs(x = "Heures d'utilisation", y = "Probabilité de fissure estimée",
+       color = "Fonction de lien",
+       size = "Nombre de turbines",
+       title = "Comparaison des fonctions de lien logit, probit et cloglog") +
+  theme_minimal()
+```
+:::
+
+Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. Les intervalles de confiance se calculent avec `predict(..., se.fit=TRUE)` sur l'échelle du lien (méthode 1) ou avec `type="response"` (méthode 2).
+:::
+
+
 ### Tests d'hypothèses et intervalles de confiance
 
 Les intervalles de confiance et tests concernant les $\beta_j$ sont obtenus par la méthode de **Wald**. Un intervalle de confiance de niveau $(1-\alpha)$ pour $\beta_j$ est
@@ -352,70 +476,7 @@ et on applique $g^{-1}$ aux deux bornes. Cet intervalle respecte toujours $[0,1]
 
 Les deux méthodes donnent en pratique des résultats très similaires.
 
-:::{.env-exemple}
-**Exemple (Jeu de données `turbines`).**
 
-On ajuste le modèle avec les trois fonctions de lien :
-
-```{webr-r}
-#| message: false
-library(GLMsData)
-data(turbines)
-
-modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="logit"))
-modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="probit"))
-modele.cloglog <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="cloglog"))
-summary(modele.logit)$coefficients
-summary(modele.probit)$coefficients
-summary(modele.cloglog)$coefficients
-```
-
-```{webr-r courbe-prob-turbines}
-#| warning: false
-library(ggplot2)
-library(dplyr)
-
-# Grille de valeurs de Hours pour une courbe lisse
-grille <- data.frame(
-  Hours = seq(min(turbines$Hours), max(turbines$Hours), length.out = 200)
-)
-
-# Fonction utilitaire pour extraire les prédictions d'un modèle donné
-predire_modele <- function(modele, nom_lien) {
-  grille |>
-    mutate(
-      p_hat = predict(modele, newdata = grille, type = "response"),
-      lien  = nom_lien
-    )
-}
-
-predictions <- bind_rows(
-  predire_modele(modele.logit,   "Logit"),
-  predire_modele(modele.probit,  "Probit"),
-  predire_modele(modele.cloglog, "Cloglog")
-)
-
-# Proportions observées, pour superposer les points aux données réelles
-turbines_obs <- turbines |>
-  mutate(prop_observee = Fissures / Turbines)
-
-ggplot() +
-  geom_point(data = turbines_obs, aes(x = Hours, y = prop_observee, size = Turbines),
-             color = "black", alpha = 0.6) +
-  geom_line(data = predictions, aes(x = Hours, y = p_hat, color = lien),
-            linewidth = 1) +
-  labs(x = "Heures d'utilisation", y = "Probabilité de fissure estimée",
-       color = "Fonction de lien",
-       size = "Nombre de turbines",
-       title = "Comparaison des fonctions de lien logit, probit et cloglog") +
-  theme_minimal()
-```
-
-Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. Les intervalles de confiance se calculent avec `predict(..., se.fit=TRUE)` sur l'échelle du lien (méthode 1) ou avec `type="response"` (méthode 2).
-:::
 
 ## Sélection de modèles
 

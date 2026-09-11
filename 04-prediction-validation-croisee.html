@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Prédiction, mesures de performance et validation croisée – Notes de cours — STT-4300</title>
+<title>4&nbsp; Prédiction, mesures de performance et validation croisée – STT-4300 - Régression II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -134,7 +134,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Notes de cours — STT-4300</a> 
+      <a href="./">STT-4300 - Régression II</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/ton-utilisateur/notes-stt4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
 </div>
@@ -274,6 +274,7 @@ window.Quarto = {
 <h3 data-number="4.2.2" class="anchored" data-anchor-id="validation-croisée-avec-exclusion-dune-observation-loocv"><span class="header-section-number">4.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV)</h3>
 <p>Pour remédier au deuxième défaut, pour <span class="math inline">\(i = 1,\ldots,n\)</span>, on estime <span class="math inline">\(\beta\)</span> avec toutes les observations <strong>sauf</strong> la <span class="math inline">\(i^{\text{ème}}\)</span> et on calcule <span class="math inline">\(\hat y_{i,(-i)}\)</span>. Le critère est <span class="math display">\[VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(y_i - \hat y_{i,(-i)}\right)^2.\]</span></p>
 <div class="env-propriete">
+<p><span class="env-titre">Propriété</span></p>
 <p><strong>Propriété (Formule explicite pour la régression linéaire).</strong></p>
 <p><span class="math display">\[VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat y_i}{1 - h_i}\right)^2,\]</span> où <span class="math inline">\(h_i\)</span> est le levier de l’observation <span class="math inline">\(i\)</span>. Il n’est donc pas nécessaire d’ajuster <span class="math inline">\(n\)</span> régressions : un seul ajustement suffit.</p>
 </div>
@@ -283,6 +284,7 @@ window.Quarto = {
 <p>Pour d’autres modèles (notamment les MLG), le calcul de <span class="math inline">\(VC_{(n)}\)</span> requiert l’ajustement de <span class="math inline">\(n\)</span> modèles, ce qui peut être coûteux. On considère alors la validation croisée à <span class="math inline">\(K\)</span> blocs (en pratique <span class="math inline">\(K = 5\)</span> ou <span class="math inline">\(K = 10\)</span>). On partage le jeu de données en <span class="math inline">\(K\)</span> parties de tailles quasiment égales <span class="math inline">\(A_1,\ldots,A_K\)</span>. Pour <span class="math inline">\(k = 1,\ldots,K\)</span>, on estime <span class="math inline">\(\beta\)</span> à partir de toutes les données sauf <span class="math inline">\(A_k\)</span> et on calcule <span class="math display">\[MSE_k = \frac{1}{n_k}\sum_{i\in A_k}\left\{y_i - \hat y_{i,(-k)}\right\}^2,\]</span> où <span class="math inline">\(n_k\)</span> est la taille de <span class="math inline">\(A_k\)</span>. On estime le taux d’erreur test par <span class="math display">\[VC_{(K)} = \frac{1}{K}\sum_{k=1}^K MSE_k.\]</span></p>
 <p>En R, la fonction <code>cv.glm</code> de la librairie <code>boot</code> calcule <span class="math inline">\(VC_{(n)}\)</span> (par défaut) et <span class="math inline">\(VC_{(K)}\)</span> (argument <code>K</code>).</p>
 <div class="env-exemple">
+<p><span class="env-titre">Exemple</span></p>
 <p><strong>Exemple (<code>Auto</code>).</strong></p>
 <p>Sur les quatre modèles polynomiaux, la validation croisée (<span class="math inline">\(VC_{(n)}\)</span>, <span class="math inline">\(VC_{(5)}\)</span> et <span class="math inline">\(VC_{(10)}\)</span>) désigne systématiquement le modèle 3 (quadratique) comme le meilleur pour la prédiction (<span class="math inline">\(VC_{(n)} \approx 19.25\)</span>), alors que l’approche par ensemble de validation unique pouvait suggérer le modèle 4.</p>
 </div>

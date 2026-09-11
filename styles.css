@@ -21,3 +21,10 @@
 .env-exemple p:first-child {
   margin-top: 0;
 }
+
+.env-titre {
+  font-weight: bold;
+  display: block;
+  font-size: 1.1em;
+  margin-bottom: 0.3em;
+}

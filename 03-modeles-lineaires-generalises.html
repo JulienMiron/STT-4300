@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Modèles linéaires généralisés – Notes de cours — STT-4300</title>
+<title>3&nbsp; Modèles linéaires généralisés – STT-4300 - Régression II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -169,7 +169,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Notes de cours — STT-4300</a> 
+      <a href="./">STT-4300 - Régression II</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/ton-utilisateur/notes-stt4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
 </div>
@@ -299,10 +299,12 @@ window.Quarto = {
 <section id="définition" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="définition"><span class="header-section-number">3.1.1</span> Définition</h3>
 <div class="env-definition">
+<p><span class="env-titre">Définition</span></p>
 <p><strong>Définition.</strong></p>
 <p>La distribution de la variable aléatoire <span class="math inline">\(Y\)</span> appartient à la famille exponentielle si sa fonction de probabilité (densité si <span class="math inline">\(Y\)</span> est continue, fonction de masse si <span class="math inline">\(Y\)</span> est discrète) s’écrit <span class="math display">\[f_Y(y) = a(y,\phi)\exp\left\{\frac{y\theta - b(\theta)}{\phi}\right\},\]</span> où <span class="math inline">\(\theta\)</span> est le <strong>paramètre canonique</strong> et <span class="math inline">\(\phi\)</span> le <strong>paramètre de dispersion</strong>.</p>
 </div>
 <div id="sec-famexp" class="env-propriete">
+<p><span class="env-titre">Propriété</span></p>
 <p><strong>Propriété.</strong></p>
 <p>Si <span class="math inline">\(Y\)</span> appartient à la famille exponentielle, alors <span class="math display">\[E[Y] = \mu = b'(\theta) \qquad \mbox{et} \qquad Var[Y] = \phi\, b''(\theta) = \phi\, V(\mu),\]</span> où <span class="math inline">\(V(u) = b''\!\left[(b')^{-1}(u)\right]\)</span> est la <strong>fonction de variance</strong>.</p>
 </div>
@@ -412,6 +414,7 @@ window.Quarto = {
 <p>La variable réponse <span class="math inline">\(Y_i \in \mathbb{N}\)</span> dénote un dénombrement (nombre de nouveaux cas d’une maladie, nombre d’absences, etc.). La régression Poisson suppose <span class="math inline">\(Y_i \sim \mathcal{P}(\mu_i)\)</span> : <span class="math display">\[P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.\]</span></p>
 <p>Avec la fonction de lien canonique <span class="math inline">\(g(\mu_i) = \log(\mu_i)\)</span>, on a <span class="math display">\[\mu_i = e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}} = e^{\beta_0}\times\left\{e^{\beta_1}\right\}^{X_{i1}}\times\cdots\times\left\{e^{\beta_p}\right\}^{X_{ip}}.\]</span></p>
 <div class="env-remarque">
+<p><span class="env-titre">Remarque</span></p>
 <p><strong>Remarque (Interprétation).</strong></p>
 <p>Si <span class="math inline">\(X_{ij}\)</span> augmente de 1, <span class="math inline">\(\mu_i\)</span> est <strong>multiplié</strong> par <span class="math inline">\(e^{\beta_j}\)</span>. Si <span class="math inline">\(\beta_j &gt; 0\)</span>, alors <span class="math inline">\(e^{\beta_j} &gt; 1\)</span> et <span class="math inline">\(\mu_i\)</span> croît.</p>
 </div>

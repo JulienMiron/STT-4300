@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Sélection de variables et régularisation – Notes de cours — STT-4300</title>
+<title>5&nbsp; Sélection de variables et régularisation – STT-4300 - Régression II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -169,7 +169,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Notes de cours — STT-4300</a> 
+      <a href="./">STT-4300 - Régression II</a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/ton-utilisateur/notes-stt4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
 </div>
@@ -292,6 +292,7 @@ window.Quarto = {
 <p>Considérons le modèle de régression <span class="math display">\[Y_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip} + \epsilon_i, \qquad \epsilon_i \sim \mathcal{N}(0,\sigma^2).\]</span> L’estimateur des moindres carrés <span class="math inline">\(\hat\beta\)</span> est sans biais et de variance minimale parmi les estimateurs sans biais. Cependant, rien ne garantit qu’il possède la plus petite <strong>erreur quadratique moyenne</strong> : <span class="math display">\[E\left[(\beta_j - \hat\beta_j)^2\right] = \mbox{biais}(\hat\beta_j)^2 + Var(\hat\beta_j).\]</span></p>
 <p>La régression régularisée impose une pénalité au critère des moindres carrés : on minimise <span class="math display">\[l_\lambda(\beta) = l(\beta) + \lambda\, g(\beta_1,\ldots,\beta_p),\]</span> où <span class="math inline">\(g\)</span> est une fonction de pénalité connue et <span class="math inline">\(\lambda \geq 0\)</span> est le <strong>coefficient de pénalité</strong>. La pénalité <strong>réduit la variance</strong> des estimateurs au prix d’un <strong>biais</strong> ; avec un choix judicieux de <span class="math inline">\(g\)</span> et de <span class="math inline">\(\lambda\)</span>, on diminue l’erreur quadratique moyenne et on obtient des prédictions plus précises. C’est le <strong>compromis biais-variance</strong>.</p>
 <div class="env-remarque">
+<p><span class="env-titre">Remarque</span></p>
 <p><strong>Remarque.</strong></p>
 <p>L’ordonnée à l’origine <span class="math inline">\(\beta_0\)</span> n’est pas pénalisée. Par ailleurs, les variables explicatives sont généralement standardisées avant l’ajustement, car la pénalité n’est pas invariante à l’échelle des variables.</p>
 </div>
@@ -306,6 +307,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 \]</span></p>
 <p>L’estimateur est donc biaisé, sauf si <span class="math inline">\(\lambda = 0\)</span>. Lorsque <span class="math inline">\(\lambda = 0\)</span>, <span class="math inline">\(\hat\beta^{(R)}_\lambda = \hat\beta\)</span> ; lorsque <span class="math inline">\(\lambda\to\infty\)</span>, tous les <span class="math inline">\(\hat\beta^{(R)}_{j,\lambda}\)</span> (<span class="math inline">\(j\geq1\)</span>) tendent vers 0 et l’ordonnée à l’origine tend vers <span class="math inline">\(\bar Y\)</span>. On parle d’un phénomène de <strong>rétrécissement</strong> (<em>shrinkage</em>).</p>
 <div class="env-exemple">
+<p><span class="env-titre">Exemple</span></p>
 <p><strong>Exemple (<code>Hitters</code>, librairie <code>ISLR</code>).</strong></p>
 <p>La réponse est le salaire d’un joueur de baseball (19 variables explicatives). En R, la régression ridge s’ajuste avec <code>glmnet(x, y, alpha=0)</code>. Avec <span class="math inline">\(\lambda = e^6\)</span>, on observe <span class="math inline">\(\sum_j[\hat\beta^{(R)}_{j,\lambda}]^2 = 5721\)</span> contre <span class="math inline">\(\sum_j\hat\beta_j^2 = 18469\)</span> pour les moindres carrés : rétrécissement marqué. Sur une partition entraînement/test, le taux d’erreur test passe de <span class="math inline">\(124\,716\)</span> (moindres carrés) à <span class="math inline">\(91\,274\)</span> (ridge), soit une diminution de près de 27%.</p>
 </div>
@@ -315,6 +317,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <p>La régression lasso minimise <span class="math display">\[l^{(L)}_\lambda(\beta) = \sum_{i=1}^n\left\{Y_i - (\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip})\right\}^2 + \lambda\sum_{j=1}^p|\beta_j|.\]</span> Il n’existe pas d’expression explicite pour <span class="math inline">\(\hat\beta^{(L)}_\lambda\)</span>, mais des algorithmes d’optimisation efficaces existent (en R : <code>glmnet(x, y, alpha=1)</code>).</p>
 <p>La caractéristique clé du lasso : pour les grandes valeurs de <span class="math inline">\(\lambda\)</span>, certains coefficients <span class="math inline">\(\hat\beta^{(L)}_{j,\lambda}\)</span> deviennent <strong>identiquement égaux à 0</strong>. Le lasso effectue donc une <strong>sélection de variables</strong> automatique, intuitive et naturelle. Comme pour ridge : quand <span class="math inline">\(\lambda\)</span> croît, le biais croît et la variance diminue.</p>
 <div class="env-exemple">
+<p><span class="env-titre">Exemple</span></p>
 <p><strong>Exemple (<code>Hitters</code>, suite).</strong></p>
 <p>Avec <span class="math inline">\(\lambda = e^2\)</span>, le lasso annule les coefficients de <code>HmRun</code>, <code>Runs</code>, <code>RBI</code>, <code>CAtBat</code>, <code>CHits</code>, <code>Assists</code> et <code>NewLeagueN</code> : le modèle retenu ne contient plus que 12 variables.</p>
 </div>
@@ -334,7 +337,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>reg.ridge.select <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x, y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">lambda=</span>grille.lambda)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>reg.ridge.select<span class="sc">$</span>lambda.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4.641589</code></pre>
+<pre><code>[1] 231.013</code></pre>
 </div>
 </div>
 <p>Sur les données <code>Hitters</code>, on obtient <span class="math inline">\(\lambda = e^{2.2}\)</span> pour ridge et <span class="math inline">\(\lambda = e^3\)</span> pour le lasso.</p>

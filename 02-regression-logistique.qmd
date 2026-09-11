@@ -57,6 +57,42 @@ La fonction de lien doit assurer que $\pi_i = g^{-1}(\eta_i) \in [0,1]$. Trois c
 
 Dans les trois cas, $g^{-1}(\cdot)$ est une fonction de répartition. En pratique, les trois liens donnent souvent des résultats très similaires.
 
+
+Voici une comparaison des probabilités prédites pour les trois liens, en fonction de $\eta_i$.
+```{r}
+#| echo: false
+#| warning: false
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(latex2exp)
+
+evaluer_liens <- function(x) {
+  data.frame(
+    X       = x,
+    logit   = plogis(x),                  # 1 / (1 + exp(-x))
+    probit  = pnorm(x),                   # fonction de répartition normale
+    cloglog = 1 - exp(-exp(x))            # complementary log-log inverse
+  )
+}
+
+grille <- data.frame(
+  X = seq(-5, 5, length.out = 200)
+)
+resultats <- evaluer_liens(grille$X)
+
+
+
+resultats |>
+  pivot_longer(cols = c(logit, probit, cloglog), names_to = "lien", values_to = "p") |>
+  ggplot(aes(x = X, y = p, color = lien)) +
+  geom_line(linewidth = 1) +
+  labs(x = TeX("Valeur de $\\eta$ "), y = "Probabilité",
+       color = "Fonction de lien",
+       title = "Comparaison des fonctions de lien inverses") +
+  theme_minimal()
+```
+
 :::{.env-remarque #sec-cotes titre = "Interprétation du lien logit"}
 Avec le lien logit, on a
 
@@ -106,41 +142,6 @@ On distingue trois cas :
 
 :::
 
-Voici une comparaison des probabilités prédites pour les trois liens, en fonction de $\eta_i$.
-```{r}
-#| echo: false
-#| warning: false
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(latex2exp)
-
-evaluer_liens <- function(x) {
-  data.frame(
-    X       = x,
-    logit   = plogis(x),                  # 1 / (1 + exp(-x))
-    probit  = pnorm(x),                   # fonction de répartition normale
-    cloglog = 1 - exp(-exp(x))            # complementary log-log inverse
-  )
-}
-
-grille <- data.frame(
-  X = seq(-5, 5, length.out = 200)
-)
-resultats <- evaluer_liens(grille$X)
-
-
-
-resultats |>
-  pivot_longer(cols = c(logit, probit, cloglog), names_to = "lien", values_to = "p") |>
-  ggplot(aes(x = X, y = p, color = lien)) +
-  geom_line(linewidth = 1) +
-  labs(x = TeX("Valeur de $\\eta$ "), y = "Probabilité",
-       color = "Fonction de lien",
-       title = "Comparaison des fonctions de lien inverses") +
-  theme_minimal()
-```
-
 
 
 ## Inférence statistique
@@ -173,9 +174,7 @@ $$
 
 où $\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top$ et $K$ ne dépend pas de $\beta$ (donc n'affecte pas la maximisation).
 
-:::{.env-remarque}
-**Remarque (Log-vraisemblance avec le lien logit.).**
-
+:::{.env-remarque titre = "Log-vraisemblance avec le lien logit"}
 Avec le lien logit, $\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}$ et $1-\pi_i = \dfrac{1}{1+e^{\eta_i}}$, où
 
 $$

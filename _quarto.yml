@@ -15,7 +15,7 @@ book:
   page-footer:
     left: "Notes de cours STT-4300"
     right: "Généré avec Quarto"
-  repo-url: https://github.com/ton-utilisateur/notes-stt4300
+  repo-url: https://github.com/JulienMiron/STT-4300
   repo-actions: [edit, issue]
   sidebar:
     style: docked

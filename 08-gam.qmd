@@ -89,7 +89,7 @@ summary(mod1)   # tests approximatifs de f_j = 0, DLE par fonction
 plot(mod1)      # courbes estimées avec bandes de confiance
 ```
 
-```{r}
+```{webr-r}
 #| message: false
 library(GLMsData)
 data(quilpie)

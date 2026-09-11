@@ -3,6 +3,7 @@ project:
   output-dir: _book
 
 lang: fr
+language: title-block-author-single: "Auteur"
 
 book:
   title: "Notes de cours — STT-4300"

@@ -10,7 +10,7 @@ En écriture matricielle, on a $\boldsymbol{Y} = \boldsymbol{X\beta} + \epsilon$
 $$\boldsymbol{X} =
  \begin{pmatrix}  \boldsymbol{X}_1^\top \\  \vdots  \\   \boldsymbol{X}_n^\top\end{pmatrix}=\begin{pmatrix} 1 & x_{11} & \cdots & x_{1p} \\ \vdots & \vdots & & \vdots \\ 1 & x_{n1} & \cdots & x_{np}\end{pmatrix}.$$
 
-Sous ces hypothèses, on a $\mu_i =E[Y_i|x_{i1},\hdots, x_{ip}] =  \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip}$ et $Var[Y_i] = \sigma^2$ (homoscédasticité).
+Sous ces hypothèses, on a $\mu_i =E[Y_i|x_{i1},\ldots, x_{ip}] =  \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip}$ et $Var[Y_i] = \sigma^2$ (homoscédasticité).
 
 ## Estimation par moindres carrés
 

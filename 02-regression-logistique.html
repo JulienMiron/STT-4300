@@ -456,9 +456,10 @@ I_{jk} = -\left.\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k}\right|
 <p><span class="math display">\[
 \hat{\boldsymbol\beta} \;\approx\; \mathcal{N}\{\boldsymbol\beta,\, \widehat{\text{Var}}(\hat{\boldsymbol\beta}) \}.
 \]</span></p>
+<p>Dans ce qui suit, <span class="math inline">\(\widehat{\text{V}}(\hat{\boldsymbol\beta})\)</span> sera utilisé à la place de <span class="math inline">\(\widehat{\text{Var}}(\hat{\boldsymbol\beta})\)</span>, pour alléger la notation. De plus, on écrit <span class="math inline">\(\widehat{\text{V}}(\hat{\beta}_j)=[\widehat{\text{Var}}(\hat{\boldsymbol\beta})]_{jj}\)</span> quand on parle de la variance estimée du paramètre <span class="math inline">\(\beta_j\)</span>.</p>
 <p><strong>Forme explicite dans le cas binomial.</strong> On montre que</p>
 <p><span class="math display">\[
-\widehat{\text{Var}}(\hat{\boldsymbol\beta})  = (X^\top W X)^{-1},
+\widehat{\text{V}}(\hat{\boldsymbol\beta})  = (X^\top W X)^{-1},
 \]</span></p>
 <p>où <span class="math inline">\(W\)</span> est une matrice diagonale d’entrées</p>
 <p><span class="math display">\[
@@ -576,29 +577,20 @@ Hours        0.0008104936 9.013218e-05   8.992278 2.421587e-19</code></pre>
 </section>
 <section id="tests-dhypothèses-et-intervalles-de-confiance" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="tests-dhypothèses-et-intervalles-de-confiance"><span class="header-section-number">2.2.2</span> Tests d’hypothèses et intervalles de confiance</h3>
-<p>Les intervalles de confiance et tests concernant les <span class="math inline">\(\beta_j\)</span> sont obtenus par la méthode de <strong>Wald</strong>. Un intervalle de confiance de niveau <span class="math inline">\((1-\alpha)\)</span> pour <span class="math inline">\(\beta_j\)</span> est <span class="math display">\[\left[\hat\beta_j - z_{\alpha/2}\sqrt{v(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{v(\hat\beta_j)}\right],\]</span> où <span class="math inline">\(z_\gamma\)</span> est le quantile de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> défini par <span class="math inline">\(P(Z &gt; z_\gamma) = \gamma\)</span>.</p>
-<p>Pour tester <span class="math inline">\(H_0: \beta_j = 0\)</span> contre <span class="math inline">\(H_1: \beta_j\neq 0\)</span>, on rejette <span class="math inline">\(H_0\)</span> au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(|z_{obs}| &gt; z_{\alpha/2}\)</span>, avec <span class="math inline">\(z_{obs} = \hat\beta_j/\sqrt{v(\hat\beta_j)}\)</span>. Le seuil observé (<span class="math inline">\(p\)</span>-valeur) est <span class="math inline">\(\alpha^* = 2P(Z &gt; |z_{obs}|)\)</span>.</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Le phénomène de Hauck-Donner">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Le phénomène de Hauck-Donner
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<p>Les intervalles de confiance et tests concernant les <span class="math inline">\(\beta_j\)</span> sont obtenus par la méthode de <strong>Wald</strong>. Un intervalle de confiance de niveau <span class="math inline">\((1-\alpha)\)</span> pour <span class="math inline">\(\beta_j\)</span> est <span class="math display">\[\left[\hat\beta_j - z_{\alpha/2}\sqrt{\hat{V}(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\hat{V}(\hat\beta_j)}\right],\]</span> où <span class="math inline">\(z_\gamma\)</span> est le quantile de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> défini par <span class="math inline">\(P(Z &gt; z_\gamma) = \gamma\)</span>.</p>
+<p>Pour tester <span class="math inline">\(H_0: \beta_j = 0\)</span> contre <span class="math inline">\(H_1: \beta_j\neq 0\)</span>, on rejette <span class="math inline">\(H_0\)</span> au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(|z_{obs}| &gt; z_{\alpha/2}\)</span>, avec <span class="math inline">\(z_{obs} = \hat\beta_j/\sqrt{\hat{V}(\hat\beta_j)}\)</span>. Le seuil observé (<span class="math inline">\(p\)</span>-valeur) est <span class="math inline">\(\alpha^* = 2P(Z &gt; |z_{obs}|)\)</span>.</p>
+<div id="sec-hauckdonner" class="env-remarque" data-titre="Le phénomène de Hauck-Donner">
+<p><span class="env-titre">Remarque — Le phénomène de Hauck-Donner</span></p>
 <p>Le test de Wald pour <span class="math inline">\(H_0 : \beta_j = 0\)</span> repose sur la statistique</p>
 <p><span class="math display">\[
-z_{obs} = \frac{\hat\beta_j}{\sqrt{v(\hat\beta_j)}},
+z_{obs} = \frac{\hat\beta_j}{\sqrt{\hat{V}(\hat\beta_j)}},
 \]</span></p>
-<p>où l’erreur-type est estimée à partir de la courbure de la log-vraisemblance <strong>évaluée au point estimé</strong> <span class="math inline">\(\hat\beta_j\)</span>, plutôt que sous <span class="math inline">\(H_0\)</span>. Cette dépendance locale peut mener à un comportement contre-intuitif : lorsque <span class="math inline">\(|\hat\beta_j|\)</span> devient très grand (par exemple en présence de séparation quasi-complète ou d’un effet très fort), la courbure de la vraisemblance en <span class="math inline">\(\hat\beta_j\)</span> s’aplatit, ce qui <strong>gonfle</strong> <span class="math inline">\(\sqrt{v(\hat\beta_j)}\)</span> et peut faire <strong>diminuer</strong> <span class="math inline">\(z_{obs}\)</span> — donnant l’impression que l’effet n’est pas significatif, alors qu’il l’est. On pourrait montrer que cela est causé par le fait que l’erreur-type augmente plus rapidement que la valeur absolue de l’estimation du paramètre.</p>
+<p>où l’erreur-type est estimée à partir de la courbure de la log-vraisemblance <strong>évaluée au point estimé</strong> <span class="math inline">\(\hat\beta_j\)</span>, plutôt que sous <span class="math inline">\(H_0\)</span>. Cette dépendance locale peut mener à un comportement contre-intuitif : lorsque <span class="math inline">\(|\hat\beta_j|\)</span> devient très grand (par exemple en présence de séparation quasi-complète ou d’un effet très fort), la courbure de la vraisemblance en <span class="math inline">\(\hat\beta_j\)</span> s’aplatit, ce qui <strong>gonfle</strong> <span class="math inline">\(\sqrt{\hat{V}(\hat\beta_j)}\)</span> et peut faire <strong>diminuer</strong> <span class="math inline">\(z_{obs}\)</span> — donnant l’impression que l’effet n’est pas significatif, alors qu’il l’est. On pourrait montrer que cela est causé par le fait que l’erreur-type augmente plus rapidement que la valeur absolue de l’estimation du paramètre.</p>
 <p>Ce phénomène, documenté par Hauck et Donner (1977), n’affecte pas le test du rapport de vraisemblance, qui compare directement la vraisemblance en <span class="math inline">\(\hat\beta_j\)</span> à celle en <span class="math inline">\(0\)</span> plutôt que de s’appuyer sur une approximation locale :</p>
 <p><span class="math display">\[
 G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right] \;\sim\; \chi^2_1 \quad \text{sous } H_0.
 \]</span></p>
 <p><strong>En pratique</strong> : le test «par défaut» de la plupart des fonctions de R utilise le test de Wald, car celui-ci est moins coûteux en calcul et est fiable avec de grands échantillons. Il faut porter une attention particulière aux cas où un coefficient très grand ressort avec une valeur-p de Wald étonnamment élevée. Il faut comparer avec <code>anova(modele_reduit, modele_complet, test = "Chisq")</code> avant de conclure à la non-significativité.</p>
-</div>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>

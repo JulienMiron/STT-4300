@@ -173,6 +173,7 @@ $$
 $$
 
 où $\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top$ et $K$ ne dépend pas de $\beta$ (donc n'affecte pas la maximisation).
+C'est sous cette forme qu'on reconnaîtra, plus loin, que le modèle de régression binomiale appartient à la famille exponentielle.
 
 :::{.env-remarque titre = "Log-vraisemblance avec le lien logit"}
 Avec le lien logit, $\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}$ et $1-\pi_i = \dfrac{1}{1+e^{\eta_i}}$, où
@@ -214,20 +215,20 @@ $$
 La matrice de variance-covariance de $\hat{\boldsymbol\beta}$ est estimée par
 
 $$
-v(\hat{\boldsymbol\beta}) = I^{-1},
+\widehat{\text{Var}}(\hat{\boldsymbol\beta}) = I^{-1},
 $$
 
 et la distribution asymptotique de $\hat{\boldsymbol\beta}$ est approximée par
 
 $$
-\hat{\boldsymbol\beta} \;\approx\; \mathcal{N}\{\boldsymbol\beta,\, v(\hat{\boldsymbol\beta})\}.
+\hat{\boldsymbol\beta} \;\approx\; \mathcal{N}\{\boldsymbol\beta,\, \widehat{\text{Var}}(\hat{\boldsymbol\beta}) \}.
 $$
 
 **Forme explicite dans le cas binomial.**
 On montre que
 
 $$
-v(\hat{\boldsymbol\beta}) = (X^\top W X)^{-1},
+\widehat{\text{Var}}(\hat{\boldsymbol\beta})  = (X^\top W X)^{-1},
 $$
 
 où $W$ est une matrice diagonale d'entrées

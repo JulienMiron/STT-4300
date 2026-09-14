@@ -18,10 +18,16 @@ body {
   background-color: var(--fond-clair);
 }
 
-
+footer.footer,
+.nav-footer,
+.nav-footer-left,
+.nav-footer-center,
+.nav-footer-right,
 #quarto-sidebar {
   background-color: var(--fond-fonce);
 }
+
+
 /* Environnements de type théorème (définition, propriété, remarque, exemple) */
 .env-definition,
 .env-propriete,
@@ -62,3 +68,23 @@ body {
   grid-template-columns: 1fr !important;
   row-gap: 0.5em !important; */
 }
+
+/* Lien actuellement sélectionné (page active) */
+.sidebar-item-container .sidebar-link.active,
+.sidebar-item-container .active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Lien survolé */
+.sidebar-item-container:hover .sidebar-link,
+.sidebar-link:hover {
+  color: var(--accent);
+  background-color: var(--accent-clair);
+}
+
+/* .sidebar-item-container .sidebar-link.active {
+  background-color: var(--accent-clair);
+  border-radius: 4px;
+  padding-left: 0.3em;
+} */

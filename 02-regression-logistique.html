@@ -423,7 +423,7 @@ o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i
 <p><span class="math display">\[
 \ell(\boldsymbol{\mu}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ y_i \log(\mu_i) + (m_i - y_i)\log(m_i - \mu_i) \right\} + K,
 \]</span></p>
-<p>où <span class="math inline">\(\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top\)</span> et <span class="math inline">\(K\)</span> ne dépend pas de <span class="math inline">\(\beta\)</span> (donc n’affecte pas la maximisation).</p>
+<p>où <span class="math inline">\(\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top\)</span> et <span class="math inline">\(K\)</span> ne dépend pas de <span class="math inline">\(\beta\)</span> (donc n’affecte pas la maximisation). C’est sous cette forme qu’on reconnaîtra, plus loin, que le modèle de régression binomiale appartient à la famille exponentielle.</p>
 <div class="env-remarque" data-titre="Log-vraisemblance avec le lien logit">
 <p><span class="env-titre">Remarque — Log-vraisemblance avec le lien logit</span></p>
 <p>Avec le lien logit, <span class="math inline">\(\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}\)</span> et <span class="math inline">\(1-\pi_i = \dfrac{1}{1+e^{\eta_i}}\)</span>, où</p>
@@ -450,15 +450,15 @@ I_{jk} = -\left.\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k}\right|
 \]</span></p>
 <p>La matrice de variance-covariance de <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> est estimée par</p>
 <p><span class="math display">\[
-v(\hat{\boldsymbol\beta}) = I^{-1},
+\widehat{\text{Var}}(\hat{\boldsymbol\beta}) = I^{-1},
 \]</span></p>
 <p>et la distribution asymptotique de <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> est approximée par</p>
 <p><span class="math display">\[
-\hat{\boldsymbol\beta} \;\approx\; \mathcal{N}\{\boldsymbol\beta,\, v(\hat{\boldsymbol\beta})\}.
+\hat{\boldsymbol\beta} \;\approx\; \mathcal{N}\{\boldsymbol\beta,\, \widehat{\text{Var}}(\hat{\boldsymbol\beta}) \}.
 \]</span></p>
 <p><strong>Forme explicite dans le cas binomial.</strong> On montre que</p>
 <p><span class="math display">\[
-v(\hat{\boldsymbol\beta}) = (X^\top W X)^{-1},
+\widehat{\text{Var}}(\hat{\boldsymbol\beta})  = (X^\top W X)^{-1},
 \]</span></p>
 <p>où <span class="math inline">\(W\)</span> est une matrice diagonale d’entrées</p>
 <p><span class="math display">\[

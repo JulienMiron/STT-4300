@@ -111,6 +111,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
+<script>
+window.MathJax = {
+  chtml: {
+    linebreaks: { inline: false }
+  }
+};
+</script>  
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
@@ -328,7 +335,7 @@ E[Y_i] &amp;= \mu_i = \pi_i,\\
 Var[Y_i] &amp;= \pi_i(1-\pi_i).
 \end{aligned}
 \]</span></p>
-<p>On pose <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span> (le <strong>prédicteur linéaire</strong>) et on relie <span class="math inline">\(\pi_i\)</span> à <span class="math inline">\(\eta_i\)</span> par une <strong>fonction de lien</strong> <span class="math inline">\(g\)</span> supposée connue : <span class="math inline">\(\eta_i = g(\pi_i)\)</span>, c’est-à-dire <span class="math display">\[\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}).\]</span></p>
+<p>On pose <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span> (le <strong>prédicteur linéaire</strong>) et on relie <span class="math inline">\(\pi_i\)</span> à <span class="math inline">\(\eta_i\)</span> par une <strong>fonction de lien</strong> <span class="math inline">\(g\)</span> supposée connue : <span class="math inline">\(\eta_i=g(\pi_i)\)</span>, c’est-à-dire <span class="math display">\[\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}).\]</span></p>
 </section>
 <section id="données-groupées-binomiale" class="level3" data-number="2.1.2">
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="données-groupées-binomiale"><span class="header-section-number">2.1.2</span> Données groupées (binomiale)</h3>

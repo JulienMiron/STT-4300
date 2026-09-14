@@ -88,3 +88,7 @@ footer.footer,
   border-radius: 4px;
   padding-left: 0.3em;
 } */
+
+mjx-container[jax="CHTML"] {
+  white-space: nowrap;
+}

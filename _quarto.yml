@@ -5,6 +5,7 @@ project:
 
 lang: fr
 language: 
+  title-block-author-single: "Auteur"
   title-block-modified: "Dernière modification"
 
 date-modified: last-modified
@@ -38,6 +39,15 @@ crossref:
 
 format:
   html:
+    include-in-header:
+      - text: |
+          <script>
+          window.MathJax = {
+            chtml: {
+              linebreaks: { inline: false }
+            }
+          };
+          </script>  
     theme: cosmo
     css: styles.css
     toc: true

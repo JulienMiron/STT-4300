@@ -30,7 +30,7 @@ Var[Y_i] &= \pi_i(1-\pi_i).
 \end{aligned}
 $$
 
-On pose $\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}$ (le **prédicteur linéaire**) et on relie $\pi_i$ à $\eta_i$ par une **fonction de lien** $g$ supposée connue : $\eta_i = g(\pi_i)$, c'est-à-dire
+On pose $\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}$ (le **prédicteur linéaire**) et on relie $\pi_i$ à $\eta_i$ par une **fonction de lien** $g$ supposée connue : $\eta_i=g(\pi_i)$, c'est-à-dire
 $$\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}).$$
 
 ### Données groupées (binomiale)

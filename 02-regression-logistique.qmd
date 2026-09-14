@@ -266,6 +266,20 @@ On ajuste le modèle avec les trois fonctions de lien :
 library(GLMsData)
 data(turbines)
 
+
+turbines_obs <- turbines |>
+  mutate(prop_observee = Fissures / Turbines)
+
+ggplot() +
+  geom_point(data = turbines_obs, aes(x = Hours, y = prop_observee, size = Turbines),
+             color = "black", alpha = 0.6) +
+  labs(x = "Heures d'utilisation", y = "Pourcentage de fissure",
+       color = "Fonction de lien",
+       size = "Nombre de turbines",
+       title = "Pourcentage de fissure selon la durée d'utilisation") +
+  theme_minimal()
+
+
 modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
                       data=turbines, family=binomial(link="logit"))
 modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,

@@ -224,11 +224,13 @@ $$
 \hat{\boldsymbol\beta} \;\approx\; \mathcal{N}\{\boldsymbol\beta,\, \widehat{\text{Var}}(\hat{\boldsymbol\beta}) \}.
 $$
 
+Dans ce qui suit, $\widehat{\text{V}}(\hat{\boldsymbol\beta})$ sera utilisé à la place de $\widehat{\text{Var}}(\hat{\boldsymbol\beta})$, pour alléger la notation. De plus, on écrit $\widehat{\text{V}}(\hat{\beta}_j)=[\widehat{\text{Var}}(\hat{\boldsymbol\beta})]_{jj}$ quand on parle de la variance estimée du paramètre $\beta_j$. 
+
 **Forme explicite dans le cas binomial.**
 On montre que
 
 $$
-\widehat{\text{Var}}(\hat{\boldsymbol\beta})  = (X^\top W X)^{-1},
+\widehat{\text{V}}(\hat{\boldsymbol\beta})  = (X^\top W X)^{-1},
 $$
 
 où $W$ est une matrice diagonale d'entrées
@@ -337,21 +339,21 @@ Les trois liens mènent à des coefficients significatifs et à des courbes pré
 ### Tests d'hypothèses et intervalles de confiance
 
 Les intervalles de confiance et tests concernant les $\beta_j$ sont obtenus par la méthode de **Wald**. Un intervalle de confiance de niveau $(1-\alpha)$ pour $\beta_j$ est
-$$\left[\hat\beta_j - z_{\alpha/2}\sqrt{v(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{v(\hat\beta_j)}\right],$$
+$$\left[\hat\beta_j - z_{\alpha/2}\sqrt{\hat{V}(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\hat{V}(\hat\beta_j)}\right],$$
 où $z_\gamma$ est le quantile de la $\mathcal{N}(0,1)$ défini par $P(Z > z_\gamma) = \gamma$.
 
-Pour tester $H_0: \beta_j = 0$ contre $H_1: \beta_j\neq 0$, on rejette $H_0$ au seuil $\alpha$ si $|z_{obs}| > z_{\alpha/2}$, avec $z_{obs} = \hat\beta_j/\sqrt{v(\hat\beta_j)}$. Le seuil observé ($p$-valeur) est $\alpha^* = 2P(Z > |z_{obs}|)$.
+Pour tester $H_0: \beta_j = 0$ contre $H_1: \beta_j\neq 0$, on rejette $H_0$ au seuil $\alpha$ si $|z_{obs}| > z_{\alpha/2}$, avec $z_{obs} = \hat\beta_j/\sqrt{\hat{V}(\hat\beta_j)}$. Le seuil observé ($p$-valeur) est $\alpha^* = 2P(Z > |z_{obs}|)$.
 
 
-::: {.callout-note title="Le phénomène de Hauck-Donner"}
+:::{.env-remarque #sec-hauckdonner titre = "Le phénomène de Hauck-Donner"}
 
 Le test de Wald pour $H_0 : \beta_j = 0$ repose sur la statistique
 
 $$
-z_{obs} = \frac{\hat\beta_j}{\sqrt{v(\hat\beta_j)}},
+z_{obs} = \frac{\hat\beta_j}{\sqrt{\hat{V}(\hat\beta_j)}},
 $$
 
-où l'erreur-type est estimée à partir de la courbure de la log-vraisemblance **évaluée au point estimé** $\hat\beta_j$, plutôt que sous $H_0$. Cette dépendance locale peut mener à un comportement contre-intuitif : lorsque $|\hat\beta_j|$ devient très grand (par exemple en présence de séparation quasi-complète ou d'un effet très fort), la courbure de la vraisemblance en $\hat\beta_j$ s'aplatit, ce qui **gonfle** $\sqrt{v(\hat\beta_j)}$ et peut faire **diminuer** $z_{obs}$ — donnant l'impression que l'effet n'est pas significatif, alors qu'il l'est. On pourrait montrer que cela est causé par le fait que l'erreur-type augmente plus rapidement que la valeur absolue de l'estimation du paramètre.
+où l'erreur-type est estimée à partir de la courbure de la log-vraisemblance **évaluée au point estimé** $\hat\beta_j$, plutôt que sous $H_0$. Cette dépendance locale peut mener à un comportement contre-intuitif : lorsque $|\hat\beta_j|$ devient très grand (par exemple en présence de séparation quasi-complète ou d'un effet très fort), la courbure de la vraisemblance en $\hat\beta_j$ s'aplatit, ce qui **gonfle** $\sqrt{\hat{V}(\hat\beta_j)}$ et peut faire **diminuer** $z_{obs}$ — donnant l'impression que l'effet n'est pas significatif, alors qu'il l'est. On pourrait montrer que cela est causé par le fait que l'erreur-type augmente plus rapidement que la valeur absolue de l'estimation du paramètre.
 
 Ce phénomène, documenté par Hauck et Donner (1977), n'affecte pas le test du rapport de vraisemblance, qui compare directement la vraisemblance en $\hat\beta_j$ à celle en $0$ plutôt que de s'appuyer sur une approximation locale :
 

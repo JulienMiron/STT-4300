@@ -336,7 +336,6 @@ Les trois liens mènent à des coefficients significatifs et à des courbes pré
 :::
 
 
-### Tests d'hypothèses et intervalles de confiance
 
 Les intervalles de confiance et tests concernant les $\beta_j$ sont obtenus par la méthode de **Wald**. Un intervalle de confiance de niveau $(1-\alpha)$ pour $\beta_j$ est
 $$\left[\hat\beta_j - z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\right],$$
@@ -464,7 +463,7 @@ Pour $\boldsymbol{X}^* = (1, X_1^*,\ldots,X_p^*)^\top$, on estime $\pi^*$ par $\
 $$\left[{\boldsymbol{X}^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)}\right], \qquad \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta) = {\boldsymbol{X}^*}^\top \hat{\text V}(\hat\beta)\, \boldsymbol{X}^*,$$
 et on applique $g^{-1}$ aux deux bornes. Cet intervalle respecte toujours $[0,1]$.
 
-1. **Règle du delta** : $v(\hat\pi^*) = h({\boldsymbol{X}^*}^\top\hat\beta)\, v({\boldsymbol{X}^*}^\top\hat\beta)$ avec $h(u) = \{\partial g^{-1}(u)/\partial u\}^2$, d'où l'IC approximatif $\left[\hat\pi^* \pm z_{\alpha/2}\sqrt{v(\hat\pi^*)}\right]$.
+1. **Règle du delta** : $\hat{\text V}(\hat\pi^*) = h({\boldsymbol{X}^*}^\top\hat\beta)\, \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)$ avec $h(u) = \{\partial g^{-1}(u)/\partial u\}^2$, d'où l'IC approximatif $\left[\hat\pi^* \pm z_{\alpha/2}\sqrt{\hat{\text V}(\hat\pi^*)}\right]$.
 
 Les deux méthodes donnent en pratique des résultats très similaires.
 

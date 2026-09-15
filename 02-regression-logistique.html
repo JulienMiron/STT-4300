@@ -298,11 +298,10 @@ window.Quarto = {
   </ul></li>
   <li><a href="#sélection-de-modèles" id="toc-sélection-de-modèles" class="nav-link" data-scroll-target="#sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</a>
   <ul class="collapse">
-  <li><a href="#déviance" id="toc-déviance" class="nav-link" data-scroll-target="#déviance"><span class="header-section-number">2.3.1</span> Déviance</a></li>
-  <li><a href="#sec-deviance" id="toc-sec-deviance" class="nav-link" data-scroll-target="#sec-deviance"><span class="header-section-number">2.3.2</span> Déviance</a></li>
-  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.3</span> Comparaison de modèles emboîtés</a></li>
-  <li><a href="#comparaison-de-modèles-non-emboîtés-aic-et-bic" id="toc-comparaison-de-modèles-non-emboîtés-aic-et-bic" class="nav-link" data-scroll-target="#comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.4</span> Comparaison de modèles non emboîtés : AIC et BIC</a></li>
-  <li><a href="#sélection-automatique" id="toc-sélection-automatique" class="nav-link" data-scroll-target="#sélection-automatique"><span class="header-section-number">2.3.5</span> Sélection automatique</a></li>
+  <li><a href="#sec-deviance" id="toc-sec-deviance" class="nav-link" data-scroll-target="#sec-deviance"><span class="header-section-number">2.3.1</span> Déviance</a></li>
+  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</a></li>
+  <li><a href="#comparaison-de-modèles-non-emboîtés-aic-et-bic" id="toc-comparaison-de-modèles-non-emboîtés-aic-et-bic" class="nav-link" data-scroll-target="#comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</a></li>
+  <li><a href="#sélection-automatique" id="toc-sélection-automatique" class="nav-link" data-scroll-target="#sélection-automatique"><span class="header-section-number">2.3.4</span> Sélection automatique</a></li>
   </ul></li>
   <li><a href="#validation-et-diagnostic-de-modèles" id="toc-validation-et-diagnostic-de-modèles" class="nav-link" data-scroll-target="#validation-et-diagnostic-de-modèles"><span class="header-section-number">2.4</span> Validation et diagnostic de modèles</a>
   <ul class="collapse">
@@ -366,7 +365,10 @@ E[Y_i] &amp;= \mu_i = \pi_i,\\
 Var[Y_i] &amp;= \pi_i(1-\pi_i).
 \end{aligned}
 \]</span></p>
+<div class="env-definition" data-titre="Prédicteur linéaire et fonction de lien">
+<p><span class="env-titre">Définition — Prédicteur linéaire et fonction de lien</span></p>
 <p>On pose <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span> (le <strong>prédicteur linéaire</strong>) et on relie <span class="math inline">\(\pi_i\)</span> à <span class="math inline">\(\eta_i\)</span> par une <strong>fonction de lien</strong> <span class="math inline">\(g\)</span> supposée connue : <span class="math inline">\(\eta_i=g(\pi_i)\)</span>, c’est-à-dire <span class="math display">\[\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}).\]</span></p>
+</div>
 </section>
 <section id="données-groupées-binomiale" class="level3" data-number="2.1.2">
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="données-groupées-binomiale"><span class="header-section-number">2.1.2</span> Données groupées (binomiale)</h3>
@@ -399,8 +401,8 @@ Var[Y_i] &amp;= m_i\pi_i(1-\pi_i) = \frac{\mu_i(m_i - \mu_i)}{m_i}.
 </div>
 </div>
 </div>
-<div id="sec-cotes" class="env-remarque" data-titre="Interprétation du lien logit">
-<p><span class="env-titre">Remarque — Interprétation du lien logit</span></p>
+<div id="sec-cotes" class="env-logit" data-titre="Interprétation">
+<p><span class="env-titre">Le cas du lien logit — Interprétation</span></p>
 <p>Avec le lien logit, on a</p>
 <p><span class="math display">\[
 \eta_i = \ln\left(\frac{\pi_i}{1-\pi_i}\right)
@@ -409,10 +411,13 @@ Var[Y_i] &amp;= m_i\pi_i(1-\pi_i) = \frac{\mu_i(m_i - \mu_i)}{m_i}.
 <p><span class="math display">\[
 e^{\eta_i} = \frac{\pi_i}{1-\pi_i}.
 \]</span></p>
-<p><strong>Les cotes (odds).</strong> Le rapport ci-dessus a une interprétation concrète : c’est la cote (<em>odds</em>), notée <span class="math inline">\(o_i\)</span> :</p>
+<div class="env-definition" data-titre="Cote (odds)">
+<p><span class="env-titre">Définition — Cote (odds)</span></p>
+<p>Le rapport ci-dessus a une interprétation concrète : c’est la cote (<em>odds</em>), notée <span class="math inline">\(o_i\)</span> :</p>
 <p><span class="math display">\[
 o_i = \frac{\pi_i}{1-\pi_i} = \frac{P(Y_i=1)}{P(Y_i=0)}.
 \]</span></p>
+</div>
 <p>Autrement dit, la cote compare la probabilité que l’événement se produise (<span class="math inline">\(Y_i=1\)</span>) à la probabilité qu’il ne se produise pas (<span class="math inline">\(Y_i=0\)</span>). Par exemple :</p>
 <ul>
 <li><p>si <span class="math inline">\(\pi_i = 0{,}5\)</span>, alors <span class="math inline">\(o_i = 1\)</span> : autant de chances que l’événement arrive ou n’arrive pas ;</p></li>
@@ -455,8 +460,8 @@ o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i
 \ell(\boldsymbol{\mu}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ y_i \log(\mu_i) + (m_i - y_i)\log(m_i - \mu_i) \right\} + K,
 \]</span></p>
 <p>où <span class="math inline">\(\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top\)</span> et <span class="math inline">\(K\)</span> ne dépend pas de <span class="math inline">\(\beta\)</span> (donc n’affecte pas la maximisation). C’est sous cette forme qu’on reconnaîtra, plus loin, que le modèle de régression binomiale appartient à la famille exponentielle. Cette écriture est aussi plus facile à utiliser pour le calcul de la <a href="#sec-deviance">déviance</a>.</p>
-<div class="env-remarque" data-titre="Log-vraisemblance avec le lien logit">
-<p><span class="env-titre">Remarque — Log-vraisemblance avec le lien logit</span></p>
+<div class="env-logit" data-titre="Log-vraisemblance">
+<p><span class="env-titre">Le cas du lien logit — Log-vraisemblance</span></p>
 <p>Avec le lien logit, <span class="math inline">\(\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}\)</span> et <span class="math inline">\(1-\pi_i = \dfrac{1}{1+e^{\eta_i}}\)</span>, où</p>
 <p><span class="math display">\[
 \eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.
@@ -500,8 +505,8 @@ w_i = \frac{\hmu{i} (m_i - \hmu{i})}{m_i},
 <p><span class="math display">\[
 \hmu{i} = m_i \hpi{i} = m_i\, g^{-1}(\hbj{0} + \hbj{1} X_{i1} + \cdots + \hbj{p} X_{ip}).
 \]</span></p>
-<div class="env-remarque">
-<p><span class="env-titre">Remarque</span></p>
+<div class="env-logit" data-titre="Expression de $w_i$">
+<p><span class="env-titre">Le cas du lien logit — Expression de <span class="math inline">\(w_i\)</span></span></p>
 <p><strong>Remarque (Cas du lien logit).</strong></p>
 <p>Avec le lien logit, <span class="math inline">\(\hpi{i} = \dfrac{e^{\heta{i}}}{1+e^{\heta{i}}}\)</span>, où <span class="math inline">\(\heta{i} = \hbj{0} + \hbj{1} X_{i1} + \cdots + \hbj{p} X_{ip}\)</span>. L’entrée <span class="math inline">\(w_i\)</span> se simplifie alors en</p>
 <p><span class="math display">\[
@@ -799,11 +804,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>Pour <span class="math inline">\(\boldsymbol{X}^* = (1, X_1^*,\ldots,X_p^*)^\top\)</span>, on estime <span class="math inline">\(\pi^*\)</span> par <span class="math inline">\(\hat\pi^* = g^{-1}({\boldsymbol{X}^*}^\top\hat\beta)\)</span>. Deux approches :</p>
 <ol type="1">
 <li><p><strong>Transformation de l’intervalle sur <span class="math inline">\(\eta^*\)</span></strong> : un IC pour <span class="math inline">\({X^*}^\top\beta\)</span> est <span class="math display">\[\left[{\boldsymbol{X}^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)}\right], \qquad \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta) = {\boldsymbol{X}^*}^\top \hat{\text V}(\hat\beta)\, \boldsymbol{X}^*,\]</span> et on applique <span class="math inline">\(g^{-1}\)</span> aux deux bornes. Cet intervalle respecte toujours <span class="math inline">\([0,1]\)</span>.</p></li>
-<li><p><strong>Règle du delta</strong> : <span class="math inline">\(\hat{\text V}(\hat\pi^*) = h({\boldsymbol{X}^*}^\top\hat\beta)\, \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)\)</span> avec <span class="math inline">\(h(u) = \{\partial g^{-1}(u)/\partial u\}^2\)</span>, d’où l’IC approximatif <span class="math inline">\(\left[\hat\pi^* \pm z_{\alpha/2}\sqrt{\hat{\text V}(\hat\pi^*)}\right]\)</span>.</p></li>
+<li><p><strong>Méthode du delta</strong> : <span class="math inline">\(\hat{\text V}(\hat\pi^*) = h({\boldsymbol{X}^*}^\top\hat\beta)\, \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)\)</span> avec <span class="math inline">\(h(u) = \{\partial g^{-1}(u)/\partial u\}^2\)</span>, d’où l’IC approximatif <span class="math inline">\(\left[\hat\pi^* \pm z_{\alpha/2}\sqrt{\hat{\text V}(\hat\pi^*)}\right]\)</span>.</p></li>
 </ol>
 <p>Les deux méthodes donnent en pratique des résultats très similaires.</p>
-<div class="env-remarque" data-titre="Règle du delta avec le lien logit">
-<p><span class="env-titre">Remarque — Règle du delta avec le lien logit</span></p>
+<div class="env-logit" data-titre="Méthode du delta">
+<p><span class="env-titre">Le cas du lien logit — Méthode du delta</span></p>
 <p>Avec le lien logit, <span class="math inline">\(g^{-1}(u) = \dfrac{e^u}{1+e^u}\)</span>, dont la dérivée est</p>
 <p><span class="math display">\[
 \frac{\partial g^{-1}(u)}{\partial u} = \frac{e^u}{(1+e^u)^2} = g^{-1}(u)\left\{1-g^{-1}(u)\right\}.
@@ -827,23 +832,31 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 </section>
 <section id="sélection-de-modèles" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</h2>
-<section id="déviance" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1" class="anchored" data-anchor-id="déviance"><span class="header-section-number">2.3.1</span> Déviance</h3>
-</section>
-<section id="sec-deviance" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="sec-deviance"><span class="header-section-number">2.3.2</span> Déviance</h3>
-<p><strong>Le modèle saturé.</strong> Pour juger si un modèle avec <span class="math inline">\(p+1\)</span> paramètres <span class="math inline">\(\boldsymbol\beta\)</span> s’ajuste bien aux données, il est utile de le comparer au modèle le plus flexible possible : celui qui accorde à chaque observation son propre paramètre, sans aucune structure imposée par des variables explicatives. On l’appelle le <strong>modèle saturé</strong>, avec <span class="math inline">\(n\)</span> paramètres <span class="math inline">\(\{\tilde\mu_1,\ldots,\tilde\mu_n\}\)</span> (un par observation, plutôt que <span class="math inline">\(p+1\)</span> pour l’ensemble de l’échantillon).</p>
-<p>Puisque rien ne contraint <span class="math inline">\(\tilde\mu_i\)</span> à part son domaine, l’estimateur du maximum de vraisemblance de <span class="math inline">\(\tilde\mu_i\)</span> est simplement <span class="math inline">\(y_i\)</span> : la log-vraisemblance est maximisée en ajustant chaque paramètre exactement sur la donnée observée correspondante. Le modèle saturé représente donc l’ajustement <em>parfait</em> : il reproduit exactement les données, sans laisser aucun résidu. Il n’a cependant aucune valeur prédictive ou explicative, puisqu’il ne fait que mémoriser les observations — son seul rôle est de servir de référence, un étalon auquel comparer un modèle plus parcimonieux (avec <span class="math inline">\(p+1 \ll n\)</span> paramètres) pour quantifier ce qui reste à expliquer.</p>
-<p><strong>La déviance.</strong> La statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est</p>
-<p><span class="math display">\[D = 2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.\]</span></p>
+<section id="sec-deviance" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="sec-deviance"><span class="header-section-number">2.3.1</span> Déviance</h3>
+<p>Pour juger si un modèle avec <span class="math inline">\(p+1\)</span> paramètres <span class="math inline">\(\boldsymbol\beta\)</span> s’ajuste bien aux données, il est utile de le comparer au modèle le plus flexible possible : celui qui accorde à chaque observation son propre paramètre, sans aucune structure imposée par des variables explicatives.</p>
+<div class="env-definition" data-titre="Modèle saturé">
+<p><span class="env-titre">Définition — Modèle saturé</span></p>
+<p>On l’appelle le <strong>modèle saturé</strong>, avec <span class="math inline">\(n\)</span> paramètres <span class="math inline">\(\{\tilde\mu_1,\ldots,\tilde\mu_n\}\)</span> (un par observation, plutôt que <span class="math inline">\(p+1\)</span> pour l’ensemble de l’échantillon).</p>
+</div>
+<p>Il est facile de constater que le modèle saturé maximise la log-vraisemblance, donnée par <span class="math display">\[
+\ell(\tilde\mu_1,\ldots,\tilde\mu_n; \boldsymbol{y}) = \sum_{i=1}^n \left\{ y_i \log(\tilde\mu_i) + (m_i - y_i)\log(m_i - \tilde\mu_i) \right\} + K,
+\]</span></p>
+<p>quand <span class="math inline">\(\{\tilde\mu_1,\ldots,\tilde\mu_n\}= \{y_1,\ldots,y_n\}\)</span>, c’est-à-dire si la log-vraisemblance est calculée en ajustant chaque paramètre exactement sur la donnée observée correspondante. Le modèle saturé représente donc l’ajustement <em>parfait</em> : il reproduit exactement les données, sans laisser aucun résidu. Il n’a cependant aucune valeur prédictive ou explicative, puisqu’il ne fait que mémoriser les observations — son seul rôle est de servir de référence, un étalon auquel comparer un modèle plus parcimonieux (avec <span class="math inline">\(p+1 \ll n\)</span> paramètres) pour quantifier ce qui reste à expliquer.</p>
+<p><strong>La déviance.</strong> En notant <span class="math inline">\(\tilde{\boldsymbol{\mu}}=(\tilde\mu_1,\ldots,\tilde\mu_n)^\top\)</span> et <span class="math inline">\(\hat{\boldsymbol{\mu}}=(\hat\mu_1,\ldots,\hat\mu_n)^\top\)</span>, la statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est</p>
+<p><span class="math display">\[\Lambda=\frac{L(\tilde{\boldsymbol{\mu}}; \boldsymbol y)}{L(\hat{\boldsymbol{\mu}}; \boldsymbol y)} =\frac{L(\boldsymbol{y}; \boldsymbol y)}{L(\hat{\boldsymbol{\mu}}; \boldsymbol y)}.\]</span></p>
+<div class="env-definition" data-titre="Déviance">
+<p><span class="env-titre">Définition — Déviance</span></p>
+<p>On définit la déviance <span class="math inline">\(D\)</span> comme étant deux fois le log de ce rapport:</p>
+<p><span class="math display">\[D =2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.\]</span></p>
+</div>
 <p><span class="math inline">\(D\)</span> est la <strong>déviance</strong> du modèle et <span class="math inline">\(d_i\)</span> la déviance individuelle de l’observation <span class="math inline">\(i\)</span> ; chaque <span class="math inline">\(d_i\)</span> mesure l’écart entre l’ajustement parfait <span class="math inline">\(y_i\)</span> et l’ajustement <span class="math inline">\(\hmu{i}\)</span> obtenu par le modèle. Puisque le modèle saturé maximise la vraisemblance parmi <em>tous</em> les modèles possibles, <span class="math inline">\(l(y,y) \geq l(\hat\mu,y)\)</span> toujours, et donc <span class="math inline">\(D \geq 0\)</span> : plus <span class="math inline">\(D\)</span> est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s’ajuste bien aux données. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l’adéquation du modèle et à comparer des modèles.</p>
 </section>
-<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="2.3.3">
-<h3 data-number="2.3.3" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.3</span> Comparaison de modèles emboîtés</h3>
+<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</h3>
 <p>Pour comparer deux modèles emboîtés de déviances <span class="math inline">\(D_1\)</span> (complet) et <span class="math inline">\(D_2\)</span> (réduit), la statistique de test est <span class="math inline">\(\chi^2 = D_2 - D_1\)</span>. Sous <span class="math inline">\(H_0\)</span> (le modèle réduit est adéquat), <span class="math inline">\(\chi^2\)</span> suit une loi du khi-deux à <span class="math inline">\(d\)</span> degrés de liberté, où <span class="math inline">\(d\)</span> est la différence du nombre de paramètres.</p>
-<div class="env-exemple">
-<p><span class="env-titre">Exemple</span></p>
-<p><strong>Exemple (<code>turbines</code>, termes quadratique et cubique).</strong></p>
+<div class="env-exemple" data-titre="Introduction des termes quadratiques et cubiques dans l'exemple `turbines`">
+<p><span class="env-titre">Exemple — Introduction des termes quadratiques et cubiques dans l’exemple <code>turbines</code></span></p>
 <p>On teste <span class="math inline">\(H_0: \beta_2 = \beta_3 = 0\)</span> (modèle avec <code>Hours</code> seulement contre modèle avec termes en <code>Hours</code><span class="math inline">\(^2\)</span> et <code>Hours</code><span class="math inline">\(^3\)</span>) :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
@@ -870,37 +883,372 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 <p>On ne rejette pas <span class="math inline">\(H_0\)</span> : le modèle réduit est adéquat.</p>
 </div>
 </section>
-<section id="comparaison-de-modèles-non-emboîtés-aic-et-bic" class="level3" data-number="2.3.4">
-<h3 data-number="2.3.4" class="anchored" data-anchor-id="comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.4</span> Comparaison de modèles non emboîtés : AIC et BIC</h3>
+<section id="comparaison-de-modèles-non-emboîtés-aic-et-bic" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</h3>
 <p>Comme pour les modèles linéaires, on utilise <span class="math display">\[AIC = -2\,l(\hat\mu;y) + 2(p+1), \qquad BIC = -2\,l(\hat\mu;y) + \log(n)(p+1).\]</span> Le modèle ayant le plus petit <span class="math inline">\(AIC\)</span> (ou <span class="math inline">\(BIC\)</span>) est préférable. En R : <code>extractAIC(modele)</code> et <code>extractAIC(modele, k=log(n))</code>.</p>
 </section>
-<section id="sélection-automatique" class="level3" data-number="2.3.5">
-<h3 data-number="2.3.5" class="anchored" data-anchor-id="sélection-automatique"><span class="header-section-number">2.3.5</span> Sélection automatique</h3>
-<p>Les méthodes pas à pas <em>forward</em>, <em>backward</em> et <em>stepwise</em> fonctionnent exactement comme pour les modèles linéaires (fonction <code>step</code> avec l’argument <code>direction</code>). Sur le jeu de données <code>deposit</code>, les trois procédures retiennent le modèle incluant le type d’insecticide, la dose et le terme quadratique de la dose.</p>
+<section id="sélection-automatique" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="sélection-automatique"><span class="header-section-number">2.3.4</span> Sélection automatique</h3>
+<p>Les méthodes pas à pas <em>forward</em>, <em>backward</em> et <em>stepwise</em> fonctionnent exactement comme pour les modèles linéaires (fonction <code>step</code> avec l’argument <code>direction</code>).</p>
+<div class="env-exemple" data-titre="Sélection automatique sur le jeu de données `nminer`">
+<p><span class="env-titre">Exemple — Sélection automatique sur le jeu de données <code>nminer</code></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(nminer)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># On construit la réponse binaire décrite dans le texte :</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 si au moins un mineur bruyant a été détecté, 0 sinon</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>nminer<span class="sc">$</span>Detecte <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(nminer<span class="sc">$</span>Minerab <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèle complet : effets additifs de toutes les variables explicatives disponibles</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>modele.complet <span class="ot">&lt;-</span> <span class="fu">glm</span>(Detecte <span class="sc">~</span> Eucs <span class="sc">+</span> Area <span class="sc">+</span> Grazed <span class="sc">+</span> Shrubs <span class="sc">+</span> Bulokes <span class="sc">+</span> Timber,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> nminer, <span class="at">family =</span> binomial)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Backward : part du modèle complet, retire des termes</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>modele.backward <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.complet, <span class="at">direction =</span> <span class="st">"backward"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start:  AIC=22.45
+Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Df Deviance    AIC
+- Bulokes  1    8.646 20.646
+- Area     1    9.152 21.152
+&lt;none&gt;          8.453 22.453
+- Shrubs   1   11.633 23.633
+- Grazed   1   14.761 26.761
+- Timber   1   16.856 28.856
+- Eucs     1   34.332 46.332</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Step:  AIC=20.65
+Detecte ~ Eucs + Area + Grazed + Shrubs + Timber</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Df Deviance    AIC
+- Area    1    9.272 19.272
+&lt;none&gt;         8.646 20.646
+- Shrubs  1   11.790 21.790
+- Grazed  1   14.796 24.796
+- Timber  1   16.857 26.857
+- Eucs    1   36.861 46.861</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Step:  AIC=19.27
+Detecte ~ Eucs + Grazed + Shrubs + Timber
+
+         Df Deviance    AIC
+&lt;none&gt;         9.272 19.272
+- Shrubs  1   12.075 20.075
+- Grazed  1   14.986 22.986
+- Timber  1   16.865 24.865
+- Eucs    1   37.161 45.161</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward : part du modèle vide, ajoute des termes jusqu'au modèle complet</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>modele.vide <span class="ot">&lt;-</span> <span class="fu">glm</span>(Detecte <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> nminer, <span class="at">family =</span> binomial)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>modele.forward <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.vide, <span class="at">direction =</span> <span class="st">"forward"</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">scope =</span> <span class="fu">formula</span>(modele.complet))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start:  AIC=44.68
+Detecte ~ 1
+
+          Df Deviance    AIC
++ Eucs     1   19.185 23.185
++ Bulokes  1   40.074 44.074
+&lt;none&gt;         42.684 44.684
++ Timber   1   41.630 45.630
++ Shrubs   1   42.002 46.002
++ Area     1   42.426 46.426
++ Grazed   1   42.443 46.443
+
+Step:  AIC=23.18
+Detecte ~ Eucs
+
+          Df Deviance    AIC
++ Grazed   1   16.942 22.942
+&lt;none&gt;         19.184 23.184
++ Shrubs   1   17.272 23.272
++ Timber   1   18.657 24.657
++ Bulokes  1   19.168 25.168
++ Area     1   19.178 25.178
+
+Step:  AIC=22.94
+Detecte ~ Eucs + Grazed
+
+          Df Deviance    AIC
++ Timber   1   12.075 20.075
+&lt;none&gt;         16.942 22.942
++ Shrubs   1   16.865 24.865
++ Area     1   16.935 24.935
++ Bulokes  1   16.942 24.942
+
+Step:  AIC=20.07
+Detecte ~ Eucs + Grazed + Timber</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Df Deviance    AIC
++ Shrubs   1   9.2721 19.272
+&lt;none&gt;        12.0747 20.075
++ Area     1  11.7902 21.790
++ Bulokes  1  11.9989 21.999</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Step:  AIC=19.27
+Detecte ~ Eucs + Grazed + Timber + Shrubs</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Df Deviance    AIC
+&lt;none&gt;         9.2721 19.272
++ Area     1   8.6462 20.646
++ Bulokes  1   9.1522 21.152</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stepwise: part du modèle complet, ajoute et retire au besoin</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>modele.step <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.complet, <span class="at">direction =</span> <span class="st">"both"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start:  AIC=22.45
+Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Df Deviance    AIC
+- Bulokes  1    8.646 20.646
+- Area     1    9.152 21.152
+&lt;none&gt;          8.453 22.453
+- Shrubs   1   11.633 23.633
+- Grazed   1   14.761 26.761
+- Timber   1   16.856 28.856
+- Eucs     1   34.332 46.332</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Step:  AIC=20.65
+Detecte ~ Eucs + Area + Grazed + Shrubs + Timber</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Df Deviance    AIC
+- Area     1    9.272 19.272
+&lt;none&gt;          8.646 20.646
+- Shrubs   1   11.790 21.790
++ Bulokes  1    8.453 22.453
+- Grazed   1   14.796 24.796
+- Timber   1   16.857 26.857
+- Eucs     1   36.861 46.861</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Step:  AIC=19.27
+Detecte ~ Eucs + Grazed + Shrubs + Timber</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Df Deviance    AIC
+&lt;none&gt;          9.272 19.272
+- Shrubs   1   12.075 20.075
++ Area     1    8.646 20.646
++ Bulokes  1    9.152 21.152
+- Grazed   1   14.986 22.986
+- Timber   1   16.865 24.865
+- Eucs     1   37.161 45.161</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.backward)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Detecte ~ Eucs + Grazed + Shrubs + Timber, family = binomial, 
+    data = nminer)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)  
+(Intercept)  -6.7086     4.3062  -1.558   0.1193  
+Eucs          1.4941     0.8688   1.720   0.0855 .
+Grazed       12.7870     8.1296   1.573   0.1157  
+Shrubs       -5.9792     4.5601  -1.311   0.1898  
+Timber       -0.5258     0.3294  -1.596   0.1105  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 42.6843  on 30  degrees of freedom
+Residual deviance:  9.2721  on 26  degrees of freedom
+AIC: 19.272
+
+Number of Fisher Scoring iterations: 9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.forward)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Detecte ~ Eucs + Grazed + Timber + Shrubs, family = binomial, 
+    data = nminer)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)  
+(Intercept)  -6.7086     4.3062  -1.558   0.1193  
+Eucs          1.4941     0.8688   1.720   0.0855 .
+Grazed       12.7870     8.1296   1.573   0.1157  
+Timber       -0.5258     0.3294  -1.596   0.1105  
+Shrubs       -5.9792     4.5601  -1.311   0.1898  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 42.6843  on 30  degrees of freedom
+Residual deviance:  9.2721  on 26  degrees of freedom
+AIC: 19.272
+
+Number of Fisher Scoring iterations: 9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.step)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Detecte ~ Eucs + Grazed + Shrubs + Timber, family = binomial, 
+    data = nminer)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)  
+(Intercept)  -6.7086     4.3062  -1.558   0.1193  
+Eucs          1.4941     0.8688   1.720   0.0855 .
+Grazed       12.7870     8.1296   1.573   0.1157  
+Shrubs       -5.9792     4.5601  -1.311   0.1898  
+Timber       -0.5258     0.3294  -1.596   0.1105  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 42.6843  on 30  degrees of freedom
+Residual deviance:  9.2721  on 26  degrees of freedom
+AIC: 19.272
+
+Number of Fisher Scoring iterations: 9</code></pre>
+</div>
+</div>
+<p>Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n’est pas toujours le cas : comme chacune n’explore qu’un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu’elles aboutissent au même optimum local.</p>
+</div>
 </section>
 </section>
 <section id="validation-et-diagnostic-de-modèles" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="validation-et-diagnostic-de-modèles"><span class="header-section-number">2.4</span> Validation et diagnostic de modèles</h2>
 <section id="résidus" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="résidus"><span class="header-section-number">2.4.1</span> Résidus</h3>
-<p>On distingue deux types de résidus :</p>
+<div class="env-definition" data-titre="Résidus déviance et résidus de Pearson">
+<p><span class="env-titre">Définition — Résidus déviance et résidus de Pearson</span></p>
 <ul>
 <li><p><strong>Résidus déviance</strong> : <span class="math inline">\(r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}\)</span>, avec <span class="math display">\[d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\}.\]</span></p></li>
 <li><p><strong>Résidus de Pearson</strong> : <span class="math display">\[r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.\]</span></p></li>
 </ul>
+</div>
+<p>Il est possible de montrer que la somme des résidus déviance <span class="math display">\[\sum_{i=1}^nr_{D,i} = \sum_{i=1}^n\mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}=D,\]</span> correspond à la déviance introduite <a href="#sec-deviance">plus tôt</a>.</p>
 </section>
 <section id="tests-dadéquation-globale" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="tests-dadéquation-globale"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</h3>
-<p>Deux statistiques permettent de tester l’adéquation globale : la déviance <span class="math inline">\(D = \sum_i r_{D,i}^2\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]</span> Lorsque tous les <span class="math inline">\(m_i \to \infty\)</span>, <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span> convergent en loi vers une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien spécifié.</p>
-<div class="env-remarque">
-<p><span class="env-titre">Remarque</span></p>
-<p><strong>Remarque.</strong></p>
-<p>Ces tests ne sont valides que pour des <strong>données groupées</strong> avec des <span class="math inline">\(m_i\)</span> élevés, car ils reposent sur un résultat asymptotique en <span class="math inline">\(m_i\)</span>. Ils sont inutilisables pour des données individuelles (Bernoulli).</p>
+<p>Deux statistiques permettent de tester l’adéquation globale : la déviance <span class="math inline">\(D\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]</span> Lorsque tous les <span class="math inline">\(m_i \to \infty\)</span>, <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span> convergent en loi vers une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien spécifié.</p>
+<p>L’hypothèse nulle du test est que le modèle est adéquat.</p>
+<div class="env-exemple" data-titre="Test d'adéquation avec l'exemple `turbines`">
+<p><span class="env-titre">Exemple — Test d’adéquation avec l’exemple <code>turbines</code></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>modele.logit <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures, Turbines <span class="sc">-</span> Fissures) <span class="sc">~</span> Hours,</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> turbines, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Déviance</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.logit)</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>ddl <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(modele.logit)</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>p.deviance <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(D, <span class="at">df =</span> ddl)</span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Khi-deux de Pearson</span></span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a>chi2.pearson <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(modele.logit, <span class="at">type =</span> <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a>p.pearson <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(chi2.pearson, <span class="at">df =</span> ddl)</span>
+<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Statistique =</span> <span class="fu">c</span>(<span class="st">"Déviance"</span>, <span class="st">"Khi-deux de Pearson"</span>),</span>
+<span id="cb60-18"><a href="#cb60-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valeur =</span> <span class="fu">c</span>(D, chi2.pearson),</span>
+<span id="cb60-19"><a href="#cb60-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">ddl =</span> ddl,</span>
+<span id="cb60-20"><a href="#cb60-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.valeur =</span> <span class="fu">c</span>(p.deviance, p.pearson)</span>
+<span id="cb60-21"><a href="#cb60-21" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Statistique    Valeur ddl  p.valeur
+1            Déviance 10.331466   9 0.3243236
+2 Khi-deux de Pearson  9.250839   9 0.4144493</code></pre>
+</div>
+</div>
+</div>
+<div class="env-remarque" data-titre="Déviance ou Khi-carré de Pearson?">
+<p><span class="env-titre">Remarque — Déviance ou Khi-carré de Pearson?</span></p>
+<p>Bien que <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span> convergent tous deux vers une loi <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> quand les <span class="math inline">\(m_i \to \infty\)</span>, leur comportement en échantillon fini diffère : la statistique de Pearson respecte généralement mieux cette approximation que la déviance, surtout quand les <span class="math inline">\(m_i\)</span> sont petits ou modérés <span class="citation" data-cites="mccullagh1989glm agresti2013cda">(<a href="#ref-mccullagh1989glm" role="doc-biblioref">McCullagh et Nelder 1989</a>; <a href="#ref-agresti2013cda" role="doc-biblioref">Agresti 2013</a>)</span>.</p>
+<p>Le cas extrême illustre bien ce phénomène : ils sont inutilisables pour des données individuelles (Bernoulli, <span class="math inline">\(m_i=1\)</span>). En effet, dans ce cas, un des deux termes de <span class="math inline">\(d_i\)</span> s’annule toujours (par la convention <span class="math inline">\(0\log 0=0\)</span>), de sorte que</p>
+<p><span class="math display">\[
+d_i = -2\left[y_i\log(\hmu{i}) + (1-y_i)\log(1-\hmu{i})\right].
+\]</span></p>
+<p>De plus, la log-vraisemblance du modèle saturé vaut alors exactement 0, puisque <span class="math inline">\(\tilde\mu_i = y_i \in \{0,1\}\)</span> annule <span class="math inline">\(y_i\log(y_i)+(1-y_i)\log(1-y_i)\)</span> par la même convention. La déviance se réduit donc à</p>
+<p><span class="math display">\[
+D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
+\]</span></p>
+<p>c’est-à-dire une simple transformation de la vraisemblance du modèle, sans point de comparaison utile — d’où la perte de son interprétation comme test d’adéquation. <span class="math inline">\(\chi^2_P\)</span>, lui, reste au moins défini dans ce cas, même si son approximation <span class="math inline">\(\chi^2\)</span> n’est pas fiable non plus.</p>
+<p>Quand les deux statistiques mènent à des conclusions similaires (avec des <span class="math inline">\(m_i\)</span> raisonnablement grands), peu importe laquelle on rapporte. Un désaccord marqué entre les deux valeurs-<span class="math inline">\(p\)</span> signale plutôt que l’approximation asymptotique commune aux deux tests devient peu fiable, plutôt que l’un des deux tests serait le bon et l’autre non.</p>
+<p>Cette distinction ne s’applique toutefois qu’au test d’adéquation globale d’un seul modèle. Pour comparer des modèles emboîtés, la déviance conserve un avantage clair : les différences de déviances suivent exactement une loi <span class="math inline">\(\chi^2\)</span>, ce qui n’est pas le cas des différences de statistiques de Pearson.</p>
 </div>
 </section>
 <section id="graphiques-et-extra-variabilité" class="level3" data-number="2.4.3">
 <h3 data-number="2.4.3" class="anchored" data-anchor-id="graphiques-et-extra-variabilité"><span class="header-section-number">2.4.3</span> Graphiques et extra-variabilité</h3>
-<p>Les graphiques des résidus en fonction des numéros d’observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une <strong>extra-variabilité</strong> (<em>overdispersion</em>) : <span class="math inline">\(E[Y_i] = m_i\pi_i\)</span> mais <span class="math inline">\(Var[Y_i] &gt; m_i\pi_i(1-\pi_i)\)</span>. On pose alors <span class="math inline">\(Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)\)</span> et on estime <span class="math inline">\(\phi\)</span> par <span class="math inline">\(\chi^2_P/(n-(p+1))\)</span>. En cas d’extra-variabilité, on spécifie <code>family=quasibinomial()</code> au lieu de <code>family=binomial()</code> dans <code>glm</code>.</p>
+<p>Les graphiques des résidus en fonction des numéros d’observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une extra-variabilité.</p>
+<div class="env-definition" data-titre="Extra-variabilité (overdispersion)">
+<p><span class="env-titre">Définition — Extra-variabilité (overdispersion)</span></p>
+<p>L’<strong>extra-variabilité</strong> (<em>overdispersion</em>) survient quand <span class="math inline">\(E[Y_i] = m_i\pi_i\)</span> mais <span class="math inline">\(Var[Y_i] &gt; m_i\pi_i(1-\pi_i)\)</span>. On pose alors <span class="math inline">\(Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)\)</span> et on estime <span class="math inline">\(\phi\)</span> par <span class="math inline">\(\chi^2_P/(n-(p+1))\)</span>.</p>
+</div>
+<p>En cas d’extra-variabilité, on spécifie <code>family=quasibinomial()</code> au lieu de <code>family=binomial()</code> dans <code>glm</code>.</p>
 <p>Pour vérifier la linéarité du prédicteur, on trace le nuage de points <span class="math inline">\(\{(\hpi{i}, \tilde\pi_i)\}\)</span>, où <span class="math inline">\(\hpi{i} = g^{-1}(\heta{i})\)</span> et <span class="math inline">\(\tilde\pi_i = y_i/m_i\)</span> : si le modèle est bien spécifié, les points doivent être autour de la droite <span class="math inline">\(y=x\)</span>.</p>
 </section>
 <section id="observations-aberrantes-et-valeurs-influentes" class="level3" data-number="2.4.4">
@@ -911,16 +1259,22 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 <section id="sec-roc" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="sec-roc"><span class="header-section-number">2.5</span> Spécificité, sensibilité et courbe ROC</h2>
 <p>Pour des données individuelles, l’adéquation est difficile à évaluer, mais on peut mesurer la <strong>capacité prédictive</strong> du modèle. On ajuste le modèle et on calcule les probabilités prédites <span class="math inline">\(\hpi{i} = g^{-1}(\heta{i})\)</span>.</p>
-<p>Fixons un seuil <span class="math inline">\(u \in [0,1]\)</span> (souvent <span class="math inline">\(u=1/2\)</span>). On classe <span class="math inline">\(\hat y_i = 1\)</span> si <span class="math inline">\(\hpi{i} &gt; u\)</span> et <span class="math inline">\(\hat y_i = 0\)</span> sinon. On mesure la capacité prédictive par :</p>
+<p>Fixons un seuil <span class="math inline">\(u \in [0,1]\)</span> (souvent <span class="math inline">\(u=1/2\)</span>). On classe <span class="math inline">\(\hat y_i = 1\)</span> si <span class="math inline">\(\hpi{i} &gt; u\)</span> et <span class="math inline">\(\hat y_i = 0\)</span> sinon.</p>
+<div class="env-definition" data-titre="Spécificité et sensibilité">
+<p><span class="env-titre">Définition — Spécificité et sensibilité</span></p>
+<p>On mesure la capacité prédictive par :</p>
 <p><span class="math display">\[
 \begin{aligned}
 \text{Spécificité (taux de vrais négatifs) :}\quad &amp; Spec = P(\hat y = 0 \mid y = 0),\\
 \text{Sensibilité (taux de vrais positifs) :}\quad &amp; Sens = P(\hat y = 1 \mid y = 1).
 \end{aligned}
 \]</span></p>
+</div>
 <p>Pour un <span class="math inline">\(u\)</span> fixé, on les estime par <span class="math display">\[\widehat{Spec}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hpi{i} &lt; u)\,\&amp;\,(y_i = 0)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 0\}}},
 \qquad
 \widehat{Sens}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hpi{i} &gt; u)\,\&amp;\,(y_i = 1)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 1\}}}.\]</span></p>
+<div class="env-definition" data-titre="Courbe ROC et AUC">
+<p><span class="env-titre">Définition — Courbe ROC et AUC</span></p>
 <p>En faisant varier <span class="math inline">\(u\)</span> sur une grille <span class="math inline">\(\{u_1 = 0, u_2, \ldots, u_B = 1\}\)</span> et en traçant les points <span class="math inline">\(\{(1-\widehat{Spec}(u_b),\, \widehat{Sens}(u_b))\}\)</span>, on obtient la <strong>courbe ROC</strong>. L’<strong>aire sous la courbe</strong> (AUC) quantifie la capacité prédictive : <span class="math display">\[\mbox{AUC} \in \begin{cases}
 [0.9,\,1] &amp; \mbox{modèle excellent},\\
 [0.8,\,0.9) &amp; \mbox{modèle bon},\\
@@ -928,22 +1282,23 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 [0.6,\,0.7) &amp; \mbox{modèle mauvais},\\
 [0.5,\,0.6) &amp; \mbox{modèle très faible}.
 \end{cases}\]</span></p>
+</div>
 <div class="env-exemple">
 <p><span class="env-titre">Exemple</span></p>
 <p><strong>Exemple (<code>quilpie</code>).</strong></p>
 <p>Avec la variable explicative SOI et le lien logit :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family =</span> binomial, <span class="at">data =</span> quilpie)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clinfun)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">marker =</span> <span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">status =</span> quilpie<span class="sc">$</span>y,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"empirical"</span>)</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family =</span> binomial, <span class="at">data =</span> quilpie)</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clinfun)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">marker =</span> <span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">status =</span> quilpie<span class="sc">$</span>y,</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"empirical"</span>)</span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ROC curve with AUC = 0.7835498 and s.e. = 0.05651002 </code></pre>
 </div>
@@ -953,11 +1308,17 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-agresti2013cda" class="csl-entry" role="listitem">
+Agresti, Alan. 2013. <em>Categorical Data Analysis</em>. 3ᵉ éd. Wiley.
+</div>
 <div id="ref-dunn2018glm" class="csl-entry" role="listitem">
 Dunn, Peter K., et Gordon K. Smyth. 2018. <em>Generalized Linear Models with Examples in <span>R</span></em>. Springer Texts in Statistics. Springer. <a href="https://doi.org/10.1007/978-1-4419-0118-7">https://doi.org/10.1007/978-1-4419-0118-7</a>.
 </div>
 <div id="ref-hauck1977" class="csl-entry" role="listitem">
 Hauck, Walter W., et Allan Donner. 1977. <span>«&nbsp;Wald’s Test as Applied to Hypotheses in Logit Analysis&nbsp;»</span>. <em>Journal of the American Statistical Association</em> 72 (360): 851‑53. <a href="https://doi.org/10.1080/01621459.1977.10479969">https://doi.org/10.1080/01621459.1977.10479969</a>.
+</div>
+<div id="ref-mccullagh1989glm" class="csl-entry" role="listitem">
+McCullagh, Peter, et John A. Nelder. 1989. <em>Generalized Linear Models</em>. 2ᵉ éd. Chapman; Hall.
 </div>
 </div>
 </section>

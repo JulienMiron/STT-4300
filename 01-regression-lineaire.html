@@ -280,8 +280,11 @@ window.Quarto = {
 <section id="le-modèle-linéaire" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="le-modèle-linéaire"><span class="header-section-number">1.1</span> Le modèle linéaire</h2>
 <p>On dispose de données <span class="math inline">\(\{(Y_i, \boldsymbol{X}_i),\, i=1,\ldots,n\}\)</span>, où <span class="math inline">\(Y_i\)</span> est la variable réponse (continue) et <span class="math inline">\(\boldsymbol{X}_i=(1,x_{i1},\ldots,x_{ip})^\top\)</span> est un vecteur de <span class="math inline">\(p\)</span> variables explicatives<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Le modèle de régression linéaire multiple s’écrit : <span class="math display">\[Y_i = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} + \epsilon_i, \qquad i=1,\ldots,n,\]</span> où <span class="math inline">\(\beta_0,\beta_1,\ldots,\beta_p\)</span> sont les coefficients de régression et les erreurs <span class="math inline">\(\epsilon_i\)</span> sont indépendantes et identiquement distribuées selon <span class="math inline">\(\mathcal{N}(0,\sigma^2)\)</span>.</p>
+<div class="env-definition" data-titre="Matrice de design">
+<p><span class="env-titre">Définition — Matrice de design</span></p>
 <p>En écriture matricielle, on a <span class="math inline">\(\boldsymbol{Y} = \boldsymbol{X\beta} + \epsilon\)</span>, où <span class="math inline">\(\boldsymbol{Y}=(Y_1,\ldots,Y_n)^\top\)</span>, <span class="math inline">\(\boldsymbol{\beta}=(\beta_0,\ldots,\beta_p)^\top\)</span>, <span class="math inline">\(\boldsymbol{\epsilon}=(\epsilon_1,\ldots,\epsilon_n)^\top\)</span> et <span class="math inline">\(\boldsymbol{X}\)</span> est la matrice de design (<em>design matrix</em>)<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> de dimension <span class="math inline">\(n\times(p+1)\)</span> dont la première colonne ne contient que des 1 pour inclure l’ordonnée à l’origine : <span class="math display">\[\boldsymbol{X} =
 \begin{pmatrix}  \boldsymbol{X}_1^\top \\  \vdots  \\   \boldsymbol{X}_n^\top\end{pmatrix}=\begin{pmatrix} 1 &amp; x_{11} &amp; \cdots &amp; x_{1p} \\ \vdots &amp; \vdots &amp; &amp; \vdots \\ 1 &amp; x_{n1} &amp; \cdots &amp; x_{np}\end{pmatrix}.\]</span></p>
+</div>
 <p>Sous ces hypothèses, on a <span class="math inline">\(\mu_i =E[Y_i|x_{i1},\ldots, x_{ip}] =  \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip}\)</span> et <span class="math inline">\(Var[Y_i] = \sigma^2\)</span> (homoscédasticité).</p>
 </section>
 <section id="estimation-par-moindres-carrés" class="level2" data-number="1.2">
@@ -289,7 +292,11 @@ window.Quarto = {
 <p>On estime <span class="math inline">\(\beta\)</span> en minimisant la somme des carrés des écarts : <span class="math display">\[SS_E =\sum_{i=1}^n\epsilon_i^2= \sum_{i=1}^n \left\{Y_i - (\beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip})\right\}^2 = (\boldsymbol{Y}-\boldsymbol{X\beta})^\top(\boldsymbol{Y}-\boldsymbol{X\beta})=\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}.\]</span></p>
 <p>La solution explicite est <span class="math display">\[\boxed{\hat{\boldsymbol{\beta}} = (\boldsymbol{X}^\top \boldsymbol{X})^{-1} \boldsymbol{X}^\top \boldsymbol{Y}}\]</span> et l’estimateur obtenu vérifie <span class="math display">\[\hat{\boldsymbol{\beta}} \sim \mathcal{N}\left\{\boldsymbol{\beta},\, \sigma^2 (\boldsymbol{X}^\top \boldsymbol{X})^{-1}\right\}.\]</span></p>
 <p>Sous l’hypothèse de normalité des erreurs, l’estimateur des moindres carrés coïncide avec l’estimateur du maximum de vraisemblance. Il est sans biais et de variance minimale parmi les estimateurs linéaires sans biais (théorème de Gauss-Markov).</p>
-<p>Les valeurs prédites sont <span class="math inline">\(\hat{\boldsymbol{Y}} = \boldsymbol{X\hat{\beta}} = \boldsymbol{HY}\)</span>, où <span class="math inline">\(\boldsymbol{H} = \boldsymbol{X(X^\top X)^{-1}X^\top}\)</span> est la matrice chapeau (<em>hat matrix</em>). Les éléments diagonaux <span class="math inline">\(h_i = H_{ii}\)</span> sont les <strong>leviers</strong> (<em>leverage</em>) des observations. L’estimateur sans biais usuel de <span class="math inline">\(\sigma^2\)</span> est <span class="math display">\[\hat\sigma^2 = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n-(p+1)}.\]</span> L’estimateur du maximum de vraisemblance de <span class="math inline">\(\sigma^2\)</span> est <span class="math display">\[\hat\sigma^2_{MV} = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n}.\]</span></p>
+<div class="env-definition" data-titre="Matrice chapeau et leviers">
+<p><span class="env-titre">Définition — Matrice chapeau et leviers</span></p>
+<p>Les valeurs prédites sont <span class="math inline">\(\hat{\boldsymbol{Y}} = \boldsymbol{X\hat{\beta}} = \boldsymbol{HY}\)</span>, où <span class="math inline">\(\boldsymbol{H} = \boldsymbol{X(X^\top X)^{-1}X^\top}\)</span> est la matrice chapeau (<em>hat matrix</em>). Les éléments diagonaux <span class="math inline">\(h_i = H_{ii}\)</span> sont les <strong>leviers</strong> (<em>leverage</em>) des observations.</p>
+</div>
+<p>L’estimateur sans biais usuel de <span class="math inline">\(\sigma^2\)</span> est <span class="math display">\[\hat\sigma^2 = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n-(p+1)}.\]</span> L’estimateur du maximum de vraisemblance de <span class="math inline">\(\sigma^2\)</span> est <span class="math display">\[\hat\sigma^2_{MV} = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n}.\]</span></p>
 </section>
 <section id="inférence-statistique" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">1.3</span> Inférence statistique</h2>
@@ -300,7 +307,11 @@ window.Quarto = {
 </section>
 <section id="test-f-et-comparaison-de-modèles-emboîtés" class="level3" data-number="1.3.2">
 <h3 data-number="1.3.2" class="anchored" data-anchor-id="test-f-et-comparaison-de-modèles-emboîtés"><span class="header-section-number">1.3.2</span> Test F et comparaison de modèles emboîtés</h3>
-<p>Deux modèles sont emboîtés si l’un est complètement inclus dans l’autre. Pour comparer un modèle réduit emboîté (à <span class="math inline">\(q+1\)</span> paramètres) à un modèle complet (à <span class="math inline">\(p+1\)</span> paramètres, <span class="math inline">\(q &lt; p\)</span>), on utilise la statistique <span class="math display">\[F_{obs} = \frac{(SSE_{r\acute{e}duit} - SSE_{complet})/(p-q)}{SSE_{complet}/(n-(p+1))},\]</span> qui suit une loi <span class="math inline">\(F_{p-q,\, n-(p+1)}\)</span> sous l’hypothèse nulle que le modèle réduit est adéquat.</p>
+<div class="env-definition" data-titre="Modèles emboîtés">
+<p><span class="env-titre">Définition — Modèles emboîtés</span></p>
+<p>Deux modèles sont emboîtés si l’un est complètement inclus dans l’autre.</p>
+</div>
+<p>Pour comparer un modèle réduit emboîté (à <span class="math inline">\(q+1\)</span> paramètres) à un modèle complet (à <span class="math inline">\(p+1\)</span> paramètres, <span class="math inline">\(q &lt; p\)</span>), on utilise la statistique <span class="math display">\[F_{obs} = \frac{(SSE_{r\acute{e}duit} - SSE_{complet})/(p-q)}{SSE_{complet}/(n-(p+1))},\]</span> qui suit une loi <span class="math inline">\(F_{p-q,\, n-(p+1)}\)</span> sous l’hypothèse nulle que le modèle réduit est adéquat.</p>
 </section>
 <section id="coefficient-de-détermination" class="level3" data-number="1.3.3">
 <h3 data-number="1.3.3" class="anchored" data-anchor-id="coefficient-de-détermination"><span class="header-section-number">1.3.3</span> Coefficient de détermination</h3>
@@ -319,7 +330,11 @@ window.Quarto = {
 <h2 data-number="1.5" class="anchored" data-anchor-id="diagnostics-du-modèle"><span class="header-section-number">1.5</span> Diagnostics du modèle</h2>
 <section id="résidus" class="level3" data-number="1.5.1">
 <h3 data-number="1.5.1" class="anchored" data-anchor-id="résidus"><span class="header-section-number">1.5.1</span> Résidus</h3>
-<p>Les <strong>résidus</strong> sont <span class="math inline">\(e_i = Y_i - \hat Y_i\)</span>. Les résidus standardisés sont <span class="math inline">\(r_i = e_i / (\hat\sigma\sqrt{1-h_i})\)</span> et les résidus studentisés sont calculés en excluant l’observation <span class="math inline">\(i\)</span> de l’estimation de <span class="math inline">\(\sigma\)</span>. L’inspection graphique des résidus permet de vérifier :</p>
+<div class="env-definition" data-titre="Résidus, résidus standardisés et studentisés">
+<p><span class="env-titre">Définition — Résidus, résidus standardisés et studentisés</span></p>
+<p>Les <strong>résidus</strong> sont <span class="math inline">\(e_i = Y_i - \hat Y_i\)</span>. Les résidus standardisés sont <span class="math inline">\(r_i = e_i / (\hat\sigma\sqrt{1-h_i})\)</span> et les résidus studentisés sont calculés en excluant l’observation <span class="math inline">\(i\)</span> de l’estimation de <span class="math inline">\(\sigma\)</span>.</p>
+</div>
+<p>L’inspection graphique des résidus permet de vérifier :</p>
 <ul>
 <li><p>la linéarité (résidus vs valeurs ajustées : aucune tendance) ;</p></li>
 <li><p>l’homoscédasticité (dispersion constante des résidus) ;</p></li>
@@ -329,12 +344,20 @@ window.Quarto = {
 </section>
 <section id="observations-aberrantes-et-influentes" class="level3" data-number="1.5.2">
 <h3 data-number="1.5.2" class="anchored" data-anchor-id="observations-aberrantes-et-influentes"><span class="header-section-number">1.5.2</span> Observations aberrantes et influentes</h3>
-<p>Le levier <span class="math inline">\(h_i\)</span> mesure le potentiel d’influence de l’observation <span class="math inline">\(i\)</span> ; une valeur dépassant <span class="math inline">\(2(p+1)/n\)</span> mérite examen. La distance de Cook, <span class="math display">\[D_i = \frac{r_i^2}{p+1}\cdot\frac{h_i}{1-h_i},\]</span> mesure l’influence globale de l’observation <span class="math inline">\(i\)</span> sur les coefficients estimés. Les <strong>DFBETAS</strong> et <strong>DFFITS</strong> mesurent respectivement l’effet du retrait de l’observation <span class="math inline">\(i\)</span> sur chaque coefficient et sur la valeur ajustée <span class="math inline">\(\hat Y_i\)</span>.</p>
+<p>Le levier <span class="math inline">\(h_i\)</span> mesure le potentiel d’influence de l’observation <span class="math inline">\(i\)</span> ; une valeur dépassant <span class="math inline">\(2(p+1)/n\)</span> mérite examen.</p>
+<div class="env-definition" data-titre="Distance de Cook">
+<p><span class="env-titre">Définition — Distance de Cook</span></p>
+<p>La distance de Cook, <span class="math display">\[D_i = \frac{r_i^2}{p+1}\cdot\frac{h_i}{1-h_i},\]</span> mesure l’influence globale de l’observation <span class="math inline">\(i\)</span> sur les coefficients estimés.</p>
+</div>
+<div class="env-definition" data-titre="DFBETAS et DFFITS">
+<p><span class="env-titre">Définition — DFBETAS et DFFITS</span></p>
+<p>Les <strong>DFBETAS</strong> et <strong>DFFITS</strong> mesurent respectivement l’effet du retrait de l’observation <span class="math inline">\(i\)</span> sur chaque coefficient et sur la valeur ajustée <span class="math inline">\(\hat Y_i\)</span>.</p>
 <p><span class="math display">\[
 \begin{aligned}
 **DFBETA**_i=\hat{\boldsymbol{\beta}}- \hat{\boldsymbol{\beta}}_{(-i)}=\frac{(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}_i^\top e_i}{1-h_i}
 \end{aligned}
 \]</span></p>
+</div>
 </section>
 </section>
 <section id="sélection-de-variables-aic-et-bic" class="level2" data-number="1.6">

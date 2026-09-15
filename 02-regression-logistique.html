@@ -389,7 +389,11 @@ Var[Y_i] &amp;= m_i\pi_i(1-\pi_i) = \frac{\mu_i(m_i - \mu_i)}{m_i}.
 <li><strong>Probit :</strong> <span class="math inline">\(g(u) = \Phi^{-1}(u)\)</span>, où <span class="math inline">\(\Phi\)</span> est la fonction de répartition de la <span class="math inline">\(\mathcal{N}(0,1)\)</span>, d’où <span class="math inline">\(\pi_i = \Phi(\eta_i)\)</span>. En R : <code>link="probit"</code>.</li>
 <li><strong>C-log-log :</strong> <span class="math inline">\(g(u) = \log\{-\log(1-u)\}\)</span>, d’où <span class="math inline">\(\pi_i = 1 - e^{-e^{\eta_i}}\)</span>. En R : <code>link="cloglog"</code>.</li>
 </ul>
-<p>Dans les trois cas, <span class="math inline">\(g^{-1}(\cdot)\)</span> est une fonction de répartition. En pratique, les trois liens donnent souvent des résultats très similaires.</p>
+<div class="env-propriete" data-titre="$g^{-1}$ est une fonction de répartition">
+<p><span class="env-titre">Propriété — <span class="math inline">\(g^{-1}\)</span> est une fonction de répartition</span></p>
+<p>Dans les trois cas, <span class="math inline">\(g^{-1}(\cdot)\)</span> est une fonction de répartition. C’est précisément cette propriété qui garantit que <span class="math inline">\(\pi_i = g^{-1}(\eta_i) \in [0,1]\)</span>, peu importe le lien choisi et peu importe la valeur (réelle, non bornée) de <span class="math inline">\(\eta_i\)</span>.</p>
+</div>
+<p>En pratique, les trois liens donnent souvent des résultats très similaires.</p>
 <p>Voici une comparaison des probabilités prédites pour les trois liens, en fonction de <span class="math inline">\(\eta_i\)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -426,17 +430,20 @@ o_i = \frac{\pi_i}{1-\pi_i} = \frac{P(Y_i=1)}{P(Y_i=0)}.
 <p><span class="math display">\[
 \eta_i = \beta_0 + \beta_1 X_1 + \cdots + \beta_j X_j + \cdots
 \]</span></p>
-<p>Si on augmente <span class="math inline">\(X_j\)</span> d’une unité, toutes les autres variables restant constantes, <span class="math inline">\(\eta_i\)</span> augmente de <span class="math inline">\(\beta_j\)</span>. Comme <span class="math inline">\(o_i = e^{\eta_i}\)</span>, cette augmentation se traduit par une <em>multiplication</em> de la cote :</p>
+<p>Si on augmente <span class="math inline">\(X_j\)</span> d’une unité, toutes les autres variables restant constantes, <span class="math inline">\(\eta_i\)</span> augmente de <span class="math inline">\(\beta_j\)</span>.</p>
+<div class="env-propriete" data-titre="Effet multiplicatif sur la cote">
+<p><span class="env-titre">Propriété — Effet multiplicatif sur la cote</span></p>
+<p>Comme <span class="math inline">\(o_i = e^{\eta_i}\)</span>, une augmentation d’une unité de <span class="math inline">\(X_j\)</span> (toutes les autres variables restant constantes) se traduit par une <em>multiplication</em> de la cote :</p>
 <p><span class="math display">\[
 o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i^{\text{ancien}} \cdot e^{\beta_j}.
 \]</span></p>
-<p>Une augmentation unitaire de <span class="math inline">\(X_j\)</span> multiplie donc la cote par <span class="math inline">\(e^{\beta_j}\)</span> ; <span class="math inline">\(e^{\beta_j}\)</span> est le <strong>rapport de cotes</strong> (<em>odds ratio</em>).</p>
-<p>On distingue trois cas :</p>
+<p>Une augmentation unitaire de <span class="math inline">\(X_j\)</span> multiplie donc la cote par <span class="math inline">\(e^{\beta_j}\)</span> ; <span class="math inline">\(e^{\beta_j}\)</span> est le <strong>rapport de cotes</strong> (<em>odds ratio</em>). On distingue trois cas :</p>
 <ul>
 <li><p>si <span class="math inline">\(e^{\beta_j} &gt; 1\)</span> : augmenter <span class="math inline">\(X_j\)</span> augmente la cote (et donc <span class="math inline">\(P(Y_i=1)\)</span>) ;</p></li>
 <li><p>si <span class="math inline">\(e^{\beta_j} &lt; 1\)</span> : augmenter <span class="math inline">\(X_j\)</span> diminue la cote ;</p></li>
 <li><p>si <span class="math inline">\(e^{\beta_j} = 1\)</span> (c’est-à-dire <span class="math inline">\(\beta_j = 0\)</span>) : <span class="math inline">\(X_j\)</span> n’a pas d’effet sur la cote.</p></li>
 </ul>
+</div>
 </div>
 </section>
 </section>
@@ -851,11 +858,20 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 <p>On définit la déviance <span class="math inline">\(D\)</span> comme étant deux fois le log de ce rapport:</p>
 <p><span class="math display">\[D =2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.\]</span></p>
 </div>
-<p><span class="math inline">\(D\)</span> est la <strong>déviance</strong> du modèle et <span class="math inline">\(d_i\)</span> la déviance individuelle de l’observation <span class="math inline">\(i\)</span> ; chaque <span class="math inline">\(d_i\)</span> mesure l’écart entre l’ajustement parfait <span class="math inline">\(y_i\)</span> et l’ajustement <span class="math inline">\(\hmu{i}\)</span> obtenu par le modèle. Puisque le modèle saturé maximise la vraisemblance parmi <em>tous</em> les modèles possibles, <span class="math inline">\(l(y,y) \geq l(\hat\mu,y)\)</span> toujours, et donc <span class="math inline">\(D \geq 0\)</span> : plus <span class="math inline">\(D\)</span> est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s’ajuste bien aux données. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l’adéquation du modèle et à comparer des modèles.</p>
+<p><span class="math inline">\(D\)</span> est la <strong>déviance</strong> du modèle et <span class="math inline">\(d_i\)</span> la déviance individuelle de l’observation <span class="math inline">\(i\)</span> ; chaque <span class="math inline">\(d_i\)</span> mesure l’écart entre l’ajustement parfait <span class="math inline">\(y_i\)</span> et l’ajustement <span class="math inline">\(\hmu{i}\)</span> obtenu par le modèle.</p>
+<div class="env-propriete" data-titre="Non-négativité de la déviance">
+<p><span class="env-titre">Propriété — Non-négativité de la déviance</span></p>
+<p>Puisque le modèle saturé maximise la vraisemblance parmi <em>tous</em> les modèles possibles, <span class="math inline">\(l(y,y) \geq l(\hat\mu,y)\)</span> toujours, et donc <span class="math inline">\(D \geq 0\)</span> : plus <span class="math inline">\(D\)</span> est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s’ajuste bien aux données.</p>
+</div>
+<p>La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l’adéquation du modèle et à comparer des modèles.</p>
 </section>
 <section id="comparaison-de-modèles-emboîtés" class="level3" data-number="2.3.2">
 <h3 data-number="2.3.2" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</h3>
-<p>Pour comparer deux modèles emboîtés de déviances <span class="math inline">\(D_1\)</span> (complet) et <span class="math inline">\(D_2\)</span> (réduit), la statistique de test est <span class="math inline">\(\chi^2 = D_2 - D_1\)</span>. Sous <span class="math inline">\(H_0\)</span> (le modèle réduit est adéquat), <span class="math inline">\(\chi^2\)</span> suit une loi du khi-deux à <span class="math inline">\(d\)</span> degrés de liberté, où <span class="math inline">\(d\)</span> est la différence du nombre de paramètres.</p>
+<p>Pour comparer deux modèles emboîtés de déviances <span class="math inline">\(D_1\)</span> (complet) et <span class="math inline">\(D_2\)</span> (réduit), la statistique de test est <span class="math inline">\(\chi^2 = D_2 - D_1\)</span>.</p>
+<div class="env-propriete" data-titre="Distribution asymptotique de $\chi^2 = D_2-D_1$">
+<p><span class="env-titre">Propriété — Distribution asymptotique de <span class="math inline">\(\chi^2 = D_2-D_1\)</span></span></p>
+<p>Sous <span class="math inline">\(H_0\)</span> (le modèle réduit est adéquat), <span class="math inline">\(\chi^2\)</span> suit une loi du khi-deux à <span class="math inline">\(d\)</span> degrés de liberté, où <span class="math inline">\(d\)</span> est la différence du nombre de paramètres.</p>
+</div>
 <div class="env-exemple" data-titre="Introduction des termes quadratiques et cubiques dans l'exemple [`turbines`](#data-turbines)">
 <p><span class="env-titre">Exemple — Introduction des termes quadratiques et cubiques dans l’exemple <a href="#data-turbines"><code>turbines</code></a></span></p>
 <p>On teste <span class="math inline">\(H_0: \beta_2 = \beta_3 = 0\)</span> (modèle avec <code>Hours</code> seulement contre modèle avec termes en <code>Hours</code><span class="math inline">\(^2\)</span> et <code>Hours</code><span class="math inline">\(^3\)</span>) :</p>
@@ -1189,11 +1205,18 @@ Number of Fisher Scoring iterations: 9</code></pre>
 <li><p><strong>Résidus de Pearson</strong> : <span class="math display">\[r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.\]</span></p></li>
 </ul>
 </div>
+<div class="env-propriete" data-titre="Somme des résidus déviance">
+<p><span class="env-titre">Propriété — Somme des résidus déviance</span></p>
 <p>Il est possible de montrer que la somme des résidus déviance <span class="math display">\[\sum_{i=1}^nr_{D,i} = \sum_{i=1}^n\mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}=D,\]</span> correspond à la déviance introduite <a href="#sec-deviance">plus tôt</a>.</p>
+</div>
 </section>
 <section id="tests-dadéquation-globale" class="level3" data-number="2.4.2">
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="tests-dadéquation-globale"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</h3>
-<p>Deux statistiques permettent de tester l’adéquation globale : la déviance <span class="math inline">\(D\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]</span> Lorsque tous les <span class="math inline">\(m_i \to \infty\)</span>, <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span> convergent en loi vers une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien spécifié.</p>
+<p>Deux statistiques permettent de tester l’adéquation globale : la déviance <span class="math inline">\(D\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]</span></p>
+<div class="env-propriete" data-titre="Convergence de $D$ et $\chi^2_P$">
+<p><span class="env-titre">Propriété — Convergence de <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span></span></p>
+<p>Lorsque tous les <span class="math inline">\(m_i \to \infty\)</span>, <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span> convergent en loi vers une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien spécifié.</p>
+</div>
 <p>L’hypothèse nulle du test est que le modèle est adéquat.</p>
 <div class="env-exemple" data-titre="Test d'adéquation avec l'exemple [`turbines`](#data-turbines)">
 <p><span class="env-titre">Exemple — Test d’adéquation avec l’exemple <a href="#data-turbines"><code>turbines</code></a></span></p>

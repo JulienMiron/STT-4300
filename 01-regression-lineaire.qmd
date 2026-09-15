@@ -6,9 +6,11 @@ On dispose de données $\{(Y_i, \boldsymbol{X}_i),\, i=1,\ldots,n\}$, où $Y_i$ 
 $$Y_i = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip} + \epsilon_i, \qquad i=1,\ldots,n,$$
 où $\beta_0,\beta_1,\ldots,\beta_p$ sont les coefficients de régression et les erreurs $\epsilon_i$ sont indépendantes et identiquement distribuées selon $\mathcal{N}(0,\sigma^2)$.
 
+:::{.env-definition titre="Matrice de design"}
 En écriture matricielle, on a $\boldsymbol{Y} = \boldsymbol{X\beta} + \epsilon$, où $\boldsymbol{Y}=(Y_1,\ldots,Y_n)^\top$, $\boldsymbol{\beta}=(\beta_0,\ldots,\beta_p)^\top$, $\boldsymbol{\epsilon}=(\epsilon_1,\ldots,\epsilon_n)^\top$ et $\boldsymbol{X}$ est la matrice de design (*design matrix*)^[Tout au long du document, certains termes seront traduits. Comme la plupart des références scientifiques en statistique sont en anglais, il peut être utile de connaître le terme en anglais afin de le reconnaître plus rapidement.] de dimension $n\times(p+1)$ dont la première colonne ne contient que des 1 pour inclure l'ordonnée à l'origine :
 $$\boldsymbol{X} =
  \begin{pmatrix}  \boldsymbol{X}_1^\top \\  \vdots  \\   \boldsymbol{X}_n^\top\end{pmatrix}=\begin{pmatrix} 1 & x_{11} & \cdots & x_{1p} \\ \vdots & \vdots & & \vdots \\ 1 & x_{n1} & \cdots & x_{np}\end{pmatrix}.$$
+:::
 
 Sous ces hypothèses, on a $\mu_i =E[Y_i|x_{i1},\ldots, x_{ip}] =  \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip}$ et $Var[Y_i] = \sigma^2$ (homoscédasticité).
 
@@ -24,7 +26,11 @@ $$\hat{\boldsymbol{\beta}} \sim \mathcal{N}\left\{\boldsymbol{\beta},\, \sigma^2
 
 Sous l'hypothèse de normalité des erreurs, l'estimateur des moindres carrés coïncide avec l'estimateur du maximum de vraisemblance. Il est sans biais et de variance minimale parmi les estimateurs linéaires sans biais (théorème de Gauss-Markov).
 
-Les valeurs prédites sont $\hat{\boldsymbol{Y}} = \boldsymbol{X\hat{\beta}} = \boldsymbol{HY}$, où $\boldsymbol{H} = \boldsymbol{X(X^\top X)^{-1}X^\top}$ est la matrice chapeau (*hat matrix*). Les éléments diagonaux $h_i = H_{ii}$ sont les **leviers** (*leverage*) des observations. L'estimateur sans biais usuel de $\sigma^2$ est
+:::{.env-definition titre="Matrice chapeau et leviers"}
+Les valeurs prédites sont $\hat{\boldsymbol{Y}} = \boldsymbol{X\hat{\beta}} = \boldsymbol{HY}$, où $\boldsymbol{H} = \boldsymbol{X(X^\top X)^{-1}X^\top}$ est la matrice chapeau (*hat matrix*). Les éléments diagonaux $h_i = H_{ii}$ sont les **leviers** (*leverage*) des observations.
+:::
+
+L'estimateur sans biais usuel de $\sigma^2$ est
 $$\hat\sigma^2 = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n-(p+1)}.$$
 L'estimateur du maximum de vraisemblance de $\sigma^2$ est $$\hat\sigma^2_{MV} = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n}.$$
 
@@ -40,7 +46,11 @@ Pour tester $H_0: \beta_j = 0$ contre $H_1 : \beta_j \neq 0$, on utilise la stat
 
 ### Test F et comparaison de modèles emboîtés
 
-Deux modèles sont emboîtés si l'un est complètement inclus dans l'autre. Pour comparer un modèle réduit emboîté (à $q+1$ paramètres) à un modèle complet (à $p+1$ paramètres, $q < p$), on utilise la statistique
+:::{.env-definition titre="Modèles emboîtés"}
+Deux modèles sont emboîtés si l'un est complètement inclus dans l'autre.
+:::
+
+Pour comparer un modèle réduit emboîté (à $q+1$ paramètres) à un modèle complet (à $p+1$ paramètres, $q < p$), on utilise la statistique
 $$F_{obs} = \frac{(SSE_{r\acute{e}duit} - SSE_{complet})/(p-q)}{SSE_{complet}/(n-(p+1))},$$
 qui suit une loi $F_{p-q,\, n-(p+1)}$ sous l'hypothèse nulle que le modèle réduit est adéquat.
 
@@ -65,7 +75,11 @@ $${\boldsymbol{X}^*}^\top\hat{\boldsymbol{\beta}} \pm t_{\alpha/2,\,n-(p+1)}\,\h
 
 ### Résidus
 
-Les **résidus** sont $e_i = Y_i - \hat Y_i$. Les résidus standardisés sont $r_i = e_i / (\hat\sigma\sqrt{1-h_i})$ et les résidus studentisés sont calculés en excluant l'observation $i$ de l'estimation de $\sigma$. L'inspection graphique des résidus permet de vérifier :
+:::{.env-definition titre="Résidus, résidus standardisés et studentisés"}
+Les **résidus** sont $e_i = Y_i - \hat Y_i$. Les résidus standardisés sont $r_i = e_i / (\hat\sigma\sqrt{1-h_i})$ et les résidus studentisés sont calculés en excluant l'observation $i$ de l'estimation de $\sigma$.
+:::
+
+L'inspection graphique des résidus permet de vérifier :
 
 - la linéarité (résidus vs valeurs ajustées : aucune tendance) ;
 
@@ -77,15 +91,23 @@ Les **résidus** sont $e_i = Y_i - \hat Y_i$. Les résidus standardisés sont $r
 
 ### Observations aberrantes et influentes
 
-Le levier $h_i$ mesure le potentiel d'influence de l'observation $i$ ; une valeur dépassant $2(p+1)/n$ mérite examen. La distance de Cook,
+Le levier $h_i$ mesure le potentiel d'influence de l'observation $i$ ; une valeur dépassant $2(p+1)/n$ mérite examen.
+
+:::{.env-definition titre="Distance de Cook"}
+La distance de Cook,
 $$D_i = \frac{r_i^2}{p+1}\cdot\frac{h_i}{1-h_i},$$
-mesure l'influence globale de l'observation $i$ sur les coefficients estimés. Les **DFBETAS** et **DFFITS** mesurent respectivement l'effet du retrait de l'observation $i$ sur chaque coefficient et sur la valeur ajustée $\hat Y_i$.
+mesure l'influence globale de l'observation $i$ sur les coefficients estimés.
+:::
+
+:::{.env-definition titre="DFBETAS et DFFITS"}
+Les **DFBETAS** et **DFFITS** mesurent respectivement l'effet du retrait de l'observation $i$ sur chaque coefficient et sur la valeur ajustée $\hat Y_i$.
 
 $$
 \begin{aligned}
 **DFBETA**_i=\hat{\boldsymbol{\beta}}- \hat{\boldsymbol{\beta}}_{(-i)}=\frac{(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}_i^\top e_i}{1-h_i}
 \end{aligned}
 $$
+:::
 
 ## Sélection de variables : AIC et BIC
 

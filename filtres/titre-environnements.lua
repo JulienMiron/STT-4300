@@ -6,7 +6,8 @@ local etiquettes = {
   ["env-propriete"]  = "Propriété",
   ["env-remarque"]   = "Remarque",
   ["env-exemple"]    = "Exemple",
-  ["env-theo"]    = "Pour aller plus loin avec la théorie"
+  ["env-theo"]    = "Pour aller plus loin avec la théorie",
+  ["env-logit"]    = "Le cas du lien logit"
 }
 
 

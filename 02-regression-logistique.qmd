@@ -30,8 +30,10 @@ Var[Y_i] &= \pi_i(1-\pi_i).
 \end{aligned}
 $$
 
+:::{.env-definition titre="Prédicteur linéaire et fonction de lien"}
 On pose $\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}$ (le **prédicteur linéaire**) et on relie $\pi_i$ à $\eta_i$ par une **fonction de lien** $g$ supposée connue : $\eta_i=g(\pi_i)$, c'est-à-dire
 $$\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}).$$
+:::
 
 ### Données groupées (binomiale)
 
@@ -99,7 +101,7 @@ resultats |>
   theme_minimal()
 ```
 
-:::{.env-remarque #sec-cotes titre = "Interprétation du lien logit"}
+::::{.env-logit #sec-cotes titre="Interprétation"}
 Avec le lien logit, on a
 
 $$
@@ -112,11 +114,13 @@ $$
 e^{\eta_i} = \frac{\pi_i}{1-\pi_i}.
 $$
 
-**Les cotes (odds).** Le rapport ci-dessus a une interprétation concrète : c'est la cote (*odds*), notée $o_i$ :
+:::{.env-definition titre="Cote (odds)"}
+Le rapport ci-dessus a une interprétation concrète : c'est la cote (*odds*), notée $o_i$ :
 
 $$
 o_i = \frac{\pi_i}{1-\pi_i} = \frac{P(Y_i=1)}{P(Y_i=0)}.
 $$
+:::
 
 Autrement dit, la cote compare la probabilité que l'événement se produise ($Y_i=1$) à la probabilité qu'il ne se produise pas ($Y_i=0$). Par exemple :
 
@@ -146,7 +150,7 @@ On distingue trois cas :
 
 - si $e^{\beta_j} = 1$ (c'est-à-dire $\beta_j = 0$) : $X_j$ n'a pas d'effet sur la cote.
 
-:::
+::::
 
 
 
@@ -181,7 +185,7 @@ $$
 où $\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top$ et $K$ ne dépend pas de $\beta$ (donc n'affecte pas la maximisation).
 C'est sous cette forme qu'on reconnaîtra, plus loin, que le modèle de régression binomiale appartient à la famille exponentielle. Cette écriture est aussi plus facile à utiliser pour le calcul de la [déviance](#sec-deviance).
 
-:::{.env-remarque titre = "Log-vraisemblance avec le lien logit"}
+:::{.env-logit titre="Log-vraisemblance"}
 Avec le lien logit, $\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}$ et $1-\pi_i = \dfrac{1}{1+e^{\eta_i}}$, où
 
 $$
@@ -251,7 +255,7 @@ $$
 \hmu{i} = m_i \hpi{i} = m_i\, g^{-1}(\hbj{0} + \hbj{1} X_{i1} + \cdots + \hbj{p} X_{ip}).
 $$
 
-:::{.env-remarque}
+:::{.env-logit titre="Expression de $w_i$"}
 **Remarque (Cas du lien logit).**
 
 Avec le lien logit, $\hpi{i} = \dfrac{e^{\heta{i}}}{1+e^{\heta{i}}}$, où $\heta{i} = \hbj{0} + \hbj{1} X_{i1} + \cdots + \hbj{p} X_{ip}$. L'entrée $w_i$ se simplifie alors en
@@ -263,7 +267,7 @@ $$
 :::
 
 
-:::{.env-exemple titre = "Jeu de données `turbines`"}
+:::{.env-exemple titre="Jeu de données `turbines`"}
 Les données `turbines`, tirées de la librairie `GLMsData` [@dunn2018glm], proviennent d'une expérience de fiabilité sur des roues de turbine (Nelson, 1982) : on y rapporte, pour différentes durées de fonctionnement, le nombre de roues ayant développé des fissures parmi celles mises à l'essai.
 
 On ajuste le modèle avec les trois fonctions de lien :
@@ -376,7 +380,7 @@ où $z_\gamma$ est le quantile de la $\mathcal{N}(0,1)$ défini par $P(Z > z_\ga
 Pour tester $H_0: \beta_j = 0$ contre $H_1: \beta_j\neq 0$, on rejette $H_0$ au seuil $\alpha$ si $|z_{obs}| > z_{\alpha/2}$, avec $z_{obs} = \hat\beta_j/\sqrt{\hat{\text V}(\hat\beta_j)}$. Le seuil observé ($p$-valeur) est $\alpha^* = 2P(Z > |z_{obs}|)$.
 
 
-:::{.env-remarque #sec-hauckdonner titre = "Le phénomène de Hauck-Donner"}
+:::{.env-remarque #sec-hauckdonner titre="Le phénomène de Hauck-Donner"}
 
 Le test de Wald pour $H_0 : \beta_j = 0$ repose sur la statistique
 
@@ -510,13 +514,13 @@ Pour $\boldsymbol{X}^* = (1, X_1^*,\ldots,X_p^*)^\top$, on estime $\pi^*$ par $\
 $$\left[{\boldsymbol{X}^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)}\right], \qquad \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta) = {\boldsymbol{X}^*}^\top \hat{\text V}(\hat\beta)\, \boldsymbol{X}^*,$$
 et on applique $g^{-1}$ aux deux bornes. Cet intervalle respecte toujours $[0,1]$.
 
-1. **Règle du delta** : $\hat{\text V}(\hat\pi^*) = h({\boldsymbol{X}^*}^\top\hat\beta)\, \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)$ avec $h(u) = \{\partial g^{-1}(u)/\partial u\}^2$, d'où l'IC approximatif $\left[\hat\pi^* \pm z_{\alpha/2}\sqrt{\hat{\text V}(\hat\pi^*)}\right]$.
+1. **Méthode du delta** : $\hat{\text V}(\hat\pi^*) = h({\boldsymbol{X}^*}^\top\hat\beta)\, \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)$ avec $h(u) = \{\partial g^{-1}(u)/\partial u\}^2$, d'où l'IC approximatif $\left[\hat\pi^* \pm z_{\alpha/2}\sqrt{\hat{\text V}(\hat\pi^*)}\right]$.
 
 Les deux méthodes donnent en pratique des résultats très similaires.
 
 
 
-:::{.env-remarque titre = "Règle du delta avec le lien logit"}
+:::{.env-logit titre="Méthode du delta"}
 Avec le lien logit, $g^{-1}(u) = \dfrac{e^u}{1+e^u}$, dont la dérivée est
 
 $$
@@ -531,7 +535,7 @@ $$
 :::
 
 
-:::{.env-theo titre = "Idée de la méthode du delta"}
+:::{.env-theo titre="Idée de la méthode du delta"}
 On a $\hat\theta = {\boldsymbol{X}^*}^\top\hat\beta$, dont on connaît la distribution asymptotique : $\hat\theta \approx \mathcal{N}(\theta,\, \hat{\text V}(\hat\theta))$. On s'intéresse cependant à $\hat\pi^* = g^{-1}(\hat\theta)$, une transformation *non linéaire* de $\hat\theta$ — et la normalité asymptotique ne se transporte pas automatiquement à travers une transformation non linéaire, ni sa variance.
 
 La méthode du delta contourne le problème en approximant $g^{-1}$ localement par sa tangente (développement de Taylor au premier ordre) autour de $\theta$ :
@@ -552,17 +556,32 @@ Contrairement à la première approche (transformer les bornes de l'IC sur $\eta
 
 ## Sélection de modèles
 
-### Déviance
-
 ### Déviance {#sec-deviance}
 
-**Le modèle saturé.** Pour juger si un modèle avec $p+1$ paramètres $\boldsymbol\beta$ s'ajuste bien aux données, il est utile de le comparer au modèle le plus flexible possible : celui qui accorde à chaque observation son propre paramètre, sans aucune structure imposée par des variables explicatives. On l'appelle le **modèle saturé**, avec $n$ paramètres $\{\tilde\mu_1,\ldots,\tilde\mu_n\}$ (un par observation, plutôt que $p+1$ pour l'ensemble de l'échantillon).
+Pour juger si un modèle avec $p+1$ paramètres $\boldsymbol\beta$ s'ajuste bien aux données, il est utile de le comparer au modèle le plus flexible possible : celui qui accorde à chaque observation son propre paramètre, sans aucune structure imposée par des variables explicatives.
 
-Puisque rien ne contraint $\tilde\mu_i$ à part son domaine, l'estimateur du maximum de vraisemblance de $\tilde\mu_i$ est simplement $y_i$ : la log-vraisemblance est maximisée en ajustant chaque paramètre exactement sur la donnée observée correspondante. Le modèle saturé représente donc l'ajustement *parfait* : il reproduit exactement les données, sans laisser aucun résidu. Il n'a cependant aucune valeur prédictive ou explicative, puisqu'il ne fait que mémoriser les observations — son seul rôle est de servir de référence, un étalon auquel comparer un modèle plus parcimonieux (avec $p+1 \ll n$ paramètres) pour quantifier ce qui reste à expliquer.
+:::{.env-definition titre="Modèle saturé"}
+On l'appelle le **modèle saturé**, avec $n$ paramètres $\{\tilde\mu_1,\ldots,\tilde\mu_n\}$ (un par observation, plutôt que $p+1$ pour l'ensemble de l'échantillon).
+:::
 
-**La déviance.** La statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est
+Il est facile de constater que le modèle saturé  maximise la log-vraisemblance, donnée par
+$$
+\ell(\tilde\mu_1,\ldots,\tilde\mu_n; \boldsymbol{y}) = \sum_{i=1}^n \left\{ y_i \log(\tilde\mu_i) + (m_i - y_i)\log(m_i - \tilde\mu_i) \right\} + K,
+$$
 
-$$D = 2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.$$
+quand $\{\tilde\mu_1,\ldots,\tilde\mu_n\}= \{y_1,\ldots,y_n\}$, c'est-à-dire si la log-vraisemblance est calculée en ajustant chaque paramètre exactement sur la donnée observée correspondante. Le modèle saturé représente donc l'ajustement *parfait* : il reproduit exactement les données, sans laisser aucun résidu. Il n'a cependant aucune valeur prédictive ou explicative, puisqu'il ne fait que mémoriser les observations — son seul rôle est de servir de référence, un étalon auquel comparer un modèle plus parcimonieux (avec $p+1 \ll n$ paramètres) pour quantifier ce qui reste à expliquer.
+
+**La déviance.** En notant $\tilde{\boldsymbol{\mu}}=(\tilde\mu_1,\ldots,\tilde\mu_n)^\top$ et $\hat{\boldsymbol{\mu}}=(\hat\mu_1,\ldots,\hat\mu_n)^\top$, la statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est
+
+$$\Lambda=\frac{L(\tilde{\boldsymbol{\mu}}; \boldsymbol y)}{L(\hat{\boldsymbol{\mu}}; \boldsymbol y)} =\frac{L(\boldsymbol{y}; \boldsymbol y)}{L(\hat{\boldsymbol{\mu}}; \boldsymbol y)}.$$
+
+:::{.env-definition titre="Déviance"}
+On définit la déviance $D$ comme étant deux fois le log de ce rapport:
+
+$$D =2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.$$
+:::
+
+
 
 $D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'observation $i$ ; chaque $d_i$ mesure l'écart entre l'ajustement parfait $y_i$ et l'ajustement $\hmu{i}$ obtenu par le modèle. Puisque le modèle saturé maximise la vraisemblance parmi *tous* les modèles possibles, $l(y,y) \geq l(\hat\mu,y)$ toujours, et donc $D \geq 0$ : plus $D$ est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s'ajuste bien aux données. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'adéquation du modèle et à comparer des modèles.
 
@@ -570,8 +589,8 @@ $D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'obse
 
 Pour comparer deux modèles emboîtés de déviances $D_1$ (complet) et $D_2$ (réduit), la statistique de test est $\chi^2 = D_2 - D_1$. Sous $H_0$ (le modèle réduit est adéquat), $\chi^2$ suit une loi du khi-deux à $d$ degrés de liberté, où $d$ est la différence du nombre de paramètres.
 
-:::{.env-exemple}
-**Exemple (`turbines`, termes quadratique et cubique).**
+:::{.env-exemple titre="Introduction des termes quadratiques et cubiques dans l'exemple `turbines`"}
+
 
 On teste $H_0: \beta_2 = \beta_3 = 0$ (modèle avec `Hours` seulement contre modèle avec termes en `Hours`$^2$ et `Hours`$^3$) :
 
@@ -607,35 +626,123 @@ Le modèle ayant le plus petit $AIC$ (ou $BIC$) est préférable. En R : `extrac
 
 ### Sélection automatique
 
-Les méthodes pas à pas *forward*, *backward* et *stepwise* fonctionnent exactement comme pour les modèles linéaires (fonction `step` avec l'argument `direction`). Sur le jeu de données `deposit`, les trois procédures retiennent le modèle incluant le type d'insecticide, la dose et le terme quadratique de la dose.
+Les méthodes pas à pas *forward*, *backward* et *stepwise* fonctionnent exactement comme pour les modèles linéaires (fonction `step` avec l'argument `direction`). 
 
+:::{.env-exemple titre="Sélection automatique sur le jeu de données `nminer`"}
+
+```{r}
+#| message: false
+library(GLMsData)
+data(nminer)
+
+# On construit la réponse binaire décrite dans le texte :
+# 1 si au moins un mineur bruyant a été détecté, 0 sinon
+nminer$Detecte <- as.numeric(nminer$Minerab > 0)
+
+# Modèle complet : effets additifs de toutes les variables explicatives disponibles
+modele.complet <- glm(Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber,
+                       data = nminer, family = binomial)
+
+# Backward : part du modèle complet, retire des termes
+modele.backward <- step(modele.complet, direction = "backward")
+
+# Forward : part du modèle vide, ajoute des termes jusqu'au modèle complet
+modele.vide <- glm(Detecte ~ 1, data = nminer, family = binomial)
+modele.forward <- step(modele.vide, direction = "forward",
+                        scope = formula(modele.complet))
+
+# Stepwise: part du modèle complet, ajoute et retire au besoin
+modele.step <- step(modele.complet, direction = "both")
+
+summary(modele.backward)
+summary(modele.forward)
+summary(modele.step)
+
+```
+Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local.
+
+:::
 ## Validation et diagnostic de modèles
 
 ### Résidus
 
-On distingue deux types de résidus :
-
+:::{.env-definition titre="Résidus déviance et résidus de Pearson"}
 - **Résidus déviance** : $r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}$, avec
 $$d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\}.$$
 
 - **Résidus de Pearson** :
 $$r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.$$
+:::
+
+Il est possible de montrer que la somme des résidus déviance 
+$$\sum_{i=1}^nr_{D,i} = \sum_{i=1}^n\mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}=D,$$
+correspond à la déviance introduite [plus tôt](#sec-deviance).
 
 ### Tests d'adéquation globale
 
-Deux statistiques permettent de tester l'adéquation globale : la déviance $D = \sum_i r_{D,i}^2$ et la statistique du khi-deux de Pearson
+Deux statistiques permettent de tester l'adéquation globale : la déviance $D$ et la statistique du khi-deux de Pearson
 $$\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.$$
 Lorsque tous les $m_i \to \infty$, $D$ et $\chi^2_P$ convergent en loi vers une $\chi^2_{n-(p+1)}$ si le modèle est bien spécifié.
 
-:::{.env-remarque}
-**Remarque.**
+L'hypothèse nulle du test est que le modèle est adéquat.
 
-Ces tests ne sont valides que pour des **données groupées** avec des $m_i$ élevés, car ils reposent sur un résultat asymptotique en $m_i$. Ils sont inutilisables pour des données individuelles (Bernoulli).
+::: {.env-exemple titre="Test d'adéquation avec l'exemple `turbines`"}
+```{r}
+library(GLMsData)
+data(turbines)
+
+modele.logit <- glm(cbind(Fissures, Turbines - Fissures) ~ Hours,
+                     data = turbines, family = binomial(link = "logit"))
+
+# Déviance
+D <- deviance(modele.logit)
+ddl <- df.residual(modele.logit)
+p.deviance <- 1 - pchisq(D, df = ddl)
+
+# Khi-deux de Pearson
+chi2.pearson <- sum(residuals(modele.logit, type = "pearson")^2)
+p.pearson <- 1 - pchisq(chi2.pearson, df = ddl)
+
+data.frame(
+  Statistique = c("Déviance", "Khi-deux de Pearson"),
+  Valeur = c(D, chi2.pearson),
+  ddl = ddl,
+  p.valeur = c(p.deviance, p.pearson)
+)
+```
+
 :::
 
+:::{.env-remarque titre="Déviance ou Khi-carré de Pearson?"}
+Bien que $D$ et $\chi^2_P$ convergent tous deux vers une loi $\chi^2_{n-(p+1)}$ quand les $m_i \to \infty$, leur comportement en échantillon fini diffère : la statistique de Pearson respecte généralement mieux cette approximation que la déviance, surtout quand les $m_i$ sont petits ou modérés [@mccullagh1989glm; @agresti2013cda].
+
+Le cas extrême illustre bien ce phénomène : ils sont inutilisables pour des données individuelles (Bernoulli, $m_i=1$). En effet, dans ce cas, un des deux termes de $d_i$ s'annule toujours (par la convention $0\log 0=0$), de sorte que
+
+$$
+d_i = -2\left[y_i\log(\hmu{i}) + (1-y_i)\log(1-\hmu{i})\right].
+$$
+
+De plus, la log-vraisemblance du modèle saturé vaut alors exactement 0, puisque $\tilde\mu_i = y_i \in \{0,1\}$ annule $y_i\log(y_i)+(1-y_i)\log(1-y_i)$ par la même convention. La déviance se réduit donc à
+
+$$
+D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
+$$
+
+c'est-à-dire une simple transformation de la vraisemblance du modèle, sans point de comparaison utile — d'où la perte de son interprétation comme test d'adéquation. $\chi^2_P$, lui, reste au moins défini dans ce cas, même si son approximation $\chi^2$ n'est pas fiable non plus.
+
+Quand les deux statistiques mènent à des conclusions similaires (avec des $m_i$ raisonnablement grands), peu importe laquelle on rapporte. Un désaccord marqué entre les deux valeurs-$p$ signale plutôt que l'approximation asymptotique commune aux deux tests devient peu fiable, plutôt que l'un des deux tests serait le bon et l'autre non.
+
+Cette distinction ne s'applique toutefois qu'au test d'adéquation globale d'un seul modèle. Pour comparer des modèles emboîtés, la déviance conserve un avantage clair : les différences de déviances suivent exactement une loi $\chi^2$, ce qui n'est pas le cas des différences de statistiques de Pearson.
+:::
 ### Graphiques et extra-variabilité
 
-Les graphiques des résidus en fonction des numéros d'observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une **extra-variabilité** (*overdispersion*) : $E[Y_i] = m_i\pi_i$ mais $Var[Y_i] > m_i\pi_i(1-\pi_i)$. On pose alors $Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)$ et on estime $\phi$ par $\chi^2_P/(n-(p+1))$. En cas d'extra-variabilité, on spécifie `family=quasibinomial()` au lieu de `family=binomial()` dans `glm`.
+Les graphiques des résidus en fonction des numéros d'observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une extra-variabilité.
+
+:::{.env-definition titre="Extra-variabilité (overdispersion)"}
+L'**extra-variabilité** (*overdispersion*) survient quand $E[Y_i] = m_i\pi_i$ mais $Var[Y_i] > m_i\pi_i(1-\pi_i)$. On pose alors $Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)$ et on estime $\phi$ par $\chi^2_P/(n-(p+1))$.
+:::
+
+En cas d'extra-variabilité, on spécifie `family=quasibinomial()` au lieu de `family=binomial()` dans `glm`.
 
 Pour vérifier la linéarité du prédicteur, on trace le nuage de points $\{(\hpi{i}, \tilde\pi_i)\}$, où $\hpi{i} = g^{-1}(\heta{i})$ et $\tilde\pi_i = y_i/m_i$ : si le modèle est bien spécifié, les points doivent être autour de la droite $y=x$.
 
@@ -647,7 +754,10 @@ Le principe est identique à la régression linéaire. Les définitions des levi
 
 Pour des données individuelles, l'adéquation est difficile à évaluer, mais on peut mesurer la **capacité prédictive** du modèle. On ajuste le modèle et on calcule les probabilités prédites $\hpi{i} = g^{-1}(\heta{i})$.
 
-Fixons un seuil $u \in [0,1]$ (souvent $u=1/2$). On classe $\hat y_i = 1$ si $\hpi{i} > u$ et $\hat y_i = 0$ sinon. On mesure la capacité prédictive par :
+Fixons un seuil $u \in [0,1]$ (souvent $u=1/2$). On classe $\hat y_i = 1$ si $\hpi{i} > u$ et $\hat y_i = 0$ sinon.
+
+:::{.env-definition titre="Spécificité et sensibilité"}
+On mesure la capacité prédictive par :
 
 $$
 \begin{aligned}
@@ -655,12 +765,14 @@ $$
 \text{Sensibilité (taux de vrais positifs) :}\quad & Sens = P(\hat y = 1 \mid y = 1).
 \end{aligned}
 $$
+:::
 
 Pour un $u$ fixé, on les estime par
 $$\widehat{Spec}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hpi{i} < u)\,\&\,(y_i = 0)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 0\}}},
 \qquad
 \widehat{Sens}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hpi{i} > u)\,\&\,(y_i = 1)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 1\}}}.$$
 
+:::{.env-definition titre="Courbe ROC et AUC"}
 En faisant varier $u$ sur une grille $\{u_1 = 0, u_2, \ldots, u_B = 1\}$ et en traçant les points $\{(1-\widehat{Spec}(u_b),\, \widehat{Sens}(u_b))\}$, on obtient la **courbe ROC**. L'**aire sous la courbe** (AUC) quantifie la capacité prédictive :
 $$\mbox{AUC} \in \begin{cases}
 [0.9,\,1] & \mbox{modèle excellent},\\
@@ -669,6 +781,7 @@ $$\mbox{AUC} \in \begin{cases}
 [0.6,\,0.7) & \mbox{modèle mauvais},\\
 [0.5,\,0.6) & \mbox{modèle très faible}.
 \end{cases}$$
+:::
 
 :::{.env-exemple}
 **Exemple (`quilpie`).**

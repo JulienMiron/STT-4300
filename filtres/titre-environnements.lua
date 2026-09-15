@@ -5,8 +5,10 @@ local etiquettes = {
   ["env-definition"] = "Définition",
   ["env-propriete"]  = "Propriété",
   ["env-remarque"]   = "Remarque",
-  ["env-exemple"]    = "Exemple"
+  ["env-exemple"]    = "Exemple",
+  ["env-theo"]    = "Pour aller plus loin avec la théorie"
 }
+
 
 function Div(el)
   for classe, etiquette in pairs(etiquettes) do

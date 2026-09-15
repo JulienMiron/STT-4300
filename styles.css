@@ -32,7 +32,8 @@ footer.footer,
 .env-definition,
 .env-propriete,
 .env-remarque,
-.env-exemple {
+.env-exemple,
+.env-theo {
   margin: 1.5em 0;
   padding: 0.9em 1.2em;
   border-left: 4px solid #7a7a7a;
@@ -44,6 +45,7 @@ footer.footer,
 .env-propriete   { border-left-color: #31a354; background-color: #eef9f1; }
 .env-remarque     { border-left-color: #e6a817; background-color: #fdf6e3; }
 .env-exemple      { border-left-color: #9467bd; background-color: #f5f0fa; }
+.env-theo      { border-left-color: #4ebf90; background-color: #f0fdf9; }
 
 
 

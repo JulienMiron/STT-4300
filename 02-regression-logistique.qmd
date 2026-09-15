@@ -179,7 +179,7 @@ $$
 $$
 
 où $\boldsymbol{\mu} = (\mu_1, \dots, \mu_n)^\top$ et $K$ ne dépend pas de $\beta$ (donc n'affecte pas la maximisation).
-C'est sous cette forme qu'on reconnaîtra, plus loin, que le modèle de régression binomiale appartient à la famille exponentielle.
+C'est sous cette forme qu'on reconnaîtra, plus loin, que le modèle de régression binomiale appartient à la famille exponentielle. Cette écriture est aussi plus facile à utiliser pour le calcul de la [déviance](@sec-deviance).
 
 :::{.env-remarque titre = "Log-vraisemblance avec le lien logit"}
 Avec le lien logit, $\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}$ et $1-\pi_i = \dfrac{1}{1+e^{\eta_i}}$, où
@@ -516,13 +516,55 @@ Les deux méthodes donnent en pratique des résultats très similaires.
 
 
 
+:::{.env-remarque titre = "Règle du delta avec le lien logit"}
+Avec le lien logit, $g^{-1}(u) = \dfrac{e^u}{1+e^u}$, dont la dérivée est
+
+$$
+\frac{\partial g^{-1}(u)}{\partial u} = \frac{e^u}{(1+e^u)^2} = g^{-1}(u)\left\{1-g^{-1}(u)\right\}.
+$$
+
+Ainsi, $h(u) = \left[g^{-1}(u)\{1-g^{-1}(u)\}\right]^2$, et évalué en $u = {\boldsymbol{X}^*}^\top\hat\beta$, on obtient $h({\boldsymbol{X}^*}^\top\hat\beta) = \left[\hat\pi^*(1-\hat\pi^*)\right]^2$. La règle du delta donne alors
+
+$$
+\hat{\text V}(\hat\pi^*) = \left[\hat\pi^*(1-\hat\pi^*)\right]^2 \hat{\text V}\left({\boldsymbol{X}^*}^\top\hat\beta\right).
+$$
+:::
+
+
+:::{.env-theo titre = "Idée de la méthode du delta"}
+On a $\hat\theta = {\boldsymbol{X}^*}^\top\hat\beta$, dont on connaît la distribution asymptotique : $\hat\theta \approx \mathcal{N}(\theta,\, \hat{\text V}(\hat\theta))$. On s'intéresse cependant à $\hat\pi^* = g^{-1}(\hat\theta)$, une transformation *non linéaire* de $\hat\theta$ — et la normalité asymptotique ne se transporte pas automatiquement à travers une transformation non linéaire, ni sa variance.
+
+La méthode du delta contourne le problème en approximant $g^{-1}$ localement par sa tangente (développement de Taylor au premier ordre) autour de $\theta$ :
+$$
+g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\partial u}\right|_{u=\theta} (\hat\theta - \theta).
+$$
+Comme $g^{-1}(\theta) = \pi^*$ est une constante et que le second terme n'est qu'une transformation *linéaire* de $\hat\theta$, on peut maintenant calculer sa variance directement :
+$$
+\text{Var}(\hat\pi^*) \approx \left[\left.\frac{\partial g^{-1}(u)}{\partial u}\right|_{u=\theta}\right]^2 \text{Var}(\hat\theta),
+$$
+qu'on estime en substituant $\hat\theta$ à $\theta$ (d'où $\hat{\text V}(\hat\pi^*) = h({\boldsymbol{X}^*}^\top\hat\beta)\,\hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)$, où $h(u) = \{\partial g^{-1}(u)/\partial u\}^2$).
+
+Contrairement à la première approche (transformer les bornes de l'IC sur $\eta^*$), cette méthode approxime directement la variance de $\hat\pi^*$ sur son échelle naturelle — mais comme elle repose sur une approximation linéaire locale, l'intervalle de confiance qui en résulte n'est pas garanti de rester dans $[0,1]$, contrairement à celui obtenu par transformation.
+:::
+
+
+
+
 ## Sélection de modèles
 
 ### Déviance
 
-Considérons le **modèle saturé** avec $n$ paramètres $\{\tilde\mu_1,\ldots,\tilde\mu_n\}$ et sans variables explicatives ; ses estimateurs du maximum de vraisemblance sont $\{y_1,\ldots,y_n\}$. La statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est
+### Déviance {#sec-deviance}
+
+**Le modèle saturé.** Pour juger si un modèle avec $p+1$ paramètres $\boldsymbol\beta$ s'ajuste bien aux données, il est utile de le comparer au modèle le plus flexible possible : celui qui accorde à chaque observation son propre paramètre, sans aucune structure imposée par des variables explicatives. On l'appelle le **modèle saturé**, avec $n$ paramètres $\{\tilde\mu_1,\ldots,\tilde\mu_n\}$ (un par observation, plutôt que $p+1$ pour l'ensemble de l'échantillon).
+
+Puisque rien ne contraint $\tilde\mu_i$ à part son domaine, l'estimateur du maximum de vraisemblance de $\tilde\mu_i$ est simplement $y_i$ : la log-vraisemblance est maximisée en ajustant chaque paramètre exactement sur la donnée observée correspondante. Le modèle saturé représente donc l'ajustement *parfait* : il reproduit exactement les données, sans laisser aucun résidu. Il n'a cependant aucune valeur prédictive ou explicative, puisqu'il ne fait que mémoriser les observations — son seul rôle est de servir de référence, un étalon auquel comparer un modèle plus parcimonieux (avec $p+1 \ll n$ paramètres) pour quantifier ce qui reste à expliquer.
+
+**La déviance.** La statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est
+
 $$D = 2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.$$
-$D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'observation $i$. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'adéquation du modèle et à comparer des modèles.
+
+$D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'observation $i$ ; chaque $d_i$ mesure l'écart entre l'ajustement parfait $y_i$ et l'ajustement $\hmu{i}$ obtenu par le modèle. Puisque le modèle saturé maximise la vraisemblance parmi *tous* les modèles possibles, $l(y,y) \geq l(\hat\mu,y)$ toujours, et donc $D \geq 0$ : plus $D$ est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s'ajuste bien aux données. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'adéquation du modèle et à comparer des modèles.
 
 ### Comparaison de modèles emboîtés
 

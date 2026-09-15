@@ -6,7 +6,7 @@
 }
 
 h2 {
-  border-bottom: 2px solid var(--accent);
+  border-bottom: 3.5px solid var(--accent);
   padding-bottom: 0.3em;
 }
 
@@ -105,4 +105,17 @@ mjx-container[jax="CHTML"] {
   font-size: 1.5em;
   font-weight: bold;
   margin-bottom: 1em;
+}
+
+.sidebar nav[role=doc-toc] ul > li > a.active,
+.sidebar nav[role=doc-toc] ul > li > ul > li > a.active{
+  font-weight: bold;
+  color: var(--accent) !important;
+  border-left-color: var(--accent) !important;
+}
+
+.sidebar nav[role=doc-toc] ul > li > a:hover,
+.sidebar nav[role=doc-toc] ul > li > ul > li > a:hover {
+  color: var(--accent) !important;
+  border-left-color: var(--accent) !important;
 }

@@ -16,8 +16,10 @@ function Div(el)
         texte = texte .. " — " .. el.attributes["titre"]
       end
 
+      local inlines = pandoc.read(texte, "markdown").blocks[1].content
+
       local titre = pandoc.Para({
-        pandoc.Span({pandoc.Str(texte)}, pandoc.Attr("", {"env-titre"}))
+        pandoc.Span(inlines, pandoc.Attr("", {"env-titre"}))
       })
 
       table.insert(el.content, 1, titre)

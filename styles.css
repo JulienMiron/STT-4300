@@ -92,3 +92,17 @@ footer.footer,
 mjx-container[jax="CHTML"] {
   white-space: nowrap;
 }
+
+#refs {
+  margin-top: 3em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--accent);
+}
+
+#refs::before {
+  content: "Références";
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 1em;
+}

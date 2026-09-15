@@ -69,10 +69,10 @@ library(latex2exp)
 
 evaluer_liens <- function(x) {
   data.frame(
-    X       = x,
-    logit   = plogis(x),                  # 1 / (1 + exp(-x))
-    probit  = pnorm(x),                   # fonction de répartition normale
-    cloglog = 1 - exp(-exp(x))            # complementary log-log inverse
+    X = x,
+    logit = plogis(x), # 1 / (1 + exp(-x))
+    probit = pnorm(x), # fonction de répartition normale
+    cloglog = 1 - exp(-exp(x)) # complementary log-log inverse
   )
 }
 
@@ -82,14 +82,20 @@ grille <- data.frame(
 resultats <- evaluer_liens(grille$X)
 
 
-
 resultats |>
-  pivot_longer(cols = c(logit, probit, cloglog), names_to = "lien", values_to = "p") |>
+  pivot_longer(
+    cols = c(logit, probit, cloglog),
+    names_to = "lien",
+    values_to = "p"
+  ) |>
   ggplot(aes(x = X, y = p, color = lien)) +
   geom_line(linewidth = 1) +
-  labs(x = TeX("Valeur de $\\eta$ "), y = "Probabilité",
-       color = "Fonction de lien",
-       title = "Comparaison des fonctions de lien inverses") +
+  labs(
+    x = TeX("Valeur de $\\eta$ "),
+    y = "Probabilité",
+    color = "Fonction de lien",
+    title = "Comparaison des fonctions de lien inverses"
+  ) +
   theme_minimal()
 ```
 
@@ -212,53 +218,53 @@ $$
 I_{jk} = -\left.\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k}\right|_{\hat{\boldsymbol{\beta}}}.
 $$
 
-La matrice de variance-covariance de $\hat{\boldsymbol\beta}$ est estimée par
+La matrice de variance-covariance de $\hb$ est estimée par
 
 $$
-\widehat{\text{Var}}(\hat{\boldsymbol\beta}) = I^{-1},
+\widehat{\text{Var}}(\hb) = I^{-1},
 $$
 
-et la distribution asymptotique de $\hat{\boldsymbol\beta}$ est approximée par
+et la distribution asymptotique de $\hb$ est approximée par
 
 $$
-\hat{\boldsymbol\beta} \;\approx\; \mathcal{N}\{\boldsymbol\beta,\, \widehat{\text{Var}}(\hat{\boldsymbol\beta}) \}.
+\hb \;\approx\; \mathcal{N}\{\bb,\, \hvar{\hb} \}.
 $$
 
-Dans ce qui suit, $\widehat{\text{V}}(\hat{\boldsymbol\beta})$ sera utilisé à la place de $\widehat{\text{Var}}(\hat{\boldsymbol\beta})$, pour alléger la notation. De plus, on écrit $\widehat{\text{V}}(\hat{\beta}_j)=[\widehat{\text{Var}}(\hat{\boldsymbol\beta})]_{jj}$ quand on parle de la variance estimée du paramètre $\beta_j$. 
+Dans ce qui suit, $\hv{\hb}$ sera utilisé à la place de $\hvar{\hb}$, pour alléger la notation. De plus, on écrit $\hv{\hbj{j}}=[\hvar{\hb}]_{jj}$ quand on parle de la variance estimée du paramètre $\beta_j$. 
 
 **Forme explicite dans le cas binomial.**
 On montre que
 
 $$
-\widehat{\text{V}}(\hat{\boldsymbol\beta})  = (X^\top W X)^{-1},
+\widehat{\text{V}}(\hb)  = (X^\top W X)^{-1},
 $$
 
 où $W$ est une matrice diagonale d'entrées
 
 $$
-w_i = \frac{\hat\mu_i (m_i - \hat\mu_i)}{m_i},
+w_i = \frac{\hmu{i} (m_i - \hmu{i})}{m_i},
 $$
 
 avec
 
 $$
-\hat\mu_i = m_i \hat\pi_i = m_i\, g^{-1}(\hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}).
+\hmu{i} = m_i \hpi{i} = m_i\, g^{-1}(\hbj{0} + \hbj{1} X_{i1} + \cdots + \hbj{p} X_{ip}).
 $$
 
 :::{.env-remarque}
 **Remarque (Cas du lien logit).**
 
-Avec le lien logit, $\hat\pi_i = \dfrac{e^{\hat\eta_i}}{1+e^{\hat\eta_i}}$, où $\hat\eta_i = \hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}$. L'entrée $w_i$ se simplifie alors en
+Avec le lien logit, $\hpi{i} = \dfrac{e^{\heta{i}}}{1+e^{\heta{i}}}$, où $\heta{i} = \hbj{0} + \hbj{1} X_{i1} + \cdots + \hbj{p} X_{ip}$. L'entrée $w_i$ se simplifie alors en
 
 $$
-w_i = \frac{\hat\mu_i(m_i - \hat\mu_i)}{m_i} = m_i\, \hat\pi_i(1-\hat\pi_i).
+w_i = \frac{\hmu{i}(m_i - \hmu{i})}{m_i} = m_i\, \hpi{i}(1-\hpi{i}).
 $$
 
 :::
 
 
-:::{.env-exemple}
-**Exemple (Jeu de données `turbines`).**
+:::{.env-exemple titre = "Jeu de données `turbines`"}
+Les données `turbines`, tirées de la librairie `GLMsData` [@dunn2018glm], proviennent d'une expérience de fiabilité sur des roues de turbine (Nelson, 1982) : on y rapporte, pour différentes durées de fonctionnement, le nombre de roues ayant développé des fissures parmi celles mises à l'essai.
 
 On ajuste le modèle avec les trois fonctions de lien :
 
@@ -272,21 +278,37 @@ turbines_obs <- turbines |>
   mutate(prop_observee = Fissures / Turbines)
 
 ggplot() +
-  geom_point(data = turbines_obs, aes(x = Hours, y = prop_observee, size = Turbines),
-             color = "black", alpha = 0.6) +
-  labs(x = "Heures d'utilisation", y = "Pourcentage de fissure",
-       color = "Fonction de lien",
-       size = "Nombre de turbines",
-       title = "Pourcentage de fissure selon la durée d'utilisation") +
+  geom_point(
+    data = turbines_obs,
+    aes(x = Hours, y = prop_observee, size = Turbines),
+    color = "black",
+    alpha = 0.6
+  ) +
+  labs(
+    x = "Heures d'utilisation",
+    y = "Pourcentage de fissure",
+    color = "Fonction de lien",
+    size = "Nombre de turbines",
+    title = "Pourcentage de fissure selon la durée d'utilisation"
+  ) +
   theme_minimal()
 
 
-modele.logit   <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="logit"))
-modele.probit  <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="probit"))
-modele.cloglog <- glm(cbind(Fissures,Turbines-Fissures)~Hours,
-                      data=turbines, family=binomial(link="cloglog"))
+modele.logit <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours,
+  data = turbines,
+  family = binomial(link = "logit")
+)
+modele.probit <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours,
+  data = turbines,
+  family = binomial(link = "probit")
+)
+modele.cloglog <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours,
+  data = turbines,
+  family = binomial(link = "cloglog")
+)
 summary(modele.logit)$coefficients
 summary(modele.probit)$coefficients
 summary(modele.cloglog)$coefficients
@@ -305,13 +327,13 @@ predire_modele <- function(modele, nom_lien) {
   grille |>
     mutate(
       p_hat = predict(modele, newdata = grille, type = "response"),
-      lien  = nom_lien
+      lien = nom_lien
     )
 }
 
 predictions <- bind_rows(
-  predire_modele(modele.logit,   "Logit"),
-  predire_modele(modele.probit,  "Probit"),
+  predire_modele(modele.logit, "Logit"),
+  predire_modele(modele.probit, "Probit"),
   predire_modele(modele.cloglog, "Cloglog")
 )
 
@@ -319,14 +341,24 @@ turbines_obs <- turbines |>
   mutate(prop_observee = Fissures / Turbines)
 
 ggplot() +
-  geom_point(data = turbines_obs, aes(x = Hours, y = prop_observee, size = Turbines),
-             color = "black", alpha = 0.6) +
-  geom_line(data = predictions, aes(x = Hours, y = p_hat, color = lien),
-            linewidth = 1) +
-  labs(x = "Heures d'utilisation", y = "Probabilité de fissure estimée",
-       color = "Fonction de lien",
-       size = "Nombre de turbines",
-       title = "Comparaison des fonctions de lien logit, probit et cloglog") +
+  geom_point(
+    data = turbines_obs,
+    aes(x = Hours, y = prop_observee, size = Turbines),
+    color = "black",
+    alpha = 0.6
+  ) +
+  geom_line(
+    data = predictions,
+    aes(x = Hours, y = p_hat, color = lien),
+    linewidth = 1
+  ) +
+  labs(
+    x = "Heures d'utilisation",
+    y = "Probabilité de fissure estimée",
+    color = "Fonction de lien",
+    size = "Nombre de turbines",
+    title = "Comparaison des fonctions de lien logit, probit et cloglog"
+  ) +
   theme_minimal()
 ```
 
@@ -354,7 +386,7 @@ $$
 
 où l'erreur-type est estimée à partir de la courbure de la log-vraisemblance **évaluée au point estimé** $\hat\beta_j$, plutôt que sous $H_0$. Cette dépendance locale peut mener à un comportement contre-intuitif : lorsque $|\hat\beta_j|$ devient très grand (par exemple en présence de séparation quasi-complète ou d'un effet très fort), la courbure de la vraisemblance en $\hat\beta_j$ s'aplatit, ce qui **gonfle** $\sqrt{\hat{\text V}(\hat\beta_j)}$ et peut faire **diminuer** $z_{obs}$ — donnant l'impression que l'effet n'est pas significatif, alors qu'il l'est. On pourrait montrer que cela est causé par le fait que l'erreur-type augmente plus rapidement que la valeur absolue de l'estimation du paramètre.
 
-Ce phénomène, documenté par Hauck et Donner (1977), n'affecte pas le test du rapport de vraisemblance, qui compare directement la vraisemblance en $\hat\beta_j$ à celle en $0$ plutôt que de s'appuyer sur une approximation locale :
+Ce phénomène, documenté par @hauck1977, n'affecte pas le test du rapport de vraisemblance, qui compare directement la vraisemblance en $\hat\beta_j$ à celle en $0$ plutôt que de s'appuyer sur une approximation locale :
 
 $$
 G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right] \;\sim\; \chi^2_1 \quad \text{sous } H_0.
@@ -381,33 +413,48 @@ simuler_logistique <- function(n, beta0 = 0, beta1 = 1) {
 
 set.seed(123)
 n <- 200
-valeurs_beta1 <- seq(0.5, 15, by = 0.5)  # vrai effet croissant -> séparation
+valeurs_beta1 <- seq(0.5, 15, by = 0.5) # vrai effet croissant -> séparation
 
 resultats <- map_dfr(valeurs_beta1, function(b1) {
   dat <- simuler_logistique(n, beta0 = 0, beta1 = b1)
 
   mod_complet <- glm(y ~ x, data = dat, family = binomial)
-  mod_reduit  <- glm(y ~ 1, data = dat, family = binomial)
+  mod_reduit <- glm(y ~ 1, data = dat, family = binomial)
 
-  beta_hat   <- coef(mod_complet)["x"]
-  et_hat     <- summary(mod_complet)$coefficients["x", "Std. Error"]
+  beta_hat <- coef(mod_complet)["x"]
+  et_hat <- summary(mod_complet)$coefficients["x", "Std. Error"]
   wald_chisq <- (beta_hat / et_hat)^2
-  lr_chisq   <- as.numeric(2 * (logLik(mod_complet) - logLik(mod_reduit)))
+  lr_chisq <- as.numeric(2 * (logLik(mod_complet) - logLik(mod_reduit)))
 
-  data.frame(beta1_vrai = b1, beta_hat = beta_hat,
-             wald_chisq = wald_chisq, lr_chisq = lr_chisq)
+  data.frame(
+    beta1_vrai = b1,
+    beta_hat = beta_hat,
+    wald_chisq = wald_chisq,
+    lr_chisq = lr_chisq
+  )
 })
 
 resultats |>
-  tidyr::pivot_longer(c(wald_chisq, lr_chisq), names_to = "test", values_to = "statistique") |>
-  mutate(test = recode(test,
-                        wald_chisq = "Wald (khi-carré)",
-                        lr_chisq   = "Rapport de vraisemblance")) |>
+  tidyr::pivot_longer(
+    c(wald_chisq, lr_chisq),
+    names_to = "test",
+    values_to = "statistique"
+  ) |>
+  mutate(
+    test = recode(
+      test,
+      wald_chisq = "Wald (khi-carré)",
+      lr_chisq = "Rapport de vraisemblance"
+    )
+  ) |>
   ggplot(aes(x = beta_hat, y = statistique, color = test)) +
   geom_line(linewidth = 1) +
-  labs(x = expression(hat(beta)[x]), y = "Statistique de test (échelle khi-carré, 1 ddl)",
-       color = NULL,
-       title = "Effet Hauck-Donner avec un prédicteur continu") +
+  labs(
+    x = expression(hat(beta)[x]),
+    y = "Statistique de test (échelle khi-carré, 1 ddl)",
+    color = NULL,
+    title = "Effet Hauck-Donner avec un prédicteur continu"
+  ) +
   theme_minimal()
 ```
 
@@ -421,7 +468,7 @@ Pour illustrer concrètement l'écart entre les deux tests, comparons un cas "no
 simuler_logistique <- function(n, beta0 = 0, beta1 = 1) {
   x <- rnorm(n, mean = 0, sd = 1)
   eta <- beta0 + beta1 * x
-  p <- plogis(eta)          # équivalent à 1 / (1 + exp(-eta))
+  p <- plogis(eta) # équivalent à 1 / (1 + exp(-eta))
   y <- rbinom(n, size = 1, prob = p)
   data.frame(x = x, y = y)
 }
@@ -474,7 +521,7 @@ Les deux méthodes donnent en pratique des résultats très similaires.
 ### Déviance
 
 Considérons le **modèle saturé** avec $n$ paramètres $\{\tilde\mu_1,\ldots,\tilde\mu_n\}$ et sans variables explicatives ; ses estimateurs du maximum de vraisemblance sont $\{y_1,\ldots,y_n\}$. La statistique du rapport de vraisemblance entre le modèle saturé et le modèle considéré est
-$$D = 2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hat\mu_i}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hat\mu_i}\right)\right\} = \sum_{i=1}^n d_i.$$
+$$D = 2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.$$
 $D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'observation $i$. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'adéquation du modèle et à comparer des modèles.
 
 ### Comparaison de modèles emboîtés
@@ -491,13 +538,19 @@ On teste $H_0: \beta_2 = \beta_3 = 0$ (modèle avec `Hours` seulement contre mod
 library(GLMsData)
 data(turbines)
 
-modele.reduit  <- glm(cbind(Fissures,Turbines-Fissures) ~ Hours,
-                      data=turbines, family=binomial)
-modele.complet <- glm(cbind(Fissures,Turbines-Fissures) ~ Hours + I(Hours^2) + I(Hours^3),
-                      data=turbines, family=binomial)
+modele.reduit <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours,
+  data = turbines,
+  family = binomial
+)
+modele.complet <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours + I(Hours^2) + I(Hours^3),
+  data = turbines,
+  family = binomial
+)
 
 stat.test <- deviance(modele.reduit) - deviance(modele.complet)
-p.valeur  <- 1 - pchisq(stat.test, df=2)
+p.valeur <- 1 - pchisq(stat.test, df = 2)
 p.valeur
 ```
 
@@ -520,16 +573,16 @@ Les méthodes pas à pas *forward*, *backward* et *stepwise* fonctionnent exacte
 
 On distingue deux types de résidus :
 
-- **Résidus déviance** : $r_{D,i} = \mathrm{signe}(y_i - \hat\mu_i)\sqrt{d_i}$, avec
-$$d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hat\mu_i}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hat\mu_i}\right)\right\}.$$
+- **Résidus déviance** : $r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}$, avec
+$$d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\}.$$
 
 - **Résidus de Pearson** :
-$$r_{P,i} = \frac{y_i - m_i\hat\pi_i}{\sqrt{m_i\hat\pi_i(1-\hat\pi_i)}} = \frac{y_i - \hat\mu_i}{\sqrt{\hat\mu_i(m_i-\hat\mu_i)/m_i}}.$$
+$$r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.$$
 
 ### Tests d'adéquation globale
 
 Deux statistiques permettent de tester l'adéquation globale : la déviance $D = \sum_i r_{D,i}^2$ et la statistique du khi-deux de Pearson
-$$\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hat\mu_i)^2}{\hat\mu_i(m_i - \hat\mu_i)}.$$
+$$\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.$$
 Lorsque tous les $m_i \to \infty$, $D$ et $\chi^2_P$ convergent en loi vers une $\chi^2_{n-(p+1)}$ si le modèle est bien spécifié.
 
 :::{.env-remarque}
@@ -542,7 +595,7 @@ Ces tests ne sont valides que pour des **données groupées** avec des $m_i$ él
 
 Les graphiques des résidus en fonction des numéros d'observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une **extra-variabilité** (*overdispersion*) : $E[Y_i] = m_i\pi_i$ mais $Var[Y_i] > m_i\pi_i(1-\pi_i)$. On pose alors $Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)$ et on estime $\phi$ par $\chi^2_P/(n-(p+1))$. En cas d'extra-variabilité, on spécifie `family=quasibinomial()` au lieu de `family=binomial()` dans `glm`.
 
-Pour vérifier la linéarité du prédicteur, on trace le nuage de points $\{(\hat\pi_i, \tilde\pi_i)\}$, où $\hat\pi_i = g^{-1}(\hat\eta_i)$ et $\tilde\pi_i = y_i/m_i$ : si le modèle est bien spécifié, les points doivent être autour de la droite $y=x$.
+Pour vérifier la linéarité du prédicteur, on trace le nuage de points $\{(\hpi{i}, \tilde\pi_i)\}$, où $\hpi{i} = g^{-1}(\heta{i})$ et $\tilde\pi_i = y_i/m_i$ : si le modèle est bien spécifié, les points doivent être autour de la droite $y=x$.
 
 ### Observations aberrantes et valeurs influentes
 
@@ -550,9 +603,9 @@ Le principe est identique à la régression linéaire. Les définitions des levi
 
 ## Spécificité, sensibilité et courbe ROC {#sec-roc}
 
-Pour des données individuelles, l'adéquation est difficile à évaluer, mais on peut mesurer la **capacité prédictive** du modèle. On ajuste le modèle et on calcule les probabilités prédites $\hat\pi_i = g^{-1}(\hat\eta_i)$.
+Pour des données individuelles, l'adéquation est difficile à évaluer, mais on peut mesurer la **capacité prédictive** du modèle. On ajuste le modèle et on calcule les probabilités prédites $\hpi{i} = g^{-1}(\heta{i})$.
 
-Fixons un seuil $u \in [0,1]$ (souvent $u=1/2$). On classe $\hat y_i = 1$ si $\hat\pi_i > u$ et $\hat y_i = 0$ sinon. On mesure la capacité prédictive par :
+Fixons un seuil $u \in [0,1]$ (souvent $u=1/2$). On classe $\hat y_i = 1$ si $\hpi{i} > u$ et $\hat y_i = 0$ sinon. On mesure la capacité prédictive par :
 
 $$
 \begin{aligned}
@@ -562,9 +615,9 @@ $$
 $$
 
 Pour un $u$ fixé, on les estime par
-$$\widehat{Spec}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hat\pi_i < u)\,\&\,(y_i = 0)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 0\}}},
+$$\widehat{Spec}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hpi{i} < u)\,\&\,(y_i = 0)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 0\}}},
 \qquad
-\widehat{Sens}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hat\pi_i > u)\,\&\,(y_i = 1)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 1\}}}.$$
+\widehat{Sens}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hpi{i} > u)\,\&\,(y_i = 1)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 1\}}}.$$
 
 En faisant varier $u$ sur une grille $\{u_1 = 0, u_2, \ldots, u_B = 1\}$ et en traçant les points $\{(1-\widehat{Spec}(u_b),\, \widehat{Sens}(u_b))\}$, on obtient la **courbe ROC**. L'**aire sous la courbe** (AUC) quantifie la capacité prédictive :
 $$\mbox{AUC} \in \begin{cases}
@@ -585,10 +638,13 @@ Avec la variable explicative SOI et le lien logit :
 library(GLMsData)
 data(quilpie)
 
-modele <- glm(y ~ SOI, family=binomial, data=quilpie)
+modele <- glm(y ~ SOI, family = binomial, data = quilpie)
 library(clinfun)
-courbe.roc <- roc.curve(marker=as.vector(fitted(modele)),
-                        status=quilpie$y, method=c("empirical"))
+courbe.roc <- roc.curve(
+  marker = as.vector(fitted(modele)),
+  status = quilpie$y,
+  method = c("empirical")
+)
 courbe.roc
 ```
 

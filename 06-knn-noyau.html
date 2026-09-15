@@ -80,6 +80,18 @@ ul.task-list li input[type="checkbox"] {
 window.MathJax = {
   chtml: {
     linebreaks: { inline: false }
+  },
+  tex: {
+    macros: {
+      bb: "\\boldsymbol\\beta",
+      hb: "\\hat{\\boldsymbol\\beta}",
+      hv: ["\\hat{\\text V}(#1)", 1],
+      hvar: ["\\widehat{\\text{Var}}(#1)", 1],
+      hbj: ["\\hat\\beta_{#1}", 1],
+      hpi: ["\\hat\\pi_{#1}", 1],
+      heta: ["\\hat\\eta_{#1}", 1],
+      hmu: ["\\hat\\mu_{#1}", 1]
+    }
   }
 };
 </script>  
@@ -250,7 +262,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">14 septembre 2026</p>
+      <p class="date-modified">15 septembre 2026</p>
     </div>
   </div>
     

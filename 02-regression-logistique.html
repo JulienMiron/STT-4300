@@ -293,7 +293,6 @@ window.Quarto = {
   <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">2.2</span> Inférence statistique</a>
   <ul class="collapse">
   <li><a href="#estimation-des-paramètres-boldsymbolbeta" id="toc-estimation-des-paramètres-boldsymbolbeta" class="nav-link" data-scroll-target="#estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">2.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></a></li>
-  <li><a href="#comparaison-directe-des-sorties" id="toc-comparaison-directe-des-sorties" class="nav-link" data-scroll-target="#comparaison-directe-des-sorties"><span class="header-section-number">2.2.2</span> Comparaison directe des sorties</a></li>
   <li><a href="#intervalle-de-confiance-pour-une-probabilité-prédite" id="toc-intervalle-de-confiance-pour-une-probabilité-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.3</span> Intervalle de confiance pour une probabilité prédite</a></li>
   </ul></li>
   <li><a href="#sélection-de-modèles" id="toc-sélection-de-modèles" class="nav-link" data-scroll-target="#sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</a>
@@ -345,12 +344,12 @@ window.Quarto = {
 <p>Les modèles de régression linéaire ne permettent de considérer que les cas où la variable réponse <span class="math inline">\(Y_i\)</span> est normale. Cependant, dans plusieurs situations, on a une variable réponse discrète qui ne peut prendre qu’un nombre fini (ou dénombrable) de valeurs possibles. Dans ce chapitre, on s’intéresse au cas où <span class="math inline">\(Y_i\)</span> suit une loi de Bernoulli ou une loi binomiale.</p>
 <div class="env-exemple">
 <p><span class="env-titre">Exemple</span></p>
-<p>Quatre exemples tirés de la librairie <code>GLMsData</code> de R :</p>
+<p>Quatre exemples tirés de la librairie <code>GLMsData</code> de R <span class="citation" data-cites="dunn2018glm">(<a href="#ref-dunn2018glm" role="doc-biblioref">Dunn et Smyth 2018</a>)</span> :</p>
 <ol type="1">
-<li><p><code>quilpie</code> : observations de 1921 à 1988 de la quantité de pluie mesurée en juillet à Quilpie (Australie). La réponse vaut 1 si la quantité de pluie dépasse 10 mm et 0 sinon ; les variables explicatives concernent la pression atmosphérique (SOI).</p></li>
-<li><p><code>nminer</code> : 31 observations ; la réponse vaut 1 si un mineur bruyant (oiseau) est détecté dans la parcelle et 0 sinon.</p></li>
-<li><p><code>deposit</code> : 18 observations ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre d’insectes tués parmi les <span class="math inline">\(m_i\)</span> insectes exposés, avec deux variables explicatives (type d’insecticide <span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> ou <span class="math inline">\(C\)</span>, et dose).</p></li>
-<li><p><code>turbines</code> : 11 observations ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre de machines présentant des fissures parmi <span class="math inline">\(m_i\)</span> machines, en fonction du nombre d’heures de fonctionnement.</p></li>
+<li><p><span id="data-quilpie"><code>quilpie</code></span> : observations de 1921 à 1988 de la quantité de pluie mesurée en juillet à Quilpie (Australie), une ville semi-aride du Queensland où les précipitations conditionnent fortement l’agriculture locale. La réponse vaut 1 si la quantité de pluie dépasse 10 mm (un seuil jugé suffisant pour amorcer les semis) et 0 sinon ; la variable explicative est un indice de pression atmosphérique, le <em>Southern Oscillation Index</em> (SOI), qui capture les phases El Niño/La Niña connues pour influencer les précipitations dans cette région.</p></li>
+<li><p><span id="data-nminer"><code>nminer</code></span> : 31 transects de deux hectares en milieu boisé (eucalyptus) dans l’ouest de Victoria (Australie) ; la réponse vaut 1 si au moins un mineur bruyant (<em>Manorina melanocephala</em>, un oiseau indigène particulièrement agressif qui chasse les espèces plus petites) est détecté dans le transect et 0 sinon. Les variables explicatives décrivent l’habitat : densité d’eucalyptus (<code>Eucs</code>), superficie du transect (<code>Area</code>), présence de pâturage (<code>Grazed</code>), présence d’arbustes (<code>Shrubs</code>), nombre d’arbres de type buloke (<code>Bulokes</code>) et quantité de bois mort au sol (<code>Timber</code>).</p></li>
+<li><p><span id="data-deposit"><code>deposit</code></span> : 18 observations sur l’efficacité de trois insecticides (<span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> ou <span class="math inline">\(C\)</span>) appliqués à différentes doses (en mg) sur des insectes ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre d’insectes tués parmi les <span class="math inline">\(m_i\)</span> insectes exposés à chaque combinaison insecticide-dose.</p></li>
+<li><p><span id="data-turbines"><code>turbines</code></span> : 11 observations issues d’une expérience de fiabilité sur des roues de turbine <span class="citation" data-cites="nelson1982">(<a href="#ref-nelson1982" role="doc-biblioref">Nelson 1982</a>)</span> ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre de roues présentant des fissures parmi <span class="math inline">\(m_i\)</span> roues mises à l’essai, en fonction du nombre d’heures de fonctionnement.</p></li>
 </ol>
 </div>
 <section id="données-et-modèle" class="level2" data-number="2.1">
@@ -513,9 +512,8 @@ w_i = \frac{\hmu{i} (m_i - \hmu{i})}{m_i},
 w_i = \frac{\hmu{i}(m_i - \hmu{i})}{m_i} = m_i\, \hpi{i}(1-\hpi{i}).
 \]</span></p>
 </div>
-<div class="env-exemple" data-titre="Jeu de données `turbines`">
-<p><span class="env-titre">Exemple — Jeu de données <code>turbines</code></span></p>
-<p>Les données <code>turbines</code>, tirées de la librairie <code>GLMsData</code> <span class="citation" data-cites="dunn2018glm">(<a href="#ref-dunn2018glm" role="doc-biblioref">Dunn et Smyth 2018</a>)</span>, proviennent d’une expérience de fiabilité sur des roues de turbine (Nelson, 1982) : on y rapporte, pour différentes durées de fonctionnement, le nombre de roues ayant développé des fissures parmi celles mises à l’essai.</p>
+<div class="env-exemple" data-titre="Jeu de données [`turbines`](#data-turbines)">
+<p><span class="env-titre">Exemple — Jeu de données <a href="#data-turbines"><code>turbines</code></a></span></p>
 <p>On ajuste le modèle avec les trois fonctions de lien :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
@@ -651,6 +649,8 @@ G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right]
 \]</span></p>
 <p><strong>En pratique</strong> : le test «par défaut» de la plupart des fonctions de R utilise le test de Wald, car celui-ci est moins coûteux en calcul et est fiable avec de grands échantillons. Il faut porter une attention particulière aux cas où un coefficient très grand ressort avec une valeur-p de Wald étonnamment élevée. Il faut comparer avec <code>anova(modele_reduit, modele_complet, test = "Chisq")</code> avant de conclure à la non-significativité.</p>
 </div>
+<div class="env-exemple" data-titre="Effet Hauck-Donner">
+<p><span class="env-titre">Exemple — Effet Hauck-Donner</span></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -717,7 +717,6 @@ G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right]
 </div>
 </div>
 </div>
-</section>
 <section id="comparaison-directe-des-sorties" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="comparaison-directe-des-sorties"><span class="header-section-number">2.2.2</span> Comparaison directe des sorties</h3>
 <p>Pour illustrer concrètement l’écart entre les deux tests, comparons un cas “normal” (<span class="math inline">\(k = 15\)</span>, pas de séparation) à un cas de séparation quasi-complète (<span class="math inline">\(k = 19\)</span>, un seul échec sur 20 dans le groupe <span class="math inline">\(x = 1\)</span>) :</p>
@@ -799,6 +798,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 </section>
+</div>
+</section>
 <section id="intervalle-de-confiance-pour-une-probabilité-prédite" class="level3" data-number="2.2.3">
 <h3 data-number="2.2.3" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.3</span> Intervalle de confiance pour une probabilité prédite</h3>
 <p>Pour <span class="math inline">\(\boldsymbol{X}^* = (1, X_1^*,\ldots,X_p^*)^\top\)</span>, on estime <span class="math inline">\(\pi^*\)</span> par <span class="math inline">\(\hat\pi^* = g^{-1}({\boldsymbol{X}^*}^\top\hat\beta)\)</span>. Deux approches :</p>
@@ -855,8 +856,8 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 <section id="comparaison-de-modèles-emboîtés" class="level3" data-number="2.3.2">
 <h3 data-number="2.3.2" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</h3>
 <p>Pour comparer deux modèles emboîtés de déviances <span class="math inline">\(D_1\)</span> (complet) et <span class="math inline">\(D_2\)</span> (réduit), la statistique de test est <span class="math inline">\(\chi^2 = D_2 - D_1\)</span>. Sous <span class="math inline">\(H_0\)</span> (le modèle réduit est adéquat), <span class="math inline">\(\chi^2\)</span> suit une loi du khi-deux à <span class="math inline">\(d\)</span> degrés de liberté, où <span class="math inline">\(d\)</span> est la différence du nombre de paramètres.</p>
-<div class="env-exemple" data-titre="Introduction des termes quadratiques et cubiques dans l'exemple `turbines`">
-<p><span class="env-titre">Exemple — Introduction des termes quadratiques et cubiques dans l’exemple <code>turbines</code></span></p>
+<div class="env-exemple" data-titre="Introduction des termes quadratiques et cubiques dans l'exemple [`turbines`](#data-turbines)">
+<p><span class="env-titre">Exemple — Introduction des termes quadratiques et cubiques dans l’exemple <a href="#data-turbines"><code>turbines</code></a></span></p>
 <p>On teste <span class="math inline">\(H_0: \beta_2 = \beta_3 = 0\)</span> (modèle avec <code>Hours</code> seulement contre modèle avec termes en <code>Hours</code><span class="math inline">\(^2\)</span> et <code>Hours</code><span class="math inline">\(^3\)</span>) :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
@@ -890,8 +891,8 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 <section id="sélection-automatique" class="level3" data-number="2.3.4">
 <h3 data-number="2.3.4" class="anchored" data-anchor-id="sélection-automatique"><span class="header-section-number">2.3.4</span> Sélection automatique</h3>
 <p>Les méthodes pas à pas <em>forward</em>, <em>backward</em> et <em>stepwise</em> fonctionnent exactement comme pour les modèles linéaires (fonction <code>step</code> avec l’argument <code>direction</code>).</p>
-<div class="env-exemple" data-titre="Sélection automatique sur le jeu de données `nminer`">
-<p><span class="env-titre">Exemple — Sélection automatique sur le jeu de données <code>nminer</code></span></p>
+<div class="env-exemple" data-titre="Sélection automatique sur le jeu de données [`nminer`](#data-nminer)">
+<p><span class="env-titre">Exemple — Sélection automatique sur le jeu de données <a href="#data-nminer"><code>nminer</code></a></span></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(nminer)</span>
@@ -1194,8 +1195,8 @@ Number of Fisher Scoring iterations: 9</code></pre>
 <h3 data-number="2.4.2" class="anchored" data-anchor-id="tests-dadéquation-globale"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</h3>
 <p>Deux statistiques permettent de tester l’adéquation globale : la déviance <span class="math inline">\(D\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]</span> Lorsque tous les <span class="math inline">\(m_i \to \infty\)</span>, <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span> convergent en loi vers une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien spécifié.</p>
 <p>L’hypothèse nulle du test est que le modèle est adéquat.</p>
-<div class="env-exemple" data-titre="Test d'adéquation avec l'exemple `turbines`">
-<p><span class="env-titre">Exemple — Test d’adéquation avec l’exemple <code>turbines</code></span></p>
+<div class="env-exemple" data-titre="Test d'adéquation avec l'exemple [`turbines`](#data-turbines)">
+<p><span class="env-titre">Exemple — Test d’adéquation avec l’exemple <a href="#data-turbines"><code>turbines</code></a></span></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
@@ -1283,10 +1284,9 @@ D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
 [0.5,\,0.6) &amp; \mbox{modèle très faible}.
 \end{cases}\]</span></p>
 </div>
-<div class="env-exemple">
-<p><span class="env-titre">Exemple</span></p>
-<p><strong>Exemple (<code>quilpie</code>).</strong></p>
-<p>Avec la variable explicative SOI et le lien logit :</p>
+<div class="env-exemple" data-titre="Courbe ROC avec l'exemple [`quilpie`](#data-quilpie)">
+<p><span class="env-titre">Exemple — Courbe ROC avec l’exemple <a href="#data-quilpie"><code>quilpie</code></a></span></p>
+<p>On ajuste ici un modèle logistique avec la variable explicative SOI et le lien logit :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
@@ -1319,6 +1319,9 @@ Hauck, Walter W., et Allan Donner. 1977. <span>«&nbsp;Wald’s Test as Applied 
 </div>
 <div id="ref-mccullagh1989glm" class="csl-entry" role="listitem">
 McCullagh, Peter, et John A. Nelder. 1989. <em>Generalized Linear Models</em>. 2ᵉ éd. Chapman; Hall.
+</div>
+<div id="ref-nelson1982" class="csl-entry" role="listitem">
+Nelson, Wayne. 1982. <em>Applied Life Data Analysis</em>. Wiley.
 </div>
 </div>
 </section>

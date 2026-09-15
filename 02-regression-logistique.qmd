@@ -57,7 +57,11 @@ La fonction de lien doit assurer que $\pi_i = g^{-1}(\eta_i) \in [0,1]$. Trois c
 - **Probit :** $g(u) = \Phi^{-1}(u)$, où $\Phi$ est la fonction de répartition de la $\mathcal{N}(0,1)$, d'où $\pi_i = \Phi(\eta_i)$. En R : `link="probit"`.
 - **C-log-log :** $g(u) = \log\{-\log(1-u)\}$, d'où $\pi_i = 1 - e^{-e^{\eta_i}}$. En R : `link="cloglog"`.
 
-Dans les trois cas, $g^{-1}(\cdot)$ est une fonction de répartition. En pratique, les trois liens donnent souvent des résultats très similaires.
+:::{.env-propriete titre="$g^{-1}$ est une fonction de répartition"}
+Dans les trois cas, $g^{-1}(\cdot)$ est une fonction de répartition. C'est précisément cette propriété qui garantit que $\pi_i = g^{-1}(\eta_i) \in [0,1]$, peu importe le lien choisi et peu importe la valeur (réelle, non bornée) de $\eta_i$.
+:::
+
+En pratique, les trois liens donnent souvent des résultats très similaires.
 
 
 Voici une comparaison des probabilités prédites pour les trois liens, en fonction de $\eta_i$.
@@ -134,21 +138,23 @@ $$
 \eta_i = \beta_0 + \beta_1 X_1 + \cdots + \beta_j X_j + \cdots
 $$
 
-Si on augmente $X_j$ d'une unité, toutes les autres variables restant constantes, $\eta_i$ augmente de $\beta_j$. Comme $o_i = e^{\eta_i}$, cette augmentation se traduit par une *multiplication* de la cote :
+Si on augmente $X_j$ d'une unité, toutes les autres variables restant constantes, $\eta_i$ augmente de $\beta_j$.
+
+:::{.env-propriete titre="Effet multiplicatif sur la cote"}
+Comme $o_i = e^{\eta_i}$, une augmentation d'une unité de $X_j$ (toutes les autres variables restant constantes) se traduit par une *multiplication* de la cote :
 
 $$
 o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i^{\text{ancien}} \cdot e^{\beta_j}.
 $$
 
-Une augmentation unitaire de $X_j$ multiplie donc la cote par $e^{\beta_j}$ ; $e^{\beta_j}$ est le **rapport de cotes** (*odds ratio*).
-
-On distingue trois cas :
+Une augmentation unitaire de $X_j$ multiplie donc la cote par $e^{\beta_j}$ ; $e^{\beta_j}$ est le **rapport de cotes** (*odds ratio*). On distingue trois cas :
 
 - si $e^{\beta_j} > 1$ : augmenter $X_j$ augmente la cote (et donc $P(Y_i=1)$) ;
 
 - si $e^{\beta_j} < 1$ : augmenter $X_j$ diminue la cote ;
 
 - si $e^{\beta_j} = 1$ (c'est-à-dire $\beta_j = 0$) : $X_j$ n'a pas d'effet sur la cote.
+:::
 
 ::::
 
@@ -508,6 +514,7 @@ anova(mod_separe_reduit, mod_separe, test = "Chisq")
 ```
 
 :::
+
 ### Intervalle de confiance pour une probabilité prédite
 
 Pour $\boldsymbol{X}^* = (1, X_1^*,\ldots,X_p^*)^\top$, on estime $\pi^*$ par $\hat\pi^* = g^{-1}({\boldsymbol{X}^*}^\top\hat\beta)$. Deux approches :
@@ -585,11 +592,21 @@ $$D =2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(
 
 
 
-$D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'observation $i$ ; chaque $d_i$ mesure l'écart entre l'ajustement parfait $y_i$ et l'ajustement $\hmu{i}$ obtenu par le modèle. Puisque le modèle saturé maximise la vraisemblance parmi *tous* les modèles possibles, $l(y,y) \geq l(\hat\mu,y)$ toujours, et donc $D \geq 0$ : plus $D$ est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s'ajuste bien aux données. La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'adéquation du modèle et à comparer des modèles.
+$D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'observation $i$ ; chaque $d_i$ mesure l'écart entre l'ajustement parfait $y_i$ et l'ajustement $\hmu{i}$ obtenu par le modèle.
+
+:::{.env-propriete titre="Non-négativité de la déviance"}
+Puisque le modèle saturé maximise la vraisemblance parmi *tous* les modèles possibles, $l(y,y) \geq l(\hat\mu,y)$ toujours, et donc $D \geq 0$ : plus $D$ est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s'ajuste bien aux données.
+:::
+
+La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'adéquation du modèle et à comparer des modèles.
 
 ### Comparaison de modèles emboîtés
 
-Pour comparer deux modèles emboîtés de déviances $D_1$ (complet) et $D_2$ (réduit), la statistique de test est $\chi^2 = D_2 - D_1$. Sous $H_0$ (le modèle réduit est adéquat), $\chi^2$ suit une loi du khi-deux à $d$ degrés de liberté, où $d$ est la différence du nombre de paramètres.
+Pour comparer deux modèles emboîtés de déviances $D_1$ (complet) et $D_2$ (réduit), la statistique de test est $\chi^2 = D_2 - D_1$.
+
+:::{.env-propriete titre="Distribution asymptotique de $\chi^2 = D_2-D_1$"}
+Sous $H_0$ (le modèle réduit est adéquat), $\chi^2$ suit une loi du khi-deux à $d$ degrés de liberté, où $d$ est la différence du nombre de paramètres.
+:::
 
 :::{.env-exemple titre="Introduction des termes quadratiques et cubiques dans l'exemple [`turbines`](#data-turbines)"}
 
@@ -665,6 +682,7 @@ summary(modele.step)
 Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local.
 
 :::
+
 ## Validation et diagnostic de modèles
 
 ### Résidus
@@ -677,15 +695,20 @@ $$d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\le
 $$r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.$$
 :::
 
+:::{.env-propriete titre="Somme des résidus déviance"}
 Il est possible de montrer que la somme des résidus déviance 
 $$\sum_{i=1}^nr_{D,i} = \sum_{i=1}^n\mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}=D,$$
 correspond à la déviance introduite [plus tôt](#sec-deviance).
+:::
 
 ### Tests d'adéquation globale
 
 Deux statistiques permettent de tester l'adéquation globale : la déviance $D$ et la statistique du khi-deux de Pearson
 $$\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.$$
+
+:::{.env-propriete titre="Convergence de $D$ et $\chi^2_P$"}
 Lorsque tous les $m_i \to \infty$, $D$ et $\chi^2_P$ convergent en loi vers une $\chi^2_{n-(p+1)}$ si le modèle est bien spécifié.
+:::
 
 L'hypothèse nulle du test est que le modèle est adéquat.
 
@@ -738,6 +761,7 @@ Quand les deux statistiques mènent à des conclusions similaires (avec des $m_i
 
 Cette distinction ne s'applique toutefois qu'au test d'adéquation globale d'un seul modèle. Pour comparer des modèles emboîtés, la déviance conserve un avantage clair : les différences de déviances suivent exactement une loi $\chi^2$, ce qui n'est pas le cas des différences de statistiques de Pearson.
 :::
+
 ### Graphiques et extra-variabilité
 
 Les graphiques des résidus en fonction des numéros d'observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une extra-variabilité.

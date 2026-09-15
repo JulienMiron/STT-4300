@@ -37,17 +37,16 @@ footer.footer,
 .env-logit {
   margin: 1.5em 0;
   padding: 0.9em 1.2em;
-  border-left: 4px solid #7a7a7a;
+  border-left: 4px solid;
   border-radius: 4px;
-  background-color: #f7f7f9;
 }
 
-.env-definition { border-left-color: #2c7fb8; background-color: #eef6fb; }
-.env-propriete   { border-left-color: #31a354; background-color: #eef9f1; }
-.env-remarque     { border-left-color: #e6a817; background-color: #fdf6e3; }
-.env-exemple      { border-left-color: #9467bd; background-color: #f5f0fa; }
-.env-theo      { border-left-color: #4ebf90; background-color: #f0fdf9; }
-.env-logit      { border-left-color: #f8d9fc; background-color: #fffaff; }
+.env-definition { border-left-color: #3454d1; background-color: #eef1fc; }
+.env-propriete  { border-left-color: #c9694f; background-color: #fbf1ee; }
+.env-remarque   { border-left-color: #6b7280; background-color: #f2f3f5; }
+.env-exemple    { border-left-color: #9467bd; background-color: #f5f0fa; }
+.env-theo       { border-left-color: #4ebf90; background-color: #f0fdf9; }
+.env-logit      { border-left-color: #e6a817; background-color: #fdf6e3; }
 
 
 

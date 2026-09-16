@@ -1,8 +1,8 @@
 :root {
   --accent: #217e5f;       /* bleu-gris, sobre */
   --accent-clair: #eaf1f5; /* même teinte, très pâle, pour les fonds */
-  --fond-clair: #FFFBFF;   /* corps principal */
-  --fond-fonce: #FFFBFF;   /* barre de gauche, un cran plus foncé */
+  --fond-clair: #FFFDFF;   /* corps principal */
+  --fond-fonce: #FFFDFF;   /* barre de gauche, un cran plus foncé */
 }
 
 h2 {

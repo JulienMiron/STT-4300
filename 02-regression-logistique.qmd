@@ -261,10 +261,6 @@ $$
 $$ {#eq-score-vecteur}
 
 
-
-Les estimateurs du maximum de vraisemblance $\hat{\boldsymbol{\beta}}$ sont solutions de $\boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{0}$, un système non linéaire sans solution fermée. On le résout numériquement par l'algorithme de Newton-Raphson / IRLS (voir @sec-irls), qui requiert la matrice d'information (dérivée seconde de $\ell$).
-
-
 :::
 
 

@@ -215,11 +215,58 @@ La log-vraisemblance se réécrit donc directement en fonction de $\boldsymbol{\
 $$
 \ell(\boldsymbol{\beta}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ \log\binom{m_i}{y_i} + y_i \eta_i - m_i \log\left(1+e^{\eta_i}\right) \right\}.
 $$
+:::
+
+**Estimation.** 
+L'estimateur du maximum de vraisemblance $\hat{\boldsymbol{\beta}}$ est la valeur de $\boldsymbol{\beta}$ qui maximise $\ell$. Contrairement à la régression linéaire classique, il n'existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien $g$. On doit donc résoudre le problème numériquement, typiquement par l'algorithme des moindres carrés pondérés itératifs (IRLS -- *Iteratively Reweighted Least Squares*), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.
+
+
+:::{.env-logit titre="Estimation"}
+**Dérivée par rapport à $\beta_j$**
+
+On dérive $\ell(\boldsymbol{\beta}; \boldsymbol{y})$ terme à terme par rapport à $\beta_j$ ($j = 0, 1, \dots, p$), en notant que $\dfrac{\partial \eta_i}{\partial \beta_j} = X_{ij}$ (avec $X_{i0} \equiv 1$ pour l'ordonnée à l'origine).
+
+Le terme $\log\binom{m_i}{y_i}$ ne dépend pas de $\boldsymbol{\beta}$, sa dérivée est donc nulle. Pour le terme $y_i \eta_i$ :
+
+$$
+\frac{\partial}{\partial \beta_j}\left( y_i \eta_i \right) = y_i X_{ij}.
+$$
+
+Pour le terme $m_i \log(1+e^{\eta_i})$, on utilise la règle de dérivation en chaîne :
+
+$$
+\frac{\partial}{\partial \beta_j} \log\left(1+e^{\eta_i}\right)
+= \frac{e^{\eta_i}}{1+e^{\eta_i}} \cdot \frac{\partial \eta_i}{\partial \beta_j}
+= \pi_i X_{ij},
+$$
+
+d'où
+
+$$
+\frac{\partial}{\partial \beta_j}\left( m_i \log(1+e^{\eta_i}) \right) = m_i \pi_i X_{ij}.
+$$
+
+En combinant les trois morceaux, la dérivée partielle de la log-vraisemblance est
+
+$$
+\frac{\partial \ell(\boldsymbol{\beta}; \boldsymbol{y})}{\partial \beta_j} = \sum_{i=1}^n \left( y_i - m_i \pi_i \right) X_{ij}.
+$$ {#eq-score-logit}
+
+**Vecteur score**
+
+En posant $\boldsymbol{U}(\boldsymbol{\beta}) = \left( \dfrac{\partial \ell}{\partial \beta_0}, \dots, \dfrac{\partial \ell}{\partial \beta_p} \right)^\top$, $\boldsymbol{X}$ la matrice de design ($n \times (p+1)$), $\boldsymbol{y} = (y_1, \dots, y_n)^\top$ et $\boldsymbol{\mu} = (m_1\pi_1, \dots, m_n\pi_n)^\top$, on obtient sous forme matricielle :
+
+$$
+\boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{X}^\top (\boldsymbol{y} - \boldsymbol{\mu}).
+$$ {#eq-score-vecteur}
+
+
+
+Les estimateurs du maximum de vraisemblance $\hat{\boldsymbol{\beta}}$ sont solutions de $\boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{0}$, un système non linéaire sans solution fermée. On le résout numériquement par l'algorithme de Newton-Raphson / IRLS (voir @sec-irls), qui requiert la matrice d'information (dérivée seconde de $\ell$).
+
 
 :::
 
-**Estimation.**
-L'estimateur du maximum de vraisemblance $\hat{\boldsymbol{\beta}}$ est la valeur de $\boldsymbol{\beta}$ qui maximise $\ell$. Contrairement à la régression linéaire classique, il n'existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien $g$. On doit donc résoudre le problème numériquement, typiquement par l'algorithme des moindres carrés pondérés itératifs (IRLS -- *Iteratively Reweighted Least Squares*), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.
 
 ### Séparation des données {#sec-separation}
 

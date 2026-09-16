@@ -23,8 +23,9 @@ book:
   repo-url: https://github.com/JulienMiron/STT-4300
   repo-actions: [edit, issue]
   sidebar:
-    style: docked
+    style: floating
     collapse-level: 1
+    logo: images/logit_plot.png    # ton image, placée au-dessus du titre
   chapters:
     - index.qmd
     - 01-regression-lineaire.qmd
@@ -41,6 +42,10 @@ crossref:
 
 format:
   html:
+    grid:
+      sidebar-width: 300px   # ta sidebar de gauche (chapitres) — défaut 250px
+      margin-width: 300px    # ta TdM de droite — défaut ~200-250px selon thème
+      gutter-width: 1rem   # optionnel : espace entre les colonnes
     include-in-header:
       - text: |
           <script>

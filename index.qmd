@@ -7,7 +7,7 @@ Si vous constatez des coquilles ou des erreurs, merci de m'envoyer [un courriel]
 ## Remerciements {.unnumbered}
 
 Ces notes s'appuient en partie sur du matériel de cours développé respectivement par Lajmi Lakhal Chaieb,
-Thierry Duchesne, Michel Carbon, de l'Université Laval et Eva Cantoni de l'Université de Genève.
+Thierry Duchesne, Michel Carbon et Khader Khadraoui de l'Université Laval et Eva Cantoni de l'Université de Genève.
 
 ## Utilisation de l'IA {.unnumbered}
 

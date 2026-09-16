@@ -237,8 +237,13 @@ $$
 et la distribution asymptotique de $\hb$ est approximée par
 
 $$
-\hb \;\approx\; \mathcal{N}\{\bb,\, \hvar{\hb} \}.
+\hb \;\overset{\cdot}{\sim}\; \mathcal{N}\{\bb,\, \hvar{\hb} \}.
 $$
+
+<details class="notation">
+<summary>$\overset{\cdot}{\sim}$</summary>
+La notation $\dot\sim$ signifie que la variable aléatoire suit *approximativement* la loi indiquée, de façon asymptotique — ici, quand $n\to\infty$. Cette approximation provient d'un résultat de convergence en distribution, qu'on explicitera à la [section sur la déviance](#sec-deviance).
+</details>
 
 Dans ce qui suit, $\hv{\hb}$ sera utilisé à la place de $\hvar{\hb}$, pour alléger la notation. De plus, on écrit $\hv{\hbj{j}}=[\hvar{\hb}]_{jj}$ quand on parle de la variance estimée du paramètre $\beta_j$. 
 
@@ -398,7 +403,7 @@ où l'erreur-type est estimée à partir de la courbure de la log-vraisemblance 
 Ce phénomène, documenté par @hauck1977, n'affecte pas le test du rapport de vraisemblance, qui compare directement la vraisemblance en $\hat\beta_j$ à celle en $0$ plutôt que de s'appuyer sur une approximation locale :
 
 $$
-G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right] \;\sim\; \chi^2_1 \quad \text{sous } H_0.
+G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right] \;\overset{\cdot}{\sim}\; \chi^2_1 \quad \text{sous } H_0.
 $$
 
 **En pratique** : le test «par défaut» de la plupart des fonctions de R utilise le test de Wald, car celui-ci est moins coûteux en calcul et est fiable avec de grands échantillons. Il faut porter une attention particulière aux cas où un coefficient très grand ressort avec une valeur-p de Wald étonnamment élevée. Il faut comparer avec `anova(modele_reduit, modele_complet, test = "Chisq")` avant de conclure à la non-significativité.
@@ -541,11 +546,12 @@ Ainsi, $h(u) = \left[g^{-1}(u)\{1-g^{-1}(u)\}\right]^2$, et évalué en $u = {\b
 $$
 \hat{\text V}(\hat\pi^*) = \left[\hat\pi^*(1-\hat\pi^*)\right]^2 \hat{\text V}\left({\boldsymbol{X}^*}^\top\hat\beta\right).
 $$
+
 :::
 
 
 :::{.env-theo titre="Idée de la méthode du delta"}
-On a $\hat\theta = {\boldsymbol{X}^*}^\top\hat\beta$, dont on connaît la distribution asymptotique : $\hat\theta \approx \mathcal{N}(\theta,\, \hat{\text V}(\hat\theta))$. On s'intéresse cependant à $\hat\pi^* = g^{-1}(\hat\theta)$, une transformation *non linéaire* de $\hat\theta$ — et la normalité asymptotique ne se transporte pas automatiquement à travers une transformation non linéaire, ni sa variance.
+On a $\hat\theta = {\boldsymbol{X}^*}^\top\hat\beta$, dont on connaît la distribution asymptotique : $\hat\theta \overset{\cdot}{\sim} \mathcal{N}(\theta,\, \hat{\text V}(\hat\theta))$. On s'intéresse cependant à $\hat\pi^* = g^{-1}(\hat\theta)$, une transformation *non linéaire* de $\hat\theta$ — et la normalité asymptotique ne se transporte pas automatiquement à travers une transformation non linéaire, ni sa variance.
 
 La méthode du delta contourne le problème en approximant $g^{-1}$ localement par sa tangente (développement de Taylor au premier ordre) autour de $\theta$ :
 $$
@@ -593,6 +599,26 @@ $$D =2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(
 
 
 $D$ est la **déviance** du modèle et $d_i$ la déviance individuelle de l'observation $i$ ; chaque $d_i$ mesure l'écart entre l'ajustement parfait $y_i$ et l'ajustement $\hmu{i}$ obtenu par le modèle.
+
+:::{.env-remarque}
+Le $2$ de la formule de la déviance est nécessaire pour avoir
+
+$$D \xrightarrow{d} \chi_{n-(p+1)}^2, \text{lorsque } m_i\to \infty,$$
+
+c'est-à-dire que la déviance tend vers la loi du khi-carré à $n-(p+1)$ degrés de liberté quand les $m_i$ tendent vers l'infini.
+
+<details class="notation">
+<summary>$\xrightarrow{d}$</summary>
+La flèche $\xrightarrow{d}$ indique une **convergence en distribution** (ou en loi) : la distribution de la quantité à gauche (ici $D$) se rapproche de celle indiquée à droite (ici $\chi^2_{n-(p+1)}$) lorsque le paramètre asymptotique tend vers l'infini (ici $m_i$), sans que $D$ elle-même ne converge vers une valeur précise. C'est ce même type de convergence qui justifiait la notation $\dot\sim$ utilisée plus tôt pour $\hat\beta$.
+</details>
+
+Autrement, c'est-à-dire lorsque les $m_i$ sont finis, on utilise plutôt
+
+$$D \;\overset{\cdot}{\sim}\; \chi_{n-(p+1)}^2$$
+
+comme approximation.
+
+:::
 
 :::{.env-propriete titre="Non-négativité de la déviance"}
 Puisque le modèle saturé maximise la vraisemblance parmi *tous* les modèles possibles, $l(y,y) \geq l(\hat\mu,y)$ toujours, et donc $D \geq 0$ : plus $D$ est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s'ajuste bien aux données.

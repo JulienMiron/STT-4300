@@ -519,7 +519,6 @@ y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) = y_i \eta_i - m_i \log(1+e^{\eta_i})
 <p><span id="eq-score-vecteur"><span class="math display">\[
 \boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{X}^\top (\boldsymbol{y} - \boldsymbol{\mu}).
 \tag{2.2}\]</span></span></p>
-<p>Les estimateurs du maximum de vraisemblance <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> sont solutions de <span class="math inline">\(\boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{0}\)</span>, un système non linéaire sans solution fermée. On le résout numériquement par l’algorithme de Newton-Raphson / IRLS (voir <span class="quarto-unresolved-ref">?sec-irls</span>), qui requiert la matrice d’information (dérivée seconde de <span class="math inline">\(\ell\)</span>).</p>
 </div>
 </section>
 <section id="sec-separation" class="level3" data-number="2.2.2">

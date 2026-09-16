@@ -4,18 +4,18 @@ library(dplyr)
 set.seed(42)
 
 # Simulation de données groupées (style turbines)
-n_groupes <- 10
+n_groupes <- 20
 df <- data.frame(
-  X = seq(-2500, 8000, length.out = n_groupes)
+  X = seq(0, 7, length.out = n_groupes)
 )
 
 # Vrai modèle logistique sous-jacent
 beta0_vrai <- -4
-beta1_vrai <- 0.0012
+beta1_vrai <- 1
 
 df <- df |>
   mutate(
-    Poids = sample(15:70, n_groupes, replace = TRUE),      # nombre d'essais par groupe
+    Poids = sample(5:10, n_groupes, replace = TRUE),      # nombre d'essais par groupe
     eta_vrai = beta0_vrai + beta1_vrai * X,
     p_vrai = plogis(eta_vrai),
     Succes = rbinom(n_groupes, size = Poids, prob = p_vrai),

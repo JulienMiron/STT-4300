@@ -123,3 +123,45 @@ mjx-container[jax="CHTML"] {
   color: var(--accent) !important;
   border-left-color: var(--accent) !important;
 }
+
+/* Boîte de notation cliquable */
+details.notation {
+  background-color: #f0f4f8;
+  border-left: 4px solid #4a90d9;
+  border-radius: 4px;
+  padding: 0.6em 1em;
+  margin: 1em 0;
+  font-size: 0.95em;
+}
+
+details.notation summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #2c5f8a;
+  list-style: none;
+  outline: none;
+}
+
+/* Retire la flèche par défaut du navigateur et ajoute la nôtre */
+details.notation summary::-webkit-details-marker {
+  display: none;
+}
+
+details.notation summary::before {
+  content: "💡 Élément de notation:";
+}
+
+details.notation summary::after {
+  content: " ▸";
+  float: right;
+  transition: transform 0.2s ease;
+}
+
+details.notation[open] summary::after {
+  transform: rotate(90deg);
+}
+
+/* Contenu déplié */
+details.notation p {
+  margin: 0.5em 0 0 0;
+}

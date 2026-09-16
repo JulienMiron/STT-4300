@@ -330,7 +330,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">15 septembre 2026</p>
+      <p class="date-modified">16 septembre 2026</p>
     </div>
   </div>
     
@@ -496,8 +496,14 @@ I_{jk} = -\left.\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k}\right|
 \]</span></p>
 <p>et la distribution asymptotique de <span class="math inline">\(\hb\)</span> est approximée par</p>
 <p><span class="math display">\[
-\hb \;\approx\; \mathcal{N}\{\bb,\, \hvar{\hb} \}.
+\hb \;\overset{\cdot}{\sim}\; \mathcal{N}\{\bb,\, \hvar{\hb} \}.
 \]</span></p>
+<details class="notation">
+<summary>
+<span class="math inline">\(\overset{\cdot}{\sim}\)</span>
+</summary>
+La notation <span class="math inline">\(\dot\sim\)</span> signifie que la variable aléatoire suit <em>approximativement</em> la loi indiquée, de façon asymptotique — ici, quand <span class="math inline">\(n\to\infty\)</span>. Cette approximation provient d’un résultat de convergence en distribution, qu’on explicitera à la <a href="#sec-deviance">section sur la déviance</a>.
+</details>
 <p>Dans ce qui suit, <span class="math inline">\(\hv{\hb}\)</span> sera utilisé à la place de <span class="math inline">\(\hvar{\hb}\)</span>, pour alléger la notation. De plus, on écrit <span class="math inline">\(\hv{\hbj{j}}=[\hvar{\hb}]_{jj}\)</span> quand on parle de la variance estimée du paramètre <span class="math inline">\(\beta_j\)</span>.</p>
 <p><strong>Forme explicite dans le cas binomial.</strong> On montre que</p>
 <p><span class="math display">\[
@@ -652,7 +658,7 @@ z_{obs} = \frac{\hat\beta_j}{\sqrt{\hat{\text V}(\hat\beta_j)}},
 <p>où l’erreur-type est estimée à partir de la courbure de la log-vraisemblance <strong>évaluée au point estimé</strong> <span class="math inline">\(\hat\beta_j\)</span>, plutôt que sous <span class="math inline">\(H_0\)</span>. Cette dépendance locale peut mener à un comportement contre-intuitif : lorsque <span class="math inline">\(|\hat\beta_j|\)</span> devient très grand (par exemple en présence de séparation quasi-complète ou d’un effet très fort), la courbure de la vraisemblance en <span class="math inline">\(\hat\beta_j\)</span> s’aplatit, ce qui <strong>gonfle</strong> <span class="math inline">\(\sqrt{\hat{\text V}(\hat\beta_j)}\)</span> et peut faire <strong>diminuer</strong> <span class="math inline">\(z_{obs}\)</span> — donnant l’impression que l’effet n’est pas significatif, alors qu’il l’est. On pourrait montrer que cela est causé par le fait que l’erreur-type augmente plus rapidement que la valeur absolue de l’estimation du paramètre.</p>
 <p>Ce phénomène, documenté par <span class="citation" data-cites="hauck1977">Hauck et Donner (<a href="#ref-hauck1977" role="doc-biblioref">1977</a>)</span>, n’affecte pas le test du rapport de vraisemblance, qui compare directement la vraisemblance en <span class="math inline">\(\hat\beta_j\)</span> à celle en <span class="math inline">\(0\)</span> plutôt que de s’appuyer sur une approximation locale :</p>
 <p><span class="math display">\[
-G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right] \;\sim\; \chi^2_1 \quad \text{sous } H_0.
+G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right] \;\overset{\cdot}{\sim}\; \chi^2_1 \quad \text{sous } H_0.
 \]</span></p>
 <p><strong>En pratique</strong> : le test «par défaut» de la plupart des fonctions de R utilise le test de Wald, car celui-ci est moins coûteux en calcul et est fiable avec de grands échantillons. Il faut porter une attention particulière aux cas où un coefficient très grand ressort avec une valeur-p de Wald étonnamment élevée. Il faut comparer avec <code>anova(modele_reduit, modele_complet, test = "Chisq")</code> avant de conclure à la non-significativité.</p>
 </div>
@@ -828,7 +834,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <div class="env-theo" data-titre="Idée de la méthode du delta">
 <p><span class="env-titre">Pour aller plus loin avec la théorie — Idée de la méthode du delta</span></p>
-<p>On a <span class="math inline">\(\hat\theta = {\boldsymbol{X}^*}^\top\hat\beta\)</span>, dont on connaît la distribution asymptotique : <span class="math inline">\(\hat\theta \approx \mathcal{N}(\theta,\, \hat{\text V}(\hat\theta))\)</span>. On s’intéresse cependant à <span class="math inline">\(\hat\pi^* = g^{-1}(\hat\theta)\)</span>, une transformation <em>non linéaire</em> de <span class="math inline">\(\hat\theta\)</span> — et la normalité asymptotique ne se transporte pas automatiquement à travers une transformation non linéaire, ni sa variance.</p>
+<p>On a <span class="math inline">\(\hat\theta = {\boldsymbol{X}^*}^\top\hat\beta\)</span>, dont on connaît la distribution asymptotique : <span class="math inline">\(\hat\theta \overset{\cdot}{\sim} \mathcal{N}(\theta,\, \hat{\text V}(\hat\theta))\)</span>. On s’intéresse cependant à <span class="math inline">\(\hat\pi^* = g^{-1}(\hat\theta)\)</span>, une transformation <em>non linéaire</em> de <span class="math inline">\(\hat\theta\)</span> — et la normalité asymptotique ne se transporte pas automatiquement à travers une transformation non linéaire, ni sa variance.</p>
 <p>La méthode du delta contourne le problème en approximant <span class="math inline">\(g^{-1}\)</span> localement par sa tangente (développement de Taylor au premier ordre) autour de <span class="math inline">\(\theta\)</span> : <span class="math display">\[
 g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\partial u}\right|_{u=\theta} (\hat\theta - \theta).
 \]</span> Comme <span class="math inline">\(g^{-1}(\theta) = \pi^*\)</span> est une constante et que le second terme n’est qu’une transformation <em>linéaire</em> de <span class="math inline">\(\hat\theta\)</span>, on peut maintenant calculer sa variance directement : <span class="math display">\[
@@ -859,6 +865,21 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 <p><span class="math display">\[D =2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.\]</span></p>
 </div>
 <p><span class="math inline">\(D\)</span> est la <strong>déviance</strong> du modèle et <span class="math inline">\(d_i\)</span> la déviance individuelle de l’observation <span class="math inline">\(i\)</span> ; chaque <span class="math inline">\(d_i\)</span> mesure l’écart entre l’ajustement parfait <span class="math inline">\(y_i\)</span> et l’ajustement <span class="math inline">\(\hmu{i}\)</span> obtenu par le modèle.</p>
+<div class="env-remarque">
+<p><span class="env-titre">Remarque</span></p>
+<p>Le <span class="math inline">\(2\)</span> de la formule de la déviance est nécessaire pour avoir</p>
+<p><span class="math display">\[D \xrightarrow{d} \chi_{n-(p+1)}^2, \text{lorsque } m_i\to \infty,\]</span></p>
+<p>c’est-à-dire que la déviance tend vers la loi du khi-carré à <span class="math inline">\(n-(p+1)\)</span> degrés de liberté quand les <span class="math inline">\(m_i\)</span> tendent vers l’infini.</p>
+<details class="notation">
+<summary>
+<span class="math inline">\(\xrightarrow{d}\)</span>
+</summary>
+La flèche <span class="math inline">\(\xrightarrow{d}\)</span> indique une <strong>convergence en distribution</strong> (ou en loi) : la distribution de la quantité à gauche (ici <span class="math inline">\(D\)</span>) se rapproche de celle indiquée à droite (ici <span class="math inline">\(\chi^2_{n-(p+1)}\)</span>) lorsque le paramètre asymptotique tend vers l’infini (ici <span class="math inline">\(m_i\)</span>), sans que <span class="math inline">\(D\)</span> elle-même ne converge vers une valeur précise. C’est ce même type de convergence qui justifiait la notation <span class="math inline">\(\dot\sim\)</span> utilisée plus tôt pour <span class="math inline">\(\hat\beta\)</span>.
+</details>
+<p>Autrement, c’est-à-dire lorsque les <span class="math inline">\(m_i\)</span> sont finis, on utilise plutôt</p>
+<p><span class="math display">\[D \;\overset{\cdot}{\sim}\; \chi_{n-(p+1)}^2\]</span></p>
+<p>comme approximation.</p>
+</div>
 <div class="env-propriete" data-titre="Non-négativité de la déviance">
 <p><span class="env-titre">Propriété — Non-négativité de la déviance</span></p>
 <p>Puisque le modèle saturé maximise la vraisemblance parmi <em>tous</em> les modèles possibles, <span class="math inline">\(l(y,y) \geq l(\hat\mu,y)\)</span> toujours, et donc <span class="math inline">\(D \geq 0\)</span> : plus <span class="math inline">\(D\)</span> est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s’ajuste bien aux données.</p>

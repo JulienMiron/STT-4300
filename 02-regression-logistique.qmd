@@ -221,6 +221,54 @@ $$
 **Estimation.**
 L'estimateur du maximum de vraisemblance $\hat{\boldsymbol{\beta}}$ est la valeur de $\boldsymbol{\beta}$ qui maximise $\ell$. Contrairement à la régression linéaire classique, il n'existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien $g$. On doit donc résoudre le problème numériquement, typiquement par l'algorithme des moindres carrés pondérés itératifs (IRLS -- *Iteratively Reweighted Least Squares*), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.
 
+### Séparation des données {#sec-separation}
+
+:::{.env-definition titre="Séparation complète et quasi-complète"}
+On dit qu'il y a **séparation complète** si un hyperplan permet de classer parfaitement les $Y_i$ à partir des covariables : il existe $\boldsymbol\beta$ tel que $\boldsymbol{X}_i^\top\boldsymbol\beta > 0$ chaque fois que $Y_i=1$ et $\boldsymbol{X}_i^\top\boldsymbol\beta < 0$ chaque fois que $Y_i=0$ (ou l'inverse).
+
+On parle de **séparation quasi-complète** lorsque cette séparation est presque parfaite : il existe un hyperplan qui classe correctement toutes les observations, sauf sur un sous-ensemble où $\boldsymbol{X}_i^\top\boldsymbol\beta = 0$ exactement.
+:::
+
+En présence de séparation (complète ou quasi-complète), l'estimateur du maximum de vraisemblance $\hat{\boldsymbol\beta}$ **n'existe pas** au sens usuel : la vraisemblance continue d'augmenter à mesure que $\|\boldsymbol\beta\| \to \infty$ dans la direction qui sépare les données, sans jamais atteindre de maximum fini. En pratique, l'algorithme IRLS ne converge pas, ou converge vers des $\hat\beta_j$ extrêmement grands, limités seulement par le critère d'arrêt numérique de l'algorithme.
+
+
+R signale souvent ce problème par l'avertissement
+
+```
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+```
+
+accompagné de coefficients estimés très grands en valeur absolue et d'erreurs-types démesurément grandes — souvent des ordres de grandeur plus grandes que le coefficient lui-même.
+
+::: {.env-exemple titre="Illustration de la séparation complète"}
+
+```{r}
+#| warning: true
+set.seed(1)
+x <- c(rnorm(10, mean = -3), rnorm(10, mean = 3))
+y <- c(rep(0, 10), rep(1, 10)) # séparation complète : y=0 si x<0, y=1 si x>0
+
+modele_separe <- glm(y ~ x, family = binomial)
+summary(modele_separe)$coefficients
+
+plot(x,y)
+```
+
+Le coefficient de `x` et son erreur-type explosent tous les deux — signe clair de séparation, pas d'un effet réellement très fort.
+:::
+
+:::{.env-remarque titre="Que faire en cas de séparation?"}
+Quelques approches courantes :
+
+- **Régression logistique pénalisée (Firth)** : ajoute un terme de pénalité à la vraisemblance (`logistf` en R), qui garantit l'existence d'un estimateur fini même sous séparation.
+- **Retirer ou regrouper la variable problématique** : si une variable catégorielle cause la séparation, fusionner la catégorie en cause avec une catégorie voisine peut régler le problème.
+- **Régularisation** (ridge, lasso) : contraint les coefficients et empêche qu'ils divergent vers l'infini.
+- **Recueillir plus de données** : si la séparation vient d'un petit échantillon plutôt que d'une relation déterministe réelle, un échantillon plus grand peut la faire disparaître.
+
+Ce phénomène a aussi une conséquence directe sur l'inférence : les tests de Wald deviennent peu fiables en présence de séparation, même partielle — voir le [phénomène de Hauck-Donner](#sec-hauckdonner) plus loin.
+:::
+
+### Information de Fisher et variance des estimateurs
 **Matrice d'information de Fisher.**
 On calcule ensuite la matrice d'information de Fisher $I$, dont l'élément $(j,k)$ est
 
@@ -398,7 +446,7 @@ $$
 z_{obs} = \frac{\hat\beta_j}{\sqrt{\hat{\text V}(\hat\beta_j)}},
 $$
 
-où l'erreur-type est estimée à partir de la courbure de la log-vraisemblance **évaluée au point estimé** $\hat\beta_j$, plutôt que sous $H_0$. Cette dépendance locale peut mener à un comportement contre-intuitif : lorsque $|\hat\beta_j|$ devient très grand (par exemple en présence de séparation quasi-complète ou d'un effet très fort), la courbure de la vraisemblance en $\hat\beta_j$ s'aplatit, ce qui **gonfle** $\sqrt{\hat{\text V}(\hat\beta_j)}$ et peut faire **diminuer** $z_{obs}$ — donnant l'impression que l'effet n'est pas significatif, alors qu'il l'est. On pourrait montrer que cela est causé par le fait que l'erreur-type augmente plus rapidement que la valeur absolue de l'estimation du paramètre.
+où l'erreur-type est estimée à partir de la courbure de la log-vraisemblance **évaluée au point estimé** $\hat\beta_j$, plutôt que sous $H_0$. Cette dépendance locale peut mener à un comportement contre-intuitif : lorsque $|\hat\beta_j|$ devient très grand (par exemple en présence de [séparation](#sec-separation) — complète ou quasi-complète — ou d'un effet très fort), la courbure de la vraisemblance en $\hat\beta_j$ s'aplatit, ce qui **gonfle** $\sqrt{\hat{\text V}(\hat\beta_j)}$ et peut faire **diminuer** $z_{obs}$ — donnant l'impression que l'effet n'est pas significatif, alors qu'il l'est. On pourrait montrer que cela est causé par le fait que l'erreur-type augmente plus rapidement que la valeur absolue de l'estimation du paramètre.
 
 Ce phénomène, documenté par @hauck1977, n'affecte pas le test du rapport de vraisemblance, qui compare directement la vraisemblance en $\hat\beta_j$ à celle en $0$ plutôt que de s'appuyer sur une approximation locale :
 
@@ -410,7 +458,7 @@ $$
 
 :::
 
-::: {.env-exemple titre = "Effet Hauck-Donner"}
+::: {.env-exemple titre="Effet Hauck-Donner"}
 
 ```{r hauck-donner-sim-continu}
 #| warning: false

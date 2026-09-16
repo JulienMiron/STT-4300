@@ -251,7 +251,7 @@ y <- c(rep(0, 10), rep(1, 10)) # séparation complète : y=0 si x<0, y=1 si x>0
 modele_separe <- glm(y ~ x, family = binomial)
 summary(modele_separe)$coefficients
 
-plot(x,y)
+plot(x,y, pch = 19)
 ```
 
 Le coefficient de `x` et son erreur-type explosent tous les deux — signe clair de séparation, pas d'un effet réellement très fort.

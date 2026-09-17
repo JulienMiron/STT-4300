@@ -230,12 +230,12 @@ $$
 \boldsymbol{U}(\boldsymbol{\beta}) = \frac{\partial \ell(\boldsymbol{\beta};\boldsymbol y)}{\partial \boldsymbol\beta} = \left(\frac{\partial \ell}{\partial \beta_0}, \ldots, \frac{\partial \ell}{\partial \beta_p}\right)^\top.
 $$
 
-L'estimateur du maximum de vraisemblance $\hat{\boldsymbol\beta}$ est la solution de l'équation du score $\boldsymbol U(\boldsymbol\beta) = \boldsymbol 0$. 
+
 
 :::
 
 **Estimation.** 
-L'estimateur du maximum de vraisemblance $\hat{\boldsymbol{\beta}}$ est la valeur de $\boldsymbol{\beta}$ qui maximise $\ell$. Contrairement à la régression linéaire classique, il n'existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien $g$. On doit donc résoudre le problème numériquement, typiquement par l'algorithme des moindres carrés pondérés itératifs (IRLS -- *Iteratively Reweighted Least Squares*), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.
+L'estimateur du maximum de vraisemblance $\hat{\boldsymbol\beta}$ est la solution de l'équation du score $\boldsymbol U(\boldsymbol\beta) = \boldsymbol 0$, c'est-à-dire la valeur qui maximise $\ell$. Contrairement à la régression linéaire classique, il n'existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien $g$. On doit donc résoudre le problème numériquement, typiquement par l'algorithme des moindres carrés pondérés itératifs (IRLS -- *Iteratively Reweighted Least Squares*), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.
 
 
 :::{.env-logit titre="Estimation"}
@@ -289,6 +289,18 @@ On dit qu'il y a **séparation complète** si un hyperplan permet de classer par
 On parle de **séparation quasi-complète** lorsque cette séparation est presque parfaite : il existe un hyperplan qui classe correctement toutes les observations, sauf sur un sous-ensemble où $\boldsymbol{X}_i^\top\boldsymbol\beta = 0$ exactement.
 :::
 
+:::{.env-remarque titre="Intuition géométrique : une pente qui explose"}
+Avec un seul prédicteur continu et le lien logit, $\hat\pi(x) = g^{-1}(\hat\beta_0 + \hat\beta_1 x)$, dont la pente est
+
+$$
+\hat\pi'(x) = \hat\beta_1\, \hat\pi(x)\{1-\hat\pi(x)\},
+$$
+
+maximale au point d'inflexion ($\hat\pi(x)=1/2$), où elle vaut $\hat\beta_1/4$. Sous séparation, l'algorithme pousse $|\hat\beta_1| \to \infty$ pour continuer à augmenter la vraisemblance : la pente maximale de la courbe explose elle aussi. Géométriquement, la sigmoïde logistique devient de plus en plus abrupte et se rapproche d'une **fonction en escalier** (valant 0 d'un côté du seuil de séparation et 1 de l'autre) plutôt que de converger vers une courbe en S bien définie — un saut qu'aucune sigmoïde à pente finie ne peut reproduire exactement, d'où la non-convergence de l'algorithme plutôt qu'une pente littéralement infinie en pratique.
+
+Avec plusieurs covariables, cette image se généralise : l'**hyperplan séparateur** devient une frontière de décision parfaitement nette (les probabilités prédites tendent vers 0 ou 1 de chaque côté), mais « la pente » n'est plus un scalaire unique — c'est la norme $\|\hat{\boldsymbol\beta}\|$ dans la direction séparatrice qui diverge.
+:::
+
 En présence de séparation (complète ou quasi-complète), l'estimateur du maximum de vraisemblance $\hat{\boldsymbol\beta}$ **n'existe pas** au sens usuel : la vraisemblance continue d'augmenter à mesure que $\|\boldsymbol\beta\| \to \infty$ dans la direction qui sépare les données, sans jamais atteindre de maximum fini. En pratique, l'algorithme IRLS ne converge pas, ou converge vers des $\hat\beta_j$ extrêmement grands, limités seulement par le critère d'arrêt numérique de l'algorithme.
 
 
@@ -311,8 +323,14 @@ y <- c(rep(0, 10), rep(1, 10)) # séparation complète : y=0 si x<0, y=1 si x>0
 modele_separe <- glm(y ~ x, family = binomial)
 summary(modele_separe)$coefficients
 
-plot(x,y, pch = 19)
+grille_x <- data.frame(x = seq(min(x), max(x), length.out = 200))
+grille_x$p_hat <- predict(modele_separe, newdata = grille_x, type = "response")
+
+plot(x, y, pch = 19, ylim = c(0, 1))
+lines(grille_x$x, grille_x$p_hat, col = "blue", lwd = 2)
 ```
+
+La courbe de prédiction $\hat\pi(x)$ se rapproche d'une fonction en escalier plutôt que d'une sigmoïde classique : elle passe de 0 à 1 sur un intervalle extrêmement court, autour du seuil de séparation ($x=0$ ici) — reflet direct de la pente $\hat\beta_1/4$ qui explose sous séparation complète.
 
 Le coefficient de `x` et son erreur-type explosent tous les deux — signe clair de séparation, pas d'un effet réellement très fort.
 :::

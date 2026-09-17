@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Sélection de variables et régularisation – STT-4300 - Régression II</title>
+<title>5&nbsp; Sélection de variables et régularisation – **Régression II -- STT-4300**</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -82,7 +82,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7affff850df01dc638a384acdf12eb19.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-a0508a2073994df95a8d211313b4500e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -192,7 +192,7 @@ window.Quarto = {
       <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">STT-4300 - Régression II</a> 
+      <a href="./"><strong>Régression II – STT-4300</strong></a> 
         <div class="sidebar-tools-main">
     <a href="https://github.com/JulienMiron/STT-4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
 </div>
@@ -296,7 +296,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">16 septembre 2026</p>
+      <p class="date-modified">17 septembre 2026</p>
     </div>
   </div>
     
@@ -366,7 +366,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>reg.ridge.select <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x, y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">lambda=</span>grille.lambda)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>reg.ridge.select<span class="sc">$</span>lambda.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 18.73817</code></pre>
+<pre><code>[1] 4.641589</code></pre>
 </div>
 </div>
 <p>Sur les données <code>Hitters</code>, on obtient <span class="math inline">\(\lambda = e^{2.2}\)</span> pour ridge et <span class="math inline">\(\lambda = e^3\)</span> pour le lasso.</p>

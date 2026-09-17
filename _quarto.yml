@@ -14,7 +14,7 @@ date-format: "D MMMM YYYY"
 bibliography: references.bib
 
 book:
-  title: "STT-4300 - Régression II"
+  title: "**Régression II -- STT-4300**"
   #subtitle: "Rappels de régression linéaire, modèles linéaires généralisés, régression non-linéaire et non-paramétrique, modèles additifs généralisés"
   author: "Julien Miron"
   page-footer:
@@ -43,8 +43,8 @@ crossref:
 format:
   html:
     grid:
-      sidebar-width: 300px   # ta sidebar de gauche (chapitres) — défaut 250px
-      margin-width: 300px    # ta TdM de droite — défaut ~200-250px selon thème
+      sidebar-width: 250px   # ta sidebar de gauche (chapitres) — défaut 250px
+      margin-width: 200px    # ta TdM de droite — défaut ~200-250px selon thème
       gutter-width: 1rem   # optionnel : espace entre les colonnes
     include-in-header:
       - text: |

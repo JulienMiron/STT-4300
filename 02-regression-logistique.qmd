@@ -1,5 +1,16 @@
 # Modèles de régression pour données binaires {#sec-logistique}
 
+```{r setup}
+#| include: false
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(latex2exp)
+library(GLMsData)
+library(purrr)
+library(clinfun)
+```
+
 Les modèles de régression linéaire ne permettent de considérer que les cas où la variable réponse $Y_i$ est normale. Cependant, dans plusieurs situations, on a une variable réponse discrète qui ne peut prendre qu'un nombre fini (ou dénombrable) de valeurs possibles. Dans ce chapitre, on s'intéresse au cas où $Y_i$ suit une loi de Bernoulli ou une loi binomiale.
 
 :::{.env-exemple}
@@ -65,14 +76,9 @@ En pratique, les trois liens donnent souvent des résultats très similaires.
 
 
 Voici une comparaison des probabilités prédites pour les trois liens, en fonction de $\eta_i$.
-```{r}
+```{r comparaison-liens}
 #| echo: false
 #| warning: false
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(latex2exp)
-
 evaluer_liens <- function(x) {
   data.frame(
     X = x,
@@ -217,6 +223,17 @@ $$
 $$
 :::
 
+:::{.env-definition titre="Score"}
+Le score, noté $\boldsymbol{U}(\boldsymbol{\beta})$, est le vecteur des dérivées partielles de la log-vraisemblance par rapport à $\boldsymbol\beta$ :
+
+$$
+\boldsymbol{U}(\boldsymbol{\beta}) = \frac{\partial \ell(\boldsymbol{\beta};\boldsymbol y)}{\partial \boldsymbol\beta} = \left(\frac{\partial \ell}{\partial \beta_0}, \ldots, \frac{\partial \ell}{\partial \beta_p}\right)^\top.
+$$
+
+L'estimateur du maximum de vraisemblance $\hat{\boldsymbol\beta}$ est la solution de l'équation du score $\boldsymbol U(\boldsymbol\beta) = \boldsymbol 0$. 
+
+:::
+
 **Estimation.** 
 L'estimateur du maximum de vraisemblance $\hat{\boldsymbol{\beta}}$ est la valeur de $\boldsymbol{\beta}$ qui maximise $\ell$. Contrairement à la régression linéaire classique, il n'existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien $g$. On doit donc résoudre le problème numériquement, typiquement par l'algorithme des moindres carrés pondérés itératifs (IRLS -- *Iteratively Reweighted Least Squares*), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.
 
@@ -252,9 +269,9 @@ $$
 \frac{\partial \ell(\boldsymbol{\beta}; \boldsymbol{y})}{\partial \beta_j} = \sum_{i=1}^n \left( y_i - m_i \pi_i \right) X_{ij}.
 $$ {#eq-score-logit}
 
-**Vecteur score**
+**Forme matricielle (lien logit)**
 
-En posant $\boldsymbol{U}(\boldsymbol{\beta}) = \left( \dfrac{\partial \ell}{\partial \beta_0}, \dots, \dfrac{\partial \ell}{\partial \beta_p} \right)^\top$, $\boldsymbol{X}$ la matrice de design ($n \times (p+1)$), $\boldsymbol{y} = (y_1, \dots, y_n)^\top$ et $\boldsymbol{\mu} = (m_1\pi_1, \dots, m_n\pi_n)^\top$, on obtient sous forme matricielle :
+En posant $\boldsymbol{X}$ la matrice de design ($n \times (p+1)$), $\boldsymbol{y} = (y_1, \dots, y_n)^\top$ et $\boldsymbol{\mu} = (m_1\pi_1, \dots, m_n\pi_n)^\top$, on obtient le score sous forme matricielle :
 
 $$
 \boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{X}^\top (\boldsymbol{y} - \boldsymbol{\mu}).
@@ -285,7 +302,7 @@ accompagné de coefficients estimés très grands en valeur absolue et d'erreurs
 
 ::: {.env-exemple titre="Illustration de la séparation complète"}
 
-```{r}
+```{r separation-complete-exemple}
 #| warning: true
 set.seed(1)
 x <- c(rnorm(10, mean = -3), rnorm(10, mean = 3))
@@ -373,9 +390,8 @@ $$
 
 On ajuste le modèle avec les trois fonctions de lien :
 
-```{r}
+```{r turbines-ajustement}
 #| message: false
-library(GLMsData)
 data(turbines)
 
 
@@ -419,11 +435,8 @@ summary(modele.probit)$coefficients
 summary(modele.cloglog)$coefficients
 ```
 
-```{r}
+```{r turbines-comparaison-liens-plot}
 #| warning: false
-library(ggplot2)
-library(dplyr)
-
 grille <- data.frame(
   Hours = seq(min(turbines$Hours), max(turbines$Hours), length.out = 200)
 )
@@ -505,10 +518,6 @@ $$
 
 ```{r hauck-donner-sim-continu}
 #| warning: false
-library(purrr)
-library(dplyr)
-library(ggplot2)
-
 simuler_logistique <- function(n, beta0 = 0, beta1 = 1) {
   x <- rnorm(n, mean = 0, sd = 1)
   eta <- beta0 + beta1 * x
@@ -730,9 +739,8 @@ Sous $H_0$ (le modèle réduit est adéquat), $\chi^2$ suit une loi du khi-deux 
 
 On teste $H_0: \beta_2 = \beta_3 = 0$ (modèle avec `Hours` seulement contre modèle avec termes en `Hours`$^2$ et `Hours`$^3$) :
 
-```{r}
+```{r turbines-deviance-test}
 #| message: false
-library(GLMsData)
 data(turbines)
 
 modele.reduit <- glm(
@@ -767,9 +775,8 @@ Les méthodes pas à pas *forward*, *backward* et *stepwise* fonctionnent exacte
 :::{.env-exemple titre="Sélection automatique sur le jeu de données [`nminer`](#data-nminer)"}
 
 
-```{r}
+```{r nminer-selection}
 #| message: false
-library(GLMsData)
 data(nminer)
 
 # On construit la réponse binaire décrite dans le texte :
@@ -831,8 +838,7 @@ L'hypothèse nulle du test est que le modèle est adéquat.
 
 ::: {.env-exemple titre="Test d'adéquation avec l'exemple [`turbines`](#data-turbines)"}
 
-```{r}
-library(GLMsData)
+```{r turbines-adequation}
 data(turbines)
 
 modele.logit <- glm(cbind(Fissures, Turbines - Fissures) ~ Hours,
@@ -932,13 +938,11 @@ $$\mbox{AUC} \in \begin{cases}
 
 On ajuste ici un modèle logistique avec la variable explicative SOI et le lien logit :
 
-```{r}
+```{r quilpie-roc}
 #| message: false
-library(GLMsData)
 data(quilpie)
 
 modele <- glm(y ~ SOI, family = binomial, data = quilpie)
-library(clinfun)
 courbe.roc <- roc.curve(
   marker = as.vector(fitted(modele)),
   status = quilpie$y,

@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.21.0 (TeX Live 2025)  (format=lualatex 2025.3.8)  15 SEP 2026 08:39
+This is LuaHBTeX, Version 1.21.0 (TeX Live 2025)  (format=lualatex 2025.3.8)  17 SEP 2026 09:05
  restricted system commands enabled.
 **index.tex
 (./index.tex
@@ -76,9 +76,9 @@ Class scrreprt Info: File `scrsize11pt.clo' used instead of
 (/usr/local/texlive/2025/texmf-dist/tex/latex/koma-script/scrsize11pt.clo
 File: scrsize11pt.clo 2024/10/24 v3.43 KOMA-Script font size class option (11pt
 )
-luaotfload | db : Font names database not found, generating new one.
-luaotfload | db : This can take several minutes; please be patient.) (/usr/loca
-l/texlive/2025/texmf-dist/tex/latex/koma-script/typearea.sty
+luaotfload | db : Font names database loaded from /Users/jmiron/Library/texlive/
+2025/texmf-var/luatex-cache/generic/names/luaotfload-names.luc.gz) (/usr/local/
+texlive/2025/texmf-dist/tex/latex/koma-script/typearea.sty
 Package: typearea 2024/10/24 v3.43 KOMA-Script package (type area)
 \ta@bcor=\skip50
 \ta@div=\count194
@@ -1206,23 +1206,23 @@ No file index.toc.
 ]
 chapter 1.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 310.
+(Font)              scaled to size 10.95pt on input line 311.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 7.665pt on input line 310.
+(Font)              scaled to size 7.665pt on input line 311.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 5.475pt on input line 310.
+(Font)              scaled to size 5.475pt on input line 311.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 310.
+(Font)              scaled to size 10.95pt on input line 311.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 7.665pt on input line 310.
+(Font)              scaled to size 7.665pt on input line 311.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 5.475pt on input line 310.
+(Font)              scaled to size 5.475pt on input line 311.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 10.95pt on input line 310.
+(Font)              scaled to size 10.95pt on input line 311.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 7.665pt on input line 310.
+(Font)              scaled to size 7.665pt on input line 311.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 5.475pt on input line 310.
+(Font)              scaled to size 5.475pt on input line 311.
 
 
 [4
@@ -1233,101 +1233,126 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
 
 [6]
 
-LaTeX Warning: Reference `sec-logistique' on page 7 undefined on input line 504
+[7]
+
+LaTeX Warning: Reference `sec-logistique' on page 8 undefined on input line 524
 .
 
 
-LaTeX Warning: Reference `sec-mlg' on page 7 undefined on input line 505.
+LaTeX Warning: Reference `sec-mlg' on page 8 undefined on input line 525.
 
 
-LaTeX Warning: Reference `sec-knn' on page 7 undefined on input line 506.
+LaTeX Warning: Reference `sec-knn' on page 8 undefined on input line 526.
 
 
-LaTeX Warning: Reference `sec-gam' on page 7 undefined on input line 506.
+LaTeX Warning: Reference `sec-gam' on page 8 undefined on input line 526.
 
 
 
-[7]
+[8]
 chapter 2.
 
 
-[8
+[9
 
 ]
 
-LaTeX Warning: Hyper reference `sec-cotes' on page 9 undefined on input line 60
-4.
+LaTeX Warning: Hyper reference `sec-cotes' on page 10 undefined on input line 6
+43.
 
-<02-regression-logistique_files/figure-pdf/unnamed-chunk-1-1.pdf, id=81, 381.42
+
+
+[10]
+<02-regression-logistique_files/figure-pdf/unnamed-chunk-1-1.pdf, id=95, 381.42
 5pt x 240.9pt>
 File: 02-regression-logistique_files/figure-pdf/unnamed-chunk-1-1.pdf Graphic f
 ile (type pdf)
 <use 02-regression-logistique_files/figure-pdf/unnamed-chunk-1-1.pdf>
 Package luatex.def Info: 02-regression-logistique_files/figure-pdf/unnamed-chun
-k-1-1.pdf  used on input line 621.
+k-1-1.pdf  used on input line 666.
 (luatex.def)             Requested size: 381.42406pt x 240.8994pt.
 
 
-[9]
-
-[10<./02-regression-logistique_files/figure-pdf/unnamed-chunk-1-1.pdf>]
+[11<./02-regression-logistique_files/figure-pdf/unnamed-chunk-1-1.pdf>]
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 693.
+(Font)              scaled to size 12.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 693.
+(Font)              scaled to size 8.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 6.0pt on input line 693.
+(Font)              scaled to size 6.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 693.
+(Font)              scaled to size 12.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 693.
+(Font)              scaled to size 8.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 6.0pt on input line 693.
+(Font)              scaled to size 6.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 693.
+(Font)              scaled to size 12.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 693.
+(Font)              scaled to size 8.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.0pt on input line 693.
+(Font)              scaled to size 6.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 12.0pt on input line 693.
+(Font)              scaled to size 12.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 8.0pt on input line 693.
+(Font)              scaled to size 8.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/b/n' will be
-(Font)              scaled to size 6.0pt on input line 693.
+(Font)              scaled to size 6.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 12.0pt on input line 693.
+(Font)              scaled to size 12.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 8.0pt on input line 693.
+(Font)              scaled to size 8.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/b/n' will be
-(Font)              scaled to size 6.0pt on input line 693.
+(Font)              scaled to size 6.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 12.0pt on input line 693.
+(Font)              scaled to size 12.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 8.0pt on input line 693.
+(Font)              scaled to size 8.0pt on input line 742.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/b/n' will be
-(Font)              scaled to size 6.0pt on input line 693.
+(Font)              scaled to size 6.0pt on input line 742.
 
 
-[11]
+[12]
 
-LaTeX Warning: Hyper reference `sec-deviance' on page 12 undefined on input lin
-e 731.
+LaTeX Warning: Hyper reference `sec-deviance' on page 13 undefined on input lin
+e 780.
 
+
+
+[13]
+
+[14]
+
+[15]
+<02-regression-logistique_files/figure-pdf/unnamed-chunk-2-1.pdf, id=132, 362.3
+5374pt x 176.66pt>
+File: 02-regression-logistique_files/figure-pdf/unnamed-chunk-2-1.pdf Graphic f
+ile (type pdf)
+<use 02-regression-logistique_files/figure-pdf/unnamed-chunk-2-1.pdf>
+Package luatex.def Info: 02-regression-logistique_files/figure-pdf/unnamed-chun
+k-2-1.pdf  used on input line 945.
+(luatex.def)             Requested size: 362.35286pt x 176.65956pt.
+
+LaTeX Warning: Hyper reference `sec-hauckdonner' on page 16 undefined on input 
+line 975.
+
+
+
+[16<./02-regression-logistique_files/figure-pdf/unnamed-chunk-2-1.pdf>]
 ! Undefined control sequence.
-l.778 La matrice de variance-covariance de \(\hb
+l.988 La matrice de variance-covariance de \(\hb
                                               \) est estimée par
 
 Here is how much of LuaTeX's memory you used:
- 27552 strings out of 475506
- 100000,1373583 words of node,token memory allocated
- 47200 words of node memory still in use:
-   199 hlist, 15 vlist, 8 rule, 103 disc, 16 local_par, 2 dir, 46 math, 509 glue
-, 80 kern, 38 penalty, 11 margin_kern, 1316 glyph, 13256 attribute, 70 glue_spec
-, 1682 attribute_list, 2 temp, 1 user_defined, 2 pdf_colorstack nodes
-   avail lists: 1:2,2:7109,3:158,4:63,5:228,6:21,7:2578,8:84,9:320,10:7,11:225,1
-2:1
- 50057 multiletter control sequences out of 65536+600000
+ 27592 strings out of 475506
+ 125007,1373583 words of node,token memory allocated
+ 8367 words of node memory still in use:
+   33 hlist, 3 vlist, 4 rule, 3 local_par, 2 dir, 2 math, 178 glue, 12 kern, 5 p
+enalty, 54 glyph, 2590 attribute, 70 glue_spec, 327 attribute_list, 2 temp, 1 us
+er_defined, 2 pdf_colorstack nodes
+   avail lists: 1:3,2:24027,3:310,4:292,5:272,6:41,7:5431,8:84,9:572,10:10,11:39
+4,12:1
+ 50079 multiletter control sequences out of 65536+600000
  105 fonts using 37045727 bytes
  108i,13n,114p,10918b,427s stack positions out of 10000i,1000n,20000p,200000b,200000s
 !  ==> Fatal error occurred, no output PDF file produced!

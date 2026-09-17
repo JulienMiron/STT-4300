@@ -242,7 +242,7 @@
 \@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
 \makeatother
 \hypersetup{
-  pdftitle={STT-4300 - Régression II},
+  pdftitle={Régression II -- STT-4300},
   pdfauthor={Julien Miron},
   pdflang={fr},
   colorlinks=true,
@@ -253,7 +253,7 @@
   pdfcreator={LaTeX via pandoc}}
 
 
-\title{STT-4300 - Régression II}
+\title{\textbf{Régression II -- STT-4300}}
 \author{Julien Miron}
 \date{}
 \begin{document}
@@ -288,8 +288,9 @@ Si vous constatez des coquilles ou des erreurs, merci de m'envoyer
 \markright{Remerciements}
 
 Ces notes s'appuient en partie sur du matériel de cours développé
-respectivement par Lajmi Lakhal Chaieb, Thierry Duchesne, Michel Carbon,
-de l'Université Laval et Eva Cantoni de l'Université de Genève.
+respectivement par Lajmi Lakhal Chaieb, Thierry Duchesne, Michel Carbon
+et Khader Khadraoui de l'Université Laval et Eva Cantoni de l'Université
+de Genève.
 
 \section*{Utilisation de l'IA}\label{utilisation-de-lia}
 \addcontentsline{toc}{section}{Utilisation de l'IA}
@@ -320,6 +321,8 @@ linéaire multiple s'écrit :
 où \(\beta_0,\beta_1,\ldots,\beta_p\) sont les coefficients de
 régression et les erreurs \(\epsilon_i\) sont indépendantes et
 identiquement distribuées selon \(\mathcal{N}(0,\sigma^2)\).
+
+{Définition --- Matrice de design}
 
 En écriture matricielle, on a
 \(\boldsymbol{Y} = \boldsymbol{X\beta} + \epsilon\), où
@@ -355,12 +358,16 @@ carrés coïncide avec l'estimateur du maximum de vraisemblance. Il est
 sans biais et de variance minimale parmi les estimateurs linéaires sans
 biais (théorème de Gauss-Markov).
 
+{Définition --- Matrice chapeau et leviers}
+
 Les valeurs prédites sont
 \(\hat{\boldsymbol{Y}} = \boldsymbol{X\hat{\beta}} = \boldsymbol{HY}\),
 où \(\boldsymbol{H} = \boldsymbol{X(X^\top X)^{-1}X^\top}\) est la
 matrice chapeau (\emph{hat matrix}). Les éléments diagonaux
 \(h_i = H_{ii}\) sont les \textbf{leviers} (\emph{leverage}) des
-observations. L'estimateur sans biais usuel de \(\sigma^2\) est
+observations.
+
+L'estimateur sans biais usuel de \(\sigma^2\) est
 \[\hat\sigma^2 = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n-(p+1)}.\]
 L'estimateur du maximum de vraisemblance de \(\sigma^2\) est
 \[\hat\sigma^2_{MV} = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n}.\]
@@ -388,7 +395,10 @@ suit une loi \(t_{n-(p+1)}\) sous \(H_0\). On rejette \(H_0\) au seuil
 \subsection{Test F et comparaison de modèles
 emboîtés}\label{test-f-et-comparaison-de-moduxe8les-embouxeetuxe9s}
 
+{Définition --- Modèles emboîtés}
+
 Deux modèles sont emboîtés si l'un est complètement inclus dans l'autre.
+
 Pour comparer un modèle réduit emboîté (à \(q+1\) paramètres) à un
 modèle complet (à \(p+1\) paramètres, \(q < p\)), on utilise la
 statistique
@@ -428,11 +438,14 @@ On distingue :
 
 \subsection{Résidus}\label{ruxe9sidus}
 
+{Définition --- Résidus, résidus standardisés et studentisés}
+
 Les \textbf{résidus} sont \(e_i = Y_i - \hat Y_i\). Les résidus
 standardisés sont \(r_i = e_i / (\hat\sigma\sqrt{1-h_i})\) et les
 résidus studentisés sont calculés en excluant l'observation \(i\) de
-l'estimation de \(\sigma\). L'inspection graphique des résidus permet de
-vérifier :
+l'estimation de \(\sigma\).
+
+L'inspection graphique des résidus permet de vérifier :
 
 \begin{itemize}
 \item
@@ -449,12 +462,19 @@ vérifier :
 influentes}\label{observations-aberrantes-et-influentes}
 
 Le levier \(h_i\) mesure le potentiel d'influence de l'observation \(i\)
-; une valeur dépassant \(2(p+1)/n\) mérite examen. La distance de Cook,
-\[D_i = \frac{r_i^2}{p+1}\cdot\frac{h_i}{1-h_i},\] mesure l'influence
-globale de l'observation \(i\) sur les coefficients estimés. Les
-\textbf{DFBETAS} et \textbf{DFFITS} mesurent respectivement l'effet du
-retrait de l'observation \(i\) sur chaque coefficient et sur la valeur
-ajustée \(\hat Y_i\).
+; une valeur dépassant \(2(p+1)/n\) mérite examen.
+
+{Définition --- Distance de Cook}
+
+La distance de Cook, \[D_i = \frac{r_i^2}{p+1}\cdot\frac{h_i}{1-h_i},\]
+mesure l'influence globale de l'observation \(i\) sur les coefficients
+estimés.
+
+{Définition --- DFBETAS et DFFITS}
+
+Les \textbf{DFBETAS} et \textbf{DFFITS} mesurent respectivement l'effet
+du retrait de l'observation \(i\) sur chaque coefficient et sur la
+valeur ajustée \(\hat Y_i\).
 
 \[
 \begin{aligned}
@@ -519,26 +539,43 @@ une loi binomiale.
 
 {Exemple}
 
-Quatre exemples tirés de la librairie \texttt{GLMsData} de R :
+Quatre exemples tirés de la librairie \texttt{GLMsData} de R (Dunn et
+Smyth 2018) :
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  \texttt{quilpie} : observations de 1921 à 1988 de la quantité de pluie
-  mesurée en juillet à Quilpie (Australie). La réponse vaut 1 si la
-  quantité de pluie dépasse 10 mm et 0 sinon ; les variables
-  explicatives concernent la pression atmosphérique (SOI).
+  \protect\phantomsection\label{data-quilpie}{\texttt{quilpie}} :
+  observations de 1921 à 1988 de la quantité de pluie mesurée en juillet
+  à Quilpie (Australie), une ville semi-aride du Queensland où les
+  précipitations conditionnent fortement l'agriculture locale. La
+  réponse vaut 1 si la quantité de pluie dépasse 10 mm (un seuil jugé
+  suffisant pour amorcer les semis) et 0 sinon ; la variable explicative
+  est un indice de pression atmosphérique, le \emph{Southern Oscillation
+  Index} (SOI), qui capture les phases El Niño/La Niña connues pour
+  influencer les précipitations dans cette région.
 \item
-  \texttt{nminer} : 31 observations ; la réponse vaut 1 si un mineur
-  bruyant (oiseau) est détecté dans la parcelle et 0 sinon.
+  \protect\phantomsection\label{data-nminer}{\texttt{nminer}} : 31
+  transects de deux hectares en milieu boisé (eucalyptus) dans l'ouest
+  de Victoria (Australie) ; la réponse vaut 1 si au moins un mineur
+  bruyant (\emph{Manorina melanocephala}, un oiseau indigène
+  particulièrement agressif qui chasse les espèces plus petites) est
+  détecté dans le transect et 0 sinon. Les variables explicatives
+  décrivent l'habitat : densité d'eucalyptus (\texttt{Eucs}), superficie
+  du transect (\texttt{Area}), présence de pâturage (\texttt{Grazed}),
+  présence d'arbustes (\texttt{Shrubs}), nombre d'arbres de type buloke
+  (\texttt{Bulokes}) et quantité de bois mort au sol (\texttt{Timber}).
 \item
-  \texttt{deposit} : 18 observations ; la réponse \(Y_i\) est le nombre
-  d'insectes tués parmi les \(m_i\) insectes exposés, avec deux
-  variables explicatives (type d'insecticide \(A\), \(B\) ou \(C\), et
-  dose).
+  \protect\phantomsection\label{data-deposit}{\texttt{deposit}} : 18
+  observations sur l'efficacité de trois insecticides (\(A\), \(B\) ou
+  \(C\)) appliqués à différentes doses (en mg) sur des insectes ; la
+  réponse \(Y_i\) est le nombre d'insectes tués parmi les \(m_i\)
+  insectes exposés à chaque combinaison insecticide-dose.
 \item
-  \texttt{turbines} : 11 observations ; la réponse \(Y_i\) est le nombre
-  de machines présentant des fissures parmi \(m_i\) machines, en
+  \protect\phantomsection\label{data-turbines}{\texttt{turbines}} : 11
+  observations issues d'une expérience de fiabilité sur des roues de
+  turbine (Nelson 1982) ; la réponse \(Y_i\) est le nombre de roues
+  présentant des fissures parmi \(m_i\) roues mises à l'essai, en
   fonction du nombre d'heures de fonctionnement.
 \end{enumerate}
 
@@ -559,6 +596,8 @@ E[Y_i] &= \mu_i = \pi_i,\\
 Var[Y_i] &= \pi_i(1-\pi_i).
 \end{aligned}
 \]
+
+{Définition --- Prédicteur linéaire et fonction de lien}
 
 On pose \(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)
 (le \textbf{prédicteur linéaire}) et on relie \(\pi_i\) à \(\eta_i\) par
@@ -611,7 +650,13 @@ La fonction de lien doit assurer que
   \(\pi_i = 1 - e^{-e^{\eta_i}}\). En R : \texttt{link="cloglog"}.
 \end{itemize}
 
+{Propriété --- \(g^{-1}\) est une fonction de répartition}
+
 Dans les trois cas, \(g^{-1}(\cdot)\) est une fonction de répartition.
+C'est précisément cette propriété qui garantit que
+\(\pi_i = g^{-1}(\eta_i) \in [0,1]\), peu importe le lien choisi et peu
+importe la valeur (réelle, non bornée) de \(\eta_i\).
+
 En pratique, les trois liens donnent souvent des résultats très
 similaires.
 
@@ -621,7 +666,7 @@ fonction de \(\eta_i\).
 \pandocbounded{\includegraphics[keepaspectratio]{02-regression-logistique_files/figure-pdf/unnamed-chunk-1-1.pdf}}
 
 \protect\phantomsection\label{sec-cotes}
-{Remarque --- Interprétation du lien logit}
+{Le cas du lien logit --- Interprétation}
 
 Avec le lien logit, on a
 
@@ -635,8 +680,10 @@ et donc,
 e^{\eta_i} = \frac{\pi_i}{1-\pi_i}.
 \]
 
-\textbf{Les cotes (odds).} Le rapport ci-dessus a une interprétation
-concrète : c'est la cote (\emph{odds}), notée \(o_i\) :
+{Définition --- Cote (odds)}
+
+Le rapport ci-dessus a une interprétation concrète : c'est la cote
+(\emph{odds}), notée \(o_i\) :
 
 \[
 o_i = \frac{\pi_i}{1-\pi_i} = \frac{P(Y_i=1)}{P(Y_i=0)}.
@@ -662,8 +709,12 @@ produise (\(Y_i=1\)) à la probabilité qu'il ne se produise pas
 \]
 
 Si on augmente \(X_j\) d'une unité, toutes les autres variables restant
-constantes, \(\eta_i\) augmente de \(\beta_j\). Comme
-\(o_i = e^{\eta_i}\), cette augmentation se traduit par une
+constantes, \(\eta_i\) augmente de \(\beta_j\).
+
+{Propriété --- Effet multiplicatif sur la cote}
+
+Comme \(o_i = e^{\eta_i}\), une augmentation d'une unité de \(X_j\)
+(toutes les autres variables restant constantes) se traduit par une
 \emph{multiplication} de la cote :
 
 \[
@@ -672,9 +723,7 @@ o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i
 
 Une augmentation unitaire de \(X_j\) multiplie donc la cote par
 \(e^{\beta_j}\) ; \(e^{\beta_j}\) est le \textbf{rapport de cotes}
-(\emph{odds ratio}).
-
-On distingue trois cas :
+(\emph{odds ratio}). On distingue trois cas :
 
 \begin{itemize}
 \item
@@ -730,7 +779,7 @@ binomiale appartient à la famille exponentielle. Cette écriture est
 aussi plus facile à utiliser pour le calcul de la
 \hyperref[sec-deviance]{déviance}.
 
-{Remarque --- Log-vraisemblance avec le lien logit}
+{Le cas du lien logit --- Log-vraisemblance}
 
 Avec le lien logit, \(\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}\) et
 \(1-\pi_i = \dfrac{1}{1+e^{\eta_i}}\), où
@@ -768,6 +817,167 @@ moindres carrés pondérés itératifs (IRLS -- \emph{Iteratively Reweighted
 Least Squares}), qui est une application de la méthode de Newton-Raphson
 (ou Fisher scoring) à ce problème.
 
+{Le cas du lien logit --- Estimation}
+
+\textbf{Dérivée par rapport à \(\beta_j\)}
+
+On dérive \(\ell(\boldsymbol{\beta}; \boldsymbol{y})\) terme à terme par
+rapport à \(\beta_j\) (\(j = 0, 1, \dots, p\)), en notant que
+\(\dfrac{\partial \eta_i}{\partial \beta_j} = X_{ij}\) (avec
+\(X_{i0} \equiv 1\) pour l'ordonnée à l'origine).
+
+Le terme \(\log\binom{m_i}{y_i}\) ne dépend pas de
+\(\boldsymbol{\beta}\), sa dérivée est donc nulle. Pour le terme
+\(y_i \eta_i\) :
+
+\[
+\frac{\partial}{\partial \beta_j}\left( y_i \eta_i \right) = y_i X_{ij}.
+\]
+
+Pour le terme \(m_i \log(1+e^{\eta_i})\), on utilise la règle de
+dérivation en chaîne :
+
+\[
+\frac{\partial}{\partial \beta_j} \log\left(1+e^{\eta_i}\right)
+= \frac{e^{\eta_i}}{1+e^{\eta_i}} \cdot \frac{\partial \eta_i}{\partial \beta_j}
+= \pi_i X_{ij},
+\]
+
+d'où
+
+\[
+\frac{\partial}{\partial \beta_j}\left( m_i \log(1+e^{\eta_i}) \right) = m_i \pi_i X_{ij}.
+\]
+
+En combinant les trois morceaux, la dérivée partielle de la
+log-vraisemblance est
+
+\begin{equation}\protect\phantomsection\label{eq-score-logit}{
+\frac{\partial \ell(\boldsymbol{\beta}; \boldsymbol{y})}{\partial \beta_j} = \sum_{i=1}^n \left( y_i - m_i \pi_i \right) X_{ij}.
+}\end{equation}
+
+\textbf{Vecteur score}
+
+En posant
+\(\boldsymbol{U}(\boldsymbol{\beta}) = \left( \dfrac{\partial \ell}{\partial \beta_0}, \dots, \dfrac{\partial \ell}{\partial \beta_p} \right)^\top\),
+\(\boldsymbol{X}\) la matrice de design (\(n \times (p+1)\)),
+\(\boldsymbol{y} = (y_1, \dots, y_n)^\top\) et
+\(\boldsymbol{\mu} = (m_1\pi_1, \dots, m_n\pi_n)^\top\), on obtient sous
+forme matricielle :
+
+\begin{equation}\protect\phantomsection\label{eq-score-vecteur}{
+\boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{X}^\top (\boldsymbol{y} - \boldsymbol{\mu}).
+}\end{equation}
+
+\subsection{Séparation des données}\label{sec-separation}
+
+{Définition --- Séparation complète et quasi-complète}
+
+On dit qu'il y a \textbf{séparation complète} si un hyperplan permet de
+classer parfaitement les \(Y_i\) à partir des covariables : il existe
+\(\boldsymbol\beta\) tel que
+\(\boldsymbol{X}_i^\top\boldsymbol\beta > 0\) chaque fois que \(Y_i=1\)
+et \(\boldsymbol{X}_i^\top\boldsymbol\beta < 0\) chaque fois que
+\(Y_i=0\) (ou l'inverse).
+
+On parle de \textbf{séparation quasi-complète} lorsque cette séparation
+est presque parfaite : il existe un hyperplan qui classe correctement
+toutes les observations, sauf sur un sous-ensemble où
+\(\boldsymbol{X}_i^\top\boldsymbol\beta = 0\) exactement.
+
+En présence de séparation (complète ou quasi-complète), l'estimateur du
+maximum de vraisemblance \(\hat{\boldsymbol\beta}\) \textbf{n'existe
+pas} au sens usuel : la vraisemblance continue d'augmenter à mesure que
+\(\|\boldsymbol\beta\| \to \infty\) dans la direction qui sépare les
+données, sans jamais atteindre de maximum fini. En pratique,
+l'algorithme IRLS ne converge pas, ou converge vers des \(\hat\beta_j\)
+extrêmement grands, limités seulement par le critère d'arrêt numérique
+de l'algorithme.
+
+R signale souvent ce problème par l'avertissement
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+accompagné de coefficients estimés très grands en valeur absolue et
+d'erreurs-types démesurément grandes --- souvent des ordres de grandeur
+plus grandes que le coefficient lui-même.
+
+{Exemple --- Illustration de la séparation complète}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\AttributeTok{mean =} \SpecialCharTok{{-}}\DecValTok{3}\NormalTok{), }\FunctionTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\AttributeTok{mean =} \DecValTok{3}\NormalTok{))}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{), }\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{)) }\CommentTok{\# séparation complète : y=0 si x\textless{}0, y=1 si x\textgreater{}0}
+
+\NormalTok{modele\_separe }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{family =}\NormalTok{ binomial)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning: glm.fit: algorithm did not converge
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(modele\_separe)}\SpecialCharTok{$}\NormalTok{coefficients}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+             Estimate Std. Error      z value  Pr(>|z|)
+(Intercept)  6.411375   36706.87 0.0001746642 0.9998606
+x           20.668550   32170.73 0.0006424645 0.9994874
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(x,y, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{02-regression-logistique_files/figure-pdf/unnamed-chunk-2-1.pdf}}
+
+Le coefficient de \texttt{x} et son erreur-type explosent tous les deux
+--- signe clair de séparation, pas d'un effet réellement très fort.
+
+{Remarque --- Que faire en cas de séparation?}
+
+Quelques approches courantes :
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Régression logistique pénalisée (Firth)} : ajoute un terme de
+  pénalité à la vraisemblance (\texttt{logistf} en R), qui garantit
+  l'existence d'un estimateur fini même sous séparation.
+\item
+  \textbf{Retirer ou regrouper la variable problématique} : si une
+  variable catégorielle cause la séparation, fusionner la catégorie en
+  cause avec une catégorie voisine peut régler le problème.
+\item
+  \textbf{Régularisation} (ridge, lasso) : contraint les coefficients et
+  empêche qu'ils divergent vers l'infini.
+\item
+  \textbf{Recueillir plus de données} : si la séparation vient d'un
+  petit échantillon plutôt que d'une relation déterministe réelle, un
+  échantillon plus grand peut la faire disparaître.
+\end{itemize}
+
+Ce phénomène a aussi une conséquence directe sur l'inférence : les tests
+de Wald deviennent peu fiables en présence de séparation, même partielle
+--- voir le \hyperref[sec-hauckdonner]{phénomène de Hauck-Donner} plus
+loin.
+
+\subsection{Information de Fisher et variance des
+estimateurs}\label{information-de-fisher-et-variance-des-estimateurs}
+
 \textbf{Matrice d'information de Fisher.} On calcule ensuite la matrice
 d'information de Fisher \(I\), dont l'élément \((j,k)\) est
 
@@ -784,8 +994,16 @@ La matrice de variance-covariance de \(\hb\) est estimée par
 et la distribution asymptotique de \(\hb\) est approximée par
 
 \[
-\hb \;\approx\; \mathcal{N}\{\bb,\, \hvar{\hb} \}.
+\hb \;\overset{\cdot}{\sim}\; \mathcal{N}\{\bb,\, \hvar{\hb} \}.
 \]
+
+\(\overset{\cdot}{\sim}\)
+
+La notation \(\dot\sim\) signifie que la variable aléatoire suit
+\emph{approximativement} la loi indiquée, de façon asymptotique --- ici,
+quand \(n\to\infty\). Cette approximation provient d'un résultat de
+convergence en distribution, qu'on explicitera à la
+\hyperref[sec-deviance]{section sur la déviance}.
 
 Dans ce qui suit, \(\hv{\hb}\) sera utilisé à la place de
 \(\hvar{\hb}\), pour alléger la notation. De plus, on écrit
@@ -810,7 +1028,7 @@ avec
 \hmu{i} = m_i \hpi{i} = m_i\, g^{-1}(\hbj{0} + \hbj{1} X_{i1} + \cdots + \hbj{p} X_{ip}).
 \]
 
-{Remarque}
+{Le cas du lien logit --- Expression de \(w_i\)}
 
 \textbf{Remarque (Cas du lien logit).}
 
@@ -822,13 +1040,7 @@ L'entrée \(w_i\) se simplifie alors en
 w_i = \frac{\hmu{i}(m_i - \hmu{i})}{m_i} = m_i\, \hpi{i}(1-\hpi{i}).
 \]
 
-{Exemple --- Jeu de données \texttt{turbines}}
-
-Les données \texttt{turbines}, tirées de la librairie \texttt{GLMsData}
-(Dunn et Smyth 2018), proviennent d'une expérience de fiabilité sur des
-roues de turbine (Nelson, 1982) : on y rapporte, pour différentes durées
-de fonctionnement, le nombre de roues ayant développé des fissures parmi
-celles mises à l'essai.
+{Exemple --- Jeu de données \hyperref[data-turbines]{\texttt{turbines}}}
 
 On ajuste le modèle avec les trois fonctions de lien :
 
@@ -859,7 +1071,7 @@ On ajuste le modèle avec les trois fonctions de lien :
 \end{Highlighting}
 \end{Shaded}
 
-\pandocbounded{\includegraphics[keepaspectratio]{02-regression-logistique_files/figure-pdf/unnamed-chunk-2-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{02-regression-logistique_files/figure-pdf/unnamed-chunk-3-1.pdf}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -961,7 +1173,7 @@ Hours        0.0008104936 9.013218e-05   8.992278 2.421587e-19
 \end{Highlighting}
 \end{Shaded}
 
-\pandocbounded{\includegraphics[keepaspectratio]{02-regression-logistique_files/figure-pdf/unnamed-chunk-3-1.pdf}}
+\pandocbounded{\includegraphics[keepaspectratio]{02-regression-logistique_files/figure-pdf/unnamed-chunk-4-1.pdf}}
 
 Les trois liens mènent à des coefficients significatifs et à des courbes
 prédites \(\hat\pi^*\) très similaires.
@@ -991,13 +1203,14 @@ où l'erreur-type est estimée à partir de la courbure de la
 log-vraisemblance \textbf{évaluée au point estimé} \(\hat\beta_j\),
 plutôt que sous \(H_0\). Cette dépendance locale peut mener à un
 comportement contre-intuitif : lorsque \(|\hat\beta_j|\) devient très
-grand (par exemple en présence de séparation quasi-complète ou d'un
-effet très fort), la courbure de la vraisemblance en \(\hat\beta_j\)
-s'aplatit, ce qui \textbf{gonfle} \(\sqrt{\hat{\text V}(\hat\beta_j)}\)
-et peut faire \textbf{diminuer} \(z_{obs}\) --- donnant l'impression que
-l'effet n'est pas significatif, alors qu'il l'est. On pourrait montrer
-que cela est causé par le fait que l'erreur-type augmente plus
-rapidement que la valeur absolue de l'estimation du paramètre.
+grand (par exemple en présence de \hyperref[sec-separation]{séparation}
+--- complète ou quasi-complète --- ou d'un effet très fort), la courbure
+de la vraisemblance en \(\hat\beta_j\) s'aplatit, ce qui \textbf{gonfle}
+\(\sqrt{\hat{\text V}(\hat\beta_j)}\) et peut faire \textbf{diminuer}
+\(z_{obs}\) --- donnant l'impression que l'effet n'est pas significatif,
+alors qu'il l'est. On pourrait montrer que cela est causé par le fait
+que l'erreur-type augmente plus rapidement que la valeur absolue de
+l'estimation du paramètre.
 
 Ce phénomène, documenté par Hauck et Donner (1977), n'affecte pas le
 test du rapport de vraisemblance, qui compare directement la
@@ -1005,7 +1218,7 @@ vraisemblance en \(\hat\beta_j\) à celle en \(0\) plutôt que de
 s'appuyer sur une approximation locale :
 
 \[
-G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right] \;\sim\; \chi^2_1 \quad \text{sous } H_0.
+G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right] \;\overset{\cdot}{\sim}\; \chi^2_1 \quad \text{sous } H_0.
 \]
 
 \textbf{En pratique} : le test «par défaut» de la plupart des fonctions
@@ -1015,6 +1228,8 @@ particulière aux cas où un coefficient très grand ressort avec une
 valeur-p de Wald étonnamment élevée. Il faut comparer avec
 \texttt{anova(modele\_reduit,\ modele\_complet,\ test\ =\ "Chisq")}
 avant de conclure à la non-significativité.
+
+{Exemple --- Effet Hauck-Donner}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1204,7 +1419,7 @@ Deux approches :
   et on applique \(g^{-1}\) aux deux bornes. Cet intervalle respecte
   toujours \([0,1]\).
 \item
-  \textbf{Règle du delta} :
+  \textbf{Méthode du delta} :
   \(\hat{\text V}(\hat\pi^*) = h({\boldsymbol{X}^*}^\top\hat\beta)\, \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)\)
   avec \(h(u) = \{\partial g^{-1}(u)/\partial u\}^2\), d'où l'IC
   approximatif
@@ -1213,7 +1428,7 @@ Deux approches :
 
 Les deux méthodes donnent en pratique des résultats très similaires.
 
-{Remarque --- Règle du delta avec le lien logit}
+{Le cas du lien logit --- Méthode du delta}
 
 Avec le lien logit, \(g^{-1}(u) = \dfrac{e^u}{1+e^u}\), dont la dérivée
 est
@@ -1235,7 +1450,7 @@ La règle du delta donne alors
 
 On a \(\hat\theta = {\boldsymbol{X}^*}^\top\hat\beta\), dont on connaît
 la distribution asymptotique :
-\(\hat\theta \approx \mathcal{N}(\theta,\, \hat{\text V}(\hat\theta))\).
+\(\hat\theta \overset{\cdot}{\sim} \mathcal{N}(\theta,\, \hat{\text V}(\hat\theta))\).
 On s'intéresse cependant à \(\hat\pi^* = g^{-1}(\hat\theta)\), une
 transformation \emph{non linéaire} de \(\hat\theta\) --- et la normalité
 asymptotique ne se transporte pas automatiquement à travers une
@@ -1262,17 +1477,18 @@ celui obtenu par transformation.
 
 \section{Sélection de modèles}\label{suxe9lection-de-moduxe8les}
 
-\subsection{Déviance}\label{duxe9viance}
-
 \subsection{Déviance}\label{sec-deviance}
 
-\textbf{Le modèle saturé.} Pour juger si un modèle avec \(p+1\)
-paramètres \(\boldsymbol\beta\) s'ajuste bien aux données, il est utile
-de le comparer au modèle le plus flexible possible : celui qui accorde à
-chaque observation son propre paramètre, sans aucune structure imposée
-par des variables explicatives. On l'appelle le \textbf{modèle saturé},
-avec \(n\) paramètres \(\{\tilde\mu_1,\ldots,\tilde\mu_n\}\) (un par
-observation, plutôt que \(p+1\) pour l'ensemble de l'échantillon).
+Pour juger si un modèle avec \(p+1\) paramètres \(\boldsymbol\beta\)
+s'ajuste bien aux données, il est utile de le comparer au modèle le plus
+flexible possible : celui qui accorde à chaque observation son propre
+paramètre, sans aucune structure imposée par des variables explicatives.
+
+{Définition --- Modèle saturé}
+
+On l'appelle le \textbf{modèle saturé}, avec \(n\) paramètres
+\(\{\tilde\mu_1,\ldots,\tilde\mu_n\}\) (un par observation, plutôt que
+\(p+1\) pour l'ensemble de l'échantillon).
 
 Il est facile de constater que le modèle saturé maximise la
 log-vraisemblance, donnée par \[
@@ -1296,36 +1512,69 @@ statistique du rapport de vraisemblance entre le modèle saturé et le
 modèle considéré est
 
 \[\Lambda=\frac{L(\tilde{\boldsymbol{\mu}}; \boldsymbol y)}{L(\hat{\boldsymbol{\mu}}; \boldsymbol y)} =\frac{L(\boldsymbol{y}; \boldsymbol y)}{L(\hat{\boldsymbol{\mu}}; \boldsymbol y)}.\]
-::: \{.env-definition titre=``test''\} fff :::
 
-On définit la déviance comme étant deux fois le log de ce rapport, ce
-qui arrive à
+{Définition --- Déviance}
 
-\[D = 2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.\]
+On définit la déviance \(D\) comme étant deux fois le log de ce rapport:
+
+\[D =2\left\{l(y,y) - l(\hat\mu,y)\right\} = 2\sum_{i=1}^n\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\} = \sum_{i=1}^n d_i.\]
 
 \(D\) est la \textbf{déviance} du modèle et \(d_i\) la déviance
 individuelle de l'observation \(i\) ; chaque \(d_i\) mesure l'écart
 entre l'ajustement parfait \(y_i\) et l'ajustement \(\hmu{i}\) obtenu
-par le modèle. Puisque le modèle saturé maximise la vraisemblance parmi
-\emph{tous} les modèles possibles, \(l(y,y) \geq l(\hat\mu,y)\)
-toujours, et donc \(D \geq 0\) : plus \(D\) est petit, plus le modèle
-considéré se rapproche du modèle saturé, donc plus il s'ajuste bien aux
-données. La déviance joue le même rôle que la somme des carrés des
-résidus en régression linéaire : elle sert à évaluer l'adéquation du
-modèle et à comparer des modèles.
+par le modèle.
+
+{Remarque}
+
+Le \(2\) de la formule de la déviance est nécessaire pour avoir
+
+\[D \xrightarrow{d} \chi_{n-(p+1)}^2, \text{lorsque } m_i\to \infty,\]
+
+c'est-à-dire que la déviance tend vers la loi du khi-carré à \(n-(p+1)\)
+degrés de liberté quand les \(m_i\) tendent vers l'infini.
+
+\(\xrightarrow{d}\)
+
+La flèche \(\xrightarrow{d}\) indique une \textbf{convergence en
+distribution} (ou en loi) : la distribution de la quantité à gauche (ici
+\(D\)) se rapproche de celle indiquée à droite (ici
+\(\chi^2_{n-(p+1)}\)) lorsque le paramètre asymptotique tend vers
+l'infini (ici \(m_i\)), sans que \(D\) elle-même ne converge vers une
+valeur précise. C'est ce même type de convergence qui justifiait la
+notation \(\dot\sim\) utilisée plus tôt pour \(\hat\beta\).
+
+Autrement, c'est-à-dire lorsque les \(m_i\) sont finis, on utilise
+plutôt
+
+\[D \;\overset{\cdot}{\sim}\; \chi_{n-(p+1)}^2\]
+
+comme approximation.
+
+{Propriété --- Non-négativité de la déviance}
+
+Puisque le modèle saturé maximise la vraisemblance parmi \emph{tous} les
+modèles possibles, \(l(y,y) \geq l(\hat\mu,y)\) toujours, et donc
+\(D \geq 0\) : plus \(D\) est petit, plus le modèle considéré se
+rapproche du modèle saturé, donc plus il s'ajuste bien aux données.
+
+La déviance joue le même rôle que la somme des carrés des résidus en
+régression linéaire : elle sert à évaluer l'adéquation du modèle et à
+comparer des modèles.
 
 \subsection{Comparaison de modèles
 emboîtés}\label{comparaison-de-moduxe8les-embouxeetuxe9s}
 
 Pour comparer deux modèles emboîtés de déviances \(D_1\) (complet) et
 \(D_2\) (réduit), la statistique de test est \(\chi^2 = D_2 - D_1\).
+
+{Propriété --- Distribution asymptotique de \(\chi^2 = D_2-D_1\)}
+
 Sous \(H_0\) (le modèle réduit est adéquat), \(\chi^2\) suit une loi du
 khi-deux à \(d\) degrés de liberté, où \(d\) est la différence du nombre
 de paramètres.
 
-{Exemple}
-
-\textbf{Exemple (\texttt{turbines}, termes quadratique et cubique).}
+{Exemple --- Introduction des termes quadratiques et cubiques dans
+l'exemple \hyperref[data-turbines]{\texttt{turbines}}}
 
 On teste \(H_0: \beta_2 = \beta_3 = 0\) (modèle avec \texttt{Hours}
 seulement contre modèle avec termes en \texttt{Hours}\(^2\) et
@@ -1371,17 +1620,368 @@ Le modèle ayant le plus petit \(AIC\) (ou \(BIC\)) est préférable. En R
 
 Les méthodes pas à pas \emph{forward}, \emph{backward} et
 \emph{stepwise} fonctionnent exactement comme pour les modèles linéaires
-(fonction \texttt{step} avec l'argument \texttt{direction}). Sur le jeu
-de données \texttt{deposit}, les trois procédures retiennent le modèle
-incluant le type d'insecticide, la dose et le terme quadratique de la
-dose.
+(fonction \texttt{step} avec l'argument \texttt{direction}).
+
+{Exemple --- Sélection automatique sur le jeu de données
+\hyperref[data-nminer]{\texttt{nminer}}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(GLMsData)}
+\FunctionTok{data}\NormalTok{(nminer)}
+
+\CommentTok{\# On construit la réponse binaire décrite dans le texte :}
+\CommentTok{\# 1 si au moins un mineur bruyant a été détecté, 0 sinon}
+\NormalTok{nminer}\SpecialCharTok{$}\NormalTok{Detecte }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(nminer}\SpecialCharTok{$}\NormalTok{Minerab }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{)}
+
+\CommentTok{\# Modèle complet : effets additifs de toutes les variables explicatives disponibles}
+\NormalTok{modele.complet }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Detecte }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Eucs }\SpecialCharTok{+}\NormalTok{ Area }\SpecialCharTok{+}\NormalTok{ Grazed }\SpecialCharTok{+}\NormalTok{ Shrubs }\SpecialCharTok{+}\NormalTok{ Bulokes }\SpecialCharTok{+}\NormalTok{ Timber,}
+                       \AttributeTok{data =}\NormalTok{ nminer, }\AttributeTok{family =}\NormalTok{ binomial)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Backward : part du modèle complet, retire des termes}
+\NormalTok{modele.backward }\OtherTok{\textless{}{-}} \FunctionTok{step}\NormalTok{(modele.complet, }\AttributeTok{direction =} \StringTok{"backward"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Start:  AIC=22.45
+Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+          Df Deviance    AIC
+- Bulokes  1    8.646 20.646
+- Area     1    9.152 21.152
+<none>          8.453 22.453
+- Shrubs   1   11.633 23.633
+- Grazed   1   14.761 26.761
+- Timber   1   16.856 28.856
+- Eucs     1   34.332 46.332
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+
+Step:  AIC=20.65
+Detecte ~ Eucs + Area + Grazed + Shrubs + Timber
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+         Df Deviance    AIC
+- Area    1    9.272 19.272
+<none>         8.646 20.646
+- Shrubs  1   11.790 21.790
+- Grazed  1   14.796 24.796
+- Timber  1   16.857 26.857
+- Eucs    1   36.861 46.861
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+
+Step:  AIC=19.27
+Detecte ~ Eucs + Grazed + Shrubs + Timber
+
+         Df Deviance    AIC
+<none>         9.272 19.272
+- Shrubs  1   12.075 20.075
+- Grazed  1   14.986 22.986
+- Timber  1   16.865 24.865
+- Eucs    1   37.161 45.161
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Forward : part du modèle vide, ajoute des termes jusqu\textquotesingle{}au modèle complet}
+\NormalTok{modele.vide }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(Detecte }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{data =}\NormalTok{ nminer, }\AttributeTok{family =}\NormalTok{ binomial)}
+\NormalTok{modele.forward }\OtherTok{\textless{}{-}} \FunctionTok{step}\NormalTok{(modele.vide, }\AttributeTok{direction =} \StringTok{"forward"}\NormalTok{,}
+                        \AttributeTok{scope =} \FunctionTok{formula}\NormalTok{(modele.complet))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Start:  AIC=44.68
+Detecte ~ 1
+
+          Df Deviance    AIC
++ Eucs     1   19.185 23.185
++ Bulokes  1   40.074 44.074
+<none>         42.684 44.684
++ Timber   1   41.630 45.630
++ Shrubs   1   42.002 46.002
++ Area     1   42.426 46.426
++ Grazed   1   42.443 46.443
+
+Step:  AIC=23.18
+Detecte ~ Eucs
+
+          Df Deviance    AIC
++ Grazed   1   16.942 22.942
+<none>         19.184 23.184
++ Shrubs   1   17.272 23.272
++ Timber   1   18.657 24.657
++ Bulokes  1   19.168 25.168
++ Area     1   19.178 25.178
+
+Step:  AIC=22.94
+Detecte ~ Eucs + Grazed
+
+          Df Deviance    AIC
++ Timber   1   12.075 20.075
+<none>         16.942 22.942
++ Shrubs   1   16.865 24.865
++ Area     1   16.935 24.935
++ Bulokes  1   16.942 24.942
+
+Step:  AIC=20.07
+Detecte ~ Eucs + Grazed + Timber
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+          Df Deviance    AIC
++ Shrubs   1   9.2721 19.272
+<none>        12.0747 20.075
++ Area     1  11.7902 21.790
++ Bulokes  1  11.9989 21.999
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+
+Step:  AIC=19.27
+Detecte ~ Eucs + Grazed + Timber + Shrubs
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+          Df Deviance    AIC
+<none>         9.2721 19.272
++ Area     1   8.6462 20.646
++ Bulokes  1   9.1522 21.152
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Stepwise: part du modèle complet, ajoute et retire au besoin}
+\NormalTok{modele.step }\OtherTok{\textless{}{-}} \FunctionTok{step}\NormalTok{(modele.complet, }\AttributeTok{direction =} \StringTok{"both"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Start:  AIC=22.45
+Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+          Df Deviance    AIC
+- Bulokes  1    8.646 20.646
+- Area     1    9.152 21.152
+<none>          8.453 22.453
+- Shrubs   1   11.633 23.633
+- Grazed   1   14.761 26.761
+- Timber   1   16.856 28.856
+- Eucs     1   34.332 46.332
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+
+Step:  AIC=20.65
+Detecte ~ Eucs + Area + Grazed + Shrubs + Timber
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+          Df Deviance    AIC
+- Area     1    9.272 19.272
+<none>          8.646 20.646
+- Shrubs   1   11.790 21.790
++ Bulokes  1    8.453 22.453
+- Grazed   1   14.796 24.796
+- Timber   1   16.857 26.857
+- Eucs     1   36.861 46.861
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+
+Step:  AIC=19.27
+Detecte ~ Eucs + Grazed + Shrubs + Timber
+\end{verbatim}
+
+\begin{verbatim}
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+\begin{verbatim}
+          Df Deviance    AIC
+<none>          9.272 19.272
+- Shrubs   1   12.075 20.075
++ Area     1    8.646 20.646
++ Bulokes  1    9.152 21.152
+- Grazed   1   14.986 22.986
+- Timber   1   16.865 24.865
+- Eucs     1   37.161 45.161
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(modele.backward)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+glm(formula = Detecte ~ Eucs + Grazed + Shrubs + Timber, family = binomial, 
+    data = nminer)
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)  
+(Intercept)  -6.7086     4.3062  -1.558   0.1193  
+Eucs          1.4941     0.8688   1.720   0.0855 .
+Grazed       12.7870     8.1296   1.573   0.1157  
+Shrubs       -5.9792     4.5601  -1.311   0.1898  
+Timber       -0.5258     0.3294  -1.596   0.1105  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 42.6843  on 30  degrees of freedom
+Residual deviance:  9.2721  on 26  degrees of freedom
+AIC: 19.272
+
+Number of Fisher Scoring iterations: 9
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(modele.forward)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+glm(formula = Detecte ~ Eucs + Grazed + Timber + Shrubs, family = binomial, 
+    data = nminer)
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)  
+(Intercept)  -6.7086     4.3062  -1.558   0.1193  
+Eucs          1.4941     0.8688   1.720   0.0855 .
+Grazed       12.7870     8.1296   1.573   0.1157  
+Timber       -0.5258     0.3294  -1.596   0.1105  
+Shrubs       -5.9792     4.5601  -1.311   0.1898  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 42.6843  on 30  degrees of freedom
+Residual deviance:  9.2721  on 26  degrees of freedom
+AIC: 19.272
+
+Number of Fisher Scoring iterations: 9
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(modele.step)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+
+Call:
+glm(formula = Detecte ~ Eucs + Grazed + Shrubs + Timber, family = binomial, 
+    data = nminer)
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)  
+(Intercept)  -6.7086     4.3062  -1.558   0.1193  
+Eucs          1.4941     0.8688   1.720   0.0855 .
+Grazed       12.7870     8.1296   1.573   0.1157  
+Shrubs       -5.9792     4.5601  -1.311   0.1898  
+Timber       -0.5258     0.3294  -1.596   0.1105  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 42.6843  on 30  degrees of freedom
+Residual deviance:  9.2721  on 26  degrees of freedom
+AIC: 19.272
+
+Number of Fisher Scoring iterations: 9
+\end{verbatim}
+
+Dans cet exemple, les trois méthodes convergent vers le même modèle
+final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un
+chemin restreint parmi tous les sous-modèles possibles (ajoutant ou
+retirant une variable à la fois), rien ne garantit qu'elles aboutissent
+au même optimum local.
 
 \section{Validation et diagnostic de
 modèles}\label{validation-et-diagnostic-de-moduxe8les}
 
 \subsection{Résidus}\label{ruxe9sidus-1}
 
-On distingue deux types de résidus :
+{Définition --- Résidus déviance et résidus de Pearson}
 
 \begin{itemize}
 \item
@@ -1393,37 +1993,121 @@ On distingue deux types de résidus :
   \[r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.\]
 \end{itemize}
 
+{Propriété --- Somme des résidus déviance}
+
+Il est possible de montrer que la somme des résidus déviance
+\[\sum_{i=1}^nr_{D,i} = \sum_{i=1}^n\mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}=D,\]
+correspond à la déviance introduite \hyperref[sec-deviance]{plus tôt}.
+
 \subsection{Tests d'adéquation
 globale}\label{tests-daduxe9quation-globale}
 
 Deux statistiques permettent de tester l'adéquation globale : la
-déviance \(D = \sum_i r_{D,i}^2\) et la statistique du khi-deux de
-Pearson
+déviance \(D\) et la statistique du khi-deux de Pearson
 \[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]
+
+{Propriété --- Convergence de \(D\) et \(\chi^2_P\)}
+
 Lorsque tous les \(m_i \to \infty\), \(D\) et \(\chi^2_P\) convergent en
 loi vers une \(\chi^2_{n-(p+1)}\) si le modèle est bien spécifié.
 
-{Remarque}
+L'hypothèse nulle du test est que le modèle est adéquat.
 
-\textbf{Remarque.}
+{Exemple --- Test d'adéquation avec l'exemple
+\hyperref[data-turbines]{\texttt{turbines}}}
 
-Ces tests ne sont valides que pour des \textbf{données groupées} avec
-des \(m_i\) élevés, car ils reposent sur un résultat asymptotique en
-\(m_i\). Ils sont inutilisables pour des données individuelles
-(Bernoulli).
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(GLMsData)}
+\FunctionTok{data}\NormalTok{(turbines)}
+
+\NormalTok{modele.logit }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(Fissures, Turbines }\SpecialCharTok{{-}}\NormalTok{ Fissures) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Hours,}
+                     \AttributeTok{data =}\NormalTok{ turbines, }\AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link =} \StringTok{"logit"}\NormalTok{))}
+
+\CommentTok{\# Déviance}
+\NormalTok{D }\OtherTok{\textless{}{-}} \FunctionTok{deviance}\NormalTok{(modele.logit)}
+\NormalTok{ddl }\OtherTok{\textless{}{-}} \FunctionTok{df.residual}\NormalTok{(modele.logit)}
+\NormalTok{p.deviance }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{pchisq}\NormalTok{(D, }\AttributeTok{df =}\NormalTok{ ddl)}
+
+\CommentTok{\# Khi{-}deux de Pearson}
+\NormalTok{chi2.pearson }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{residuals}\NormalTok{(modele.logit, }\AttributeTok{type =} \StringTok{"pearson"}\NormalTok{)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{p.pearson }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{pchisq}\NormalTok{(chi2.pearson, }\AttributeTok{df =}\NormalTok{ ddl)}
+
+\FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Statistique =} \FunctionTok{c}\NormalTok{(}\StringTok{"Déviance"}\NormalTok{, }\StringTok{"Khi{-}deux de Pearson"}\NormalTok{),}
+  \AttributeTok{Valeur =} \FunctionTok{c}\NormalTok{(D, chi2.pearson),}
+  \AttributeTok{ddl =}\NormalTok{ ddl,}
+  \AttributeTok{p.valeur =} \FunctionTok{c}\NormalTok{(p.deviance, p.pearson)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+          Statistique    Valeur ddl  p.valeur
+1            Déviance 10.331466   9 0.3243236
+2 Khi-deux de Pearson  9.250839   9 0.4144493
+\end{verbatim}
+
+{Remarque --- Déviance ou Khi-carré de Pearson?}
+
+Bien que \(D\) et \(\chi^2_P\) convergent tous deux vers une loi
+\(\chi^2_{n-(p+1)}\) quand les \(m_i \to \infty\), leur comportement en
+échantillon fini diffère : la statistique de Pearson respecte
+généralement mieux cette approximation que la déviance, surtout quand
+les \(m_i\) sont petits ou modérés (McCullagh et Nelder 1989; Agresti
+2013).
+
+Le cas extrême illustre bien ce phénomène : ils sont inutilisables pour
+des données individuelles (Bernoulli, \(m_i=1\)). En effet, dans ce cas,
+un des deux termes de \(d_i\) s'annule toujours (par la convention
+\(0\log 0=0\)), de sorte que
+
+\[
+d_i = -2\left[y_i\log(\hmu{i}) + (1-y_i)\log(1-\hmu{i})\right].
+\]
+
+De plus, la log-vraisemblance du modèle saturé vaut alors exactement 0,
+puisque \(\tilde\mu_i = y_i \in \{0,1\}\) annule
+\(y_i\log(y_i)+(1-y_i)\log(1-y_i)\) par la même convention. La déviance
+se réduit donc à
+
+\[
+D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
+\]
+
+c'est-à-dire une simple transformation de la vraisemblance du modèle,
+sans point de comparaison utile --- d'où la perte de son interprétation
+comme test d'adéquation. \(\chi^2_P\), lui, reste au moins défini dans
+ce cas, même si son approximation \(\chi^2\) n'est pas fiable non plus.
+
+Quand les deux statistiques mènent à des conclusions similaires (avec
+des \(m_i\) raisonnablement grands), peu importe laquelle on rapporte.
+Un désaccord marqué entre les deux valeurs-\(p\) signale plutôt que
+l'approximation asymptotique commune aux deux tests devient peu fiable,
+plutôt que l'un des deux tests serait le bon et l'autre non.
+
+Cette distinction ne s'applique toutefois qu'au test d'adéquation
+globale d'un seul modèle. Pour comparer des modèles emboîtés, la
+déviance conserve un avantage clair : les différences de déviances
+suivent exactement une loi \(\chi^2\), ce qui n'est pas le cas des
+différences de statistiques de Pearson.
 
 \subsection{Graphiques et
 extra-variabilité}\label{graphiques-et-extra-variabilituxe9}
 
 Les graphiques des résidus en fonction des numéros d'observations ne
 doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en
-valeur absolue, cela peut suggérer une \textbf{extra-variabilité}
-(\emph{overdispersion}) : \(E[Y_i] = m_i\pi_i\) mais
-\(Var[Y_i] > m_i\pi_i(1-\pi_i)\). On pose alors
-\(Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)\) et on estime \(\phi\) par
-\(\chi^2_P/(n-(p+1))\). En cas d'extra-variabilité, on spécifie
-\texttt{family=quasibinomial()} au lieu de \texttt{family=binomial()}
-dans \texttt{glm}.
+valeur absolue, cela peut suggérer une extra-variabilité.
+
+{Définition --- Extra-variabilité (overdispersion)}
+
+L'\textbf{extra-variabilité} (\emph{overdispersion}) survient quand
+\(E[Y_i] = m_i\pi_i\) mais \(Var[Y_i] > m_i\pi_i(1-\pi_i)\). On pose
+alors \(Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)\) et on estime \(\phi\) par
+\(\chi^2_P/(n-(p+1))\).
+
+En cas d'extra-variabilité, on spécifie \texttt{family=quasibinomial()}
+au lieu de \texttt{family=binomial()} dans \texttt{glm}.
 
 Pour vérifier la linéarité du prédicteur, on trace le nuage de points
 \(\{(\hpi{i}, \tilde\pi_i)\}\), où \(\hpi{i} = g^{-1}(\heta{i})\) et
@@ -1446,8 +2130,11 @@ ajuste le modèle et on calcule les probabilités prédites
 \(\hpi{i} = g^{-1}(\heta{i})\).
 
 Fixons un seuil \(u \in [0,1]\) (souvent \(u=1/2\)). On classe
-\(\hat y_i = 1\) si \(\hpi{i} > u\) et \(\hat y_i = 0\) sinon. On mesure
-la capacité prédictive par :
+\(\hat y_i = 1\) si \(\hpi{i} > u\) et \(\hat y_i = 0\) sinon.
+
+{Définition --- Spécificité et sensibilité}
+
+On mesure la capacité prédictive par :
 
 \[
 \begin{aligned}
@@ -1461,6 +2148,8 @@ Pour un \(u\) fixé, on les estime par
 \qquad
 \widehat{Sens}(u) = \frac{\sum_{i=1}^n \mathbf{1}_{\{(\hpi{i} > u)\,\&\,(y_i = 1)\}}}{\sum_{i=1}^n \mathbf{1}_{\{y_i = 1\}}}.\]
 
+{Définition --- Courbe ROC et AUC}
+
 En faisant varier \(u\) sur une grille
 \(\{u_1 = 0, u_2, \ldots, u_B = 1\}\) et en traçant les points
 \(\{(1-\widehat{Spec}(u_b),\, \widehat{Sens}(u_b))\}\), on obtient la
@@ -1473,11 +2162,11 @@ capacité prédictive : \[\mbox{AUC} \in \begin{cases}
 [0.5,\,0.6) & \mbox{modèle très faible}.
 \end{cases}\]
 
-{Exemple}
+{Exemple --- Courbe ROC avec l'exemple
+\hyperref[data-quilpie]{\texttt{quilpie}}}
 
-\textbf{Exemple (\texttt{quilpie}).}
-
-Avec la variable explicative SOI et le lien logit :
+On ajuste ici un modèle logistique avec la variable explicative SOI et
+le lien logit :
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1609,7 +2298,7 @@ Distribution
 \end{longtable}
 }
 
-\subsection{Déviance}\label{duxe9viance-1}
+\subsection{Déviance}\label{duxe9viance}
 
 Posons \(t(y,\mu) = y\theta - b(\theta)\) et
 \(d(y,\mu) = 2\{t(y,y) - t(y,\mu)\}\). On a
@@ -2118,7 +2807,7 @@ En R :
 \end{Shaded}
 
 \begin{verbatim}
-[1] 8.111308
+[1] 6.135907
 \end{verbatim}
 
 Sur les données \texttt{Hitters}, on obtient \(\lambda = e^{2.2}\) pour
@@ -2773,6 +3462,9 @@ paramètres de lissage \(\lambda_j\).
 
 \protect\phantomsection\label{refs}
 \begin{CSLReferences}{1}{1}
+\bibitem[\citeproctext]{ref-agresti2013cda}
+Agresti, Alan. 2013. \emph{Categorical Data Analysis}. 3ᵉ éd. Wiley.
+
 \bibitem[\citeproctext]{ref-dunn2018glm}
 Dunn, Peter K., et Gordon K. Smyth. 2018. \emph{Generalized Linear
 Models with Examples in {R}}. Springer Texts in Statistics. Springer.
@@ -2783,6 +3475,13 @@ Hauck, Walter W., et Allan Donner. 1977. {«~Wald's Test as Applied to
 Hypotheses in Logit Analysis~»}. \emph{Journal of the American
 Statistical Association} 72 (360): 851‑53.
 \url{https://doi.org/10.1080/01621459.1977.10479969}.
+
+\bibitem[\citeproctext]{ref-mccullagh1989glm}
+McCullagh, Peter, et John A. Nelder. 1989. \emph{Generalized Linear
+Models}. 2ᵉ éd. Chapman; Hall.
+
+\bibitem[\citeproctext]{ref-nelson1982}
+Nelson, Wayne. 1982. \emph{Applied Life Data Analysis}. Wiley.
 
 \end{CSLReferences}
 

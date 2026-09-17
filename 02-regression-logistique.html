@@ -497,9 +497,8 @@ y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) = y_i \eta_i - m_i \log(1+e^{\eta_i})
 <p><span class="math display">\[
 \boldsymbol{U}(\boldsymbol{\beta}) = \frac{\partial \ell(\boldsymbol{\beta};\boldsymbol y)}{\partial \boldsymbol\beta} = \left(\frac{\partial \ell}{\partial \beta_0}, \ldots, \frac{\partial \ell}{\partial \beta_p}\right)^\top.
 \]</span></p>
-<p>L’estimateur du maximum de vraisemblance <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> est la solution de l’équation du score <span class="math inline">\(\boldsymbol U(\boldsymbol\beta) = \boldsymbol 0\)</span>.</p>
 </div>
-<p><strong>Estimation.</strong> L’estimateur du maximum de vraisemblance <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> est la valeur de <span class="math inline">\(\boldsymbol{\beta}\)</span> qui maximise <span class="math inline">\(\ell\)</span>. Contrairement à la régression linéaire classique, il n’existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien <span class="math inline">\(g\)</span>. On doit donc résoudre le problème numériquement, typiquement par l’algorithme des moindres carrés pondérés itératifs (IRLS – <em>Iteratively Reweighted Least Squares</em>), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.</p>
+<p><strong>Estimation.</strong> L’estimateur du maximum de vraisemblance <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> est la solution de l’équation du score <span class="math inline">\(\boldsymbol U(\boldsymbol\beta) = \boldsymbol 0\)</span>, c’est-à-dire la valeur qui maximise <span class="math inline">\(\ell\)</span>. Contrairement à la régression linéaire classique, il n’existe pas de solution analytique (forme fermée) ici, à cause de la non-linéarité introduite par la fonction de lien <span class="math inline">\(g\)</span>. On doit donc résoudre le problème numériquement, typiquement par l’algorithme des moindres carrés pondérés itératifs (IRLS – <em>Iteratively Reweighted Least Squares</em>), qui est une application de la méthode de Newton-Raphson (ou Fisher scoring) à ce problème.</p>
 <div class="env-logit" data-titre="Estimation">
 <p><span class="env-titre">Le cas du lien logit — Estimation</span></p>
 <p><strong>Dérivée par rapport à <span class="math inline">\(\beta_j\)</span></strong></p>
@@ -536,6 +535,15 @@ y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) = y_i \eta_i - m_i \log(1+e^{\eta_i})
 <p>On dit qu’il y a <strong>séparation complète</strong> si un hyperplan permet de classer parfaitement les <span class="math inline">\(Y_i\)</span> à partir des covariables : il existe <span class="math inline">\(\boldsymbol\beta\)</span> tel que <span class="math inline">\(\boldsymbol{X}_i^\top\boldsymbol\beta &gt; 0\)</span> chaque fois que <span class="math inline">\(Y_i=1\)</span> et <span class="math inline">\(\boldsymbol{X}_i^\top\boldsymbol\beta &lt; 0\)</span> chaque fois que <span class="math inline">\(Y_i=0\)</span> (ou l’inverse).</p>
 <p>On parle de <strong>séparation quasi-complète</strong> lorsque cette séparation est presque parfaite : il existe un hyperplan qui classe correctement toutes les observations, sauf sur un sous-ensemble où <span class="math inline">\(\boldsymbol{X}_i^\top\boldsymbol\beta = 0\)</span> exactement.</p>
 </div>
+<div class="env-remarque" data-titre="Intuition géométrique : une pente qui explose">
+<p><span class="env-titre">Remarque — Intuition géométrique : une pente qui explose</span></p>
+<p>Avec un seul prédicteur continu et le lien logit, <span class="math inline">\(\hat\pi(x) = g^{-1}(\hat\beta_0 + \hat\beta_1 x)\)</span>, dont la pente est</p>
+<p><span class="math display">\[
+\hat\pi'(x) = \hat\beta_1\, \hat\pi(x)\{1-\hat\pi(x)\},
+\]</span></p>
+<p>maximale au point d’inflexion (<span class="math inline">\(\hat\pi(x)=1/2\)</span>), où elle vaut <span class="math inline">\(\hat\beta_1/4\)</span>. Sous séparation, l’algorithme pousse <span class="math inline">\(|\hat\beta_1| \to \infty\)</span> pour continuer à augmenter la vraisemblance : la pente maximale de la courbe explose elle aussi. Géométriquement, la sigmoïde logistique devient de plus en plus abrupte et se rapproche d’une <strong>fonction en escalier</strong> (valant 0 d’un côté du seuil de séparation et 1 de l’autre) plutôt que de converger vers une courbe en S bien définie — un saut qu’aucune sigmoïde à pente finie ne peut reproduire exactement, d’où la non-convergence de l’algorithme plutôt qu’une pente littéralement infinie en pratique.</p>
+<p>Avec plusieurs covariables, cette image se généralise : l’<strong>hyperplan séparateur</strong> devient une frontière de décision parfaitement nette (les probabilités prédites tendent vers 0 ou 1 de chaque côté), mais « la pente » n’est plus un scalaire unique — c’est la norme <span class="math inline">\(\|\hat{\boldsymbol\beta}\|\)</span> dans la direction séparatrice qui diverge.</p>
+</div>
 <p>En présence de séparation (complète ou quasi-complète), l’estimateur du maximum de vraisemblance <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> <strong>n’existe pas</strong> au sens usuel : la vraisemblance continue d’augmenter à mesure que <span class="math inline">\(\|\boldsymbol\beta\| \to \infty\)</span> dans la direction qui sépare les données, sans jamais atteindre de maximum fini. En pratique, l’algorithme IRLS ne converge pas, ou converge vers des <span class="math inline">\(\hat\beta_j\)</span> extrêmement grands, limités seulement par le critère d’arrêt numérique de l’algorithme.</p>
 <p>R signale souvent ce problème par l’avertissement</p>
 <pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
@@ -560,7 +568,11 @@ y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) = y_i \eta_i - m_i \log(1+e^{\eta_i})
 (Intercept)  6.411375   36706.87 0.0001746642 0.9998606
 x           20.668550   32170.73 0.0006424645 0.9994874</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x,y, <span class="at">pch =</span> <span class="dv">19</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>grille_x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">seq</span>(<span class="fu">min</span>(x), <span class="fu">max</span>(x), <span class="at">length.out =</span> <span class="dv">200</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>grille_x<span class="sc">$</span>p_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(modele_separe, <span class="at">newdata =</span> grille_x, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(grille_x<span class="sc">$</span>x, grille_x<span class="sc">$</span>p_hat, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -569,6 +581,7 @@ x           20.668550   32170.73 0.0006424645 0.9994874</code></pre>
 </div>
 </div>
 </div>
+<p>La courbe de prédiction <span class="math inline">\(\hat\pi(x)\)</span> se rapproche d’une fonction en escalier plutôt que d’une sigmoïde classique : elle passe de 0 à 1 sur un intervalle extrêmement court, autour du seuil de séparation (<span class="math inline">\(x=0\)</span> ici) — reflet direct de la pente <span class="math inline">\(\hat\beta_1/4\)</span> qui explose sous séparation complète.</p>
 <p>Le coefficient de <code>x</code> et son erreur-type explosent tous les deux — signe clair de séparation, pas d’un effet réellement très fort.</p>
 </div>
 <div class="env-remarque" data-titre="Que faire en cas de séparation?">

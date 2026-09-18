@@ -97,7 +97,7 @@ creer_gif(dir_out, "logit_plot.gif")
 set.seed(1)
 dir_out <- preparer_dossier("frames_lineaire")
 
-n_pts <- 30
+n_pts <- 50
 X     <- runif(n_pts, 0, 10)
 X_mid <- mean(X)
 beta1_amp <- 2
@@ -137,7 +137,7 @@ creer_gif(dir_out, "lineaire_plot.gif")
 set.seed(2)
 dir_out <- preparer_dossier("frames_poisson")
 
-n_pts <- 25
+n_pts <- 50
 X     <- seq(0, 6, length.out = n_pts)
 X_mid <- mean(X)
 beta1_amp <- 0.5
@@ -279,7 +279,7 @@ creer_gif(dir_out, "knn_noyau_plot.gif")
 set.seed(6)
 dir_out <- preparer_dossier("frames_splines")
 
-n_pts <- 40
+n_pts <- 75
 X <- sort(runif(n_pts, 0, 10))
 Y <- sin(X) + rnorm(n_pts, 0, 0.25)
 
@@ -311,7 +311,7 @@ creer_gif(dir_out, "splines_plot.gif")
 set.seed(7)
 dir_out <- preparer_dossier("frames_gam")   # corrigé : était "frames_splines" par erreur
 
-n_pts <- 60
+n_pts <- 75
 X <- sort(runif(n_pts, 0, 10))
 bruit_fixe <- rnorm(n_pts, 0, 0.3)   # fixé une fois, hors boucle
 

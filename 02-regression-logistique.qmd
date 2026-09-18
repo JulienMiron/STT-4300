@@ -453,6 +453,8 @@ summary(modele.probit)$coefficients
 summary(modele.cloglog)$coefficients
 ```
 
+La sortie de `summary()` nous donne les estimations des écarts-types des estimations sous `Std. Error`, comme pour la régression linéaire.
+
 ```{r turbines-comparaison-liens-plot}
 #| warning: false
 grille <- data.frame(
@@ -511,6 +513,52 @@ où $z_\gamma$ est le quantile de la $\mathcal{N}(0,1)$ défini par $P(Z > z_\ga
 
 Pour tester $H_0: \beta_j = 0$ contre $H_1: \beta_j\neq 0$, on rejette $H_0$ au seuil $\alpha$ si $|z_{obs}| > z_{\alpha/2}$, avec $z_{obs} = \hat\beta_j/\sqrt{\hat{\text V}(\hat\beta_j)}$. Le seuil observé ($p$-valeur) est $\alpha^* = 2P(Z > |z_{obs}|)$.
 
+
+::: {.env-exemple titre="Intervalle de confiance pour $\beta_1$ dans l'exemple `turbines`"}
+En utilisant le lien logit, on construit un intervalle de confiance de niveau 95\% pour $\beta_1$ en utilsant les informations données par la sortie:
+
+```{r}
+summary(modele.logit)$coefficients
+```
+
+L'intervalle est $[\hat{\beta_1}-1,96\times \sqrt{\hat{\text V}(\hat\beta_1)};\hat{\beta_1}+1,96\times \sqrt{\hat{\text V}(\hat\beta_1)}]=[0,000776;0,001222]$.
+
+On peut bien sûr l'extraire à partir de R directement:
+
+```{r}
+confint(modele.logit)
+```
+
+On constate que les deux intervalles ne sont pas identiques.
+:::
+
+:::{.env-remarque titre="Intervalle de Wald ou intervalle par vraisemblance profilée?"}
+En R, `confint(modele)` appliqué à un objet `glm` ne calcule pas l'intervalle de Wald ci-dessus, mais un intervalle par **vraisemblance profilée** (*profile likelihood*) : plutôt que de supposer une courbure symétrique (parabolique) de la log-vraisemblance autour de $\hat\beta_j$, cette méthode explore directement sa vraie courbe en faisant varier $\beta_j$ (en réoptimisant les autres paramètres à chaque valeur), puis inverse le test du rapport de vraisemblance pour trouver les bornes exactes. L'intervalle obtenu n'est généralement pas symétrique autour de $\hat\beta_j$, contrairement à celui de Wald. Pour obtenir l'intervalle de Wald depuis R, il faut plutôt utiliser `confint.default(modele)`.
+```{r}
+confint.default(modele.logit)
+```
+Les deux méthodes convergent vers des résultats similaires avec de grands échantillons et des coefficients modérés. L'intervalle par vraisemblance profilée reste toutefois préférable en général, car il ne dépend pas de la courbure locale en $\hat\beta_j$ — il est donc, comme le test du rapport de vraisemblance, immunisé contre le [phénomène de Hauck-Donner](#sec-hauckdonner) décrit ci-dessous, et reste fiable en présence de [séparation](#sec-separation) ou de petits échantillons, situations où l'intervalle de Wald peut devenir trompeur (artificiellement trop large, voire non significatif alors que l'effet est réel). En pratique, l'intervalle de Wald garde son utilité pour l'intuition et les calculs rapides à la main, mais l'intervalle par vraisemblance profilée est préférable pour les résultats rapportés.
+:::
+
+:::{.env-theo titre="Construction de l'intervalle par vraisemblance profilée"}
+On définit d'abord la log-vraisemblance profilée de $\beta_j$ : pour chaque valeur fixée de $\beta_j$, on maximise la log-vraisemblance sur tous les autres paramètres $\boldsymbol\beta_{-j}$ :
+
+$$
+\ell_p(\beta_j) = \max_{\boldsymbol\beta_{-j}} \ell(\beta_j, \boldsymbol\beta_{-j}).
+$$
+
+Les bornes $(\beta_j^{L}, \beta_j^{U})$ de l'intervalle à $(1-\alpha)$ sont ensuite définies comme les deux solutions de l'équation
+
+$$
+2\left[\ell(\hat{\boldsymbol\beta}) - \ell_p(\beta_j)\right] = \chi^2_{1,\,1-\alpha}.
+$$
+
+C'est une équation non linéaire en $\beta_j$ (elle implique elle-même une optimisation à chaque évaluation), donc — sauf cas particuliers — il n'existe pas de solution algébrique explicite : contrairement à l'intervalle de Wald, cet intervalle n'a pas de forme fermée.
+
+**Cas particulier avec forme fermée.** En régression linéaire classique avec erreurs gaussiennes, la log-vraisemblance est exactement quadratique en $\boldsymbol\beta$, donc la vraisemblance profilée coïncide exactement avec l'approximation de Wald : les deux méthodes donnent alors le même intervalle. Cette coïncidence disparaît dès qu'on introduit une fonction de lien non linéaire, comme en régression logistique.
+
+**Résolution en pratique.** `confint.glm()` (package `MASS`) calcule $\ell_p(\beta_j)$ sur une grille de valeurs de $\beta_j$ autour de $\hat\beta_j$, en **réajustant le modèle** (avec les autres paramètres libres) à chaque valeur — d'où le message *"Waiting for profiling to be done..."*, qui reflète ces refits successifs. Ces points sont ensuite interpolés par une spline pour approximer la fonction inverse, et les bornes sont trouvées par recherche de racine sur cette interpolation plutôt que par résolution directe de l'équation ci-dessus.
+:::
 
 :::{.env-remarque #sec-hauckdonner titre="Le phénomène de Hauck-Donner"}
 

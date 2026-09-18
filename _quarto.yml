@@ -45,6 +45,7 @@ date-format: "D MMMM YYYY"
 
 format:
   html:
+    favicon: images/logit_plot.png
     include-after-body: sidebar-gif.html   # gif/animation ajoutée après le corps de page
     include-in-header:
       - mathjax-macros.html                # macros LaTeX custom pour MathJax (bb, hb, hv, etc.)

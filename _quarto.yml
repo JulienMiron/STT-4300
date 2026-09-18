@@ -10,6 +10,7 @@ project:
     - images/knn_noyau_plot.gif
     - images/splines_plot.gif
     - images/gam_plot.gif
+    - images/index_plot.gif
 
 book:
   title: "Régression II -- STT-4300"
@@ -58,7 +59,6 @@ format:
     include-after-body: sidebar-gif.html   # gif/animation ajoutée après le corps de page
     include-in-header:
       - mathjax-macros.html                # macros LaTeX custom pour MathJax (bb, hb, hv, etc.)
-
     grid:
       sidebar-width: 300px   # sidebar de gauche (chapitres) — défaut 250px
       margin-width: 250px    # TdM de droite — défaut ~200-250px selon thème
@@ -74,6 +74,7 @@ format:
     smooth-scroll: true
 
   pdf:
+    include-in-header: macros.tex
     documentclass: scrreprt
     toc: true
     number-sections: true

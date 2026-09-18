@@ -335,3 +335,61 @@ for (i in seq_len(n_frames)) {
 }
 
 creer_gif(dir_out, "gam_plot.gif")
+
+
+library(ggplot2)
+library(gifski)
+
+set.seed(9)
+
+n_pts    <- 100
+n_frames <- 150
+
+X <- sort(runif(n_pts, 0, 10))
+
+dir_out <- "/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/GitHub/STT-4300/images/frames_index"
+dir.create(dir_out, showWarnings = FALSE, recursive = TRUE)
+
+# --------------------------------------------------------------
+# États cibles (mêmes X, différentes configurations de Y)
+# Le dernier état doit être visuellement compatible avec le premier
+# pour que la boucle du gif soit fluide.
+# --------------------------------------------------------------
+
+bruit_indiv <- rnorm(n_pts, 0, 1)   # bruit individuel fixe, réutilisé dans chaque état
+
+etat_aleatoire <- bruit_indiv * 1.3                              # nuage sans structure
+etat_lineaire  <- 0.9 * (X - mean(X)) + bruit_indiv * 0.4        # tendance linéaire
+etat_sinus     <- 3 * sin(0.8 * X) + bruit_indiv * 0.35          # courbe non linéaire
+etat_plateau   <- 3 * plogis(1.2 * (X - mean(X))) + bruit_indiv * 0.3  # saturation
+
+etats <- list(etat_aleatoire, etat_lineaire, etat_sinus, etat_plateau)
+n_etats <- length(etats)
+
+# lissage cosinus (ease-in-out) entre deux états
+ease <- function(frac) (1 - cos(pi * frac)) / 2
+
+for (i in seq_len(n_frames)) {
+  # position continue dans le cycle des états (boucle complète sur n_frames)
+  pos <- (i - 1) / n_frames * n_etats
+
+  idx_a <- (floor(pos) %% n_etats) + 1
+  idx_b <- (floor(pos) + 1) %% n_etats + 1
+  frac  <- ease(pos - floor(pos))
+
+  Y_t <- (1 - frac) * etats[[idx_a]] + frac * etats[[idx_b]]
+
+  df <- data.frame(X = X, Y = Y_t)
+
+  p <- ggplot(df, aes(X, Y)) +
+    geom_point(color = "mediumpurple1", alpha = 0.7, size = 3) +
+    coord_cartesian(ylim = c(-5, 5)) +
+    theme_void() + theme(legend.position = "none")
+
+  ggsave(file.path(dir_out, sprintf("frame_%03d.png", i)), p,
+         width = 8, height = 5.5, dpi = 300, bg = "transparent")
+}
+
+gifski(sprintf(file.path(dir_out, "frame_%03d.png"), 1:n_frames),
+       gif_file = file.path(dirname(dir_out), "index_plot.gif"),
+       width = 800, height = 550, delay = 0.08, loop = TRUE)

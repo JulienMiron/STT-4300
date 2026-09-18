@@ -11,4 +11,4 @@ Thierry Duchesne, Michel Carbon et Khader Khadraoui de l'Université Laval et Ev
 
 ## Utilisation de l'IA {.unnumbered}
 
-La rédaction de certains passages, ainsi que le développement de certains exemples en R, ont bénéficié de l'assistance de Claude Sonnet 5, un modèle de langage développé par Anthropic.
+La rédaction de certains passages, ainsi que le développement de certains exemples en R, ont bénéficié de l'assistance de Claude Sonnet 5, un modèle de langage développé par Anthropic. Mais surtout, Claude a été très utile dans la réalisation des animations des chapitres.

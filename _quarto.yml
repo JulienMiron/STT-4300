@@ -25,7 +25,7 @@ book:
   sidebar:
     style: floating
     collapse-level: 1
-    logo: images/logit_plot.gif    # ton image, placée au-dessus du titre
+    logo: images/logit_plot.png    # ton image, placée au-dessus du titre
   chapters:
     - index.qmd
     - 01-regression-lineaire.qmd
@@ -42,6 +42,7 @@ crossref:
 
 format:
   html:
+    include-after-body: sidebar-gif.html
     grid:
       sidebar-width: 250px   # ta sidebar de gauche (chapitres) — défaut 250px
       margin-width: 200px    # ta TdM de droite — défaut ~200-250px selon thème

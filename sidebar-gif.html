@@ -1,0 +1,13 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const path = window.location.pathname;
+  const estIndex = path.endsWith("/") || path.endsWith("/index.html");
+
+  if (estIndex) {
+    logo.src = "/STT-4300/images/logit_plot.gif";
+  }
+});
+</script>

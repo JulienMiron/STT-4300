@@ -505,7 +505,7 @@ ggplot() +
 Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. 
 :::
 
-
+### Intervalles de confiance pour les $\beta_j$
 
 Les intervalles de confiance et tests concernant les $\beta_j$ sont obtenus par la méthode de **Wald**. Un intervalle de confiance de niveau $(1-\alpha)$ pour $\beta_j$ est
 $$\left[\hat\beta_j - z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\right],$$

@@ -366,7 +366,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>reg.ridge.select <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x, y, <span class="at">alpha=</span><span class="dv">0</span>, <span class="at">lambda=</span>grille.lambda)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>reg.ridge.select<span class="sc">$</span>lambda.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.511192</code></pre>
+<pre><code>[1] 2.656088</code></pre>
 </div>
 </div>
 <p>Sur les données <code>Hitters</code>, on obtient <span class="math inline">\(\lambda = e^{2.2}\)</span> pour ridge et <span class="math inline">\(\lambda = e^3\)</span> pour le lasso.</p>
@@ -381,11 +381,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const logo = document.querySelector(".sidebar-logo");
   if (!logo) return;
 
-  const path = window.location.pathname;
-  const estIndex = path.endsWith("/") || path.endsWith("/index.html");
+  // correspondance entre le nom de la page (sans extension) et le gif à afficher
+  const gifs = {
+    "index":                              "logit_plot.gif",
+    "01-regression-lineaire":             "lineaire_plot.gif",
+    "02-regression-logistique":           "logit_plot.gif",
+    "03-modeles-lineaires-generalises":   "glm_plot.gif",
+    "04-prediction-validation-croisee":   "cv_plot.gif",
+    "05-selection-regularisation":        "regularisation_plot.gif",
+    "06-knn-noyau":                       "knn_noyau_plot.gif",
+    "07-splines":                         "splines_plot.gif",
+    "08-gam":                             "gam_plot.gif"
+  };
 
-  if (estIndex) {
-    logo.src = logo.src.replace("logit_plot.png", "logit_plot.gif");
+  // nom de fichier de la page courante, sans extension
+  let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
+  if (page === "" ) page = "index";
+
+  const gif = gifs[page];
+  if (gif) {
+    logo.src = logo.src.replace(/[^/]+$/, gif);
   }
 });
 </script>

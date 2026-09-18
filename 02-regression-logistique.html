@@ -1622,7 +1622,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
 </div>
-<p>Le graphique des résidus vs valeurs ajustées montre plusieurs points nettement à l’écart (dont les observations 15 et 20), suggérant que le modèle ne s’ajuste pas également bien à toutes les combinaisons de <code>location</code> et <code>period</code>.</p>
+<p>Le graphique des résidus vs valeurs ajustées montre plusieurs points nettement à l’écart (dont les observations 1, 15 et 20), suggérant que le modèle ne s’ajuste pas également bien à toutes les combinaisons de <code>location</code> et <code>period</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_quasi, <span class="at">which =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -1633,7 +1633,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
 </div>
-<p>Le QQ-plot des résidus s’éloigne fortement de la droite de référence dans la queue supérieure (observations 14, 15 et 20), ce qui traduit un mauvais ajustement pour certaines observations plutôt qu’une déviation normale isolée.</p>
+<p>Le QQ-plot des résidus s’éloigne un peu de la droite de référence dans la queue supérieure (observations 14, 15 et 20), ce qui traduit un mauvais ajustement pour certaines observations plutôt qu’une déviation normale isolée.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_quasi, <span class="at">which =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -1644,7 +1644,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
 </div>
-<p>Le graphique Scale-Location révèle une dispersion des résidus qui n’est pas constante et plusieurs valeurs extrêmes (1, 14, 15, 20), renforçant l’hypothèse d’une surdispersion mal capturée par le modèle binomial standard.</p>
+<p>Le graphique Scale-Location révèle une dispersion des résidus qui n’est pas constante et plusieurs valeurs extrêmes (1, 14, 15, 20), malgré l’inclusion du paramètre de surdispersion.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_quasi, <span class="at">which =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -1655,7 +1655,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
 </div>
-<p>La distance de Cook pointe vers certaines observations influentes (14, 19 et 20).</p>
+<p>La distance de Cook pointe vers certaines observations influentes (14, 15, 19 et 20).</p>
 <p>Le seuil usuel pour un levier élevé est <span class="math inline">\(2(p+1)/n\)</span> ; pour la distance de Cook, on examine plutôt les valeurs qui se détachent nettement des autres.</p>
 </div>
 </section>
@@ -1704,7 +1704,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <pre><code>  ROC curve with AUC = 0.7835498 and s.e. = 0.05651002 </code></pre>
 </div>
 </div>
-<p>L’aire sous la courbe est de 0.78 : le modèle est bon.</p>
+<p>L’aire sous la courbe est de 0.78 : le modèle est moyen.</p>
 </div>
 
 

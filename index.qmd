@@ -4,11 +4,11 @@ Ces notes de cours couvrent la régression linéaire, les modèles linéaires g�
 
 Si vous constatez des coquilles ou des erreurs, merci de m'envoyer [un courriel](mailto:julien.miron@mat.ulaval.ca).
 
-## Version pdf des notes de cours.
+## Version pdf des notes de cours
 
-Pour télécharger la version pdf des notes de cours il suffit de cliquer [ici](_book/R%C3%A9gression-II----STT-4300.pdf) ou [là](_book/R%C3%A9gression-II----STT-4300.pdf).
+Pour télécharger la version pdf des notes de cours il suffit de cliquer <a href="_book/R%C3%A9gression-II----STT-4300.pdf" target="_blank"> ici</a> ou <a href="_book/R%C3%A9gression-II----STT-4300.pdf" target="_blank"> là</a>.
 
-Ça fonctionne [ici](_book/R%C3%A9gression-II----STT-4300.pdf) aussi.
+Ça fonctionne <a href="_book/R%C3%A9gression-II----STT-4300.pdf" target="_blank"> ici</a> aussi.
 
 ## Remerciements {.unnumbered}
 

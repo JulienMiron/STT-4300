@@ -62,6 +62,10 @@ footer.footer,
 .sidebar nav[role=doc-toc] ul > li > ul > li > a:hover {
   color: var(--accent) !important;
   border-left-color: var(--accent) !important;
+  background-color: var(--accent-clair);
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ============================================================
@@ -183,4 +187,16 @@ details.notation p {
 /* Empêche les formules rendues en CHTML de se couper sur plusieurs lignes */
 mjx-container[jax="CHTML"] {
   white-space: nowrap;
+}
+
+#TOC > ul > li > a {
+  font-weight: bold;
+}
+
+#TOC ul ul a {
+  font-weight: normal;
+}
+
+#TOC ul ul {
+  padding-left: 2.2em;
 }

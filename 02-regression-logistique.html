@@ -312,7 +312,7 @@ window.Quarto = {
   <li><a href="#validation-et-diagnostic-de-modèles" id="toc-validation-et-diagnostic-de-modèles" class="nav-link" data-scroll-target="#validation-et-diagnostic-de-modèles"><span class="header-section-number">2.4</span> Validation et diagnostic de modèles</a>
   <ul class="collapse">
   <li><a href="#résidus" id="toc-résidus" class="nav-link" data-scroll-target="#résidus"><span class="header-section-number">2.4.1</span> Résidus</a></li>
-  <li><a href="#tests-dadéquation-globale" id="toc-tests-dadéquation-globale" class="nav-link" data-scroll-target="#tests-dadéquation-globale"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</a></li>
+  <li><a href="#sec-adequation" id="toc-sec-adequation" class="nav-link" data-scroll-target="#sec-adequation"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</a></li>
   <li><a href="#graphiques-et-extra-variabilité" id="toc-graphiques-et-extra-variabilité" class="nav-link" data-scroll-target="#graphiques-et-extra-variabilité"><span class="header-section-number">2.4.3</span> Graphiques et extra-variabilité</a></li>
   <li><a href="#observations-aberrantes-et-valeurs-influentes" id="toc-observations-aberrantes-et-valeurs-influentes" class="nav-link" data-scroll-target="#observations-aberrantes-et-valeurs-influentes"><span class="header-section-number">2.4.4</span> Observations aberrantes et valeurs influentes</a></li>
   </ul></li>
@@ -1046,7 +1046,7 @@ La flèche <span class="math inline">\(\xrightarrow{d}\)</span> indique une <str
 <p><span class="env-titre">Propriété — Non-négativité de la déviance</span></p>
 <p>Puisque le modèle saturé maximise la vraisemblance parmi <em>tous</em> les modèles possibles, <span class="math inline">\(l(y,y) \geq l(\hat\mu,y)\)</span> toujours, et donc <span class="math inline">\(D \geq 0\)</span> : plus <span class="math inline">\(D\)</span> est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s’ajuste bien aux données.</p>
 </div>
-<p>La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l’adéquation du modèle et à comparer des modèles.</p>
+<p>La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l’<a href="#sec-adequation">adéquation du modèle</a> et à comparer des modèles.</p>
 </section>
 <section id="comparaison-de-modèles-emboîtés" class="level3" data-number="2.3.2">
 <h3 data-number="2.3.2" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</h3>
@@ -1073,8 +1073,8 @@ La flèche <span class="math inline">\(\xrightarrow{d}\)</span> indique une <str
 <span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>stat.test <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.reduit) <span class="sc">-</span> <span class="fu">deviance</span>(modele.complet)</span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>p.valeur <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(stat.test, <span class="at">df =</span> <span class="dv">2</span>)</span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>p.valeur</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>valeurp <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(stat.test, <span class="at">df =</span> <span class="dv">2</span>)</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>valeurp</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4767217</code></pre>
 </div>
@@ -1084,7 +1084,30 @@ La flèche <span class="math inline">\(\xrightarrow{d}\)</span> indique une <str
 </section>
 <section id="comparaison-de-modèles-non-emboîtés-aic-et-bic" class="level3" data-number="2.3.3">
 <h3 data-number="2.3.3" class="anchored" data-anchor-id="comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</h3>
-<p>Comme pour les modèles linéaires, on utilise <span class="math display">\[AIC = -2\,l(\hat\mu;y) + 2(p+1), \qquad BIC = -2\,l(\hat\mu;y) + \log(n)(p+1).\]</span> Le modèle ayant le plus petit <span class="math inline">\(AIC\)</span> (ou <span class="math inline">\(BIC\)</span>) est préférable. En R : <code>extractAIC(modele)</code> et <code>extractAIC(modele, k=log(n))</code>.</p>
+<p>Comme pour les modèles linéaires, on utilise <span class="math display">\[AIC = -2\,l(\hat\mu;y) + 2(p+1), \qquad BIC = -2\,l(\hat\mu;y) + \log(n)(p+1).\]</span> Le modèle ayant le plus petit <span class="math inline">\(AIC\)</span> (ou <span class="math inline">\(BIC\)</span>) est préférable. En R : <code>AIC(modele)</code> et <code>AIC(modele, k=log(n))</code>.</p>
+<div class="env-exemple" data-titre="Modèles non emboîtés avec `nminer`">
+<p><span class="env-titre">Exemple — Modèles non emboîtés avec <code>nminer</code></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(nminer)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>nminer<span class="sc">$</span>Detecte <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(nminer<span class="sc">$</span>Minerab <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Detecte <span class="sc">~</span>  Area <span class="sc">+</span> Grazed <span class="sc">+</span> Shrubs  <span class="sc">+</span> Timber,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> nminer, <span class="at">family =</span> binomial)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Detecte <span class="sc">~</span> Eucs <span class="sc">+</span> Grazed <span class="sc">+</span> Bulokes,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> nminer, <span class="at">family =</span> binomial)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod1)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 46.86053</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod2)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24.94172</code></pre>
+</div>
+</div>
+<p>Le modèle 2 a un AIC plus faible que le modèle 1 et lui est donc préférable.</p>
+<p><em>À noter, les variables explicatives ont été choisies au hasard ici.</em></p>
+</div>
 </section>
 <section id="sélection-automatique" class="level3" data-number="2.3.4">
 <h3 data-number="2.3.4" class="anchored" data-anchor-id="sélection-automatique"><span class="header-section-number">2.3.4</span> Sélection automatique</h3>
@@ -1092,20 +1115,20 @@ La flèche <span class="math inline">\(\xrightarrow{d}\)</span> indique une <str
 <div class="env-exemple" data-titre="Sélection automatique sur le jeu de données [`nminer`](#data-nminer)">
 <p><span class="env-titre">Exemple — Sélection automatique sur le jeu de données <a href="#data-nminer"><code>nminer</code></a></span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(nminer)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># On construit la réponse binaire décrite dans le texte :</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 si au moins un mineur bruyant a été détecté, 0 sinon</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>nminer<span class="sc">$</span>Detecte <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(nminer<span class="sc">$</span>Minerab <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèle complet : effets additifs de toutes les variables explicatives disponibles</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>modele.complet <span class="ot">&lt;-</span> <span class="fu">glm</span>(Detecte <span class="sc">~</span> Eucs <span class="sc">+</span> Area <span class="sc">+</span> Grazed <span class="sc">+</span> Shrubs <span class="sc">+</span> Bulokes <span class="sc">+</span> Timber,</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> nminer, <span class="at">family =</span> binomial)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(nminer)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># On construit la réponse binaire décrite dans le texte :</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 si au moins un mineur bruyant a été détecté, 0 sinon</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>nminer<span class="sc">$</span>Detecte <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(nminer<span class="sc">$</span>Minerab <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèle complet : effets additifs de toutes les variables explicatives disponibles</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>modele.complet <span class="ot">&lt;-</span> <span class="fu">glm</span>(Detecte <span class="sc">~</span> Eucs <span class="sc">+</span> Area <span class="sc">+</span> Grazed <span class="sc">+</span> Shrubs <span class="sc">+</span> Bulokes <span class="sc">+</span> Timber,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> nminer, <span class="at">family =</span> binomial)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Backward : part du modèle complet, retire des termes</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>modele.backward <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.complet, <span class="at">direction =</span> <span class="st">"backward"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Backward : part du modèle complet, retire des termes</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>modele.backward <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.complet, <span class="at">direction =</span> <span class="st">"backward"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Start:  AIC=22.45
 Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber</code></pre>
@@ -1159,10 +1182,10 @@ Detecte ~ Eucs + Grazed + Shrubs + Timber
 - Timber  1   16.865 24.865
 - Eucs    1   37.161 45.161</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward : part du modèle vide, ajoute des termes jusqu'au modèle complet</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>modele.vide <span class="ot">&lt;-</span> <span class="fu">glm</span>(Detecte <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> nminer, <span class="at">family =</span> binomial)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>modele.forward <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.vide, <span class="at">direction =</span> <span class="st">"forward"</span>,</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">scope =</span> <span class="fu">formula</span>(modele.complet))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Forward : part du modèle vide, ajoute des termes jusqu'au modèle complet</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>modele.vide <span class="ot">&lt;-</span> <span class="fu">glm</span>(Detecte <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> nminer, <span class="at">family =</span> binomial)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>modele.forward <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.vide, <span class="at">direction =</span> <span class="st">"forward"</span>,</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">scope =</span> <span class="fu">formula</span>(modele.complet))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Start:  AIC=44.68
 Detecte ~ 1
@@ -1229,8 +1252,8 @@ Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 + Area     1   8.6462 20.646
 + Bulokes  1   9.1522 21.152</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stepwise: part du modèle complet, ajoute et retire au besoin</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>modele.step <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.complet, <span class="at">direction =</span> <span class="st">"both"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stepwise: part du modèle complet, ajoute et retire au besoin</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>modele.step <span class="ot">&lt;-</span> <span class="fu">step</span>(modele.complet, <span class="at">direction =</span> <span class="st">"both"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Start:  AIC=22.45
 Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber</code></pre>
@@ -1295,7 +1318,7 @@ Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 - Timber   1   16.865 24.865
 - Eucs     1   37.161 45.161</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.backward)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.backward)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1320,7 +1343,7 @@ AIC: 19.272
 
 Number of Fisher Scoring iterations: 9</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.forward)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.forward)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1345,7 +1368,7 @@ AIC: 19.272
 
 Number of Fisher Scoring iterations: 9</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.step)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.step)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1371,7 +1394,7 @@ AIC: 19.272
 Number of Fisher Scoring iterations: 9</code></pre>
 </div>
 </div>
-<p>Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n’est pas toujours le cas : comme chacune n’explore qu’un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu’elles aboutissent au même optimum local.</p>
+<p>Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n’est pas toujours le cas : comme chacune n’explore qu’un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu’elles aboutissent au même optimum local (et encore moins à l’optimum global).</p>
 </div>
 </section>
 </section>
@@ -1382,18 +1405,14 @@ Number of Fisher Scoring iterations: 9</code></pre>
 <div class="env-definition" data-titre="Résidus déviance et résidus de Pearson">
 <p><span class="env-titre">Définition — Résidus déviance et résidus de Pearson</span></p>
 <ul>
-<li><p><strong>Résidus déviance</strong> : <span class="math inline">\(r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}\)</span>, avec <span class="math display">\[d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\}.\]</span></p></li>
+<li><p><strong>Résidus déviance</strong> : <span class="math inline">\(r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}\)</span>, avec <span class="math inline">\(d_i\)</span> la déviance individuelle de l’observation <span class="math inline">\(i\)</span>.</p></li>
 <li><p><strong>Résidus de Pearson</strong> : <span class="math display">\[r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.\]</span></p></li>
 </ul>
 </div>
-<div class="env-propriete" data-titre="Somme des résidus déviance">
-<p><span class="env-titre">Propriété — Somme des résidus déviance</span></p>
-<p>Il est possible de montrer que la somme des résidus déviance <span class="math display">\[\sum_{i=1}^nr_{D,i} = \sum_{i=1}^n\mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}=D,\]</span> correspond à la déviance introduite <a href="#sec-deviance">plus tôt</a>.</p>
-</div>
 </section>
-<section id="tests-dadéquation-globale" class="level3" data-number="2.4.2">
-<h3 data-number="2.4.2" class="anchored" data-anchor-id="tests-dadéquation-globale"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</h3>
-<p>Deux statistiques permettent de tester l’adéquation globale : la déviance <span class="math inline">\(D\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]</span></p>
+<section id="sec-adequation" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="sec-adequation"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</h3>
+<p>Deux statistiques permettent de tester l’adéquation globale : la <a href="#sec-deviance">déviance</a> <span class="math inline">\(D\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]</span></p>
 <div class="env-propriete" data-titre="Convergence de $D$ et $\chi^2_P$">
 <p><span class="env-titre">Propriété — Convergence de <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span></span></p>
 <p>Lorsque tous les <span class="math inline">\(m_i \to \infty\)</span>, <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span> convergent en loi vers une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien spécifié.</p>
@@ -1402,26 +1421,26 @@ Number of Fisher Scoring iterations: 9</code></pre>
 <div class="env-exemple" data-titre="Test d'adéquation avec l'exemple [`turbines`](#data-turbines)">
 <p><span class="env-titre">Exemple — Test d’adéquation avec l’exemple <a href="#data-turbines"><code>turbines</code></a></span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>modele.logit <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures, Turbines <span class="sc">-</span> Fissures) <span class="sc">~</span> Hours,</span>
-<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> turbines, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
-<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Déviance</span></span>
-<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.logit)</span>
-<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>ddl <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(modele.logit)</span>
-<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>p.deviance <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(D, <span class="at">df =</span> ddl)</span>
-<span id="cb74-10"><a href="#cb74-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-11"><a href="#cb74-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Khi-deux de Pearson</span></span>
-<span id="cb74-12"><a href="#cb74-12" aria-hidden="true" tabindex="-1"></a>chi2.pearson <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(modele.logit, <span class="at">type =</span> <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb74-13"><a href="#cb74-13" aria-hidden="true" tabindex="-1"></a>p.pearson <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(chi2.pearson, <span class="at">df =</span> ddl)</span>
-<span id="cb74-14"><a href="#cb74-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-15"><a href="#cb74-15" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
-<span id="cb74-16"><a href="#cb74-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">Statistique =</span> <span class="fu">c</span>(<span class="st">"Déviance"</span>, <span class="st">"Khi-deux de Pearson"</span>),</span>
-<span id="cb74-17"><a href="#cb74-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valeur =</span> <span class="fu">c</span>(D, chi2.pearson),</span>
-<span id="cb74-18"><a href="#cb74-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">ddl =</span> ddl,</span>
-<span id="cb74-19"><a href="#cb74-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.valeur =</span> <span class="fu">c</span>(p.deviance, p.pearson)</span>
-<span id="cb74-20"><a href="#cb74-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(turbines)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>modele.logit <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(Fissures, Turbines <span class="sc">-</span> Fissures) <span class="sc">~</span> Hours,</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> turbines, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>))</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Déviance</span></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.logit)</span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>ddl <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(modele.logit)</span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>p.deviance <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(D, <span class="at">df =</span> ddl)</span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Khi-deux de Pearson</span></span>
+<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a>chi2.pearson <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(modele.logit, <span class="at">type =</span> <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a>p.pearson <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(chi2.pearson, <span class="at">df =</span> ddl)</span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">Statistique =</span> <span class="fu">c</span>(<span class="st">"Déviance"</span>, <span class="st">"Khi-deux de Pearson"</span>),</span>
+<span id="cb78-17"><a href="#cb78-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Valeur =</span> <span class="fu">c</span>(D, chi2.pearson),</span>
+<span id="cb78-18"><a href="#cb78-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">ddl =</span> ddl,</span>
+<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.valeur =</span> <span class="fu">c</span>(p.deviance, p.pearson)</span>
+<span id="cb78-20"><a href="#cb78-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          Statistique    Valeur ddl  p.valeur
 1            Déviance 10.331466   9 0.3243236
@@ -1491,15 +1510,15 @@ D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
 <p><span class="env-titre">Exemple — Courbe ROC avec l’exemple <a href="#data-quilpie"><code>quilpie</code></a></span></p>
 <p>On ajuste ici un modèle logistique avec la variable explicative SOI et le lien logit :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family =</span> binomial, <span class="at">data =</span> quilpie)</span>
-<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(</span>
-<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">marker =</span> <span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
-<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">status =</span> quilpie<span class="sc">$</span>y,</span>
-<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"empirical"</span>)</span>
-<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family =</span> binomial, <span class="at">data =</span> quilpie)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">marker =</span> <span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">status =</span> quilpie<span class="sc">$</span>y,</span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"empirical"</span>)</span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ROC curve with AUC = 0.7835498 and s.e. = 0.05651002 </code></pre>
 </div>

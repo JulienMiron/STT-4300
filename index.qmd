@@ -4,6 +4,12 @@ Ces notes de cours couvrent la régression linéaire, les modèles linéaires g�
 
 Si vous constatez des coquilles ou des erreurs, merci de m'envoyer [un courriel](mailto:julien.miron@mat.ulaval.ca).
 
+## Version pdf des notes de cours.
+
+Pour télécharger la version pdf des notes de cours il suffit de cliquer [ici](_book/R%C3%A9gression-II----STT-4300.pdf) ou [là](_book/R%C3%A9gression-II----STT-4300.pdf).
+
+Ça fonctionne [ici](_book/R%C3%A9gression-II----STT-4300.pdf) aussi.
+
 ## Remerciements {.unnumbered}
 
 Ces notes s'appuient en partie sur du matériel de cours développé respectivement par Lajmi Lakhal Chaieb,
@@ -12,3 +18,4 @@ Thierry Duchesne, Michel Carbon et Khader Khadraoui de l'Université Laval et Ev
 ## Utilisation de l'IA {.unnumbered}
 
 La rédaction de certains passages, ainsi que le développement de certains exemples en R, ont bénéficié de l'assistance de Claude Sonnet 5, un modèle de langage développé par Anthropic. Mais surtout, Claude a été très utile dans la réalisation des animations des chapitres.
+

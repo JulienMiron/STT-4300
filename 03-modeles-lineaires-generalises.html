@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Modèles linéaires généralisés – Régression II -- STT-4300</title>
+<title>3&nbsp; Modèles linéaires généralisés (GLM) – Régression II -- STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -173,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-modeles-lineaires-generalises.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-modeles-lineaires-generalises.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -226,7 +226,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -272,24 +272,27 @@ window.Quarto = {
   <li><a href="#famille-exponentielle" id="toc-famille-exponentielle" class="nav-link active" data-scroll-target="#famille-exponentielle"><span class="header-section-number">3.1</span> Famille exponentielle</a>
   <ul class="collapse">
   <li><a href="#définition" id="toc-définition" class="nav-link" data-scroll-target="#définition"><span class="header-section-number">3.1.1</span> Définition</a></li>
-  <li><a href="#exemples" id="toc-exemples" class="nav-link" data-scroll-target="#exemples"><span class="header-section-number">3.1.2</span> Exemples</a></li>
-  <li><a href="#déviance" id="toc-déviance" class="nav-link" data-scroll-target="#déviance"><span class="header-section-number">3.1.3</span> Déviance</a></li>
+  <li><a href="#mise-en-forme-des-lois-usuelles" id="toc-mise-en-forme-des-lois-usuelles" class="nav-link" data-scroll-target="#mise-en-forme-des-lois-usuelles"><span class="header-section-number">3.1.2</span> Mise en forme des lois usuelles</a></li>
   </ul></li>
-  <li><a href="#définition-dun-mlg" id="toc-définition-dun-mlg" class="nav-link" data-scroll-target="#définition-dun-mlg"><span class="header-section-number">3.2</span> Définition d’un MLG</a></li>
+  <li><a href="#définition-dun-modèle-linéaire-généralisé" id="toc-définition-dun-modèle-linéaire-généralisé" class="nav-link" data-scroll-target="#définition-dun-modèle-linéaire-généralisé"><span class="header-section-number">3.2</span> Définition d’un modèle linéaire généralisé</a></li>
   <li><a href="#estimation-des-paramètres" id="toc-estimation-des-paramètres" class="nav-link" data-scroll-target="#estimation-des-paramètres"><span class="header-section-number">3.3</span> Estimation des paramètres</a>
   <ul class="collapse">
-  <li><a href="#estimation-de-phi" id="toc-estimation-de-phi" class="nav-link" data-scroll-target="#estimation-de-phi"><span class="header-section-number">3.3.1</span> Estimation de <span class="math inline">\(\phi\)</span></a></li>
+  <li><a href="#vraisemblance-et-score" id="toc-vraisemblance-et-score" class="nav-link" data-scroll-target="#vraisemblance-et-score"><span class="header-section-number">3.3.1</span> Vraisemblance et score</a></li>
+  <li><a href="#loi-asymptotique-de-hb" id="toc-loi-asymptotique-de-hb" class="nav-link" data-scroll-target="#loi-asymptotique-de-hb"><span class="header-section-number">3.3.2</span> loi asymptotique de <span class="math inline">\(\hb\)</span></a></li>
+  <li><a href="#déviance-individuelle" id="toc-déviance-individuelle" class="nav-link" data-scroll-target="#déviance-individuelle"><span class="header-section-number">3.3.3</span> Déviance individuelle</a></li>
+  <li><a href="#estimation-de-phi" id="toc-estimation-de-phi" class="nav-link" data-scroll-target="#estimation-de-phi"><span class="header-section-number">3.3.4</span> Estimation de <span class="math inline">\(\phi\)</span></a></li>
   </ul></li>
   <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">3.4</span> Inférence statistique</a>
   <ul class="collapse">
-  <li><a href="#cas-phi-fixé" id="toc-cas-phi-fixé" class="nav-link" data-scroll-target="#cas-phi-fixé"><span class="header-section-number">3.4.1</span> Cas <span class="math inline">\(\phi\)</span> fixé</a></li>
-  <li><a href="#cas-phi-inconnu" id="toc-cas-phi-inconnu" class="nav-link" data-scroll-target="#cas-phi-inconnu"><span class="header-section-number">3.4.2</span> Cas <span class="math inline">\(\phi\)</span> inconnu</a></li>
+  <li><a href="#intervalles-de-confiance-et-tests-pour-beta_j" id="toc-intervalles-de-confiance-et-tests-pour-beta_j" class="nav-link" data-scroll-target="#intervalles-de-confiance-et-tests-pour-beta_j"><span class="header-section-number">3.4.1</span> Intervalles de confiance et tests pour <span class="math inline">\(\beta_j\)</span></a></li>
+  <li><a href="#intervalle-de-confiance-pour-une-valeur-prédite" id="toc-intervalle-de-confiance-pour-une-valeur-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-valeur-prédite"><span class="header-section-number">3.4.2</span> Intervalle de confiance pour une valeur prédite</a></li>
+  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">3.4.3</span> Comparaison de modèles emboîtés</a></li>
   </ul></li>
   <li><a href="#sélection-et-validation-de-modèles" id="toc-sélection-et-validation-de-modèles" class="nav-link" data-scroll-target="#sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</a></li>
-  <li><a href="#sec-poisson" id="toc-sec-poisson" class="nav-link" data-scroll-target="#sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression Poisson</a>
+  <li><a href="#sec-poisson" id="toc-sec-poisson" class="nav-link" data-scroll-target="#sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression de Poisson</a>
   <ul class="collapse">
   <li><a href="#variables-explicatives-offset" id="toc-variables-explicatives-offset" class="nav-link" data-scroll-target="#variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></a></li>
-  <li><a href="#variabilité-extra-poissonienne" id="toc-variabilité-extra-poissonienne" class="nav-link" data-scroll-target="#variabilité-extra-poissonienne"><span class="header-section-number">3.6.2</span> Variabilité extra-Poissonienne</a></li>
+  <li><a href="#sec-surdispersion" id="toc-sec-surdispersion" class="nav-link" data-scroll-target="#sec-surdispersion"><span class="header-section-number">3.6.2</span> Variabilité extra-Poissonienne</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/03-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
@@ -299,7 +302,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-mlg" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></span></h1>
+<h1 class="title"><span id="sec-GLM" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></h1>
 </div>
 
 
@@ -322,31 +325,178 @@ window.Quarto = {
 </header>
 
 
-<p>La régression linéaire et la régression logistique partagent plusieurs concepts : inférence sur les coefficients <span class="math inline">\(\beta\)</span>, sélection de modèles, diagnostics. Ce chapitre en donne une présentation unifiée : on suppose que la distribution de la variable réponse appartient à la <strong>famille exponentielle</strong>, qui inclut notamment les lois normale, de Bernoulli, binomiale, de Poisson et gamma.</p>
+<p>La régression linéaire et la régression logistique partagent plusieurs concepts : inférence sur les coefficients <span class="math inline">\(\beta\)</span>, sélection de modèles, diagnostics. Ce chapitre en donne une présentation unifiée : on suppose que la loi de la variable réponse appartient à la famille exponentielle, qui inclut notamment les lois normale, de Bernoulli, binomiale, de Poisson et gamma. Les régressions linéaire et logistique, vues aux chapitres précédents, en sont donc des cas particuliers.</p>
 <section id="famille-exponentielle" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="famille-exponentielle"><span class="header-section-number">3.1</span> Famille exponentielle</h2>
 <section id="définition" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="définition"><span class="header-section-number">3.1.1</span> Définition</h3>
-<div class="env-definition">
-<p><span class="env-titre">Définition</span></p>
-<p><strong>Définition.</strong></p>
-<p>La distribution de la variable aléatoire <span class="math inline">\(Y\)</span> appartient à la famille exponentielle si sa fonction de probabilité (densité si <span class="math inline">\(Y\)</span> est continue, fonction de masse si <span class="math inline">\(Y\)</span> est discrète) s’écrit <span class="math display">\[f_Y(y) = a(y,\phi)\exp\left\{\frac{y\theta - b(\theta)}{\phi}\right\},\]</span> où <span class="math inline">\(\theta\)</span> est le <strong>paramètre canonique</strong> et <span class="math inline">\(\phi\)</span> le <strong>paramètre de dispersion</strong>.</p>
+<div class="env-definition" data-titre="Famille exponentielle">
+<p><span class="env-titre">Définition — Famille exponentielle</span></p>
+<p>La loi de la variable aléatoire <span class="math inline">\(Y\)</span> appartient à la famille exponentielle si sa fonction de probabilité (densité si <span class="math inline">\(Y\)</span> est continue, fonction de masse si <span class="math inline">\(Y\)</span> est discrète) s’écrit</p>
+<p><span class="math display">\[
+f_Y(y) = a(y,\phi)\exp\left\{\frac{y\theta - b(\theta)}{\phi}\right\},
+\]</span></p>
+<p>où <span class="math inline">\(\theta\)</span> est le paramètre canonique et <span class="math inline">\(\phi\)</span> le paramètre de dispersion. La fonction <span class="math inline">\(b(\cdot)\)</span> est appelée fonction cumulante.</p>
 </div>
-<div id="sec-famexp" class="env-propriete">
-<p><span class="env-titre">Propriété</span></p>
-<p><strong>Propriété.</strong></p>
-<p>Si <span class="math inline">\(Y\)</span> appartient à la famille exponentielle, alors <span class="math display">\[E[Y] = \mu = b'(\theta) \qquad \mbox{et} \qquad Var[Y] = \phi\, b''(\theta) = \phi\, V(\mu),\]</span> où <span class="math inline">\(V(u) = b''\!\left[(b')^{-1}(u)\right]\)</span> est la <strong>fonction de variance</strong>.</p>
+<p>Cette écriture peut sembler abstraite au premier abord, mais elle a l’avantage de regrouper sous un même formalisme des lois qui semblent, à première vue, très différentes (continues ou discrètes, bornées ou non). Une fois qu’une loi est mise sous cette forme, on peut en déduire directement son espérance et sa variance, sans repasser par le calcul habituel des moments.</p>
+<div class="env-remarque" data-titre="Forme canonique générale">
+<p><span class="env-titre">Remarque — Forme canonique générale</span></p>
+<p>La forme utilisée ci-dessus est celle adaptée aux GLM, où <span class="math inline">\(\phi\)</span> apparaît explicitement comme diviseur. En statistique mathématique, on rencontre plus souvent une écriture encore plus générale, sans référence à <span class="math inline">\(\phi\)</span> :</p>
+<p><span class="math display">\[
+f_Y(y\mid\theta) = h(y)\, c(\theta)\, \exp\left\{\sum_{k=1}^K w_k(\theta)\, t_k(y)\right\},
+\]</span></p>
+<p>où <span class="math inline">\(h(y)\)</span> ne dépend pas de <span class="math inline">\(\theta\)</span>, <span class="math inline">\(c(\theta)\)</span> est une constante de normalisation ne dépendant pas de <span class="math inline">\(y\)</span>, et les <span class="math inline">\(t_k(y)\)</span> sont des statistiques suffisantes associées aux paramètres naturels <span class="math inline">\(w_k(\theta)\)</span>.</p>
+<p>Dans le cas à un seul paramètre naturel (<span class="math inline">\(K=1\)</span>), avec <span class="math inline">\(t_1(y) = y\)</span>, cette écriture se réduit à</p>
+<p><span class="math display">\[
+f_Y(y\mid\theta) = h(y)\exp\left\{w(\theta)\, y - A(\theta)\right\}, \qquad A(\theta) = -\log c(\theta).
+\]</span></p>
+<p>On retrouve la forme du chapitre en posant <span class="math inline">\(w(\theta) = \theta/\phi\)</span> et <span class="math inline">\(A(\theta) = b(\theta)/\phi\)</span> : le paramètre de dispersion <span class="math inline">\(\phi\)</span> se trouve alors absorbé dans le paramètre naturel et dans <span class="math inline">\(h(y)\)</span> plutôt que d’apparaître séparément. Cette forme rappelle en particulier que <span class="math inline">\(Y\)</span> est une statistique suffisante pour <span class="math inline">\(\theta\)</span> dans un GLM, puisque <span class="math inline">\(t(y)=y\)</span>.</p>
 </div>
-<p>Le paramètre canonique est donc directement lié à l’espérance de <span class="math inline">\(Y\)</span>, et le paramètre de dispersion module la variance. Pour certaines distributions (Bernoulli, binomiale, Poisson), <span class="math inline">\(\phi\)</span> est fixé à 1.</p>
+<div id="sec-famexp" class="env-propriete" data-titre="Moments d'une variable de la famille exponentielle">
+<p><span class="env-titre">Propriété — Moments d’une variable de la famille exponentielle</span></p>
+<p>Si <span class="math inline">\(Y\)</span> appartient à la famille exponentielle, alors</p>
+<p><span class="math display">\[
+E[Y] = \mu = b'(\theta) \qquad \text{et} \qquad Var[Y] = \phi\, b''(\theta) = \phi\, V(\mu),
+\]</span></p>
+<p>où <span class="math inline">\(V(u) = b''\!\left[(b')^{-1}(u)\right]\)</span> est appelée fonction de variance.</p>
+</div>
+<div class="env-theo" data-titre="Calcul de tous les moments par la fonction génératrice des cumulants">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Calcul de tous les moments par la fonction génératrice des cumulants</span></p>
+<p>La propriété précédente ne donne que le premier moment et la variance. On peut en fait obtenir <em>tous</em> les moments de <span class="math inline">\(Y\)</span> en passant par sa fonction génératrice des moments (MGF).</p>
+<p><strong>Fonction génératrice des moments.</strong> Pour <span class="math inline">\(Y\)</span> de densité <span class="math inline">\(f_Y(y) = a(y,\phi)\exp\{(y\theta-b(\theta))/\phi\}\)</span>,</p>
+<p><span class="math display">\[
+M_Y(t) = E[e^{tY}] = \int a(y,\phi)\exp\left\{\frac{y(\theta+t\phi) - b(\theta)}{\phi}\right\}dy.
+\]</span></p>
+<p>Puisque <span class="math inline">\(f_Y\)</span> s’intègre à <span class="math inline">\(1\)</span> pour tout paramètre canonique valide <span class="math inline">\(\theta'\)</span>, on sait que</p>
+<p><span class="math display">\[
+\int a(y,\phi)\exp\left\{\frac{y\theta'}{\phi}\right\}dy = \exp\left\{\frac{b(\theta')}{\phi}\right\}.
+\]</span></p>
+<p>En posant <span class="math inline">\(\theta' = \theta+t\phi\)</span> dans l’intégrale de <span class="math inline">\(M_Y(t)\)</span>, celle-ci se réduit à</p>
+<p><span class="math display">\[
+M_Y(t) = \exp\left\{\frac{b(\theta+t\phi) - b(\theta)}{\phi}\right\}.
+\]</span></p>
+<p><strong>Fonction génératrice des cumulants.</strong> En prenant le logarithme de <span class="math inline">\(M_Y(t)\)</span>, on obtient la fonction génératrice des cumulants (CGF) :</p>
+<p><span class="math display">\[
+K(t) = \log M_Y(t) = \frac{b(\theta+t\phi) - b(\theta)}{\phi}.
+\]</span></p>
+<p>Les cumulants <span class="math inline">\(\kappa_n\)</span> de <span class="math inline">\(Y\)</span> sont par définition les dérivées de <span class="math inline">\(K(t)\)</span> évaluées en <span class="math inline">\(t=0\)</span>. En dérivant <span class="math inline">\(n\)</span> fois par rapport à <span class="math inline">\(t\)</span> (la dérivation porte uniquement sur <span class="math inline">\(\theta+t\phi\)</span>, chaque dérivation faisant sortir un facteur <span class="math inline">\(\phi\)</span>),</p>
+<p><span class="math display">\[
+K^{(n)}(t) = \phi^{\,n-1}\, b^{(n)}(\theta+t\phi) \qquad\Longrightarrow\qquad \kappa_n = K^{(n)}(0) = \phi^{\,n-1}\, b^{(n)}(\theta).
+\]</span></p>
+<p>Ainsi, chaque cumulant de <span class="math inline">\(Y\)</span> s’obtient simplement en dérivant <span class="math inline">\(n\)</span> fois la fonction cumulante <span class="math inline">\(b(\theta)\)</span>, puis en multipliant par <span class="math inline">\(\phi^{n-1}\)</span> — d’où le nom de <span class="math inline">\(b(\theta)\)</span>. On retrouve en particulier <span class="math inline">\(\kappa_1 = b'(\theta) = \mu\)</span> et <span class="math inline">\(\kappa_2 = \phi\, b''(\theta) = \phi\, V(\mu)\)</span>, conformément à la propriété précédente.</p>
+<p><strong>Des cumulants aux moments.</strong> Les cumulants d’ordre supérieur donnent accès aux caractéristiques de forme de la loi, par les relations cumulants-moments usuelles, par exemple :</p>
+<p><span class="math display">\[
+\kappa_3 = E[(Y-\mu)^3] \qquad\text{(asymétrie)}, \qquad \kappa_4 = E[(Y-\mu)^4] - 3\kappa_2^2 \qquad\text{(aplatissement en excès)}.
+\]</span></p>
+</div>
+<p>Le paramètre canonique <span class="math inline">\(\theta\)</span> est donc directement lié à l’espérance de <span class="math inline">\(Y\)</span> (via <span class="math inline">\(\mu = b'(\theta)\)</span>), tandis que le paramètre de dispersion <span class="math inline">\(\phi\)</span> module l’amplitude de la variance autour de la fonction de variance <span class="math inline">\(V(\mu)\)</span>, qui elle dépend de la loi choisie. Pour certaines lois (Bernoulli, binomiale, Poisson), <span class="math inline">\(\phi\)</span> est fixé à 1 : la variance ne dépend alors que de la moyenne, une contrainte qu’il faudra garder à l’œil lors des diagnostics (voir la <a href="#sec-surdispersion">surdispersion</a>).</p>
 </section>
-<section id="exemples" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="exemples"><span class="header-section-number">3.1.2</span> Exemples</h3>
-<ul>
-<li><p><strong>Loi normale</strong> <span class="math inline">\(Y\sim\mathcal{N}(\mu,\sigma^2)\)</span> : <span class="math display">\[f_Y(y) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{\frac{y\mu - \mu^2/2}{\sigma^2} - \frac{y^2}{2\sigma^2}\right\},\]</span> d’où <span class="math inline">\(\theta = \mu\)</span>, <span class="math inline">\(\phi = \sigma^2\)</span>, <span class="math inline">\(b(\theta) = \theta^2/2\)</span>, <span class="math inline">\(a(y,\phi) = (2\pi\sigma^2)^{-1/2}e^{-y^2/(2\sigma^2)}\)</span>. On vérifie <span class="math inline">\(E[Y] = \theta = \mu\)</span>, <span class="math inline">\(Var[Y] = \sigma^2\)</span> et <span class="math inline">\(V(\mu) = 1\)</span>.</p></li>
-<li><p><strong>Loi binomiale</strong> <span class="math inline">\(Y\sim\mathrm{Bin}(m,\pi)\)</span> : <span class="math display">\[P(Y=y) = \binom{m}{y}\exp\left\{y\log\!\left(\frac{\pi}{1-\pi}\right) + m\log(1-\pi)\right\},\]</span> d’où <span class="math inline">\(\theta = \log\{\pi/(1-\pi)\}\)</span> (donc <span class="math inline">\(\pi = e^\theta/(1+e^\theta)\)</span>), <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(a(y,\phi) = \binom{m}{y}\)</span> et <span class="math inline">\(b(\theta) = m\log(1+e^\theta)\)</span>. On vérifie <span class="math inline">\(E[Y] = m\pi\)</span>, <span class="math inline">\(Var[Y] = m\pi(1-\pi)\)</span> et <span class="math inline">\(V(\mu) = \mu(m-\mu)/m\)</span>.</p></li>
-<li><p><strong>Loi de Poisson</strong> <span class="math inline">\(Y\sim\mathcal{P}(\lambda)\)</span> : <span class="math display">\[P(Y=y) = \frac{1}{y!}\exp\left\{y\log(\lambda) - \lambda\right\},\]</span> d’où <span class="math inline">\(\theta = \log(\lambda)\)</span>, <span class="math inline">\(\phi = 1\)</span>, <span class="math inline">\(a(y,\phi) = 1/y!\)</span> et <span class="math inline">\(b(\theta) = e^\theta\)</span>. On vérifie <span class="math inline">\(E[Y] = Var[Y] = \lambda\)</span> et <span class="math inline">\(V(\mu) = \mu\)</span>.</p></li>
-<li><p><strong>Loi gamma</strong> <span class="math inline">\(Y\sim\mathrm{Gamma}(\alpha,\beta)\)</span>, reparamétrée avec <span class="math inline">\(\mu = \alpha\beta\)</span> et <span class="math inline">\(\phi = 1/\alpha\)</span> : on obtient <span class="math inline">\(\theta = -1/\mu\)</span>, <span class="math inline">\(b(\theta) = -\log(-\theta)\)</span>, d’où <span class="math inline">\(E[Y] = -1/\theta = \mu\)</span>, <span class="math inline">\(Var[Y] = \phi\mu^2\)</span> et <span class="math inline">\(V(\mu) = \mu^2\)</span>.</p></li>
-</ul>
+<section id="mise-en-forme-des-lois-usuelles" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="mise-en-forme-des-lois-usuelles"><span class="header-section-number">3.1.2</span> Mise en forme des lois usuelles</h3>
+<p>Pour identifier <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span>, <span class="math inline">\(a(y,\phi)\)</span> et <span class="math inline">\(b(\theta)\)</span> pour une loi donnée, la démarche est toujours la même : on part de la fonction de probabilité, on prend son logarithme, et on réarrange les termes pour faire apparaître la forme <span class="math inline">\(\{y\theta - b(\theta)\}/\phi\)</span>, tout ce qui reste (ne dépendant pas de <span class="math inline">\(\theta\)</span>) formant <span class="math inline">\(\log a(y,\phi)\)</span>.</p>
+<div class="env-exemple" data-titre="Loi normale">
+<p><span class="env-titre">Exemple — Loi normale</span></p>
+<p>Soit <span class="math inline">\(Y\sim\mathcal{N}(\mu,\sigma^2)\)</span>, de densité</p>
+<p><span class="math display">\[
+f_Y(y) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{-\frac{(y-\mu)^2}{2\sigma^2}\right\}.
+\]</span></p>
+<p>En développant le carré au numérateur de l’exposant,</p>
+<p><span class="math display">\[
+-\frac{(y-\mu)^2}{2\sigma^2} = \frac{y\mu - \mu^2/2}{\sigma^2} - \frac{y^2}{2\sigma^2},
+\]</span></p>
+<p>on obtient</p>
+<p><span class="math display">\[
+f_Y(y) = \underbrace{\frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{\frac{-y^2}{2\sigma^2}\right\}}_{a(y,\phi)}\exp\left\{\frac{y\mu - \mu^2/2}{\sigma^2}\right\}.
+\]</span></p>
+<p>En comparant à la forme générale :</p>
+<p><span class="math display">\[
+\theta = \mu, \qquad \phi = \sigma^2, \qquad b(\theta) = \frac{\mu^2}{2}.
+\]</span></p>
+<p>On vérifie que</p>
+<p><span class="math display">\[
+b'(\theta) = \theta = \mu, \qquad b''(\theta) = 1.
+\]</span></p>
+<p>D’où</p>
+<p><span class="math display">\[
+E[Y] = \mu, \qquad Var[Y] = \sigma^2 \times 1 = \sigma^2, \qquad V(\mu) = 1.
+\]</span></p>
+<p>La variance ne dépend donc pas de la moyenne.</p>
+</div>
+<div class="env-exemple" data-titre="Loi binomiale">
+<p><span class="env-titre">Exemple — Loi binomiale</span></p>
+<p>Soit <span class="math inline">\(Y\sim\mathrm{Bin}(m,\pi)\)</span>, de fonction de masse</p>
+<p><span class="math display">\[
+P(Y=y) = \binom{m}{y}\pi^y(1-\pi)^{m-y}, \qquad y = 0,1,\ldots,m.
+\]</span></p>
+<p>On isole d’abord le terme en <span class="math inline">\(y\)</span> dans l’exponentielle :</p>
+<p><span class="math display">\[
+\pi^y(1-\pi)^{m-y} = \exp\left\{y\log(\pi) + (m-y)\log(1-\pi)\right\} = \exp\left\{y\log\!\left(\frac{\pi}{1-\pi}\right) + m\log(1-\pi)\right\}.
+\]</span></p>
+<p>Ce qui permet la réécriture</p>
+<p><span class="math display">\[
+P(Y=y) = \binom{m}{y}\exp\left\{y\log\!\left(\frac{\pi}{1-\pi}\right) + m\log(1-\pi)\right\}, \qquad y = 0,1,\ldots,m.
+\]</span></p>
+<p>On identifie donc</p>
+<p><span class="math display">\[
+\theta = \log\!\left(\frac{\pi}{1-\pi}\right), \qquad \phi = 1, \qquad a(y,\phi) = \binom{m}{y}.
+\]</span></p>
+<p>Le paramètre canonique <span class="math inline">\(\theta\)</span> est ici le logit de <span class="math inline">\(\pi\)</span>, ce qui explique pourquoi ce lien est dit <em>canonique</em> pour la loi binomiale.</p>
+<p>Comme <span class="math inline">\(\pi = e^\theta/(1+e^\theta)\)</span>, on a</p>
+<p><span class="math display">\[
+1-\pi = \frac{1}{1+e^\theta} \qquad\Longrightarrow\qquad \log(1-\pi) = -\log(1+e^\theta).
+\]</span></p>
+<p>D’où</p>
+<p><span class="math display">\[
+b(\theta) = -m\log(1-\pi) = m\log(1+e^\theta).
+\]</span></p>
+<p>On vérifie que</p>
+<p><span class="math display">\[
+b'(\theta) = m\pi = E[Y], \qquad b''(\theta) = m\pi(1-\pi) = Var[Y].
+\]</span></p>
+<p>En substituant <span class="math inline">\(\mu = m\pi\)</span>, on obtient</p>
+<p><span class="math display">\[
+V(\mu) = \frac{\mu(m-\mu)}{m}.
+\]</span></p>
+</div>
+<div class="env-exemple" data-titre="Loi de Poisson">
+<p><span class="env-titre">Exemple — Loi de Poisson</span></p>
+<p>Soit <span class="math inline">\(Y\sim\mathcal{P}(\lambda)\)</span>, de fonction de masse</p>
+<p><span class="math display">\[
+P(Y=y) = \frac{\lambda^y e^{-\lambda}}{y!} = \frac{1}{y!}\exp\left\{y\log(\lambda) - \lambda\right\}, \qquad y = 0,1,2,\ldots
+\]</span></p>
+<p>On identifie directement</p>
+<p><span class="math display">\[
+\theta = \log(\lambda), \qquad \phi = 1, \qquad a(y,\phi) = \frac{1}{y!}, \qquad b(\theta) = \lambda = e^\theta.
+\]</span></p>
+<p>On a</p>
+<p><span class="math display">\[
+b'(\theta) = e^\theta = \lambda, \qquad b''(\theta) = e^\theta = \lambda.
+\]</span></p>
+<p>Ceci redonne la propriété bien connue</p>
+<p><span class="math display">\[
+E[Y] = Var[Y] = \lambda, \qquad V(\mu) = \mu.
+\]</span></p>
+</div>
+<div class="env-exemple" data-titre="Loi gamma">
+<p><span class="env-titre">Exemple — Loi gamma</span></p>
+<p>La loi gamma est habituellement paramétrée par sa forme <span class="math inline">\(\alpha\)</span> et son taux (ou son échelle) <span class="math inline">\(\beta\)</span>. Pour l’écrire sous forme exponentielle avec un paramètre canonique lié directement à la moyenne, on la reparamétrise avec</p>
+<p><span class="math display">\[
+\mu = \alpha\beta \quad\text{(la moyenne)}, \qquad \phi = \frac{1}{\alpha}.
+\]</span></p>
+<p>Après réarrangement, on obtient</p>
+<p><span class="math display">\[
+\theta = -\frac{1}{\mu}, \qquad b(\theta) = -\log(-\theta).
+\]</span></p>
+<p>On vérifie que</p>
+<p><span class="math display">\[
+b'(\theta) = -\frac{1}{\theta} = \mu, \qquad b''(\theta) = \frac{1}{\theta^2} = \mu^2.
+\]</span></p>
+<p>D’où</p>
+<p><span class="math display">\[
+Var[Y] = \phi\mu^2, \qquad V(\mu) = \mu^2.
+\]</span></p>
+<p>Contrairement aux trois exemples précédents, la variance croît ici avec le carré de la moyenne.</p>
+</div>
 <p>Le tableau suivant résume ces résultats :</p>
 <table class="caption-top table">
 <colgroup>
@@ -358,7 +508,7 @@ window.Quarto = {
 </colgroup>
 <thead>
 <tr class="header">
-<th>Distribution</th>
+<th>loi</th>
 <th><span class="math inline">\(\theta\)</span></th>
 <th><span class="math inline">\(\phi\)</span></th>
 <th><span class="math inline">\(b(\theta)\)</span></th>
@@ -397,70 +547,248 @@ window.Quarto = {
 </tbody>
 </table>
 </section>
-<section id="déviance" class="level3" data-number="3.1.3">
-<h3 data-number="3.1.3" class="anchored" data-anchor-id="déviance"><span class="header-section-number">3.1.3</span> Déviance</h3>
-<p>Posons <span class="math inline">\(t(y,\mu) = y\theta - b(\theta)\)</span> et <span class="math inline">\(d(y,\mu) = 2\{t(y,y) - t(y,\mu)\}\)</span>. On a <span class="math display">\[\frac{\partial d(y,\mu)}{\partial\theta} = -\{y - b'(\theta)\} \qquad \mbox{et} \qquad \frac{\partial^2 d(y,\mu)}{\partial\theta^2} = b''(\theta) = V(\mu) &gt; 0.\]</span> La dérivée s’annule lorsque <span class="math inline">\(\mu = y\)</span> : la quantité <span class="math inline">\(d(y,\mu)\)</span> est donc toujours positive et ne s’annule que si <span class="math inline">\(\mu = y\)</span>. Pour la loi normale, <span class="math inline">\(d(y,\mu) = (y-\mu)^2\)</span> : la déviance généralise la somme des carrés des résidus.</p>
-<p>On montre que <span class="math inline">\(d(Y,\mu)/\phi\)</span> suit approximativement une <span class="math inline">\(\chi^2_1\)</span>. Pour des variables indépendantes <span class="math inline">\(\{Y_1,\ldots,Y_n\}\)</span> de paramètres <span class="math inline">\((\mu_i,\phi)\)</span> (dispersion commune), la <strong>déviance</strong> et la <strong>déviance standardisée</strong> sont <span class="math display">\[D(y,\mu) = \sum_{i=1}^n d(y_i,\mu_i) \qquad\mbox{et}\qquad D^*(y,\mu) = \frac{D(y,\mu)}{\phi} \ \stackrel{approx.}{\sim}\ \chi^2_n.\]</span></p>
 </section>
-</section>
-<section id="définition-dun-mlg" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="définition-dun-mlg"><span class="header-section-number">3.2</span> Définition d’un MLG</h2>
-<p>Un modèle linéaire généralisé est composé de <strong>trois composantes</strong> :</p>
+<section id="définition-dun-modèle-linéaire-généralisé" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="définition-dun-modèle-linéaire-généralisé"><span class="header-section-number">3.2</span> Définition d’un modèle linéaire généralisé</h2>
+<div class="env-definition" data-titre="Modèle linéaire généralisé">
+<p><span class="env-titre">Définition — Modèle linéaire généralisé</span></p>
+<p>Un modèle linéaire généralisé (GLM) est composé de trois éléments :</p>
 <ol type="1">
-<li><p><strong>Composante aléatoire</strong> : <span class="math inline">\(Y_i\)</span> suit une distribution de la famille exponentielle de paramètres <span class="math inline">\((\theta_i, \phi)\)</span> ; chaque observation possède son propre paramètre canonique <span class="math inline">\(\theta_i\)</span>, mais le paramètre de dispersion <span class="math inline">\(\phi\)</span> est commun. Ainsi <span class="math inline">\(E[Y_i] = \mu_i = b'(\theta_i)\)</span> et <span class="math inline">\(Var[Y_i] = \phi\, V(\mu_i)\)</span>.</p></li>
-<li><p><strong>Composante systématique</strong> : <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span> (prédicteur linéaire).</p></li>
-<li><p><strong>Fonction de lien</strong> : <span class="math inline">\(g(\mu_i) = \eta_i\)</span>, avec <span class="math inline">\(g\)</span> monotone et dérivable. La fonction de lien est dite <strong>canonique</strong> si <span class="math inline">\(g[b'(u)] = u\)</span> pour tout <span class="math inline">\(u\)</span>, c’est-à-dire si elle assure <span class="math inline">\(\eta_i = \theta_i\)</span>.</p></li>
+<li><p>Composante aléatoire : <span class="math inline">\(Y_i\)</span> suit une loi de la famille exponentielle de paramètres <span class="math inline">\((\theta_i, \phi)\)</span>. Chaque observation possède son propre paramètre canonique <span class="math inline">\(\theta_i\)</span>, mais le paramètre de dispersion <span class="math inline">\(\phi\)</span> est commun à toutes les observations. Ainsi <span class="math inline">\(E[Y_i] = \mu_i = b'(\theta_i)\)</span> et <span class="math inline">\(Var[Y_i] = \phi\, V(\mu_i)\)</span>.</p></li>
+<li><p>Composante systématique : le prédicteur linéaire <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span>, qui combine linéairement les variables explicatives.</p></li>
+<li><p>Fonction de lien : une fonction <span class="math inline">\(g\)</span>, monotone et dérivable, qui relie l’espérance <span class="math inline">\(\mu_i\)</span> au prédicteur linéaire par <span class="math inline">\(g(\mu_i) = \eta_i\)</span>.</p></li>
 </ol>
-<p>Les paramètres du modèle sont <span class="math inline">\(\beta\)</span> et <span class="math inline">\(\phi\)</span>. Cas particuliers : régression linéaire (normale, lien identité), régression logistique (binomiale, lien logit), régression Poisson (Poisson, lien log).</p>
+</div>
+<div class="env-definition" data-titre="Lien canonique">
+<p><span class="env-titre">Définition — Lien canonique</span></p>
+<p>La fonction de lien est dite canonique lorsqu’elle égale directement <span class="math inline">\(\eta_i\)</span> au paramètre canonique <span class="math inline">\(\theta_i\)</span>, c’est-à-dire lorsque <span class="math inline">\(g[b'(u)] = u\)</span> pour tout <span class="math inline">\(u\)</span>. C’est le choix qui apparaît naturellement lorsqu’on écrit la loi sous forme exponentielle : par exemple, pour la loi binomiale, <span class="math inline">\(\theta = \text{logit}(\pi)\)</span>, d’où le lien logit ; pour la loi de Poisson, <span class="math inline">\(\theta = \log(\lambda)\)</span>, d’où le lien log.</p>
+</div>
+<p>Les paramètres du modèle sont donc <span class="math inline">\(\boldsymbol\beta = (\beta_0,\ldots,\beta_p)^\top\)</span> et <span class="math inline">\(\phi\)</span>. On retrouve comme cas particuliers la régression linéaire (loi normale, lien identité), la régression logistique (loi binomiale, lien logit) et la régression de Poisson (loi de Poisson, lien log). Rien n’empêche cependant d’utiliser un lien non canonique ; le lien canonique n’a pas de statut privilégié sur le plan de l’interprétation, mais il simplifie certains calculs, comme on le verra à la section suivante.</p>
 </section>
 <section id="estimation-des-paramètres" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="estimation-des-paramètres"><span class="header-section-number">3.3</span> Estimation des paramètres</h2>
-<p>La log-vraisemblance des données <span class="math inline">\(\Delta = \{(Y_i,X_i)\}\)</span> s’écrit <span class="math display">\[l(\beta,\phi\mid\Delta) = \sum_{i=1}^n\log[a(y_i,\phi)] + \frac{1}{\phi}\sum_{i=1}^n[y_i\theta_i - b(\theta_i)] = l_1(\phi) + \frac{1}{\phi}\, l_2(\beta).\]</span> L’estimateur du maximum de vraisemblance <span class="math inline">\(\hat\beta\)</span> maximise <span class="math inline">\(l_2(\beta)\)</span> (il ne dépend pas de <span class="math inline">\(\phi\)</span>). Sa distribution asymptotique est <span class="math display">\[\hat\beta \sim \mathcal{N}\left\{\beta,\ \phi\,(X^\top W X)^{-1}\right\},\]</span> où <span class="math inline">\(W = \mathrm{diag}\{W_1,\ldots,W_n\}\)</span> avec <span class="math display">\[W_i = \frac{1}{V(\hat\mu_i)\left[g'(\hat\mu_i)\right]^2},\]</span> <span class="math inline">\(\hat\mu_i = g^{-1}(\hat\eta_i)\)</span> et <span class="math inline">\(\hat\eta_i = \hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}\)</span>.</p>
-<section id="estimation-de-phi" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="estimation-de-phi"><span class="header-section-number">3.3.1</span> Estimation de <span class="math inline">\(\phi\)</span></h3>
-<p>Si <span class="math inline">\(\phi\)</span> est fixé (logistique, Poisson), la procédure s’arrête ici. Sinon (normale, gamma), on doit estimer <span class="math inline">\(\phi\)</span>. L’EMV de <span class="math inline">\(\phi\)</span> est biaisé en petits échantillons ; on lui préfère des estimateurs par la méthode des moments. On calcule <span class="math display">\[X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{V(\hat\mu_i)} \qquad\mbox{et}\qquad D(y,\hat\mu),\]</span> qui, divisées par <span class="math inline">\(\phi\)</span>, suivent approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span>. On en déduit les estimateurs de <strong>Pearson</strong> et de <strong>déviance</strong> : <span class="math display">\[\tilde\phi_P = \frac{X^2}{n-(p+1)}, \qquad \tilde\phi_D = \frac{D(y,\hat\mu)}{n-(p+1)}.\]</span> L’estimateur de Pearson possède un biais négligeable et est robuste à une mauvaise spécification de la distribution ; c’est l’estimateur par défaut de la fonction <code>glm</code> de R. L’estimateur déviance a une faible variance, mais peut être sensible lorsque des valeurs de <span class="math inline">\(y\)</span> sont proches des limites de leur support.</p>
+<section id="vraisemblance-et-score" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="vraisemblance-et-score"><span class="header-section-number">3.3.1</span> Vraisemblance et score</h3>
+<p>La log-vraisemblance des données <span class="math inline">\(\Delta = \{(Y_i,X_i)\}\)</span> s’écrit, en sommant les contributions individuelles données par la forme exponentielle,</p>
+<p><span class="math display">\[
+\ell(\boldsymbol\beta,\phi\mid\Delta) = \sum_{i=1}^n\log[a(y_i,\phi)] + \frac{1}{\phi}\sum_{i=1}^n[y_i\theta_i - b(\theta_i)] = \ell_1(\phi) + \frac{1}{\phi}\, \ell_2(\boldsymbol\beta).
+\]</span></p>
+<p>Le point important est que <span class="math inline">\(\theta_i\)</span> dépend de <span class="math inline">\(\boldsymbol\beta\)</span> (indirectement, via <span class="math inline">\(\mu_i = g^{-1}(\eta_i)\)</span> puis <span class="math inline">\(\theta_i = (b')^{-1}(\mu_i)\)</span>), mais que <span class="math inline">\(\phi\)</span> n’apparaît que comme facteur multiplicatif devant <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> et dans le terme <span class="math inline">\(\ell_1(\phi)\)</span>, qui ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>. Il s’ensuit que l’estimateur du maximum de vraisemblance <span class="math inline">\(\hb\)</span> maximise <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> seul, peu importe la valeur de <span class="math inline">\(\phi\)</span> : l’estimation de <span class="math inline">\(\boldsymbol\beta\)</span> et celle de <span class="math inline">\(\phi\)</span> se font donc de façon séparée.</p>
+<p>Comme pour la régression logistique, il n’existe généralement pas de solution analytique à ce problème de maximisation, à cause de la fonction de lien <span class="math inline">\(g\)</span>, qui introduit une relation non linéaire entre <span class="math inline">\(\boldsymbol\beta\)</span> et l’espérance <span class="math inline">\(\mu_i\)</span>. On résout donc numériquement l’équation du score par l’algorithme IRLS (<em>Iteratively Reweighted Least Squares</em>), une application de la méthode de Fisher scoring à ce problème : à chaque itération, on ajuste une régression linéaire pondérée dont les poids et la variable réponse transformée sont mis à jour à partir des valeurs ajustées courantes, jusqu’à convergence.</p>
+</section>
+<section id="loi-asymptotique-de-hb" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="loi-asymptotique-de-hb"><span class="header-section-number">3.3.2</span> loi asymptotique de <span class="math inline">\(\hb\)</span></h3>
+<div class="env-propriete" data-titre="loi asymptotique de l'estimateur du maximum de vraisemblance">
+<p><span class="env-titre">Propriété — loi asymptotique de l’estimateur du maximum de vraisemblance</span></p>
+<p>L’estimateur <span class="math inline">\(\hb\)</span> obtenu par maximisation de <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> a pour loi asymptotique</p>
+<p><span class="math display">\[
+\hb \ \overset{\cdot}{\sim}\ \mathcal{N}\left\{\boldsymbol\beta,\ \phi\,(X^\top W X)^{-1}\right\},
+\]</span></p>
+<p>où <span class="math inline">\(X\)</span> est la matrice de design, <span class="math inline">\(W = \mathrm{diag}\{W_1,\ldots,W_n\}\)</span> et</p>
+<p><span class="math display">\[
+W_i = \frac{1}{V(\hat\mu_i)\left[g'(\hat\mu_i)\right]^2},
+\]</span></p>
+<p>avec <span class="math inline">\(\hat\mu_i = g^{-1}(\hat\eta_i)\)</span> et <span class="math inline">\(\hat\eta_i = \hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}\)</span>.</p>
+</div>
+<p>Cette forme englobe les résultats vus aux chapitres précédents : en régression linéaire (<span class="math inline">\(V(\mu)=1\)</span>, <span class="math inline">\(g'(\mu)=1\)</span>), <span class="math inline">\(W_i = 1\)</span> pour tout <span class="math inline">\(i\)</span> et on retrouve la variance usuelle des moindres carrés ; en régression logistique (<span class="math inline">\(m_i=1\)</span>), on retrouve <span class="math inline">\(w_i = \hat\mu_i(1-\hat\mu_i)\)</span> après simplification.</p>
+</section>
+<section id="déviance-individuelle" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="déviance-individuelle"><span class="header-section-number">3.3.3</span> Déviance individuelle</h3>
+<p>Comme au chapitre sur la <a href="02-regression-logistique.html#sec-deviance">régression logistique</a>, on veut comparer l’ajustement <span class="math inline">\(\mu\)</span> d’un modèle à l’ajustement parfait <span class="math inline">\(y\)</span>, et ce pour n’importe quelle loi de la famille exponentielle. Posons</p>
+<p><span class="math display">\[
+t(y,\mu) = y\theta - b(\theta),
+\]</span></p>
+<p>la partie de la log-vraisemblance individuelle qui dépend de <span class="math inline">\(\theta\)</span> (donc de <span class="math inline">\(\mu\)</span>, puisque <span class="math inline">\(\mu = b'(\theta)\)</span>). La déviance individuelle est alors définie, comme dans le cas binomial, par deux fois la différence entre la vraisemblance évaluée en l’ajustement parfait et celle évaluée en <span class="math inline">\(\mu\)</span> :</p>
+<p><span class="math display">\[
+d(y,\mu) = 2\left\{t(y,y) - t(y,\mu)\right\}.
+\]</span></p>
+<div class="env-propriete" data-titre="Non-négativité de la déviance individuelle">
+<p><span class="env-titre">Propriété — Non-négativité de la déviance individuelle</span></p>
+<p>En dérivant <span class="math inline">\(d(y,\mu)\)</span> par rapport à <span class="math inline">\(\theta\)</span> (le paramètre canonique associé à <span class="math inline">\(\mu\)</span>),</p>
+<p><span class="math display">\[
+\frac{\partial d(y,\mu)}{\partial\theta} = -\{y - b'(\theta)\} \qquad \text{et} \qquad \frac{\partial^2 d(y,\mu)}{\partial\theta^2} = b''(\theta) = V(\mu) &gt; 0.
+\]</span></p>
+<p>La dérivée première s’annule lorsque <span class="math inline">\(\mu = y\)</span>, et la dérivée seconde est toujours positive : <span class="math inline">\(d(y,\mu)\)</span> atteint donc un minimum en <span class="math inline">\(\mu=y\)</span>, où elle vaut <span class="math inline">\(0\)</span>. Ainsi <span class="math inline">\(d(y,\mu) \geq 0\)</span> pour tout <span class="math inline">\(\mu\)</span>, avec égalité si et seulement si <span class="math inline">\(\mu = y\)</span>.</p>
+</div>
+<p>Pour la loi normale, on retrouve <span class="math inline">\(d(y,\mu) = (y-\mu)^2\)</span> : la déviance individuelle généralise donc directement le carré du résidu utilisé en régression linéaire classique.</p>
+<div class="env-propriete" data-titre="loi asymptotique de la déviance">
+<p><span class="env-titre">Propriété — loi asymptotique de la déviance</span></p>
+<p>On montre que <span class="math inline">\(d(Y,\mu)/\phi\)</span> suit approximativement une loi <span class="math inline">\(\chi^2_1\)</span>. Pour des variables indépendantes <span class="math inline">\(\{Y_1,\ldots,Y_n\}\)</span> de paramètres <span class="math inline">\((\mu_i,\phi)\)</span>, où le paramètre de dispersion <span class="math inline">\(\phi\)</span> est commun à toutes les observations, la déviance et la déviance standardisée du modèle sont</p>
+<p><span class="math display">\[
+D(y,\mu) = \sum_{i=1}^n d(y_i,\mu_i) \qquad\text{et}\qquad D^*(y,\mu) = \frac{D(y,\mu)}{\phi} \ \overset{\cdot}{\sim}\ \chi^2_n.
+\]</span></p>
+</div>
+<div class="env-remarque" data-titre="Le cas normal">
+<p><span class="env-titre">Remarque — Le cas normal</span></p>
+<p>Dans le cas de la loi normale, on a</p>
+<p><span class="math display">\[
+D^*(y,\mu) = \frac{D(y,\mu)}{\phi} = \frac{\sum_{i=1}^n (y_i-\mu_i)^2}{\sigma^2} \sim \chi^2_n,
+\]</span></p>
+<p>qui n’est pas une approximation, mais bien la loi exacte de la déviance standardisée.</p>
+</div>
+</section>
+<section id="estimation-de-phi" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="estimation-de-phi"><span class="header-section-number">3.3.4</span> Estimation de <span class="math inline">\(\phi\)</span></h3>
+<p>Si <span class="math inline">\(\phi\)</span> est fixé par la loi (Bernoulli, binomiale, Poisson), la procédure d’estimation s’arrête à <span class="math inline">\(\hb\)</span>. Autrement (loi normale, gamma), <span class="math inline">\(\phi\)</span> doit lui aussi être estimé. L’estimateur du maximum de vraisemblance de <span class="math inline">\(\phi\)</span> est biaisé en petits échantillons, ce qui motive l’usage d’estimateurs par la <a href="#theo-estim-phi">méthode des moments</a> plutôt que de rechercher directement le maximum de <span class="math inline">\(\ell_1(\phi)\)</span>.</p>
+<p>On calcule pour cela deux statistiques, qui généralisent la statistique du khi-deux de Pearson et la déviance vues en régression logistique :</p>
+<p><span class="math display">\[
+X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{V(\hat\mu_i)} \qquad\text{et}\qquad D(y,\hat\mu) = \sum_{i=1}^n d(y_i,\hat\mu_i).
+\]</span></p>
+<p>Ces deux statistiques, une fois divisées par <span class="math inline">\(\phi\)</span>, suivent approximativement une loi <span class="math inline">\(\chi^2_{n-(p+1)}\)</span>, ce qui mène directement aux estimateurs de Pearson et de déviance :</p>
+<p><span class="math display">\[
+\tilde\phi_P = \frac{X^2}{n-(p+1)}, \qquad \tilde\phi_D = \frac{D(y,\hat\mu)}{n-(p+1)}.
+\]</span></p>
+<div class="env-remarque" data-titre="Lequel choisir?">
+<p><span class="env-titre">Remarque — Lequel choisir?</span></p>
+<p>L’estimateur de Pearson possède un biais négligeable et demeure raisonnablement robuste à une mauvaise spécification de la loi ; c’est l’estimateur utilisé par défaut par la fonction <code>glm</code> de R. L’estimateur de déviance a une variance plus faible en général, mais peut devenir instable lorsque des valeurs de <span class="math inline">\(y\)</span> sont proches des bornes de leur support (par exemple, <span class="math inline">\(y\)</span> près de <span class="math inline">\(0\)</span> pour la loi gamma).</p>
+</div>
+<div id="theo-estim-phi" class="env-theo" data-titre="Estimateurs de $\phi$ par la méthode des moments">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Estimateurs de <span class="math inline">\(\phi\)</span> par la méthode des moments</span></p>
+<p>On cherche un estimateur de <span class="math inline">\(\phi\)</span> à partir des deux statistiques</p>
+<p><span class="math display">\[
+X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{V(\hat\mu_i)}, \qquad D(y,\hat\mu) = \sum_{i=1}^n d(y_i,\hat\mu_i),
+\]</span></p>
+<p>sachant que chacune, une fois divisée par <span class="math inline">\(\phi\)</span>, suit approximativement une loi du khi-deux :</p>
+<p><span class="math display">\[
+\frac{X^2}{\phi} \ \overset{\cdot}{\sim}\ \chi^2_{n-(p+1)}, \qquad \frac{D(y,\hat\mu)}{\phi} \ \overset{\cdot}{\sim}\ \chi^2_{n-(p+1)}.
+\]</span></p>
+<p><strong>Espérance d’une loi du khi-deux.</strong> Une variable suivant une loi <span class="math inline">\(\chi^2_d\)</span> a pour espérance <span class="math inline">\(d\)</span>. En appliquant ce fait aux deux quantités ci-dessus,</p>
+<p><span class="math display">\[
+E\!\left[\frac{X^2}{\phi}\right] \approx n-(p+1), \qquad E\!\left[\frac{D(y,\hat\mu)}{\phi}\right] \approx n-(p+1).
+\]</span></p>
+<p><strong>Isoler <span class="math inline">\(\phi\)</span>.</strong> Le paramètre <span class="math inline">\(\phi\)</span> est une constante, pas une variable aléatoire ; il peut donc sortir de l’espérance dans chacune des deux expressions :</p>
+<p><span class="math display">\[
+\frac{E[X^2]}{\phi} \approx n-(p+1), \qquad \frac{E[D(y,\hat\mu)]}{\phi} \approx n-(p+1).
+\]</span></p>
+<p>En résolvant pour <span class="math inline">\(\phi\)</span>,</p>
+<p><span class="math display">\[
+\phi \approx \frac{E[X^2]}{n-(p+1)}, \qquad \phi \approx \frac{E[D(y,\hat\mu)]}{n-(p+1)}.
+\]</span></p>
+<p><strong>Substitution empirique.</strong> La méthode des moments consiste précisément à remplacer une espérance théorique, qu’on ne connaît pas, par sa valeur observée. On remplace donc <span class="math inline">\(E[X^2]\)</span> par <span class="math inline">\(X^2\)</span> et <span class="math inline">\(E[D(y,\hat\mu)]\)</span> par <span class="math inline">\(D(y,\hat\mu)\)</span>, ce qui donne les deux estimateurs :</p>
+<p><span class="math display">\[
+\tilde\phi_P = \frac{X^2}{n-(p+1)}, \qquad \tilde\phi_D = \frac{D(y,\hat\mu)}{n-(p+1)}.
+\]</span></p>
+<p>La division par <span class="math inline">\(n-(p+1)\)</span> plutôt que par <span class="math inline">\(n\)</span> permet en plus d’obtenir un estimateur sans biais.</p>
+</div>
 </section>
 </section>
 <section id="inférence-statistique" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">3.4</span> Inférence statistique</h2>
-<section id="cas-phi-fixé" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="cas-phi-fixé"><span class="header-section-number">3.4.1</span> Cas <span class="math inline">\(\phi\)</span> fixé</h3>
-<p>Un intervalle de confiance à <span class="math inline">\((1-\alpha)100%\)</span> pour <span class="math inline">\(\beta_j\)</span> est <span class="math display">\[\left[\hat\beta_j - z_{\alpha/2}\sqrt{\phi\, v_j}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\phi\, v_j}\right],\]</span> où <span class="math inline">\(v_j\)</span> est le <span class="math inline">\((j+1)^{\text{ème}}\)</span> élément diagonal de <span class="math inline">\((X^\top W X)^{-1}\)</span>.</p>
-<p>Pour une observation future <span class="math inline">\(X^*\)</span>, avec <span class="math inline">\(\eta^* = {X^*}^\top\beta\)</span> et <span class="math inline">\(\mu^* = g^{-1}(\eta^*)\)</span>, on a <span class="math inline">\(Var[\hat\eta^*] = \phi\,{X^*}^\top(X^\top W X)^{-1}X^*\)</span>, d’où l’IC pour <span class="math inline">\(\eta^*\)</span> : <span class="math display">\[\left[{X^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\phi\,{X^*}^\top(X^\top WX)^{-1}X^*}\right],\]</span> et l’IC pour <span class="math inline">\(\mu^*\)</span> obtenu en appliquant <span class="math inline">\(g^{-1}\)</span> aux deux bornes.</p>
-<p>Pour comparer deux modèles emboîtés <span class="math inline">\(A\)</span> (réduit) et <span class="math inline">\(B\)</span> (complet), la statistique <span class="math display">\[X_{obs} = \frac{D_A(y,\hat\mu) - D_B(y,\hat\mu)}{\phi}\]</span> suit une <span class="math inline">\(\chi^2_d\)</span> sous l’hypothèse que le modèle réduit est vrai (<span class="math inline">\(d\)</span> = différence du nombre de paramètres). On rejette au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(X_{obs} &gt; \chi^2_{d,\alpha}\)</span>.</p>
+<section id="intervalles-de-confiance-et-tests-pour-beta_j" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="intervalles-de-confiance-et-tests-pour-beta_j"><span class="header-section-number">3.4.1</span> Intervalles de confiance et tests pour <span class="math inline">\(\beta_j\)</span></h3>
+<p><strong>Cas où <span class="math inline">\(\phi\)</span> est fixé.</strong> Comme en régression logistique, les intervalles de confiance et les tests concernant <span class="math inline">\(\boldsymbol\beta\)</span> reposent sur la normalité asymptotique de <span class="math inline">\(\hb\)</span>. Un intervalle de confiance de niveau <span class="math inline">\((1-\alpha)\)</span> pour <span class="math inline">\(\beta_j\)</span> est</p>
+<p><span class="math display">\[
+\left[\hbj{j} - z_{\alpha/2}\sqrt{\phi\, v_j}\,;\ \hbj{j} + z_{\alpha/2}\sqrt{\phi\, v_j}\right],
+\]</span></p>
+<p>où <span class="math inline">\(v_j\)</span> est le <span class="math inline">\((j+1)^{\text{ème}}\)</span> élément diagonal de <span class="math inline">\((X^\top W X)^{-1}\)</span> et <span class="math inline">\(z_\gamma\)</span> est le quantile de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> défini par <span class="math inline">\(P(Z&gt;z_\gamma)=\gamma\)</span>. Le test de <span class="math inline">\(H_0 : \beta_j = 0\)</span> se fait exactement comme au chapitre précédent, avec <span class="math inline">\(z_{obs} = \hbj{j}/\sqrt{\phi\, v_j}\)</span>.</p>
+<p><strong>Cas où <span class="math inline">\(\phi\)</span> est inconnu.</strong> On remplace <span class="math inline">\(\phi\)</span> par son estimateur <span class="math inline">\(\tilde\phi_P\)</span>, et les quantiles de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> par ceux de la loi de Student à <span class="math inline">\(n-(p+1)\)</span> degrés de liberté, pour tenir compte de l’incertitude additionnelle introduite par l’estimation de <span class="math inline">\(\phi\)</span> :</p>
+<p><span class="math display">\[
+\left[\hbj{j} - t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\,;\ \hbj{j} + t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\right].
+\]</span></p>
+<div class="env-theo" data-titre="Les intervalles de confiance">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Les intervalles de confiance</span></p>
+<p>Le cas <span class="math inline">\(\phi\)</span> inconnu regroupe en réalité deux situations de nature théorique différente.</p>
+<p>Pour la gaussienne, la gamma ou l’inverse gaussienne, <span class="math inline">\(\phi\)</span> est un paramètre naturel de la famille exponentielle. L’intervalle de confiance basé sur la loi de Student à <span class="math inline">\(n-(p+1)\)</span> degrés de liberté découle alors directement de la théorie de la vraisemblance exacte.</p>
+<p>Pour les modèles quasi-Poisson et quasi-binomiale (cas de surdispersion), la situation est différente : Poisson et la binomiale imposent nominalement <span class="math inline">\(\phi=1\)</span>, et ne sont donc pas de vraies familles exponentielles à dispersion libre. Lorsqu’on observe de la surdispersion, on relâche cette contrainte en introduisant un <span class="math inline">\(\phi\)</span> libre estimé par <span class="math inline">\(\tilde\phi_P\)</span>, sans changer la fonction de variance sous-jacente. On obtient alors le même intervalle</p>
+<p><span class="math display">\[
+\left[\hbj{j} - t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\,;\ \hbj{j} + t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\right],
+\]</span></p>
+<p>mais sa justification repose sur une approximation asymptotique via la quasi-vraisemblance plutôt que sur la théorie exacte de la vraisemblance. Le résultat pratique est identique, mais la garantie théorique est un peu plus faible que dans le cas d’une vraie famille exponentielle à dispersion libre.</p>
+</div>
 </section>
-<section id="cas-phi-inconnu" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="cas-phi-inconnu"><span class="header-section-number">3.4.2</span> Cas <span class="math inline">\(\phi\)</span> inconnu</h3>
-<p>On remplace <span class="math inline">\(\phi\)</span> par <span class="math inline">\(\tilde\phi_P\)</span> et les quantiles de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> par ceux de la loi de Student à <span class="math inline">\(n-(p+1)\)</span> degrés de liberté : <span class="math display">\[\left[\hat\beta_j - t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\,;\ \hat\beta_j + t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\right].\]</span> Pour la comparaison de modèles emboîtés, la statistique devient <span class="math display">\[X_{obs} = \frac{\{D_A(y,\hat\mu) - D_B(y,\hat\mu)\}/d}{\tilde\phi_P}\ \sim\ F_{d,\,n-(p+1)} \quad\mbox{sous } H_0.\]</span></p>
+<section id="intervalle-de-confiance-pour-une-valeur-prédite" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-valeur-prédite"><span class="header-section-number">3.4.2</span> Intervalle de confiance pour une valeur prédite</h3>
+<p>Pour une observation future <span class="math inline">\(X^* = (1,X_1^*,\ldots,X_p^*)^\top\)</span>, on pose <span class="math inline">\(\eta^* = {X^*}^\top\boldsymbol\beta\)</span> et <span class="math inline">\(\mu^* = g^{-1}(\eta^*)\)</span>. Comme <span class="math inline">\(\hat\eta^*\)</span> est une combinaison linéaire de <span class="math inline">\(\hat\beta\)</span>, sa variance s’obtient directement :</p>
+<p><span class="math display">\[
+\hat{\text V}(\hat\eta^*) = {X^*}^\top \hat{\text V}(\hat\beta)\, X^*,
+\]</span></p>
+<p>d’où l’intervalle de confiance pour <span class="math inline">\(\eta^*\)</span>,</p>
+<p><span class="math display">\[
+\left[{X^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\hat{\text V}(\hat\eta^*)}\right],
+\]</span></p>
+<p>et, en appliquant <span class="math inline">\(g^{-1}\)</span> aux deux bornes, un intervalle de confiance pour <span class="math inline">\(\mu^*\)</span>. Comme pour la régression logistique, cette façon de procéder (transformer les bornes de l’intervalle construit sur l’échelle du prédicteur linéaire) garantit que l’intervalle final respecte le domaine de <span class="math inline">\(\mu^*\)</span> (par exemple <span class="math inline">\([0,1]\)</span> pour une proportion), contrairement à une application directe de la méthode du delta sur <span class="math inline">\(\hat\mu^*\)</span>.</p>
+</section>
+<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">3.4.3</span> Comparaison de modèles emboîtés</h3>
+<p>Pour comparer un modèle réduit <span class="math inline">\(A\)</span> à un modèle complet <span class="math inline">\(B\)</span> (avec <span class="math inline">\(A\)</span> emboîté dans <span class="math inline">\(B\)</span>), on procède par différence de déviances, comme en régression logistique.</p>
+<div class="env-propriete" data-titre="Cas $\phi$ fixé">
+<p><span class="env-titre">Propriété — Cas <span class="math inline">\(\phi\)</span> fixé</span></p>
+<p><span class="math display">\[
+X_{obs} = \frac{D_A(y,\hat\mu) - D_B(y,\hat\mu)}{\phi}
+\]</span></p>
+<p>suit approximativement une loi <span class="math inline">\(\chi^2_d\)</span> sous l’hypothèse que le modèle réduit <span class="math inline">\(A\)</span> est adéquat, où <span class="math inline">\(d\)</span> est la différence du nombre de paramètres entre les deux modèles. On rejette <span class="math inline">\(H_0\)</span> au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(X_{obs} &gt; \chi^2_{d,\alpha}\)</span>.</p>
+</div>
+<div class="env-propriete" data-titre="Cas $\phi$ inconnu">
+<p><span class="env-titre">Propriété — Cas <span class="math inline">\(\phi\)</span> inconnu</span></p>
+<p>On remplace <span class="math inline">\(\phi\)</span> par <span class="math inline">\(\tilde\phi_P\)</span> (calculé sur le modèle complet) et on compare à une loi <span class="math inline">\(F\)</span> plutôt qu’à une loi <span class="math inline">\(\chi^2\)</span>, pour tenir compte de l’incertitude sur <span class="math inline">\(\phi\)</span> :</p>
+<p><span class="math display">\[
+X_{obs} = \frac{\{D_A(y,\hat\mu) - D_B(y,\hat\mu)\}/d}{\tilde\phi_P}\ \sim\ F_{d,\,n-(p+1)} \quad\text{sous } H_0.
+\]</span></p>
+</div>
 </section>
 </section>
 <section id="sélection-et-validation-de-modèles" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</h2>
-<p>Les procédures pas à pas <em>backward</em>, <em>forward</em> et <em>stepwise</em> restent valides pour tout MLG, sur la base de <span class="math display">\[AIC = -2\,l(\hat\beta,\tilde\phi_P\mid\Delta) + 2(p+1), \qquad BIC = -2\,l(\hat\beta,\tilde\phi_P\mid\Delta) + \log(n)(p+1).\]</span> De même, les outils de validation (résidus, DFBETAS, DFFITS, distance de Cook) vus pour les régressions linéaire et logistique restent valides pour l’ensemble des MLG.</p>
+<p>Les procédures pas à pas <em>backward</em>, <em>forward</em> et <em>stepwise</em>, telles que décrites au chapitre précédent, restent valides pour tout GLM, sur la base des critères</p>
+<p><span class="math display">\[
+AIC = -2\,\ell(\hb,\tilde\phi_P\mid\Delta) + 2(p+1), \qquad BIC = -2\,\ell(\hb,\tilde\phi_P\mid\Delta) + \log(n)(p+1).
+\]</span></p>
+<p>De même, les outils de validation vus aux chapitres sur les régressions linéaire et logistique — résidus de Pearson et de déviance, effet levier, DFBETAS, DFFITS, distance de Cook — se généralisent directement à l’ensemble des GLM, en substituant la déviance individuelle <span class="math inline">\(d_i\)</span> à la somme des carrés des résidus lorsque requis.</p>
 </section>
 <section id="sec-poisson" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression Poisson</h2>
-<p>La variable réponse <span class="math inline">\(Y_i \in \mathbb{N}\)</span> dénote un dénombrement (nombre de nouveaux cas d’une maladie, nombre d’absences, etc.). La régression Poisson suppose <span class="math inline">\(Y_i \sim \mathcal{P}(\mu_i)\)</span> : <span class="math display">\[P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.\]</span></p>
-<p>Avec la fonction de lien canonique <span class="math inline">\(g(\mu_i) = \log(\mu_i)\)</span>, on a <span class="math display">\[\mu_i = e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}} = e^{\beta_0}\times\left\{e^{\beta_1}\right\}^{X_{i1}}\times\cdots\times\left\{e^{\beta_p}\right\}^{X_{ip}}.\]</span></p>
-<div class="env-remarque">
-<p><span class="env-titre">Remarque</span></p>
-<p><strong>Remarque (Interprétation).</strong></p>
-<p>Si <span class="math inline">\(X_{ij}\)</span> augmente de 1, <span class="math inline">\(\mu_i\)</span> est <strong>multiplié</strong> par <span class="math inline">\(e^{\beta_j}\)</span>. Si <span class="math inline">\(\beta_j &gt; 0\)</span>, alors <span class="math inline">\(e^{\beta_j} &gt; 1\)</span> et <span class="math inline">\(\mu_i\)</span> croît.</p>
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression de Poisson</h2>
+<p>La variable réponse <span class="math inline">\(Y_i \in \mathbb{N}\)</span> dénote ici un dénombrement (nombre de nouveaux cas d’une maladie, nombre d’absences, nombre de sinistres, etc.). La régression de Poisson suppose <span class="math inline">\(Y_i \sim \mathcal{P}(\mu_i)\)</span> :</p>
+<p><span class="math display">\[
+P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.
+\]</span></p>
+<p>Avec la fonction de lien canonique <span class="math inline">\(g(\mu_i) = \log(\mu_i)\)</span>, on a</p>
+<p><span class="math display">\[
+\mu_i = e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}} = e^{\beta_0}\times\left\{e^{\beta_1}\right\}^{X_{i1}}\times\cdots\times\left\{e^{\beta_p}\right\}^{X_{ip}}.
+\]</span></p>
+<div class="env-remarque" data-titre="Interprétation des coefficients">
+<p><span class="env-titre">Remarque — Interprétation des coefficients</span></p>
+<p>Si <span class="math inline">\(X_{ij}\)</span> augmente d’une unité, toutes les autres variables étant fixées, <span class="math inline">\(\mu_i\)</span> est multiplié par <span class="math inline">\(e^{\beta_j}\)</span> : l’effet est multiplicatif sur l’échelle de la réponse, exactement comme le rapport de cotes <span class="math inline">\(e^{\beta_j}\)</span> l’était sur la cote en régression logistique. Si <span class="math inline">\(\beta_j &gt; 0\)</span>, alors <span class="math inline">\(e^{\beta_j}&gt;1\)</span> et <span class="math inline">\(\mu_i\)</span> croît avec <span class="math inline">\(X_{ij}\)</span> ; si <span class="math inline">\(\beta_j&lt;0\)</span>, <span class="math inline">\(\mu_i\)</span> décroît.</p>
 </div>
-<p>La log-vraisemblance est <span class="math display">\[l(\beta) = \sum_{i=1}^n\left\{y_i(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}) - e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}}\right\} + K,\]</span> et la distribution asymptotique de <span class="math inline">\(\hat\beta\)</span> est <span class="math inline">\(\mathcal{N}\{\beta,\,(X^\top WX)^{-1}\}\)</span>, où <span class="math inline">\(W = \mathrm{diag}(w_i)\)</span> avec <span class="math inline">\(w_i = \hat\mu_i = e^{\hat\eta_i}\)</span>.</p>
-<p>La déviance individuelle est <span class="math display">\[d(y,\mu) = 2\left\{y\log\!\left(\frac{y}{\mu}\right) - (y - \mu)\right\}\]</span> et l’adéquation se vérifie avec <span class="math display">\[X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\mbox{et}\qquad D = \sum_{i=1}^n d(y_i,\hat\mu_i),\]</span> qui suivent approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien adapté.</p>
+<p>La log-vraisemblance est</p>
+<p><span class="math display">\[
+\ell(\boldsymbol\beta) = \sum_{i=1}^n\left\{y_i(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}) - e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}}\right\} - \sum_{i=1}^n \log(y_i!),
+\]</span></p>
+<p>et, en dérivant terme à terme par rapport à <span class="math inline">\(\beta_j\)</span> comme on l’a fait pour le lien logit, on obtient le score</p>
+<p><span class="math display">\[
+\frac{\partial \ell(\boldsymbol\beta)}{\partial \beta_j} = \sum_{i=1}^n (y_i - \mu_i) X_{ij}, \qquad \boldsymbol U(\boldsymbol\beta) = X^\top(\boldsymbol y - \boldsymbol\mu),
+\]</span></p>
+<p>qui a exactement la même forme que pour la régression logistique — seule la relation entre <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\eta_i\)</span> diffère. La loi asymptotique de <span class="math inline">\(\hb\)</span> est <span class="math inline">\(\mathcal{N}\{\boldsymbol\beta,\,(X^\top WX)^{-1}\}\)</span>, où <span class="math inline">\(W = \mathrm{diag}(w_i)\)</span> avec <span class="math inline">\(w_i = \hat\mu_i = e^{\hat\eta_i}\)</span> (<span class="math inline">\(\phi=1\)</span> ici, comme pour la loi binomiale).</p>
+<p>La déviance individuelle, obtenue en appliquant la définition générale <span class="math inline">\(d(y,\mu)=2\{t(y,y)-t(y,\mu)\}\)</span> à la loi de Poisson, est</p>
+<p><span class="math display">\[
+d(y,\mu) = 2\left\{y\log\!\left(\frac{y}{\mu}\right) - (y - \mu)\right\},
+\]</span></p>
+<p>et l’adéquation globale se vérifie avec</p>
+<p><span class="math display">\[
+X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D = \sum_{i=1}^n d(y_i,\hat\mu_i),
+\]</span></p>
+<p>qui suivent toutes deux approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien adapté et si les <span class="math inline">\(\mu_i\)</span> ne sont pas trop petits.</p>
 <section id="variables-explicatives-offset" class="level3" data-number="3.6.1">
 <h3 data-number="3.6.1" class="anchored" data-anchor-id="variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></h3>
-<p>Considérons le jeu de données <code>danishlc</code> (librairie <code>GLMsData</code>) : nombre de nouveaux cas de cancer du poumon par ville (4 villes) et tranche d’âge (6 tranches), avec la population <span class="math inline">\(m_i\)</span> de chaque strate.</p>
-<p>Lorsque la probabilité individuelle est très petite (ici <span class="math inline">\(\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}\)</span>), une régression logistique n’est pas appropriée. On modélise plutôt l’espérance du <strong>taux</strong> <span class="math inline">\(Y_i/m_i\)</span> : <span class="math display">\[\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
+<div class="env-exemple" data-titre="Jeu de données `danishlc`">
+<p><span class="env-titre">Exemple — Jeu de données <code>danishlc</code></span></p>
+<p>Le jeu de données <code>danishlc</code> (librairie <code>GLMsData</code>) recense le nombre de nouveaux cas de cancer du poumon par ville (4 villes) et par tranche d’âge (6 tranches), ainsi que la population <span class="math inline">\(m_i\)</span> de chaque strate.</p>
+</div>
+<p>Lorsque la probabilité individuelle de l’événement est très petite (ici, par exemple, <span class="math inline">\(\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}\)</span> pour la première strate), une régression logistique n’est généralement pas appropriée : les nombres de cas se comportent alors davantage comme un dénombrement rare que comme une proportion binomiale. On modélise plutôt l’espérance du taux <span class="math inline">\(Y_i/m_i\)</span> :</p>
+<p><span class="math display">\[
+\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
 \quad\Longleftrightarrow\quad
-\log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.\]</span> Le terme <span class="math inline">\(\log(m_i)\)</span> est une variable explicative dont le coefficient est <strong>fixé à 1</strong> : on parle de variable <strong>offset</strong>. Un offset est utile lorsque l’espérance de <span class="math inline">\(Y_i\)</span> est proportionnelle à une autre variable (population, durée d’exposition, effort).</p>
+\log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.
+\]</span></p>
+<div class="env-definition" data-titre="Variable offset">
+<p><span class="env-titre">Définition — Variable offset</span></p>
+<p>Le terme <span class="math inline">\(\log(m_i)\)</span> dans l’équation ci-dessus est une variable explicative dont le coefficient est fixé à <span class="math inline">\(1\)</span> plutôt qu’estimé : on parle de variable offset. Une variable offset est utile lorsque l’espérance de <span class="math inline">\(Y_i\)</span> est proportionnelle à une autre quantité connue (une population exposée, une durée d’exposition, un effort d’échantillonnage), et qu’on souhaite modéliser un taux plutôt qu’un compte brut.</p>
+</div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(danishlc)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family=</span>poisson, <span class="at">data=</span>danishlc)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family =</span> poisson, <span class="at">data =</span> danishlc)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.additif)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -491,14 +819,65 @@ AIC: 137.84
 Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </div>
-<p>Les tests par différence de déviances montrent une différence significative entre les tranches d’âge, mais pas entre les villes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>modele.sans.ville <span class="ot">&lt;-</span> <span class="fu">update</span>(modele.additif, . <span class="sc">~</span> . <span class="sc">-</span> City)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modele.sans.ville, modele.additif, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: Cases ~ Age + offset(log(Pop))
+Model 2: Cases ~ offset(log(Pop)) + City + Age
+  Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)
+1        18     28.306                     
+2        15     23.448  3    4.859   0.1824</code></pre>
+</div>
+</div>
+<p>Le test par différence de déviances montre une différence significative entre les tranches d’âge, mais pas entre les villes : on ne rejette pas l’hypothèse que le modèle sans effet de ville est adéquat.</p>
 </section>
-<section id="variabilité-extra-poissonienne" class="level3" data-number="3.6.2">
-<h3 data-number="3.6.2" class="anchored" data-anchor-id="variabilité-extra-poissonienne"><span class="header-section-number">3.6.2</span> Variabilité extra-Poissonienne</h3>
-<p>En pratique, il arrive que <span class="math inline">\(Var[Y_i] &gt; E[Y_i]\)</span> (<strong>surdispersion</strong>). Deux stratégies :</p>
-<p><strong>Approche quasi-Poisson.</strong> On spécifie seulement les deux premiers moments : <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \phi\,\mu_i\)</span>. On obtient les mêmes estimateurs <span class="math inline">\(\hat\beta\)</span> que la régression Poisson, mais <span class="math inline">\(Var(\hat\beta)\)</span> est multipliée par <span class="math inline">\(\tilde\phi_P = X^2/(n-(p+1))\)</span>. En R : <code>family=quasipoisson</code>. Cette approche permet des IC et des tests sur <span class="math inline">\(\beta\)</span>, mais <strong>n’implique pas de vraisemblance</strong> : l’<span class="math inline">\(AIC\)</span> et le <span class="math inline">\(BIC\)</span> ne sont pas définis.</p>
-<p><strong>Loi binomiale négative.</strong> On dit que <span class="math inline">\(Y_i\)</span> suit une loi binomiale négative de paramètres <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\alpha\)</span> si <span class="math display">\[P(Y_i = y_i) = \frac{\Gamma(y_i + 1/\alpha)}{\Gamma(y_i+1)\Gamma(1/\alpha)}\left(\frac{1/\alpha}{\mu_i + 1/\alpha}\right)^{1/\alpha}\left(\frac{\mu_i}{\mu_i + 1/\alpha}\right)^{y_i}, \quad y_i = 0,1,2,\ldots,\ \alpha &gt; 0.\]</span> On a <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \mu_i + \alpha\mu_i^2\)</span> ; la loi de Poisson est retrouvée quand <span class="math inline">\(\alpha \to 0\)</span>. Avec <span class="math inline">\(\mu_i = e^{x_i^\top\beta}\)</span>, les coefficients gardent la même interprétation que la régression Poisson. En R : <code>glm.nb</code> de la librairie <code>MASS</code>.</p>
-<p>Ce modèle permet de tester <span class="math inline">\(H_0 : \alpha = 0\)</span>. On calcule <span class="math inline">\(Q_{obs} = D_0 - D_1\)</span> (déviances des modèles Poisson et binomiale négative). Comme on teste <span class="math inline">\(\alpha\)</span> à la frontière de son domaine, <span class="math display">\[Q \sim \tfrac{1}{2}\chi^2_0 + \tfrac{1}{2}\chi^2_1 \quad\mbox{sous } H_0,\]</span> et le seuil observé est <span class="math inline">\(\alpha^* = P(\chi^2_1 &gt; Q_{obs})/2\)</span>. Sur les données <code>danishlc</code>, <span class="math inline">\(\alpha^* = 0.143\)</span> : pas de variabilité extra-Poissonienne détectée.</p>
+<section id="sec-surdispersion" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="sec-surdispersion"><span class="header-section-number">3.6.2</span> Variabilité extra-Poissonienne</h3>
+<p>En pratique, il arrive fréquemment que <span class="math inline">\(Var[Y_i] &gt; E[Y_i]\)</span>, c’est-à-dire que la variance observée dans les données dépasse ce que prévoit la loi de Poisson (qui impose <span class="math inline">\(\phi = 1\)</span>). Ce phénomène est appelé surdispersion. Deux stratégies courantes permettent d’en tenir compte.</p>
+<div class="env-remarque" data-titre="Approche quasi-Poisson">
+<p><span class="env-titre">Remarque — Approche quasi-Poisson</span></p>
+<p>On spécifie seulement les deux premiers moments de <span class="math inline">\(Y_i\)</span>, sans supposer de loi précise : <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \phi\,\mu_i\)</span>. On obtient les mêmes estimateurs ponctuels <span class="math inline">\(\hb\)</span> qu’avec la régression de Poisson usuelle, mais <span class="math inline">\(Var(\hb)\)</span> est multipliée par <span class="math inline">\(\tilde\phi_P = X^2/(n-(p+1))\)</span>, ce qui élargit les intervalles de confiance et rend les tests plus conservateurs. En R : <code>family = quasipoisson</code>. Cette approche permet de construire des intervalles de confiance et des tests valides sur <span class="math inline">\(\boldsymbol\beta\)</span>, mais elle n’implique pas de vraie fonction de vraisemblance : l’AIC et le BIC n’y sont donc pas définis.</p>
+</div>
+<div class="env-definition" data-titre="Loi binomiale négative">
+<p><span class="env-titre">Définition — Loi binomiale négative</span></p>
+<p>On dit que <span class="math inline">\(Y_i\)</span> suit une loi binomiale négative de paramètres <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\alpha\)</span> si</p>
+<p><span class="math display">\[
+P(Y_i = y_i) = \frac{\Gamma(y_i + 1/\alpha)}{\Gamma(y_i+1)\Gamma(1/\alpha)}\left(\frac{1/\alpha}{\mu_i + 1/\alpha}\right)^{1/\alpha}\left(\frac{\mu_i}{\mu_i + 1/\alpha}\right)^{y_i}, \quad y_i = 0,1,2,\ldots,\ \alpha &gt; 0.
+\]</span></p>
+</div>
+<p>On montre que <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \mu_i + \alpha\mu_i^2\)</span> : la variance excède toujours l’espérance dès que <span class="math inline">\(\alpha&gt;0\)</span>, et la loi de Poisson est retrouvée à la limite <span class="math inline">\(\alpha \to 0\)</span>. Avec <span class="math inline">\(\mu_i = e^{x_i^\top\boldsymbol\beta}\)</span>, les coefficients <span class="math inline">\(\boldsymbol\beta\)</span> gardent exactement la même interprétation multiplicative que pour la régression de Poisson. En R, on ajuste ce modèle avec la fonction <code>glm.nb</code> de la librairie <code>MASS</code>, qui estime conjointement <span class="math inline">\(\boldsymbol\beta\)</span> et <span class="math inline">\(\alpha\)</span> par maximum de vraisemblance.</p>
+<div class="env-propriete" data-titre="Test de surdispersion">
+<p><span class="env-titre">Propriété — Test de surdispersion</span></p>
+<p>Comme la régression de Poisson correspond au cas particulier <span class="math inline">\(\alpha=0\)</span> de la binomiale négative, on peut tester <span class="math inline">\(H_0 : \alpha = 0\)</span> en comparant les déviances des deux modèles emboîtés, <span class="math inline">\(D_0\)</span> (Poisson) et <span class="math inline">\(D_1\)</span> (binomiale négative) : <span class="math inline">\(Q_{obs} = D_0 - D_1\)</span>. Comme <span class="math inline">\(\alpha=0\)</span> se trouve à la frontière de l’espace des paramètres (on ne peut avoir <span class="math inline">\(\alpha&lt;0\)</span>), la statistique de test ne suit pas simplement une <span class="math inline">\(\chi^2_1\)</span> sous <span class="math inline">\(H_0\)</span>, mais un mélange</p>
+<p><span class="math display">\[
+Q \sim \tfrac{1}{2}\chi^2_0 + \tfrac{1}{2}\chi^2_1 \quad\text{sous } H_0,
+\]</span></p>
+<p>où <span class="math inline">\(\chi^2_0\)</span> désigne la loi dégénérée en <span class="math inline">\(0\)</span>. Le seuil observé est donc <span class="math inline">\(\alpha^* = P(\chi^2_1 &gt; Q_{obs})/2\)</span>, soit la moitié de ce qu’on obtiendrait avec une <span class="math inline">\(\chi^2_1\)</span> usuelle.</p>
+</div>
+<div class="env-exemple" data-titre="Test de surdispersion sur `danishlc`">
+<p><span class="env-titre">Exemple — Test de surdispersion sur <code>danishlc</code></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>modele.nb <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age, <span class="at">data =</span> danishlc)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in theta.ml(Y, mu, sum(w), w, limit = control$maxit, trace =
+control$trace &gt; : iteration limit reached
+Warning in theta.ml(Y, mu, sum(w), w, limit = control$maxit, trace =
+control$trace &gt; : iteration limit reached</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Q.obs <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.additif) <span class="sc">-</span> <span class="fu">deviance</span>(modele.nb)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>alpha.etoile <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(Q.obs, <span class="at">df =</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>alpha.etoile</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.484151</code></pre>
+</div>
+</div>
+<p>On obtient <span class="math inline">\(\alpha^* \approx 0.143\)</span> : on ne détecte pas de variabilité extra-Poissonienne significative pour ces données, et le modèle de Poisson usuel demeure approprié.</p>
+</div>
 
 
 </section>

@@ -1778,7 +1778,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -2179,7 +2179,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <section id="modèles-additifs-généralisés" class="level2" data-number="8.3">
 <h2 data-number="8.3" class="anchored" data-anchor-id="modèles-additifs-généralisés"><span class="header-section-number">8.3</span> Modèles additifs généralisés</h2>
 <p>Comme pour les MLG, on combine la structure additive avec les distributions de la famille exponentielle : <span class="math inline">\(Y_i\)</span> suit une loi de la famille exponentielle avec <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math display">\[g(\mu_i) = \alpha + f_1(X_{i1}) + \cdots + f_p(X_{ip}),\]</span> où <span class="math inline">\(g\)</span> est une fonction de lien. Cas particuliers : GAM logistique (réponse binaire), GAM Poisson (dénombrements, avec offset au besoin).</p>
-<p>L’estimation se fait en minimisant la <strong>déviance pénalisée</strong> : <span class="math display">\[\hat\beta = \arg\min_\beta\left\{D(y,\mu) + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta\right\},\]</span> où <span class="math inline">\(D(y,\mu)\)</span> est la déviance du <a href="03-modeles-lineaires-generalises.html" class="quarto-xref"><span>Chapitre 3</span></a>.</p>
+<p>L’estimation se fait en minimisant la <strong>déviance pénalisée</strong> : <span class="math display">\[\hat\beta = \arg\min_\beta\left\{D(y,\mu) + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta\right\},\]</span> où <span class="math inline">\(D(y,\mu)\)</span> est la déviance du <span class="quarto-unresolved-ref">?sec-mlg</span>.</p>
 <section id="algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" class="level3" data-number="8.3.1">
 <h3 data-number="8.3.1" class="anchored" data-anchor-id="algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés"><span class="header-section-number">8.3.1</span> Algorithme d’ajustement (moindres carrés pondérés itératifs pénalisés)</h3>
 <p>L’ajustement combine l’algorithme des moindres carrés pondérés itératifs des MLG et le lissage pénalisé. À l’itération <span class="math inline">\(m\)</span> :</p>

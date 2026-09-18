@@ -351,12 +351,13 @@ window.Quarto = {
 <p>Les modèles de régression linéaire ne permettent de considérer que les cas où la variable réponse <span class="math inline">\(Y_i\)</span> est normale. Cependant, dans plusieurs situations, on a une variable réponse discrète qui ne peut prendre qu’un nombre fini (ou dénombrable) de valeurs possibles. Dans ce chapitre, on s’intéresse au cas où <span class="math inline">\(Y_i\)</span> suit une loi de Bernoulli ou une loi binomiale.</p>
 <div class="env-exemple">
 <p><span class="env-titre">Exemple</span></p>
-<p>Quatre exemples tirés de la librairie <code>GLMsData</code> de R <span class="citation" data-cites="dunn2018glm">(<a href="#ref-dunn2018glm" role="doc-biblioref">Dunn et Smyth 2018</a>)</span> :</p>
+<p>Cinq exemples tirés des librairies R <code>GLMsData</code> <span class="citation" data-cites="dunn2018glm">(<a href="#ref-dunn2018glm" role="doc-biblioref">Dunn et Smyth 2018</a>)</span> et <code>faraway</code> <span class="citation" data-cites="faraway">(<a href="#ref-faraway" role="doc-biblioref">Faraway 2025</a>)</span> :</p>
 <ol type="1">
 <li><p><span id="data-quilpie"><code>quilpie</code></span> : observations de 1921 à 1988 de la quantité de pluie mesurée en juillet à Quilpie (Australie), une ville semi-aride du Queensland où les précipitations conditionnent fortement l’agriculture locale. La réponse vaut 1 si la quantité de pluie dépasse 10 mm (un seuil jugé suffisant pour amorcer les semis) et 0 sinon ; la variable explicative est un indice de pression atmosphérique, le <em>Southern Oscillation Index</em> (SOI), qui capture les phases El Niño/La Niña connues pour influencer les précipitations dans cette région.</p></li>
 <li><p><span id="data-nminer"><code>nminer</code></span> : 31 transects de deux hectares en milieu boisé (eucalyptus) dans l’ouest de Victoria (Australie) ; la réponse vaut 1 si au moins un mineur bruyant (<em>Manorina melanocephala</em>, un oiseau indigène particulièrement agressif qui chasse les espèces plus petites) est détecté dans le transect et 0 sinon. Les variables explicatives décrivent l’habitat : densité d’eucalyptus (<code>Eucs</code>), superficie du transect (<code>Area</code>), présence de pâturage (<code>Grazed</code>), présence d’arbustes (<code>Shrubs</code>), nombre d’arbres de type buloke (<code>Bulokes</code>) et quantité de bois mort au sol (<code>Timber</code>).</p></li>
 <li><p><span id="data-deposit"><code>deposit</code></span> : 18 observations sur l’efficacité de trois insecticides (<span class="math inline">\(A\)</span>, <span class="math inline">\(B\)</span> ou <span class="math inline">\(C\)</span>) appliqués à différentes doses (en mg) sur des insectes ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre d’insectes tués parmi les <span class="math inline">\(m_i\)</span> insectes exposés à chaque combinaison insecticide-dose.</p></li>
 <li><p><span id="data-turbines"><code>turbines</code></span> : 11 observations issues d’une expérience de fiabilité sur des roues de turbine <span class="citation" data-cites="nelson1982">(<a href="#ref-nelson1982" role="doc-biblioref">Nelson 1982</a>)</span> ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre de roues présentant des fissures parmi <span class="math inline">\(m_i\)</span> roues mises à l’essai, en fonction du nombre d’heures de fonctionnement.</p></li>
+<li><p><span id="data-troutegg"><code>troutegg</code></span> : 20 observations issues d’une expérience où des boîtes d’œufs de truite ont été enfouies à cinq emplacements différents d’un cours d’eau (<code>location</code>) et retirées après quatre durées différentes (<code>period</code>, en semaines) ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre d’œufs survivants parmi les <span class="math inline">\(m_i\)</span> œufs de la boîte.</p></li>
 </ol>
 </div>
 <section id="données-et-modèle" class="level2" data-number="2.1">
@@ -1402,10 +1403,10 @@ Number of Fisher Scoring iterations: 9</code></pre>
 <h2 data-number="2.4" class="anchored" data-anchor-id="validation-et-diagnostic-de-modèles"><span class="header-section-number">2.4</span> Validation et diagnostic de modèles</h2>
 <section id="résidus" class="level3" data-number="2.4.1">
 <h3 data-number="2.4.1" class="anchored" data-anchor-id="résidus"><span class="header-section-number">2.4.1</span> Résidus</h3>
-<div class="env-definition" data-titre="Résidus déviance et résidus de Pearson">
-<p><span class="env-titre">Définition — Résidus déviance et résidus de Pearson</span></p>
+<div class="env-definition" data-titre="Résidus de déviance et résidus de Pearson">
+<p><span class="env-titre">Définition — Résidus de déviance et résidus de Pearson</span></p>
 <ul>
-<li><p><strong>Résidus déviance</strong> : <span class="math inline">\(r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}\)</span>, avec <span class="math inline">\(d_i\)</span> la déviance individuelle de l’observation <span class="math inline">\(i\)</span>.</p></li>
+<li><p><strong>Résidus de déviance</strong> : <span class="math inline">\(r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}\)</span>, avec <span class="math inline">\(d_i\)</span> la déviance individuelle de l’observation <span class="math inline">\(i\)</span>.</p></li>
 <li><p><strong>Résidus de Pearson</strong> : <span class="math display">\[r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.\]</span></p></li>
 </ul>
 </div>
@@ -1466,7 +1467,7 @@ D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
 </section>
 <section id="graphiques-et-extra-variabilité" class="level3" data-number="2.4.3">
 <h3 data-number="2.4.3" class="anchored" data-anchor-id="graphiques-et-extra-variabilité"><span class="header-section-number">2.4.3</span> Graphiques et extra-variabilité</h3>
-<p>Les graphiques des résidus en fonction des numéros d’observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une extra-variabilité.</p>
+<p>Les graphiques des résidus en fonction des numéros d’observations ne doivent montrer aucune tendance. Si plusieurs résidus de dépassent 3 en valeur absolue, cela peut suggérer une extra-variabilité.</p>
 <div class="env-definition" data-titre="Extra-variabilité (overdispersion)">
 <p><span class="env-titre">Définition — Extra-variabilité (overdispersion)</span></p>
 <p>L’<strong>extra-variabilité</strong> (<em>overdispersion</em>) survient quand <span class="math inline">\(E[Y_i] = m_i\pi_i\)</span> mais <span class="math inline">\(Var[Y_i] &gt; m_i\pi_i(1-\pi_i)\)</span>. On pose alors <span class="math inline">\(Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)\)</span> et on estime <span class="math inline">\(\phi\)</span> par <span class="math inline">\(\chi^2_P/(n-(p+1))\)</span>.</p>
@@ -1477,6 +1478,186 @@ D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
 <section id="observations-aberrantes-et-valeurs-influentes" class="level3" data-number="2.4.4">
 <h3 data-number="2.4.4" class="anchored" data-anchor-id="observations-aberrantes-et-valeurs-influentes"><span class="header-section-number">2.4.4</span> Observations aberrantes et valeurs influentes</h3>
 <p>Le principe est identique à la régression linéaire. Les définitions des leviers, résidus standardisés et studentisés diffèrent, mais ces quantités ont la même interprétation. Il en va de même pour la distance de Cook, les DFBETAS et les DFFITS.</p>
+<div class="env-exemple" data-titre="Diagnostics de surdispersion — données `troutegg`">
+<p><span class="env-titre">Exemple — Diagnostics de surdispersion — données <code>troutegg</code></span></p>
+<p>On ajuste un modèle binomial sur les données <code>troutegg</code>, qui recensent la survie d’œufs de truite selon l’emplacement dans le cours d’eau et la période de retrait.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(faraway)</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(troutegg)</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(survive, total <span class="sc">-</span> survive) <span class="sc">~</span> location <span class="sc">+</span> period,</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> binomial, <span class="at">data =</span> troutegg)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Résidus en fonction du numéro d’observation</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>res_dev <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod, <span class="at">type =</span> <span class="st">"deviance"</span>)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_dev, <span class="at">xlab =</span> <span class="st">"Numéro d'observation"</span>, <span class="at">ylab =</span> <span class="st">"Résidu de déviance"</span>,</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ici, quelques résidus dépassent les seuils à <span class="math inline">\(\pm 3\)</span> (pointillés rouges), ce qui suggère de l’extra-variabilité.</p>
+<p><strong>Estimation de <span class="math inline">\(\phi\)</span> et passage au modèle quasibinomial</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>chi2_p <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(mod, <span class="at">type =</span> <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(troutegg)</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(mod))</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>phi_hat <span class="ot">&lt;-</span> chi2_p <span class="sc">/</span> (n <span class="sc">-</span> p)</span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>phi_hat</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.330322</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>mod_quasi <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(survive, total <span class="sc">-</span> survive) <span class="sc">~</span> location <span class="sc">+</span> period,</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">family =</span> quasibinomial, <span class="at">data =</span> troutegg)</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_quasi)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = cbind(survive, total - survive) ~ location + period, 
+    family = quasibinomial, data = troutegg)
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.6358     0.6495   7.138 1.18e-05 ***
+location2    -0.4168     0.5682  -0.734 0.477315    
+location3    -1.2421     0.5066  -2.452 0.030501 *  
+location4    -0.9509     0.5281  -1.800 0.096970 .  
+location5    -4.6138     0.5777  -7.987 3.82e-06 ***
+period7      -2.1702     0.5504  -3.943 0.001953 ** 
+period8      -2.3256     0.5609  -4.146 0.001356 ** 
+period11     -2.4500     0.5405  -4.533 0.000686 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for quasibinomial family taken to be 5.330358)
+
+    Null deviance: 1021.469  on 19  degrees of freedom
+Residual deviance:   64.495  on 12  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = cbind(survive, total - survive) ~ location + period, 
+    family = binomial, data = troutegg)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)   4.6358     0.2813  16.479  &lt; 2e-16 ***
+location2    -0.4168     0.2461  -1.694   0.0903 .  
+location3    -1.2421     0.2194  -5.660 1.51e-08 ***
+location4    -0.9509     0.2288  -4.157 3.23e-05 ***
+location5    -4.6138     0.2502 -18.439  &lt; 2e-16 ***
+period7      -2.1702     0.2384  -9.103  &lt; 2e-16 ***
+period8      -2.3256     0.2429  -9.573  &lt; 2e-16 ***
+period11     -2.4500     0.2341 -10.466  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1021.469  on 19  degrees of freedom
+Residual deviance:   64.495  on 12  degrees of freedom
+AIC: 157.03
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<p><strong>Vérification de la linéarité : <span class="math inline">\(\hat\pi_i\)</span> contre <span class="math inline">\(\tilde\pi_i\)</span></strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>pi_hat   <span class="ot">&lt;-</span> <span class="fu">fitted</span>(mod_quasi)</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>pi_tilde <span class="ot">&lt;-</span> troutegg<span class="sc">$</span>survive <span class="sc">/</span> troutegg<span class="sc">$</span>total</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pi_tilde, pi_hat, <span class="at">xlab =</span> <span class="fu">expression</span>(<span class="fu">tilde</span>(pi)[i]),</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(pi)[i]), <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Les points suivent d’assez près la droite <span class="math inline">\(y = x\)</span>, sans courbure systématique apparente, ce qui appuie l’hypothèse de linéarité du prédicteur pour ce modèle.</p>
+<p><strong>Observations aberrantes et valeurs influentes</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>lev   <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(mod_quasi)</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>rstd  <span class="ot">&lt;-</span> <span class="fu">rstandard</span>(mod_quasi, <span class="at">type =</span> <span class="st">"pearson"</span>)</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>rstu  <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(mod_quasi)</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>cook  <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(mod_quasi)</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>dfb   <span class="ot">&lt;-</span> <span class="fu">dfbetas</span>(mod_quasi)</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>dff   <span class="ot">&lt;-</span> <span class="fu">dffits</span>(mod_quasi)</span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lev, cook, <span class="at">xlab =</span> <span class="st">"Levier"</span>, <span class="at">ylab =</span> <span class="st">"Distance de Cook"</span>, <span class="at">pch =</span> <span class="dv">19</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_quasi, <span class="at">which =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Le graphique des résidus vs valeurs ajustées montre plusieurs points nettement à l’écart (dont les observations 15 et 20), suggérant que le modèle ne s’ajuste pas également bien à toutes les combinaisons de <code>location</code> et <code>period</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_quasi, <span class="at">which =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Le QQ-plot des résidus s’éloigne fortement de la droite de référence dans la queue supérieure (observations 14, 15 et 20), ce qui traduit un mauvais ajustement pour certaines observations plutôt qu’une déviation normale isolée.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_quasi, <span class="at">which =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Le graphique Scale-Location révèle une dispersion des résidus qui n’est pas constante et plusieurs valeurs extrêmes (1, 14, 15, 20), renforçant l’hypothèse d’une surdispersion mal capturée par le modèle binomial standard.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod_quasi, <span class="at">which =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="02-regression-logistique_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La distance de Cook pointe vers certaines observations influentes (14, 19 et 20).</p>
+<p>Le seuil usuel pour un levier élevé est <span class="math inline">\(2(p+1)/n\)</span> ; pour la distance de Cook, on examine plutôt les valeurs qui se détachent nettement des autres.</p>
+</div>
 </section>
 </section>
 <section id="sec-roc" class="level2" data-number="2.5">
@@ -1510,15 +1691,15 @@ D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
 <p><span class="env-titre">Exemple — Courbe ROC avec l’exemple <a href="#data-quilpie"><code>quilpie</code></a></span></p>
 <p>On ajuste ici un modèle logistique avec la variable explicative SOI et le lien logit :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family =</span> binomial, <span class="at">data =</span> quilpie)</span>
-<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(</span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">marker =</span> <span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
-<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">status =</span> quilpie<span class="sc">$</span>y,</span>
-<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"empirical"</span>)</span>
-<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quilpie)</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>modele <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> SOI, <span class="at">family =</span> binomial, <span class="at">data =</span> quilpie)</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>courbe.roc <span class="ot">&lt;-</span> <span class="fu">roc.curve</span>(</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">marker =</span> <span class="fu">as.vector</span>(<span class="fu">fitted</span>(modele)),</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">status =</span> quilpie<span class="sc">$</span>y,</span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"empirical"</span>)</span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>courbe.roc</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ROC curve with AUC = 0.7835498 and s.e. = 0.05651002 </code></pre>
 </div>
@@ -1533,6 +1714,9 @@ Agresti, Alan. 2013. <em>Categorical Data Analysis</em>. 3ᵉ éd. Wiley.
 </div>
 <div id="ref-dunn2018glm" class="csl-entry" role="listitem">
 Dunn, Peter K., et Gordon K. Smyth. 2018. <em>Generalized Linear Models with Examples in <span>R</span></em>. Springer Texts in Statistics. Springer. <a href="https://doi.org/10.1007/978-1-4419-0118-7">https://doi.org/10.1007/978-1-4419-0118-7</a>.
+</div>
+<div id="ref-faraway" class="csl-entry" role="listitem">
+Faraway, Julian. 2025. <em>faraway: Functions and Datasets for Books by Julian Faraway</em>. <a href="https://CRAN.R-project.org/package=faraway">https://CRAN.R-project.org/package=faraway</a>.
 </div>
 <div id="ref-hauck1977" class="csl-entry" role="listitem">
 Hauck, Walter W., et Allan Donner. 1977. <span>«&nbsp;Wald’s Test as Applied to Hypotheses in Logit Analysis&nbsp;»</span>. <em>Journal of the American Statistical Association</em> 72 (360): 851‑53. <a href="https://doi.org/10.1080/01621459.1977.10479969">https://doi.org/10.1080/01621459.1977.10479969</a>.

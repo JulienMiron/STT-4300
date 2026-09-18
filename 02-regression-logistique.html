@@ -1736,7 +1736,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const logo = document.querySelector(".sidebar-logo");
   if (!logo) return;
 
-  // correspondance entre le nom de la page (sans extension) et le gif à afficher
   const gifs = {
     "index":                              "logit_plot.gif",
     "01-regression-lineaire":             "lineaire_plot.gif",
@@ -1749,13 +1748,13 @@ document.addEventListener("DOMContentLoaded", function () {
     "08-gam":                             "gam_plot.gif"
   };
 
-  // nom de fichier de la page courante, sans extension
   let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
-  if (page === "" ) page = "index";
+  if (page === "") page = "index";
 
   const gif = gifs[page];
   if (gif) {
-    logo.src = logo.src.replace(/[^/]+$/, gif);
+    // Date.now() change à chaque chargement de page → force le rechargement du gif
+    logo.src = logo.src.replace(/[^/]+$/, gif) + "?v=" + Date.now();
   }
 });
 </script>

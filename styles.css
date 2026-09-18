@@ -2,7 +2,7 @@
    VARIABLES DE COULEUR
    ============================================================ */
 :root {
-  --accent: #217e5f;        /* couleur d'accent (liens, bordures, éléments actifs) */
+  --accent: #0E9E6C;        /* couleur d'accent (liens, bordures, éléments actifs) */
   --accent-clair: #eaf1f5;  /* même teinte que --accent, très pâle, pour les fonds au survol */
   --fond-clair: #FFFDFF;    /* fond du corps de page */
   --fond-fonce: #FFFDFF;    /* fond de la sidebar et du footer — actuellement identique à --fond-clair */

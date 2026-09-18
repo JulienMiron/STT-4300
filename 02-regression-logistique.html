@@ -207,8 +207,8 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/logit_plot.gif" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="./images/logit_plot.gif" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./"><strong>Régression II – STT-4300</strong></a> 
@@ -299,7 +299,8 @@ window.Quarto = {
   <li><a href="#estimation-des-paramètres-boldsymbolbeta" id="toc-estimation-des-paramètres-boldsymbolbeta" class="nav-link" data-scroll-target="#estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">2.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></a></li>
   <li><a href="#sec-separation" id="toc-sec-separation" class="nav-link" data-scroll-target="#sec-separation"><span class="header-section-number">2.2.2</span> Séparation des données</a></li>
   <li><a href="#information-de-fisher-et-variance-des-estimateurs" id="toc-information-de-fisher-et-variance-des-estimateurs" class="nav-link" data-scroll-target="#information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">2.2.3</span> Information de Fisher et variance des estimateurs</a></li>
-  <li><a href="#intervalle-de-confiance-pour-une-probabilité-prédite" id="toc-intervalle-de-confiance-pour-une-probabilité-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.5</span> Intervalle de confiance pour une probabilité prédite</a></li>
+  <li><a href="#intervalles-de-confiance-pour-les-beta_j" id="toc-intervalles-de-confiance-pour-les-beta_j" class="nav-link" data-scroll-target="#intervalles-de-confiance-pour-les-beta_j"><span class="header-section-number">2.2.4</span> Intervalles de confiance pour les <span class="math inline">\(\beta_j\)</span></a></li>
+  <li><a href="#intervalle-de-confiance-pour-une-probabilité-prédite" id="toc-intervalle-de-confiance-pour-une-probabilité-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.6</span> Intervalle de confiance pour une probabilité prédite</a></li>
   </ul></li>
   <li><a href="#sélection-de-modèles" id="toc-sélection-de-modèles" class="nav-link" data-scroll-target="#sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</a>
   <ul class="collapse">
@@ -756,6 +757,9 @@ Hours        0.0008104936 9.013218e-05   8.992278 2.421587e-19</code></pre>
 </div>
 <p>Les trois liens mènent à des coefficients significatifs et à des courbes prédites <span class="math inline">\(\hat\pi^*\)</span> très similaires.</p>
 </div>
+</section>
+<section id="intervalles-de-confiance-pour-les-beta_j" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="intervalles-de-confiance-pour-les-beta_j"><span class="header-section-number">2.2.4</span> Intervalles de confiance pour les <span class="math inline">\(\beta_j\)</span></h3>
 <p>Les intervalles de confiance et tests concernant les <span class="math inline">\(\beta_j\)</span> sont obtenus par la méthode de <strong>Wald</strong>. Un intervalle de confiance de niveau <span class="math inline">\((1-\alpha)\)</span> pour <span class="math inline">\(\beta_j\)</span> est <span class="math display">\[\left[\hat\beta_j - z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\right],\]</span> où <span class="math inline">\(z_\gamma\)</span> est le quantile de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> défini par <span class="math inline">\(P(Z &gt; z_\gamma) = \gamma\)</span>.</p>
 <p>Pour tester <span class="math inline">\(H_0: \beta_j = 0\)</span> contre <span class="math inline">\(H_1: \beta_j\neq 0\)</span>, on rejette <span class="math inline">\(H_0\)</span> au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(|z_{obs}| &gt; z_{\alpha/2}\)</span>, avec <span class="math inline">\(z_{obs} = \hat\beta_j/\sqrt{\hat{\text V}(\hat\beta_j)}\)</span>. Le seuil observé (<span class="math inline">\(p\)</span>-valeur) est <span class="math inline">\(\alpha^* = 2P(Z &gt; |z_{obs}|)\)</span>.</p>
 <div class="env-exemple" data-titre="Intervalle de confiance pour $\beta_1$ dans l'exemple `turbines`">
@@ -888,8 +892,8 @@ G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right]
 </div>
 </div>
 </div>
-<section id="comparaison-directe-des-sorties" class="level3" data-number="2.2.4">
-<h3 data-number="2.2.4" class="anchored" data-anchor-id="comparaison-directe-des-sorties"><span class="header-section-number">2.2.4</span> Comparaison directe des sorties</h3>
+<section id="comparaison-directe-des-sorties" class="level3" data-number="2.2.5">
+<h3 data-number="2.2.5" class="anchored" data-anchor-id="comparaison-directe-des-sorties"><span class="header-section-number">2.2.5</span> Comparaison directe des sorties</h3>
 <p>Pour illustrer concrètement l’écart entre les deux tests, comparons un cas “normal” (<span class="math inline">\(k = 15\)</span>, pas de séparation) à un cas de séparation quasi-complète (<span class="math inline">\(k = 19\)</span>, un seul échec sur 20 dans le groupe <span class="math inline">\(x = 1\)</span>) :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>simuler_logistique <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">beta0 =</span> <span class="dv">0</span>, <span class="at">beta1 =</span> <span class="dv">1</span>) {</span>
@@ -971,8 +975,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 </div>
 </section>
-<section id="intervalle-de-confiance-pour-une-probabilité-prédite" class="level3" data-number="2.2.5">
-<h3 data-number="2.2.5" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.5</span> Intervalle de confiance pour une probabilité prédite</h3>
+<section id="intervalle-de-confiance-pour-une-probabilité-prédite" class="level3" data-number="2.2.6">
+<h3 data-number="2.2.6" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.6</span> Intervalle de confiance pour une probabilité prédite</h3>
 <p>Pour <span class="math inline">\(\boldsymbol{X}^* = (1, X_1^*,\ldots,X_p^*)^\top\)</span>, on estime <span class="math inline">\(\pi^*\)</span> par <span class="math inline">\(\hat\pi^* = g^{-1}({\boldsymbol{X}^*}^\top\hat\beta)\)</span>. Deux approches :</p>
 <ol type="1">
 <li><p><strong>Transformation de l’intervalle sur <span class="math inline">\(\eta^*\)</span></strong> : un IC pour <span class="math inline">\({X^*}^\top\beta\)</span> est <span class="math display">\[\left[{\boldsymbol{X}^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)}\right], \qquad \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta) = {\boldsymbol{X}^*}^\top \hat{\text V}(\hat\beta)\, \boldsymbol{X}^*,\]</span> et on applique <span class="math inline">\(g^{-1}\)</span> aux deux bornes. Cet intervalle respecte toujours <span class="math inline">\([0,1]\)</span>.</p></li>
@@ -1524,6 +1528,19 @@ Nelson, Wayne. 1982. <em>Applied Life Data Analysis</em>. Wiley.
 </section>
 
 </main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const path = window.location.pathname;
+  const estIndex = path.endsWith("/") || path.endsWith("/index.html");
+
+  if (estIndex) {
+    logo.src = "/STT-4300/images/logit_plot.gif";
+  }
+});
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

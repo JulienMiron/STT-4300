@@ -188,8 +188,8 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/logit_plot.gif" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="./images/logit_plot.gif" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./"><strong>Régression II – STT-4300</strong></a> 
@@ -405,7 +405,7 @@ with non-unique 'x' values seems doubtful</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 10.35561</code></pre>
+<pre><code>[1] 10.35552</code></pre>
 </div>
 </div>
 <div class="env-remarque">
@@ -419,6 +419,19 @@ with non-unique 'x' values seems doubtful</code></pre>
 </section>
 
 </main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const path = window.location.pathname;
+  const estIndex = path.endsWith("/") || path.endsWith("/index.html");
+
+  if (estIndex) {
+    logo.src = "/STT-4300/images/logit_plot.gif";
+  }
+});
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

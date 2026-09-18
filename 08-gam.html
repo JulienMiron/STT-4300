@@ -1740,8 +1740,8 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/logit_plot.gif" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="./images/logit_plot.gif" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./"><strong>Régression II – STT-4300</strong></a> 
@@ -2328,6 +2328,19 @@ UBRE = 0.17501  Scale est. = 1         n = 68</code></pre>
 </section>
 
 </main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const path = window.location.pathname;
+  const estIndex = path.endsWith("/") || path.endsWith("/index.html");
+
+  if (estIndex) {
+    logo.src = "/STT-4300/images/logit_plot.gif";
+  }
+});
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

@@ -312,7 +312,7 @@ avec $\hat\mu_i = g^{-1}(\hat\eta_i)$ et $\hat\eta_i = \hat\beta_0 + \hat\beta_1
 :::
 
 Cette forme englobe les résultats vus aux chapitres précédents : en régression linéaire ($V(\mu)=1$, $g'(\mu)=1$), $W_i = 1$ pour tout $i$ et on retrouve la variance usuelle des moindres carrés ; en régression logistique ($m_i=1$), on retrouve $w_i = \hat\mu_i(1-\hat\mu_i)$ après simplification.
-res
+
 
 ### Déviance individuelle
 

@@ -3,6 +3,13 @@ project:
   output-dir: _book
   resources:
     - images/logit_plot.gif
+    - images/lineaire_plot.gif
+    - images/glm_plot.gif
+    - images/cv_plot.gif
+    - images/regularisation_plot.gif
+    - images/knn_noyau_plot.gif
+    - images/splines_plot.gif
+    - images/gam_plot.gif
 
 book:
   title: "Régression II -- STT-4300"

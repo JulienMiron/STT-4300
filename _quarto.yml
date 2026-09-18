@@ -25,7 +25,7 @@ book:
   sidebar:
     style: floating
     collapse-level: 1
-    logo: images/logit_plot.png    # ton image, placée au-dessus du titre
+    logo: images/logit_plot.gif    # ton image, placée au-dessus du titre
   chapters:
     - index.qmd
     - 01-regression-lineaire.qmd

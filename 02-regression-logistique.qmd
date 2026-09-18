@@ -1055,25 +1055,25 @@ plot(lev, cook, xlab = "Levier", ylab = "Distance de Cook", pch = 19)
 ```{r}
 plot(mod_quasi, which = 1)
 ```
-Le graphique des résidus vs valeurs ajustées montre plusieurs points nettement à l'écart (dont les observations 15 et 20), suggérant que le modèle ne s'ajuste pas également bien à toutes les combinaisons de `location` et `period`.
+Le graphique des résidus vs valeurs ajustées montre plusieurs points nettement à l'écart (dont les observations 1, 15 et 20), suggérant que le modèle ne s'ajuste pas également bien à toutes les combinaisons de `location` et `period`.
 
 ```{r}
 plot(mod_quasi, which = 2)
 ```
 
-Le QQ-plot des résidus s'éloigne fortement de la droite de référence dans la queue supérieure (observations 14, 15 et 20), ce qui traduit un mauvais ajustement pour certaines observations plutôt qu'une déviation normale isolée.
+Le QQ-plot des résidus s'éloigne un peu de la droite de référence dans la queue supérieure (observations 14, 15 et 20), ce qui traduit un mauvais ajustement pour certaines observations plutôt qu'une déviation normale isolée.
 
 ```{r}
 plot(mod_quasi, which = 3)
 ```
 
-Le graphique Scale-Location révèle une dispersion des résidus qui n'est pas constante et plusieurs valeurs extrêmes (1, 14, 15, 20), renforçant l'hypothèse d'une surdispersion mal capturée par le modèle binomial standard.
+Le graphique Scale-Location révèle une dispersion des résidus qui n'est pas constante et plusieurs valeurs extrêmes (1, 14, 15, 20), malgré l'inclusion du paramètre de surdispersion.
 
 ```{r}
 plot(mod_quasi, which = 4)
 ```
 
-La distance de Cook pointe vers certaines observations influentes (14, 19 et 20).
+La distance de Cook pointe vers certaines observations influentes (14, 15, 19 et 20).
 
 
 Le seuil usuel pour un levier élevé est $2(p+1)/n$ ; pour la distance de Cook, on examine plutôt les valeurs qui se détachent nettement des autres.
@@ -1130,5 +1130,5 @@ courbe.roc <- roc.curve(
 courbe.roc
 ```
 
-L'aire sous la courbe est de 0.78 : le modèle est bon.
+L'aire sous la courbe est de 0.78 : le modèle est moyen.
 :::

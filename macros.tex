@@ -6,3 +6,24 @@
 \newcommand{\hpi}[1]{\hat\pi_{#1}}
 \newcommand{\heta}[1]{\hat\eta_{#1}}
 \newcommand{\hmu}[1]{\hat\mu_{#1}}
+
+
+\usepackage{graphicx}
+
+\makeatletter
+\renewcommand{\maketitle}{
+  \begin{titlepage}
+    \centering
+
+    \vspace{1cm}
+    {\LARGE \bfseries \@title \par}
+    \vspace{1cm}
+    {\Large \@author \par}
+    \vspace{0.5cm}
+    {\large \@date \par}
+    \vspace{2cm}
+    \includegraphics[width=0.75\textwidth]{images/logit_plot.png}
+    \vspace{2cm}
+  \end{titlepage}
+}
+\makeatother

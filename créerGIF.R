@@ -56,7 +56,7 @@ creer_gif <- function(dir_out, nom_gif, n_frames_gif = n_frames) {
 set.seed(42)
 dir_out <- preparer_dossier("frames")
 
-n_groupes <- 20
+n_groupes <- 40
 X     <- seq(0, 7, length.out = n_groupes)
 Poids <- sample(5:10, n_groupes, replace = TRUE)
 X_mid <- mean(X)

@@ -6,16 +6,25 @@ library(gifski)
 library(mgcv)   # requis seulement pour le chapitre GAM
 
 base_dir    <- "/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/GitHub/STT-4300/images"
-n_frames    <- 120
+n_frames    <- 50
 largeur_img <- 8
 hauteur_img <- 5.5
 dpi_img     <- 300
 largeur_gif <- 800
 hauteur_gif <- 550
 delai_gif   <- 0.08
+n_pts       <- 100 
+n_groupes   <- 50 # pour la régression linéaire logistique
+n_coef      <- 5 # pour le nombre de paramètres de LASSO
 
-couleur_pts   <- "mediumpurple1"
-couleur_ligne <- "palegreen4"
+
+
+couleur_pts   <- "#9467bd"
+couleur_ligne <- "#0E9E6C"
+
+alpha_pts       <- 1   # transparence des points (hors logit pondéré, voir plus bas)
+taille_pts      <- 3   # taille des points (hors logit, dont la taille encode le poids)
+epaisseur_ligne <- 1.2     # épaisseur des courbes/lignes ajustées
 
 theme_gif <- theme_void() + theme(legend.position = "none")
 
@@ -56,7 +65,6 @@ creer_gif <- function(dir_out, nom_gif, n_frames_gif = n_frames) {
 set.seed(42)
 dir_out <- preparer_dossier("frames")
 
-n_groupes <- 40
 X     <- seq(0, 7, length.out = n_groupes)
 Poids <- sample(5:10, n_groupes, replace = TRUE)
 X_mid <- mean(X)
@@ -80,8 +88,8 @@ for (i in seq_len(n_frames)) {
   grille$Y_hat <- predict(modele, newdata = grille, type = "response")
 
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y, size = Poids), color = couleur_pts, alpha = 0.6) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = 1) +
+    geom_point(data = df, aes(X, Y, size = Poids), color = couleur_pts, alpha = alpha_pts) +
+    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
     coord_cartesian(xlim = range(X), ylim = c(0, 1)) +
     theme_gif
 
@@ -97,7 +105,6 @@ creer_gif(dir_out, "logit_plot.gif")
 set.seed(1)
 dir_out <- preparer_dossier("frames_lineaire")
 
-n_pts <- 50
 X     <- runif(n_pts, 0, 10)
 X_mid <- mean(X)
 beta1_amp <- 2
@@ -121,8 +128,8 @@ for (i in seq_len(n_frames)) {
   grille$Y_hat <- predict(modele, newdata = grille)
 
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = 0.6, size = 2.5) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = 1) +
+    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -137,7 +144,6 @@ creer_gif(dir_out, "lineaire_plot.gif")
 set.seed(2)
 dir_out <- preparer_dossier("frames_poisson")
 
-n_pts <- 50
 X     <- seq(0, 6, length.out = n_pts)
 X_mid <- mean(X)
 beta1_amp <- 0.5
@@ -164,8 +170,8 @@ for (i in seq_len(n_frames)) {
   grille$Y_hat <- predict(modele, newdata = grille, type = "response")
 
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = 0.6, size = 2.5) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = 1) +
+    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -180,7 +186,6 @@ creer_gif(dir_out, "glm_plot.gif")
 set.seed(3)
 dir_out <- preparer_dossier("frames_vc")
 
-n_pts       <- 150
 k           <- 5
 n_frames_vc <- k * 24   # 24 frames de pause par pli
 
@@ -199,8 +204,8 @@ for (i in seq_len(n_frames_vc)) {
   grille$Y_hat <- predict(modele, newdata = grille)
 
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y, color = role), alpha = 0.7, size = 2.8) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = 1) +
+    geom_point(data = df, aes(X, Y, color = role), alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
     scale_color_manual(values = c(train = couleur_pts, test = "tomato")) +
     theme_gif
 
@@ -216,7 +221,6 @@ creer_gif(dir_out, "cv_plot.gif", n_frames_gif = n_frames_vc)
 set.seed(4)
 dir_out <- preparer_dossier("frames_lasso")
 
-n_coef    <- 5
 coef_base <- runif(n_coef, -2, 2)
 noms      <- factor(paste0("b", 1:n_coef), levels = paste0("b", 1:n_coef))
 labels_coef <- paste0("abs(hat(beta)[", 1:n_coef, "])")   # |beta_j chapeau|, syntaxe plotmath
@@ -232,7 +236,7 @@ for (i in seq_len(n_frames)) {
     geom_col(fill = couleur_pts, alpha = 0.75) +
     geom_text(aes(label = label), parse = TRUE, vjust = -0.4,
               color = couleur_ligne, size = 16, fontface = "bold") +
-    geom_hline(yintercept = 0, color = couleur_ligne, linewidth = 1) +
+    geom_hline(yintercept = 0, color = couleur_ligne, linewidth = epaisseur_ligne) +
     coord_cartesian(ylim = c(0, 2.4)) +
     theme_gif
 
@@ -248,7 +252,6 @@ creer_gif(dir_out, "regularisation_plot.gif")
 set.seed(5)
 dir_out <- preparer_dossier("frames_knn")
 
-n_pts <- 100
 X <- runif(n_pts, 0, 10)
 Y <- sin(X) + rnorm(n_pts, 0, 0.25)
 
@@ -263,8 +266,8 @@ for (i in seq_len(n_frames)) {
   df_l   <- data.frame(X = lissage$x, Y = lissage$y)
 
   p <- ggplot() +
-    geom_point(data = df_pts, aes(X, Y), color = couleur_pts, alpha = 0.6, size = 2.5) +
-    geom_line(data = df_l, aes(X, Y), color = couleur_ligne, linewidth = 1) +
+    geom_point(data = df_pts, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = df_l, aes(X, Y), color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -279,7 +282,6 @@ creer_gif(dir_out, "knn_noyau_plot.gif")
 set.seed(6)
 dir_out <- preparer_dossier("frames_splines")
 
-n_pts <- 75
 X <- sort(runif(n_pts, 0, 10))
 Y <- sin(X) + rnorm(n_pts, 0, 0.25)
 
@@ -295,8 +297,8 @@ for (i in seq_len(n_frames)) {
   df_l   <- data.frame(X = grille, Y = Y_hat)
 
   p <- ggplot() +
-    geom_point(data = df_pts, aes(X, Y), color = couleur_pts, alpha = 0.6, size = 2.5) +
-    geom_line(data = df_l, aes(X, Y), color = couleur_ligne, linewidth = 1) +
+    geom_point(data = df_pts, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = df_l, aes(X, Y), color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -311,7 +313,6 @@ creer_gif(dir_out, "splines_plot.gif")
 set.seed(7)
 dir_out <- preparer_dossier("frames_gam")   # corrigé : était "frames_splines" par erreur
 
-n_pts <- 75
 X <- sort(runif(n_pts, 0, 10))
 bruit_fixe <- rnorm(n_pts, 0, 0.3)   # fixé une fois, hors boucle
 
@@ -327,8 +328,8 @@ for (i in seq_len(n_frames)) {
   grille$Y_hat <- predict(modele, newdata = grille)
 
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = 0.6, size = 2.5) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = 1) +
+    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -337,41 +338,32 @@ for (i in seq_len(n_frames)) {
 creer_gif(dir_out, "gam_plot.gif")
 
 
-library(ggplot2)
-library(gifski)
-
+# ================================================================
+# Index — nuage de points qui se réorganise (sans ajustement)
+# ================================================================
 set.seed(9)
+dir_out <- preparer_dossier("frames_index")
 
-n_pts    <- 100
-n_frames <- 150
+n_frames_ix <- 150
 
 X <- sort(runif(n_pts, 0, 10))
 
-dir_out <- "/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/GitHub/STT-4300/images/frames_index"
-dir.create(dir_out, showWarnings = FALSE, recursive = TRUE)
+# états cibles (mêmes X, différentes configurations de Y) ; le dernier état
+# doit rester visuellement compatible avec le premier pour que la boucle soit fluide
+bruit_indiv <- rnorm(n_pts, 0, 1)
 
-# --------------------------------------------------------------
-# États cibles (mêmes X, différentes configurations de Y)
-# Le dernier état doit être visuellement compatible avec le premier
-# pour que la boucle du gif soit fluide.
-# --------------------------------------------------------------
+etat_aleatoire <- bruit_indiv * 1.3
+etat_lineaire  <- 0.9 * (X - mean(X)) + bruit_indiv * 0.4
+etat_sinus     <- 3 * sin(0.8 * X) + bruit_indiv * 0.35
+etat_plateau   <- 3 * plogis(1.2 * (X - mean(X))) + bruit_indiv * 0.3
 
-bruit_indiv <- rnorm(n_pts, 0, 1)   # bruit individuel fixe, réutilisé dans chaque état
-
-etat_aleatoire <- bruit_indiv * 1.3                              # nuage sans structure
-etat_lineaire  <- 0.9 * (X - mean(X)) + bruit_indiv * 0.4        # tendance linéaire
-etat_sinus     <- 3 * sin(0.8 * X) + bruit_indiv * 0.35          # courbe non linéaire
-etat_plateau   <- 3 * plogis(1.2 * (X - mean(X))) + bruit_indiv * 0.3  # saturation
-
-etats <- list(etat_aleatoire, etat_lineaire, etat_sinus, etat_plateau)
+etats   <- list(etat_aleatoire, etat_lineaire, etat_sinus, etat_plateau)
 n_etats <- length(etats)
 
-# lissage cosinus (ease-in-out) entre deux états
-ease <- function(frac) (1 - cos(pi * frac)) / 2
+ease <- function(frac) (1 - cos(pi * frac)) / 2   # lissage ease-in-out entre deux états
 
-for (i in seq_len(n_frames)) {
-  # position continue dans le cycle des états (boucle complète sur n_frames)
-  pos <- (i - 1) / n_frames * n_etats
+for (i in seq_len(n_frames_ix)) {
+  pos <- (i - 1) / n_frames_ix * n_etats
 
   idx_a <- (floor(pos) %% n_etats) + 1
   idx_b <- (floor(pos) + 1) %% n_etats + 1
@@ -382,14 +374,11 @@ for (i in seq_len(n_frames)) {
   df <- data.frame(X = X, Y = Y_t)
 
   p <- ggplot(df, aes(X, Y)) +
-    geom_point(color = "mediumpurple1", alpha = 0.7, size = 3) +
+    geom_point(color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
     coord_cartesian(ylim = c(-5, 5)) +
-    theme_void() + theme(legend.position = "none")
+    theme_gif
 
-  ggsave(file.path(dir_out, sprintf("frame_%03d.png", i)), p,
-         width = 8, height = 5.5, dpi = 300, bg = "transparent")
+  sauvegarder_frame(p, dir_out, i)
 }
 
-gifski(sprintf(file.path(dir_out, "frame_%03d.png"), 1:n_frames),
-       gif_file = file.path(dirname(dir_out), "index_plot.gif"),
-       width = 800, height = 550, delay = 0.08, loop = TRUE)
+creer_gif(dir_out, "index_plot.gif", n_frames_gif = n_frames_ix)

@@ -514,7 +514,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const estIndex = path.endsWith("/") || path.endsWith("/index.html");
 
   if (estIndex) {
-    logo.src = "/STT-4300/images/logit_plot.gif";
+    logo.src = logo.src.replace("logit_plot.png", "logit_plot.gif");
   }
 });
 </script>

@@ -790,7 +790,8 @@ comme approximation.
 Puisque le modèle saturé maximise la vraisemblance parmi *tous* les modèles possibles, $l(y,y) \geq l(\hat\mu,y)$ toujours, et donc $D \geq 0$ : plus $D$ est petit, plus le modèle considéré se rapproche du modèle saturé, donc plus il s'ajuste bien aux données.
 :::
 
-La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'adéquation du modèle et à comparer des modèles.
+La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l'[adéquation du modèle](#sec-adequation) et à comparer des modèles.
+
 
 ### Comparaison de modèles emboîtés
 
@@ -821,8 +822,8 @@ modele.complet <- glm(
 )
 
 stat.test <- deviance(modele.reduit) - deviance(modele.complet)
-p.valeur <- 1 - pchisq(stat.test, df = 2)
-p.valeur
+valeurp <- 1 - pchisq(stat.test, df = 2)
+valeurp
 ```
 
 On ne rejette pas $H_0$ : le modèle réduit est adéquat.
@@ -832,7 +833,25 @@ On ne rejette pas $H_0$ : le modèle réduit est adéquat.
 
 Comme pour les modèles linéaires, on utilise
 $$AIC = -2\,l(\hat\mu;y) + 2(p+1), \qquad BIC = -2\,l(\hat\mu;y) + \log(n)(p+1).$$
-Le modèle ayant le plus petit $AIC$ (ou $BIC$) est préférable. En R : `extractAIC(modele)` et `extractAIC(modele, k=log(n))`.
+Le modèle ayant le plus petit $AIC$ (ou $BIC$) est préférable. En R : `AIC(modele)` et `AIC(modele, k=log(n))`.
+
+::: {.env-exemple titre="Modèles non emboîtés avec `nminer`"}
+```{r modele-non-emboites}
+data(nminer)
+nminer$Detecte <- as.numeric(nminer$Minerab > 0)
+mod1 <- glm(Detecte ~  Area + Grazed + Shrubs  + Timber,
+            data = nminer, family = binomial)
+
+mod2 <- glm(Detecte ~ Eucs + Grazed + Bulokes,
+            data = nminer, family = binomial)
+
+AIC(mod1)
+AIC(mod2)
+```
+Le modèle 2 a un AIC plus faible que le modèle 1 et lui est donc préférable. 
+
+*À noter, les variables explicatives ont été choisies au hasard ici.*
+:::
 
 ### Sélection automatique
 
@@ -869,7 +888,7 @@ summary(modele.forward)
 summary(modele.step)
 
 ```
-Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local.
+Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local (et encore moins à l'optimum global).
 
 :::
 
@@ -878,22 +897,15 @@ Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce
 ### Résidus
 
 :::{.env-definition titre="Résidus déviance et résidus de Pearson"}
-- **Résidus déviance** : $r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}$, avec
-$$d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hmu{i}}\right) + (m_i - y_i)\log\!\left(\frac{m_i - y_i}{m_i - \hmu{i}}\right)\right\}.$$
+- **Résidus déviance** : $r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}$, avec $d_i$ la déviance individuelle de l'observation $i$.
 
 - **Résidus de Pearson** :
 $$r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.$$
 :::
 
-:::{.env-propriete titre="Somme des résidus déviance"}
-Il est possible de montrer que la somme des résidus déviance 
-$$\sum_{i=1}^nr_{D,i} = \sum_{i=1}^n\mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}=D,$$
-correspond à la déviance introduite [plus tôt](#sec-deviance).
-:::
+### Tests d'adéquation globale {#sec-adequation}
 
-### Tests d'adéquation globale
-
-Deux statistiques permettent de tester l'adéquation globale : la déviance $D$ et la statistique du khi-deux de Pearson
+Deux statistiques permettent de tester l'adéquation globale : la [déviance](#sec-deviance) $D$ et la statistique du khi-deux de Pearson
 $$\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.$$
 
 :::{.env-propriete titre="Convergence de $D$ et $\chi^2_P$"}

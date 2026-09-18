@@ -1,5 +1,3 @@
-
-
 ## Préface {.unnumbered}
 
 Ces notes de cours couvrent la régression linéaire, les modèles linéaires généralisés (régression logistique, régression de Poisson), les méthodes de validation et de sélection de modèles, la régularisation (ridge, lasso), les méthodes de régression non-paramétrique ($k$ plus proches voisins, estimateur de noyau, splines) et les modèles additifs généralisés (GAM).

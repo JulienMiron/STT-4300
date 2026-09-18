@@ -23,7 +23,8 @@ jobs:
           install.packages(c(
             "ggplot2", "rmarkdown", "knitr",
             "GLMsData", "ISLR", "MASS", "mgcv", "splines2",
-            "glmnet", "clinfun", "boot", "FNN", "KernSmooth", "purrr", "dplyr", "tidyr", "latex2exp"
+            "glmnet", "clinfun", "boot", "FNN", "KernSmooth",
+            "purrr", "dplyr", "tidyr", "latex2exp", "faraway"
           ))
         shell: Rscript {0}
 

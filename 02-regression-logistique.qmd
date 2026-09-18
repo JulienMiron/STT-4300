@@ -15,7 +15,7 @@ Les modèles de régression linéaire ne permettent de considérer que les cas o
 
 :::{.env-exemple}
 
-Quatre exemples tirés de la librairie `GLMsData` de R [@dunn2018glm] :
+Cinq exemples tirés des librairies R `GLMsData` [@dunn2018glm] et `faraway` [@faraway] :
 
 1. [`quilpie`]{#data-quilpie} : observations de 1921 à 1988 de la quantité de pluie mesurée en juillet à Quilpie (Australie), une ville semi-aride du Queensland où les précipitations conditionnent fortement l'agriculture locale. La réponse vaut 1 si la quantité de pluie dépasse 10 mm (un seuil jugé suffisant pour amorcer les semis) et 0 sinon ; la variable explicative est un indice de pression atmosphérique, le *Southern Oscillation Index* (SOI), qui capture les phases El Niño/La Niña connues pour influencer les précipitations dans cette région.
 
@@ -24,6 +24,8 @@ Quatre exemples tirés de la librairie `GLMsData` de R [@dunn2018glm] :
 1. [`deposit`]{#data-deposit} : 18 observations sur l'efficacité de trois insecticides ($A$, $B$ ou $C$) appliqués à différentes doses (en mg) sur des insectes ; la réponse $Y_i$ est le nombre d'insectes tués parmi les $m_i$ insectes exposés à chaque combinaison insecticide-dose.
 
 1. [`turbines`]{#data-turbines} : 11 observations issues d'une expérience de fiabilité sur des roues de turbine [@nelson1982] ; la réponse $Y_i$ est le nombre de roues présentant des fissures parmi $m_i$ roues mises à l'essai, en fonction du nombre d'heures de fonctionnement.
+
+1. [`troutegg`]{#data-troutegg} : 20 observations issues d'une expérience où des boîtes d'œufs de truite ont été enfouies à cinq emplacements différents d'un cours d'eau (`location`) et retirées après quatre durées différentes (`period`, en semaines) ; la réponse $Y_i$ est le nombre d'œufs survivants parmi les $m_i$ œufs de la boîte.
 
 :::
 
@@ -896,8 +898,8 @@ Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce
 
 ### Résidus
 
-:::{.env-definition titre="Résidus déviance et résidus de Pearson"}
-- **Résidus déviance** : $r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}$, avec $d_i$ la déviance individuelle de l'observation $i$.
+:::{.env-definition titre="Résidus de déviance et résidus de Pearson"}
+- **Résidus de déviance** : $r_{D,i} = \mathrm{signe}(y_i - \hmu{i})\sqrt{d_i}$, avec $d_i$ la déviance individuelle de l'observation $i$.
 
 - **Résidus de Pearson** :
 $$r_{P,i} = \frac{y_i - m_i\hpi{i}}{\sqrt{m_i\hpi{i}(1-\hpi{i})}} = \frac{y_i - \hmu{i}}{\sqrt{\hmu{i}(m_i-\hmu{i})/m_i}}.$$
@@ -965,7 +967,7 @@ Cette distinction ne s'applique toutefois qu'au test d'adéquation globale d'un 
 
 ### Graphiques et extra-variabilité
 
-Les graphiques des résidus en fonction des numéros d'observations ne doivent montrer aucune tendance. Si plusieurs résidus dépassent 3 en valeur absolue, cela peut suggérer une extra-variabilité.
+Les graphiques des résidus en fonction des numéros d'observations ne doivent montrer aucune tendance. Si plusieurs résidus de dépassent 3 en valeur absolue, cela peut suggérer une extra-variabilité.
 
 :::{.env-definition titre="Extra-variabilité (overdispersion)"}
 L'**extra-variabilité** (*overdispersion*) survient quand $E[Y_i] = m_i\pi_i$ mais $Var[Y_i] > m_i\pi_i(1-\pi_i)$. On pose alors $Var[Y_i] = \phi\, m_i\pi_i(1-\pi_i)$ et on estime $\phi$ par $\chi^2_P/(n-(p+1))$.
@@ -978,6 +980,105 @@ Pour vérifier la linéarité du prédicteur, on trace le nuage de points $\{(\h
 ### Observations aberrantes et valeurs influentes
 
 Le principe est identique à la régression linéaire. Les définitions des leviers, résidus standardisés et studentisés diffèrent, mais ces quantités ont la même interprétation. Il en va de même pour la distance de Cook, les DFBETAS et les DFFITS.
+
+
+:::{.env-exemple titre="Diagnostics de surdispersion — données `troutegg`"}
+
+On ajuste un modèle binomial sur les données `troutegg`, qui recensent la survie d'œufs de truite selon l'emplacement dans le cours d'eau et la période de retrait.
+
+```{r}
+library(faraway)
+data(troutegg)
+
+mod <- glm(cbind(survive, total - survive) ~ location + period,
+           family = binomial, data = troutegg)
+```
+
+**Résidus en fonction du numéro d'observation**
+
+```{r}
+res_dev <- residuals(mod, type = "deviance")
+
+plot(res_dev, xlab = "Numéro d'observation", ylab = "Résidu de déviance",
+     pch = 19)
+abline(h = 0, lty = 2)
+abline(h = c(-3, 3), lty = 3, col = "red")
+```
+
+Ici, quelques résidus dépassent les seuils à $\pm 3$ (pointillés rouges), ce qui suggère de l'extra-variabilité.
+
+**Estimation de $\phi$ et passage au modèle quasibinomial**
+
+```{r}
+chi2_p <- sum(residuals(mod, type = "pearson")^2)
+n <- nrow(troutegg)
+p <- length(coef(mod))
+phi_hat <- chi2_p / (n - p)
+phi_hat
+```
+
+```{r}
+mod_quasi <- glm(cbind(survive, total - survive) ~ location + period,
+                  family = quasibinomial, data = troutegg)
+summary(mod_quasi)
+summary(mod)
+
+```
+
+**Vérification de la linéarité : $\hat\pi_i$ contre $\tilde\pi_i$**
+
+```{r}
+pi_hat   <- fitted(mod_quasi)
+pi_tilde <- troutegg$survive / troutegg$total
+
+plot(pi_tilde, pi_hat, xlab = expression(tilde(pi)[i]),
+     ylab = expression(hat(pi)[i]), pch = 19,
+     xlim = c(0, 1), ylim = c(0, 1))
+abline(0, 1, lty = 2)
+```
+
+Les points suivent d'assez près la droite $y = x$, sans courbure systématique apparente, ce qui appuie l'hypothèse de linéarité du prédicteur pour ce modèle.
+
+**Observations aberrantes et valeurs influentes**
+
+```{r}
+lev   <- hatvalues(mod_quasi)
+rstd  <- rstandard(mod_quasi, type = "pearson")
+rstu  <- rstudent(mod_quasi)
+cook  <- cooks.distance(mod_quasi)
+dfb   <- dfbetas(mod_quasi)
+dff   <- dffits(mod_quasi)
+
+plot(lev, cook, xlab = "Levier", ylab = "Distance de Cook", pch = 19)
+```
+
+```{r}
+plot(mod_quasi, which = 1)
+```
+Le graphique des résidus vs valeurs ajustées montre plusieurs points nettement à l'écart (dont les observations 15 et 20), suggérant que le modèle ne s'ajuste pas également bien à toutes les combinaisons de `location` et `period`.
+
+```{r}
+plot(mod_quasi, which = 2)
+```
+
+Le QQ-plot des résidus s'éloigne fortement de la droite de référence dans la queue supérieure (observations 14, 15 et 20), ce qui traduit un mauvais ajustement pour certaines observations plutôt qu'une déviation normale isolée.
+
+```{r}
+plot(mod_quasi, which = 3)
+```
+
+Le graphique Scale-Location révèle une dispersion des résidus qui n'est pas constante et plusieurs valeurs extrêmes (1, 14, 15, 20), renforçant l'hypothèse d'une surdispersion mal capturée par le modèle binomial standard.
+
+```{r}
+plot(mod_quasi, which = 4)
+```
+
+La distance de Cook pointe vers certaines observations influentes (14, 19 et 20).
+
+
+Le seuil usuel pour un levier élevé est $2(p+1)/n$ ; pour la distance de Cook, on examine plutôt les valeurs qui se détachent nettement des autres.
+
+:::
 
 ## Spécificité, sensibilité et courbe ROC {#sec-roc}
 

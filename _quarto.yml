@@ -51,12 +51,13 @@ format:
 
     grid:
       sidebar-width: 300px   # sidebar de gauche (chapitres) — défaut 250px
-      margin-width: 200px    # TdM de droite — défaut ~200-250px selon thème
+      margin-width: 250px    # TdM de droite — défaut ~200-250px selon thème
       gutter-width: 1rem     # espace entre les colonnes
 
     theme: cosmo
     css: styles.css
     toc: true
+    toc-expand: true
     toc-depth: 3
     number-sections: true
     code-fold: false

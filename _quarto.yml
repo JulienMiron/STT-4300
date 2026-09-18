@@ -2,30 +2,23 @@ project:
   type: book
   output-dir: _book
 
-
-lang: fr
-language: 
-  title-block-author-single: "Auteur"
-  title-block-modified: "Dernière modification"
-
-date-modified: last-modified
-date-format: "D MMMM YYYY"
-
-bibliography: references.bib
-
 book:
-  title: "**Régression II -- STT-4300**"
+  title: "Régression II -- STT-4300"
   #subtitle: "Rappels de régression linéaire, modèles linéaires généralisés, régression non-linéaire et non-paramétrique, modèles additifs généralisés"
   author: "Julien Miron"
+
+  repo-url: https://github.com/JulienMiron/STT-4300
+  repo-actions: [edit, issue]      # pas "source" : le dépôt contient aussi des brouillons
+
   page-footer:
     left: "Notes de cours STT-4300"
     right: "Généré avec Quarto"
-  repo-url: https://github.com/JulienMiron/STT-4300
-  repo-actions: [edit, issue]
+
   sidebar:
     style: floating
-    collapse-level: 1
-    logo: images/logit_plot.png    # ton image, placée au-dessus du titre
+    collapse-level: 1              # replie tout sauf les titres de chapitre
+    logo: images/logit_plot.png    # affichée au-dessus du titre dans la sidebar
+
   chapters:
     - index.qmd
     - 01-regression-lineaire.qmd
@@ -38,36 +31,29 @@ book:
     - 08-gam.qmd
 
 crossref:
-  chapters: true
+  chapters: true                   # numérotation des figures/tableaux tient compte du chapitre
+
+bibliography: references.bib
+
+# Réglages de langue et de dates (affichage en français)
+lang: fr
+language:
+  title-block-author-single: "Auteur"
+  title-block-modified: "Dernière modification"
+date-modified: last-modified       # date mise à jour automatiquement au rendu
+date-format: "D MMMM YYYY"
 
 format:
   html:
-    include-after-body: sidebar-gif.html
-    grid:
-      sidebar-width: 250px   # ta sidebar de gauche (chapitres) — défaut 250px
-      margin-width: 200px    # ta TdM de droite — défaut ~200-250px selon thème
-      gutter-width: 1rem   # optionnel : espace entre les colonnes
+    include-after-body: sidebar-gif.html   # gif/animation ajoutée après le corps de page
     include-in-header:
-      - text: |
-          <script>
-          window.MathJax = {
-            chtml: {
-              linebreaks: { inline: false }
-            },
-            tex: {
-              macros: {
-                bb: "\\boldsymbol\\beta",
-                hb: "\\hat{\\boldsymbol\\beta}",
-                hv: ["\\hat{\\text V}(#1)", 1],
-                hvar: ["\\widehat{\\text{Var}}(#1)", 1],
-                hbj: ["\\hat\\beta_{#1}", 1],
-                hpi: ["\\hat\\pi_{#1}", 1],
-                heta: ["\\hat\\eta_{#1}", 1],
-                hmu: ["\\hat\\mu_{#1}", 1]
-              }
-            }
-          };
-          </script>  
+      - mathjax-macros.html                # macros LaTeX custom pour MathJax (bb, hb, hv, etc.)
+
+    grid:
+      sidebar-width: 300px   # sidebar de gauche (chapitres) — défaut 250px
+      margin-width: 200px    # TdM de droite — défaut ~200-250px selon thème
+      gutter-width: 1rem     # espace entre les colonnes
+
     theme: cosmo
     css: styles.css
     toc: true
@@ -75,14 +61,15 @@ format:
     number-sections: true
     code-fold: false
     smooth-scroll: true
+
   pdf:
     documentclass: scrreprt
     toc: true
     number-sections: true
-    keep-tex: false
+    keep-tex: false          # mettre à true pour inspecter le .tex généré en cas d'erreur
 
 editor: source
 
 filters:
-  - webr
-  - filtres/titre-environnements.lua
+  - webr                              # exécution de code R dans le navigateur
+  - filtres/titre-environnements.lua  # filtre custom pour les environnements (théorème, exemple, etc.)

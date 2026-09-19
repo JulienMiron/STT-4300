@@ -291,8 +291,12 @@ window.Quarto = {
   <li><a href="#sélection-et-validation-de-modèles" id="toc-sélection-et-validation-de-modèles" class="nav-link" data-scroll-target="#sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</a></li>
   <li><a href="#sec-poisson" id="toc-sec-poisson" class="nav-link" data-scroll-target="#sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression de Poisson</a>
   <ul class="collapse">
-  <li><a href="#variables-explicatives-offset" id="toc-variables-explicatives-offset" class="nav-link" data-scroll-target="#variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></a></li>
-  <li><a href="#sec-surdispersion" id="toc-sec-surdispersion" class="nav-link" data-scroll-target="#sec-surdispersion"><span class="header-section-number">3.6.2</span> Variabilité extra-Poissonienne</a></li>
+  <li><a href="#vraisemblance-et-score-1" id="toc-vraisemblance-et-score-1" class="nav-link" data-scroll-target="#vraisemblance-et-score-1"><span class="header-section-number">3.6.1</span> Vraisemblance et score</a></li>
+  <li><a href="#information-de-fisher-et-variance-des-estimateurs" id="toc-information-de-fisher-et-variance-des-estimateurs" class="nav-link" data-scroll-target="#information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">3.6.2</span> Information de Fisher et variance des estimateurs</a></li>
+  <li><a href="#variables-explicatives-offset" id="toc-variables-explicatives-offset" class="nav-link" data-scroll-target="#variables-explicatives-offset"><span class="header-section-number">3.6.3</span> Variables explicatives <em>offset</em></a></li>
+  <li><a href="#déviance-et-adéquation" id="toc-déviance-et-adéquation" class="nav-link" data-scroll-target="#déviance-et-adéquation"><span class="header-section-number">3.6.4</span> Déviance et adéquation</a></li>
+  <li><a href="#sec-surdispersion" id="toc-sec-surdispersion" class="nav-link" data-scroll-target="#sec-surdispersion"><span class="header-section-number">3.6.5</span> Variabilité extra-Poissonienne</a></li>
+  <li><a href="#graphiques-et-observations-aberrantes" id="toc-graphiques-et-observations-aberrantes" class="nav-link" data-scroll-target="#graphiques-et-observations-aberrantes"><span class="header-section-number">3.6.6</span> Graphiques et observations aberrantes</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/03-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
@@ -741,39 +745,85 @@ AIC = -2\,\ell(\hb,\tilde\phi_P\mid\Delta) + 2(p+1), \qquad BIC = -2\,\ell(\hb,\
 <p><span class="math display">\[
 P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.
 \]</span></p>
+<div class="env-exemple" data-titre="Jeux de données">
+<p><span class="env-titre">Exemple — Jeux de données</span></p>
+<p>Deux exemples utilisés dans cette section :</p>
+<ol type="1">
+<li><p><span id="data-danishlc"><code>danishlc</code></span> (librairie <code>GLMsData</code>) : nombre de nouveaux cas de cancer du poumon par ville (4 villes) et par tranche d’âge (6 tranches), au Danemark, ainsi que la population <span class="math inline">\(m_i\)</span> de chaque strate.</p></li>
+<li><p><span id="data-ships"><code>ships</code></span> (librairie <code>MASS</code>) : nombre d’incidents de fissure de coque (<code>incidents</code>) recensés sur des cargos, selon le type de navire (<code>type</code>), l’année de construction (<code>year</code>) et la période de service (<code>period</code>), avec le nombre-mois de service (<code>service</code>) comme mesure d’exposition.</p></li>
+</ol>
+</div>
 <p>Avec la fonction de lien canonique <span class="math inline">\(g(\mu_i) = \log(\mu_i)\)</span>, on a</p>
 <p><span class="math display">\[
-\mu_i = e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}} = e^{\beta_0}\times\left\{e^{\beta_1}\right\}^{X_{i1}}\times\cdots\times\left\{e^{\beta_p}\right\}^{X_{ip}}.
+\mu_i = e^{\eta_i}, \qquad \eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip},
+\]</span></p>
+<p>c’est-à-dire</p>
+<p><span class="math display">\[
+\mu_i = e^{\beta_0}\times\left\{e^{\beta_1}\right\}^{X_{i1}}\times\cdots\times\left\{e^{\beta_p}\right\}^{X_{ip}}.
 \]</span></p>
 <div class="env-remarque" data-titre="Interprétation des coefficients">
 <p><span class="env-titre">Remarque — Interprétation des coefficients</span></p>
 <p>Si <span class="math inline">\(X_{ij}\)</span> augmente d’une unité, toutes les autres variables étant fixées, <span class="math inline">\(\mu_i\)</span> est multiplié par <span class="math inline">\(e^{\beta_j}\)</span> : l’effet est multiplicatif sur l’échelle de la réponse, exactement comme le rapport de cotes <span class="math inline">\(e^{\beta_j}\)</span> l’était sur la cote en régression logistique. Si <span class="math inline">\(\beta_j &gt; 0\)</span>, alors <span class="math inline">\(e^{\beta_j}&gt;1\)</span> et <span class="math inline">\(\mu_i\)</span> croît avec <span class="math inline">\(X_{ij}\)</span> ; si <span class="math inline">\(\beta_j&lt;0\)</span>, <span class="math inline">\(\mu_i\)</span> décroît.</p>
 </div>
-<p>La log-vraisemblance est</p>
+<section id="vraisemblance-et-score-1" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="vraisemblance-et-score-1"><span class="header-section-number">3.6.1</span> Vraisemblance et score</h3>
+<p>La log-vraisemblance générale, avant de substituer le lien log, s’écrit</p>
 <p><span class="math display">\[
-\ell(\boldsymbol\beta) = \sum_{i=1}^n\left\{y_i(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}) - e^{\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}}\right\} - \sum_{i=1}^n \log(y_i!),
+\ell(\boldsymbol\mu;\boldsymbol y) = \sum_{i=1}^n \left\{y_i\log(\mu_i) - \mu_i\right\} - \sum_{i=1}^n \log(y_i!),
 \]</span></p>
-<p>et, en dérivant terme à terme par rapport à <span class="math inline">\(\beta_j\)</span> comme on l’a fait pour le lien logit, on obtient le score</p>
+<p>où le dernier terme ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span> et peut être ignoré pour l’estimation.</p>
+<div class="env-log" data-titre="Log-vraisemblance et score sous le lien log">
+<p><span class="env-titre">Le cas du lien log — Log-vraisemblance et score sous le lien log</span></p>
+<p>Avec <span class="math inline">\(\mu_i = e^{\eta_i}\)</span>, on a <span class="math inline">\(\log(\mu_i) = \eta_i\)</span>, de sorte que</p>
 <p><span class="math display">\[
-\frac{\partial \ell(\boldsymbol\beta)}{\partial \beta_j} = \sum_{i=1}^n (y_i - \mu_i) X_{ij}, \qquad \boldsymbol U(\boldsymbol\beta) = X^\top(\boldsymbol y - \boldsymbol\mu),
+\ell(\boldsymbol\beta;\boldsymbol y) = \sum_{i=1}^n\left\{y_i \eta_i - e^{\eta_i}\right\} + K,
 \]</span></p>
-<p>qui a exactement la même forme que pour la régression logistique — seule la relation entre <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\eta_i\)</span> diffère. La loi asymptotique de <span class="math inline">\(\hb\)</span> est <span class="math inline">\(\mathcal{N}\{\boldsymbol\beta,\,(X^\top WX)^{-1}\}\)</span>, où <span class="math inline">\(W = \mathrm{diag}(w_i)\)</span> avec <span class="math inline">\(w_i = \hat\mu_i = e^{\hat\eta_i}\)</span> (<span class="math inline">\(\phi=1\)</span> ici, comme pour la loi binomiale).</p>
-<p>La déviance individuelle, obtenue en appliquant la définition générale <span class="math inline">\(d(y,\mu)=2\{t(y,y)-t(y,\mu)\}\)</span> à la loi de Poisson, est</p>
+<p>où <span class="math inline">\(K = -\sum_i \log(y_i!)\)</span> ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>.</p>
+<p><strong>Dérivée par rapport à <span class="math inline">\(\beta_j\)</span>.</strong> En notant <span class="math inline">\(\dfrac{\partial \eta_i}{\partial \beta_j} = X_{ij}\)</span> (avec <span class="math inline">\(X_{i0}\equiv 1\)</span>), le terme <span class="math inline">\(y_i\eta_i\)</span> se dérive directement en <span class="math inline">\(y_i X_{ij}\)</span>. Pour le second terme, par la règle de dérivation en chaîne,</p>
 <p><span class="math display">\[
-d(y,\mu) = 2\left\{y\log\!\left(\frac{y}{\mu}\right) - (y - \mu)\right\},
+\frac{\partial}{\partial \beta_j}\, e^{\eta_i} = e^{\eta_i}\cdot\frac{\partial \eta_i}{\partial \beta_j} = \mu_i X_{ij}.
 \]</span></p>
-<p>et l’adéquation globale se vérifie avec</p>
+<p>D’où</p>
 <p><span class="math display">\[
-X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D = \sum_{i=1}^n d(y_i,\hat\mu_i),
+\frac{\partial \ell(\boldsymbol\beta)}{\partial \beta_j} = \sum_{i=1}^n (y_i - \mu_i) X_{ij},
 \]</span></p>
-<p>qui suivent toutes deux approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien adapté et si les <span class="math inline">\(\mu_i\)</span> ne sont pas trop petits.</p>
-<section id="variables-explicatives-offset" class="level3" data-number="3.6.1">
-<h3 data-number="3.6.1" class="anchored" data-anchor-id="variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></h3>
-<div class="env-exemple" data-titre="Jeu de données `danishlc`">
-<p><span class="env-titre">Exemple — Jeu de données <code>danishlc</code></span></p>
-<p>Le jeu de données <code>danishlc</code> (librairie <code>GLMsData</code>) recense le nombre de nouveaux cas de cancer du poumon par ville (4 villes) et par tranche d’âge (6 tranches), ainsi que la population <span class="math inline">\(m_i\)</span> de chaque strate.</p>
+<p>et, sous forme matricielle,</p>
+<p><span class="math display">\[
+\boldsymbol U(\boldsymbol\beta) = \boldsymbol X^\top(\boldsymbol y - \boldsymbol\mu).
+\]</span></p>
+<p>Cette expression a exactement la même forme que le score de la régression binomiale (<a href="02-regression-logistique.html#eq-score-vecteur" class="quarto-xref">Équation&nbsp;<span>2.2</span></a>) — seule la relation entre <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\eta_i\)</span> diffère d’un lien à l’autre.</p>
 </div>
-<p>Lorsque la probabilité individuelle de l’événement est très petite (ici, par exemple, <span class="math inline">\(\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}\)</span> pour la première strate), une régression logistique n’est généralement pas appropriée : les nombres de cas se comportent alors davantage comme un dénombrement rare que comme une proportion binomiale. On modélise plutôt l’espérance du taux <span class="math inline">\(Y_i/m_i\)</span> :</p>
+<p>Comme pour la régression logistique, l’équation <span class="math inline">\(\boldsymbol U(\boldsymbol\beta)=\boldsymbol 0\)</span> n’a pas de solution analytique : on résout numériquement par IRLS (Fisher scoring), implémenté dans <code>glm</code> avec <code>family = poisson</code>.</p>
+</section>
+<section id="information-de-fisher-et-variance-des-estimateurs" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">3.6.2</span> Information de Fisher et variance des estimateurs</h3>
+<p>La loi asymptotique de <span class="math inline">\(\hb\)</span> est</p>
+<p><span class="math display">\[
+\hb \;\dot\sim\; \mathcal{N}\{\boldsymbol\beta,\, (X^\top W X)^{-1}\},
+\]</span></p>
+<p>où <span class="math inline">\(W=\mathrm{diag}(w_i)\)</span>.</p>
+<div class="env-log" data-titre="Expression de $w_i$ sous le lien log">
+<p><span class="env-titre">Le cas du lien log — Expression de <span class="math inline">\(w_i\)</span> sous le lien log</span></p>
+<p>Puisque <span class="math inline">\(Var[Y_i]=\mu_i\)</span> et <span class="math inline">\(d\mu_i/d\eta_i = \mu_i\)</span> (lien canonique), le poids IRLS se simplifie en</p>
+<p><span class="math display">\[
+w_i = \frac{(d\mu_i/d\eta_i)^2}{Var[Y_i]} = \frac{\mu_i^2}{\mu_i} = \mu_i,
+\]</span></p>
+<p>évalué en <span class="math inline">\(\hat\mu_i = e^{\hat\eta_i}\)</span>. Comme pour la binomiale, <span class="math inline">\(\phi=1\)</span> ici : aucun paramètre de dispersion additionnel n’est estimé dans le modèle de Poisson usuel.</p>
+</div>
+</section>
+<section id="variables-explicatives-offset" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="variables-explicatives-offset"><span class="header-section-number">3.6.3</span> Variables explicatives <em>offset</em></h3>
+<div class="env-theo" data-titre="Approximation de la loi binomiale par la loi de Poisson">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Approximation de la loi binomiale par la loi de Poisson</span></p>
+<p>Soit <span class="math inline">\(Y_i \sim \text{Bin}(m_i, \pi_i)\)</span>. Si <span class="math inline">\(m_i \to \infty\)</span> et <span class="math inline">\(\pi_i \to 0\)</span> de sorte que <span class="math inline">\(\mu_i = m_i\pi_i\)</span> reste fixe (ou converge vers une constante), alors la loi de <span class="math inline">\(Y_i\)</span> converge vers une loi de Poisson de moyenne <span class="math inline">\(\mu_i\)</span> :</p>
+<p><span class="math display">\[
+P(Y_i = y) = \binom{m_i}{y}\pi_i^y(1-\pi_i)^{m_i-y} \;\longrightarrow\; e^{-\mu_i}\frac{\mu_i^y}{y!}.
+\]</span></p>
+<p><strong>Intuition.</strong> Quand <span class="math inline">\(\pi_i\)</span> est petit, l’événement <span class="math inline">\(\{Y_i = y\}\)</span> correspond à <span class="math inline">\(y\)</span> « succès » très improbables parmi un très grand nombre d’essais. Le nombre d’essais <span class="math inline">\(m_i\)</span> n’a alors presque plus d’importance en soi : ce qui détermine la loi de <span class="math inline">\(Y_i\)</span>, c’est essentiellement le produit <span class="math inline">\(\mu_i = m_i \pi_i\)</span>, c’est-à-dire le nombre de succès <em>attendu</em>. Deux strates avec des <span class="math inline">\((m_i,\pi_i)\)</span> très différents mais le même <span class="math inline">\(\mu_i\)</span> (par exemple <span class="math inline">\(m_i=10\,000,\ \pi_i=0{,}001\)</span> contre <span class="math inline">\(m_i=1000,\ \pi_i=0{,}01\)</span>) produisent des distributions de <span class="math inline">\(Y_i\)</span> presque identiques.</p>
+<p><strong>Repère pratique.</strong> L’approximation est jugée satisfaisante lorsque <span class="math inline">\(m_i\)</span> est grand (disons <span class="math inline">\(m_i \geq 20\)</span>) et <span class="math inline">\(\pi_i\)</span> est petit (disons <span class="math inline">\(\pi_i \leq 0{,}05\)</span>), de sorte que <span class="math inline">\(\mu_i = m_i\pi_i\)</span> demeure modéré. C’est le cas de la première strate de <code>danishlc</code> : <span class="math inline">\(m_1 = 3059\)</span>, <span class="math inline">\(\tilde\pi_1 \approx 3.6\times10^{-3}\)</span>, ce qui donne <span class="math inline">\(\mu_1 \approx 11\)</span> — un dénombrement rare typique.</p>
+<p><strong>Conséquence pour la modélisation.</strong> Dans ce régime, les deux paramètres <span class="math inline">\((m_i,\pi_i)\)</span> ne sont plus identifiables séparément à partir de <span class="math inline">\(Y_i\)</span> seul : seule leur combinaison <span class="math inline">\(\mu_i\)</span> compte. Il devient donc plus naturel — et numériquement plus stable — de modéliser directement <span class="math inline">\(\mu_i\)</span> comme un compte de Poisson plutôt que <span class="math inline">\(\pi_i\)</span> comme une proportion binomiale. Comme <span class="math inline">\(\mu_i\)</span> dépend mécaniquement de <span class="math inline">\(m_i\)</span> (une strate plus grande produit plus de cas même à risque individuel égal), on ne relie pas les covariables à <span class="math inline">\(\mu_i\)</span> directement, mais au taux <span class="math inline">\(\mu_i/m_i\)</span>, ce qui mène à la variable offset <span class="math inline">\(\log(m_i)\)</span> introduite plus bas.</p>
+</div>
+<p>Lorsque la probabilité individuelle de l’événement est très petite (par exemple <span class="math inline">\(\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}\)</span> pour la première strate de <code>danishlc</code>), une régression logistique n’est généralement pas appropriée : les nombres de cas se comportent alors davantage comme un dénombrement rare que comme une proportion binomiale. On modélise plutôt l’espérance du taux <span class="math inline">\(Y_i/m_i\)</span> :</p>
 <p><span class="math display">\[
 \log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
 \quad\Longleftrightarrow\quad
@@ -783,40 +833,28 @@ X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D 
 <p><span class="env-titre">Définition — Variable offset</span></p>
 <p>Le terme <span class="math inline">\(\log(m_i)\)</span> dans l’équation ci-dessus est une variable explicative dont le coefficient est fixé à <span class="math inline">\(1\)</span> plutôt qu’estimé : on parle de variable offset. Une variable offset est utile lorsque l’espérance de <span class="math inline">\(Y_i\)</span> est proportionnelle à une autre quantité connue (une population exposée, une durée d’exposition, un effort d’échantillonnage), et qu’on souhaite modéliser un taux plutôt qu’un compte brut.</p>
 </div>
+<div class="env-exemple" data-titre="Ajustement sur [`danishlc`](#data-danishlc)">
+<p><span class="env-titre">Exemple — Ajustement sur <a href="#data-danishlc"><code>danishlc</code></a></span></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(danishlc)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family =</span> poisson, <span class="at">data =</span> danishlc)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.additif)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(danishlc)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family =</span> poisson, <span class="at">data =</span> danishlc)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.additif)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-glm(formula = Cases ~ offset(log(Pop)) + City + Age, family = poisson, 
-    data = danishlc)
-
-Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept) -4.21241    0.20819 -20.233  &lt; 2e-16 ***
-CityHorsens -0.33006    0.18150  -1.818   0.0690 .  
-CityKolding -0.37155    0.18781  -1.978   0.0479 *  
-CityVejle   -0.27232    0.18785  -1.450   0.1472    
-Age40-54    -1.41965    0.25027  -5.672 1.41e-08 ***
-Age55-59    -0.31864    0.25205  -1.264   0.2062    
-Age60-64     0.09896    0.23566   0.420   0.6745    
-Age65-69     0.34805    0.23343   1.491   0.1359    
-Age70-74     0.43721    0.23929   1.827   0.0677 .  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-(Dispersion parameter for poisson family taken to be 1)
-
-    Null deviance: 129.908  on 23  degrees of freedom
-Residual deviance:  23.447  on 15  degrees of freedom
-AIC: 137.84
-
-Number of Fisher Scoring iterations: 5</code></pre>
+<pre><code>               Estimate Std. Error     z value     Pr(&gt;|z|)
+(Intercept) -4.21241109  0.2081915 -20.2333461 4.980576e-91
+CityHorsens -0.33005999  0.1815033  -1.8184791 6.899094e-02
+CityKolding -0.37154616  0.1878063  -1.9783480 4.788946e-02
+CityVejle   -0.27231769  0.1878534  -1.4496291 1.471620e-01
+Age40-54    -1.41965342  0.2502707  -5.6724722 1.407514e-08
+Age55-59    -0.31863942  0.2520492  -1.2641953 2.061599e-01
+Age60-64     0.09895893  0.2356616   0.4199197 6.745441e-01
+Age65-69     0.34805283  0.2334288   1.4910451 1.359497e-01
+Age70-74     0.43720988  0.2392942   1.8270809 6.768761e-02</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -833,9 +871,50 @@ Model 2: Cases ~ offset(log(Pop)) + City + Age
 </div>
 </div>
 <p>Le test par différence de déviances montre une différence significative entre les tranches d’âge, mais pas entre les villes : on ne rejette pas l’hypothèse que le modèle sans effet de ville est adéquat.</p>
+<p>On peut visualiser le taux d’incidence prédit par tranche d’âge :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>danishlc <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taux_predit =</span> <span class="fu">predict</span>(modele.additif, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">/</span> Pop <span class="sc">*</span> <span class="dv">1000</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">taux_observe =</span> Cases <span class="sc">/</span> Pop <span class="sc">*</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Age)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> taux_observe, <span class="at">color =</span> City), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> taux_predit, <span class="at">color =</span> City, <span class="at">group =</span> City)) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Tranche d'âge"</span>, <span class="at">y =</span> <span class="st">"Cas pour 1000 habitants"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Taux d'incidence observés et prédits, par ville et tranche d'âge"</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-modeles-lineaires-generalises_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Le taux prédit suit d’assez près les taux observés pour la plupart des combinaisons ville-âge.</p>
+</div>
 </section>
-<section id="sec-surdispersion" class="level3" data-number="3.6.2">
-<h3 data-number="3.6.2" class="anchored" data-anchor-id="sec-surdispersion"><span class="header-section-number">3.6.2</span> Variabilité extra-Poissonienne</h3>
+<section id="déviance-et-adéquation" class="level3" data-number="3.6.4">
+<h3 data-number="3.6.4" class="anchored" data-anchor-id="déviance-et-adéquation"><span class="header-section-number">3.6.4</span> Déviance et adéquation</h3>
+<p>La déviance individuelle, obtenue en appliquant la définition générale <span class="math inline">\(d(y,\mu)=2\{\ell(y,y)-\ell(y,\mu)\}\)</span> à la loi de Poisson, se dérive comme suit.</p>
+<div class="env-log" data-titre="Dérivation de la déviance">
+<p><span class="env-titre">Le cas du lien log — Dérivation de la déviance</span></p>
+<p>La contribution à la log-vraisemblance d’une observation, en fonction de <span class="math inline">\(\mu\)</span>, est <span class="math inline">\(\ell_i(\mu) = y\log(\mu) - \mu\)</span> (à la constante <span class="math inline">\(-\log(y!)\)</span> près, qui s’annule dans la différence). Le modèle saturé pose <span class="math inline">\(\tilde\mu = y\)</span>, d’où</p>
+<p><span class="math display">\[
+\ell_i(y) - \ell_i(\mu) = \left\{y\log(y) - y\right\} - \left\{y\log(\mu) - \mu\right\} = y\log\!\left(\frac{y}{\mu}\right) - (y-\mu),
+\]</span></p>
+<p>avec la convention <span class="math inline">\(y\log(y) \equiv 0\)</span> si <span class="math inline">\(y=0\)</span>. D’où</p>
+<p><span class="math display">\[
+d(y,\mu) = 2\left\{y\log\!\left(\frac{y}{\mu}\right) - (y - \mu)\right\}.
+\]</span></p>
+</div>
+<p>L’adéquation globale se vérifie avec</p>
+<p><span class="math display">\[
+X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D = \sum_{i=1}^n d(y_i,\hat\mu_i),
+\]</span></p>
+<p>qui suivent toutes deux approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien adapté et si les <span class="math inline">\(\mu_i\)</span> ne sont pas trop petits.</p>
+</section>
+<section id="sec-surdispersion" class="level3" data-number="3.6.5">
+<h3 data-number="3.6.5" class="anchored" data-anchor-id="sec-surdispersion"><span class="header-section-number">3.6.5</span> Variabilité extra-Poissonienne</h3>
 <p>En pratique, il arrive fréquemment que <span class="math inline">\(Var[Y_i] &gt; E[Y_i]\)</span>, c’est-à-dire que la variance observée dans les données dépasse ce que prévoit la loi de Poisson (qui impose <span class="math inline">\(\phi = 1\)</span>). Ce phénomène est appelé surdispersion. Deux stratégies courantes permettent d’en tenir compte.</p>
 <div class="env-remarque" data-titre="Approche quasi-Poisson">
 <p><span class="env-titre">Remarque — Approche quasi-Poisson</span></p>
@@ -857,26 +936,83 @@ Q \sim \tfrac{1}{2}\chi^2_0 + \tfrac{1}{2}\chi^2_1 \quad\text{sous } H_0,
 \]</span></p>
 <p>où <span class="math inline">\(\chi^2_0\)</span> désigne la loi dégénérée en <span class="math inline">\(0\)</span>. Le seuil observé est donc <span class="math inline">\(\alpha^* = P(\chi^2_1 &gt; Q_{obs})/2\)</span>, soit la moitié de ce qu’on obtiendrait avec une <span class="math inline">\(\chi^2_1\)</span> usuelle.</p>
 </div>
-<div class="env-exemple" data-titre="Test de surdispersion sur `danishlc`">
-<p><span class="env-titre">Exemple — Test de surdispersion sur <code>danishlc</code></span></p>
+<div class="env-exemple" data-titre="Test de surdispersion sur [`danishlc`](#data-danishlc)">
+<p><span class="env-titre">Exemple — Test de surdispersion sur <a href="#data-danishlc"><code>danishlc</code></a></span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>modele.nb <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age, <span class="at">data =</span> danishlc)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>modele.nb <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age, <span class="at">data =</span> danishlc)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in theta.ml(Y, mu, sum(w), w, limit = control$maxit, trace =
 control$trace &gt; : iteration limit reached
 Warning in theta.ml(Y, mu, sum(w), w, limit = control$maxit, trace =
 control$trace &gt; : iteration limit reached</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Q.obs <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.additif) <span class="sc">-</span> <span class="fu">deviance</span>(modele.nb)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>alpha.etoile <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(Q.obs, <span class="at">df =</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>alpha.etoile</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Q.obs <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.additif) <span class="sc">-</span> <span class="fu">deviance</span>(modele.nb)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>alpha.etoile <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(Q.obs, <span class="at">df =</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>alpha.etoile</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.484151</code></pre>
 </div>
 </div>
 <p>On obtient <span class="math inline">\(\alpha^* \approx 0.143\)</span> : on ne détecte pas de variabilité extra-Poissonienne significative pour ces données, et le modèle de Poisson usuel demeure approprié.</p>
+</div>
+</section>
+<section id="graphiques-et-observations-aberrantes" class="level3" data-number="3.6.6">
+<h3 data-number="3.6.6" class="anchored" data-anchor-id="graphiques-et-observations-aberrantes"><span class="header-section-number">3.6.6</span> Graphiques et observations aberrantes</h3>
+<p>Comme en régression logistique, on trace les résidus de déviance en fonction du numéro d’observation pour repérer une extra-variabilité, et on examine leviers, distance de Cook et DFBETAS pour repérer les observations influentes.</p>
+<div class="env-exemple" data-titre="Diagnostics — données [`ships`](#data-ships)">
+<p><span class="env-titre">Exemple — Diagnostics — données <a href="#data-ships"><code>ships</code></a></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ships)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>ships <span class="ot">&lt;-</span> ships <span class="sc">|&gt;</span> <span class="fu">filter</span>(service <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(incidents <span class="sc">~</span> type <span class="sc">+</span> year <span class="sc">+</span> period <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(service)),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> poisson, <span class="at">data =</span> ships)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Résidus en fonction du numéro d’observation</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>res_dev <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod, <span class="at">type =</span> <span class="st">"deviance"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_dev, <span class="at">xlab =</span> <span class="st">"Numéro d'observation"</span>, <span class="at">ylab =</span> <span class="st">"Résidu de déviance"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-modeles-lineaires-generalises_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Quelques résidus dépassent les seuils à <span class="math inline">\(\pm 2\)</span>, ce qui peut suggérer une légère extra-variabilité.</p>
+<p><strong>Estimation de <span class="math inline">\(\phi\)</span></strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>chi2_p <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(mod, <span class="at">type =</span> <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(ships)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(mod))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>phi_hat <span class="ot">&lt;-</span> chi2_p <span class="sc">/</span> (n <span class="sc">-</span> p)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>phi_hat</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.438925</code></pre>
+</div>
+</div>
+<p><strong>Observations aberrantes et valeurs influentes</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">which =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="03-modeles-lineaires-generalises_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La distance de Cook pointe vers quelques observations plus influentes que les autres, à examiner de plus près (grands cargos avec peu de mois de service, par exemple).</p>
+<p>Le seuil usuel pour un levier élevé est <span class="math inline">\(2(p+1)/n\)</span> ; pour la distance de Cook, on examine les valeurs qui se détachent nettement des autres.</p>
 </div>
 
 

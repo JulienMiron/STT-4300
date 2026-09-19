@@ -21,7 +21,7 @@ n_coef      <- 5 # pour le nombre de paramètres de LASSO
 
 couleur_pts   <- "#9467bd"
 couleur_ligne <- "#0E9E6C"
-couleur_accent <- "#d2b827"   # 3e couleur, utilisée uniquement pour l'état final de l'index (3 classes)
+couleur_accent <- "tomato"   # 3e couleur, utilisée uniquement pour l'état final de l'index (3 classes)
 
 alpha_pts       <- 1   # transparence des points (hors logit pondéré, voir plus bas)
 taille_pts      <- 4   # taille des points (hors logit, dont la taille encode le poids)
@@ -189,35 +189,34 @@ creer_gif(dir_out, "glm_plot.gif")
 # ================================================================
 set.seed(3)
 dir_out <- preparer_dossier("frames_vc")
-
-k           <- 5
+ 
+k           <- 3
 n_frames_vc <- k * 24   # 24 frames de pause par pli
-
+ 
 X     <- runif(n_pts, 0, 10)
 Y     <- 0.8 * X + rnorm(n_pts, 0, 1.5)
 folds <- sample(rep(1:k, length.out = n_pts))
-
+ 
 for (i in seq_len(n_frames_vc)) {
   pli_actif <- ((i - 1) %/% 24) %% k + 1
-
+ 
   df <- data.frame(X = X, Y = Y, fold = folds,
                     role = ifelse(folds == pli_actif, "test", "train"))
-
+ 
   modele <- lm(Y ~ X, data = subset(df, role == "train"))
   grille <- data.frame(X = seq(min(X), max(X), length.out = 200))
   grille$Y_hat <- predict(modele, newdata = grille)
-
+ 
   p <- ggplot() +
     geom_point(data = df, aes(X, Y, color = role), alpha = alpha_pts, size = taille_pts) +
     geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
     scale_color_manual(values = c(train = couleur_pts, test = couleur_accent)) +
     theme_gif
-
+ 
   sauvegarder_frame(p, dir_out, i)
 }
-
+ 
 creer_gif(dir_out, "cv_plot.gif", n_frames_gif = n_frames_vc)
-
 
 # ================================================================
 # 05 — Sélection et régularisation (LASSO)
@@ -398,8 +397,8 @@ interp_couleur <- function(col_a, col_b, frac) {
   rgb(rgb_t[1, ], rgb_t[2, ], rgb_t[3, ], maxColorValue = 255)
 }
  
-for (i in seq_len(n_frames_ix)) {
-  pos <- (i - 1) / n_frames_ix * n_etats
+for (i in seq_len(n_frames)) {
+  pos <- (i - 1) / n_frames * n_etats
  
   idx_a <- (floor(pos) %% n_etats) + 1
   idx_b <- (floor(pos) + 1) %% n_etats + 1
@@ -444,4 +443,4 @@ for (i in seq_len(n_frames_ix)) {
   sauvegarder_frame(p, dir_out, i)
 }
  
-creer_gif(dir_out, "index_plot.gif", n_frames_gif = n_frames_ix)
+creer_gif(dir_out, "index_plot.gif", n_frames_gif = n_frames)

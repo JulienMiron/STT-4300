@@ -7,7 +7,8 @@ local etiquettes = {
   ["env-remarque"]   = "Remarque",
   ["env-exemple"]    = "Exemple",
   ["env-theo"]    = "Pour aller plus loin avec la théorie",
-  ["env-logit"]    = "Le cas du lien logit"
+  ["env-logit"]    = "Le cas du lien logit",
+  ["env-log"]    = "Le cas du lien log"
 }
 
 

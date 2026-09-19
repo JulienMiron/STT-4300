@@ -84,7 +84,8 @@ footer.footer,
 .env-remarque,
 .env-exemple,
 .env-theo,
-.env-logit {
+.env-logit,
+.env-log {
   margin: 1.5em 0;
   padding: 0.9em 1.2em;
   border-left: 4px solid;   /* couleur définie individuellement ci-dessous */
@@ -97,6 +98,8 @@ footer.footer,
 .env-exemple    { border-left-color: #9467bd; background-color: #f5f0fa; } /* violet */
 .env-theo       { border-left-color: #4ebf90; background-color: #f0fdf9; } /* vert menthe */
 .env-logit      { border-left-color: #e6a817; background-color: #fdf6e3; } /* jaune ambré */
+.env-log      { border-left-color: #e6a817; background-color: #fdf6e3; } /* jaune ambré */
+
 
 /* Retire la marge du haut sur le premier paragraphe à l'intérieur d'un bloc,
    pour que le texte colle au titre du bloc plutôt qu'au cadre */

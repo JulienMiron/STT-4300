@@ -6,24 +6,25 @@ library(gifski)
 library(mgcv)   # requis seulement pour le chapitre GAM
 
 base_dir    <- "/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/GitHub/STT-4300/images"
-n_frames    <- 50
+n_frames    <- 150
 largeur_img <- 8
 hauteur_img <- 5.5
 dpi_img     <- 300
 largeur_gif <- 800
 hauteur_gif <- 550
 delai_gif   <- 0.08
-n_pts       <- 100 
-n_groupes   <- 50 # pour la régression linéaire logistique
+n_pts       <- 75 
+n_groupes   <- 75 # pour la régression linéaire logistique
 n_coef      <- 5 # pour le nombre de paramètres de LASSO
 
 
 
 couleur_pts   <- "#9467bd"
 couleur_ligne <- "#0E9E6C"
+couleur_accent <- "#d2b827"   # 3e couleur, utilisée uniquement pour l'état final de l'index (3 classes)
 
 alpha_pts       <- 1   # transparence des points (hors logit pondéré, voir plus bas)
-taille_pts      <- 3   # taille des points (hors logit, dont la taille encode le poids)
+taille_pts      <- 4   # taille des points (hors logit, dont la taille encode le poids)
 epaisseur_ligne <- 1.2     # épaisseur des courbes/lignes ajustées
 
 theme_gif <- theme_void() + theme(legend.position = "none")
@@ -35,6 +36,9 @@ theme_gif <- theme_void() + theme(legend.position = "none")
 # Crée (si besoin) le dossier de frames d'un chapitre et retourne son chemin
 preparer_dossier <- function(nom_dossier) {
   dir_out <- file.path(base_dir, nom_dossier)
+  if (dir.exists(dir_out)) {
+    unlink(dir_out, recursive = TRUE)
+  }
   dir.create(dir_out, showWarnings = FALSE, recursive = TRUE)
   dir_out
 }
@@ -206,7 +210,7 @@ for (i in seq_len(n_frames_vc)) {
   p <- ggplot() +
     geom_point(data = df, aes(X, Y, color = role), alpha = alpha_pts, size = taille_pts) +
     geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
-    scale_color_manual(values = c(train = couleur_pts, test = "tomato")) +
+    scale_color_manual(values = c(train = couleur_pts, test = couleur_accent)) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -344,41 +348,100 @@ creer_gif(dir_out, "gam_plot.gif")
 set.seed(9)
 dir_out <- preparer_dossier("frames_index")
 
-n_frames_ix <- 150
-
+ 
 X <- sort(runif(n_pts, 0, 10))
-
-# états cibles (mêmes X, différentes configurations de Y) ; le dernier état
-# doit rester visuellement compatible avec le premier pour que la boucle soit fluide
+ 
+# chaque état est un triplet (x, y, couleur) par point, dans le même ordre pour
+# tous les états : c'est ce qui permet d'interpoler à la fois la position et la
+# couleur de façon continue d'un état à l'autre.
 bruit_indiv <- rnorm(n_pts, 0, 1)
 
-etat_aleatoire <- bruit_indiv * 1.3
-etat_lineaire  <- 0.9 * (X - mean(X)) + bruit_indiv * 0.4
-etat_sinus     <- 3 * sin(0.8 * X) + bruit_indiv * 0.35
-etat_plateau   <- 3 * plogis(1.2 * (X - mean(X))) + bruit_indiv * 0.3
+x_final <- runif(n_pts, 0, 10)
+y_final <- runif(n_pts, -5, 5)
+ 
+etat_aleatoire <- list(x = x_final, y = y_final,
+                        col = rep(couleur_pts, n_pts))
+etat_lineaire  <- list(x = X, y = 0.9 * (X - mean(X)) + bruit_indiv * 0.4,
+                        col = rep(couleur_pts, n_pts))
+etat_sinus     <- list(x = X, y = 3 * sin(0.8 * X) + bruit_indiv * 0.35,
+                        col = rep(couleur_pts, n_pts))
+ 
+# état final : points aléatoires sur le rectangle, répartis en 3 secteurs angulaires
+# (3 vecteurs partant du centre, séparés de 120°, délimitent les classes)
 
-etats   <- list(etat_aleatoire, etat_lineaire, etat_sinus, etat_plateau)
+ 
+centre_x <- 5   # centre du rectangle (domaine x : 0 à 10)
+centre_y <- 0   # centre du rectangle (domaine y : -5 à 5)
+ 
+angle          <- atan2(y_final - centre_y, x_final - centre_x)   # entre -pi et pi
+angle_positif  <- ifelse(angle < 0, angle + 2 * pi, angle)         # entre 0 et 2*pi
+classe_finale  <- floor(angle_positif / (2 * pi / 3)) + 1          # 3 secteurs de 120°
+ 
+couleurs_classes <- c(couleur_pts, couleur_ligne, couleur_accent)
+ 
+etat_grille <- list(x = x_final, y = y_final, col = couleurs_classes[classe_finale])
+ 
+etats   <- list(etat_aleatoire, etat_lineaire, etat_sinus, etat_grille)
 n_etats <- length(etats)
-
+ 
+# angles des 3 vecteurs de séparation (mêmes bornes que celles utilisées pour classe_finale)
+angles_separation <- c(0, 2 * pi / 3, 4 * pi / 3)
+rayon_separation   <- 6   # longueur des vecteurs une fois complètement affichés
+ 
 ease <- function(frac) (1 - cos(pi * frac)) / 2   # lissage ease-in-out entre deux états
-
+ 
+# interpolation linéaire de couleurs point par point, dans l'espace RGB
+interp_couleur <- function(col_a, col_b, frac) {
+  rgb_a <- col2rgb(col_a)
+  rgb_b <- col2rgb(col_b)
+  rgb_t <- (1 - frac) * rgb_a + frac * rgb_b
+  rgb(rgb_t[1, ], rgb_t[2, ], rgb_t[3, ], maxColorValue = 255)
+}
+ 
 for (i in seq_len(n_frames_ix)) {
   pos <- (i - 1) / n_frames_ix * n_etats
-
+ 
   idx_a <- (floor(pos) %% n_etats) + 1
   idx_b <- (floor(pos) + 1) %% n_etats + 1
   frac  <- ease(pos - floor(pos))
-
-  Y_t <- (1 - frac) * etats[[idx_a]] + frac * etats[[idx_b]]
-
-  df <- data.frame(X = X, Y = Y_t)
-
-  p <- ggplot(df, aes(X, Y)) +
-    geom_point(color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
-    coord_cartesian(ylim = c(-5, 5)) +
+ 
+  X_t   <- (1 - frac) * etats[[idx_a]]$x   + frac * etats[[idx_b]]$x
+  Y_t   <- (1 - frac) * etats[[idx_a]]$y   + frac * etats[[idx_b]]$y
+  Col_t <- interp_couleur(etats[[idx_a]]$col, etats[[idx_b]]$col, frac)
+ 
+  # les vecteurs n'apparaissent qu'en entrant dans l'état "grille" (croissance, poids 0→1)
+  # ou en le quittant (rétraction, poids 1→0) ; nuls lors des autres transitions
+  if (idx_b == n_etats) {
+    poids_separation <- frac
+  } else if (idx_a == n_etats) {
+    poids_separation <- 1 - frac
+  } else {
+    poids_separation <- 0
+  }
+ 
+  df <- data.frame(X = X_t, Y = Y_t, Couleur = Col_t)
+ 
+  df_separation <- data.frame(
+    x    = centre_x,
+    y    = centre_y,
+    xend = centre_x + poids_separation * rayon_separation * cos(angles_separation),
+    yend = centre_y + poids_separation * rayon_separation * sin(angles_separation)
+  )
+ 
+    # couleur de la flèche : blanche (invisible) quand poids_separation = 0,
+  # grise et pleinement visible quand poids_separation = 1
+  couleur_separation <- interp_couleur("white", "gray50", poids_separation)
+ 
+  p <- ggplot() +
+    geom_segment(data = df_separation, aes(x, y, xend = xend, yend = yend),
+                 color = couleur_separation, linewidth = epaisseur_ligne * 0.6,
+                 arrow = arrow(length = unit(0.25, "cm"), type = "closed")) +
+    geom_point(data = df, aes(X, Y, color = Couleur), alpha = alpha_pts, size = taille_pts) +
+    scale_color_identity() +
+    coord_cartesian(xlim = c(0, 10), ylim = c(-5, 5)) +
     theme_gif
-
+ 
   sauvegarder_frame(p, dir_out, i)
 }
-
+ 
 creer_gif(dir_out, "index_plot.gif", n_frames_gif = n_frames_ix)

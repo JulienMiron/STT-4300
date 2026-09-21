@@ -15,10 +15,10 @@ Pour télécharger la version pdf des notes de cours il suffit de cliquer <a hre
 Ces notes s'appuient en partie sur du matériel de cours développé respectivement par Lajmi Lakhal Chaieb,
 Thierry Duchesne, Michel Carbon et Khader Khadraoui de l'Université Laval et Eva Cantoni de l'Université de Genève.
 
+## Provenance des données {.unnumbered}
+
+Certains des jeux de données utilisés dans ces notes proviennent en partie de [donneesbleues.ca](https://donneesbleues.ca/).
+
 ## Utilisation de l'IA {.unnumbered}
 
 La rédaction de certains passages, ainsi que le développement de certains exemples en R, ont bénéficié de l'assistance de Claude Sonnet 5, un modèle de langage développé par Anthropic. Mais surtout, Claude a été très utile dans la réalisation des animations des chapitres.
-
-## Jeux de données
-
-Les jeux de données qui sont utilisés dans les 

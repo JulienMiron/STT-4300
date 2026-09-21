@@ -107,6 +107,7 @@ En pratique, les trois liens donnent souvent des résultats très similaires.
 
 Voici une comparaison des probabilités prédites pour les trois liens, en fonction de $\eta_i$.
 ```{r comparaison-liens}
+#| echo: false
 #| warning: false
 evaluer_liens <- function(x) {
   data.frame(
@@ -459,24 +460,24 @@ ggplot() +
   theme_minimal()
 
 
-modele.logit <- glm(
+modele_agrege_classe_logit <- glm(
   cbind(survivants, effectif - survivants) ~ classe_num,
   data = empress_agrege,
   family = binomial(link = "logit")
 )
-modele.probit <- glm(
+modele_agrege_classe_probit <- glm(
   cbind(survivants, effectif - survivants) ~ classe_num,
   data = empress_agrege,
   family = binomial(link = "probit")
 )
-modele.cloglog <- glm(
+modele_agrege_classe_cloglog <- glm(
   cbind(survivants, effectif - survivants) ~ classe_num,
   data = empress_agrege,
   family = binomial(link = "cloglog")
 )
-summary(modele.logit)$coefficients
-summary(modele.probit)$coefficients
-summary(modele.cloglog)$coefficients
+summary(modele_agrege_classe_logit)$coefficients
+summary(modele_agrege_classe_probit)$coefficients
+summary(modele_agrege_classe_cloglog)$coefficients
 ```
 
 La sortie de `summary()` nous donne les estimations des écarts-types des estimations sous `Std. Error`, comme pour la régression linéaire.
@@ -496,9 +497,9 @@ predire_modele <- function(modele, nom_lien) {
 }
 
 predictions <- bind_rows(
-  predire_modele(modele.logit, "Logit"),
-  predire_modele(modele.probit, "Probit"),
-  predire_modele(modele.cloglog, "Cloglog")
+  predire_modele(modele_agrege_classe_logit, "Logit"),
+  predire_modele(modele_agrege_classe_probit, "Probit"),
+  predire_modele(modele_agrege_classe_cloglog, "Cloglog")
 )
 
 empress_obs <- empress_agrege |>
@@ -528,10 +529,12 @@ ggplot() +
 
 
 
+Pour les trois liens, la valeur-p associée à `classe_num` (environ $1{,}3\times10^{-4}$ pour le logit, $2{,}1\times10^{-4}$ pour le probit et $6{,}2\times10^{-5}$ pour le cloglog) est largement inférieure au seuil de 5\% : on rejette $H_0:\beta_1=0$ dans les trois cas, l'effet de la classe est donc significatif quel que soit le lien choisi.
+
 Les trois liens mènent à des coefficients significatifs (plus la classe est élevée, moins la probabilité de survie est grande) et à des courbes prédites $\hat\pi^*$ très similaires : à `classe_num` fixé, les probabilités prédites diffèrent de moins de 1 point de pourcentage d'un lien à l'autre.
 :::
 
-### Intervalles de confiance et tests de significativité pour les $\beta_j$
+### Intervalles de confiance pour les $\beta_j$
 
 Les intervalles de confiance et tests concernant les $\beta_j$ sont obtenus par la méthode de **Wald**. Un intervalle de confiance de niveau $(1-\alpha)$ pour $\beta_j$ est
 $$\left[\hat\beta_j - z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\right],$$
@@ -544,7 +547,7 @@ Pour tester $H_0: \beta_j = 0$ contre $H_1: \beta_j\neq 0$, on rejette $H_0$ au 
 En utilisant le lien logit, on construit un intervalle de confiance de niveau 95\% pour $\beta_1$ (l'effet de `classe_num`) en utilsant les informations données par la sortie:
 
 ```{r}
-summary(modele.logit)$coefficients
+summary(modele_agrege_classe_logit)$coefficients
 ```
 
 L'intervalle est $[\hat{\beta_1}-1,96\times \sqrt{\hat{\text V}(\hat\beta_1)};\hat{\beta_1}+1,96\times \sqrt{\hat{\text V}(\hat\beta_1)}]=[-0,6422;-0,2069]$.
@@ -552,7 +555,7 @@ L'intervalle est $[\hat{\beta_1}-1,96\times \sqrt{\hat{\text V}(\hat\beta_1)};\h
 On peut bien sûr l'extraire à partir de R directement:
 
 ```{r}
-confint(modele.logit)
+confint(modele_agrege_classe_logit)
 ```
 
 On constate que les deux intervalles ne sont pas identiques.
@@ -561,7 +564,7 @@ On constate que les deux intervalles ne sont pas identiques.
 :::{.env-remarque titre="Intervalle de Wald ou intervalle par vraisemblance profilée?"}
 En R, `confint(modele)` appliqué à un objet `glm` ne calcule pas l'intervalle de Wald ci-dessus, mais un intervalle par **vraisemblance profilée** (*profile likelihood*) : plutôt que de supposer une courbure symétrique (parabolique) de la log-vraisemblance autour de $\hat\beta_j$, cette méthode explore directement sa vraie courbe en faisant varier $\beta_j$ (en réoptimisant les autres paramètres à chaque valeur), puis inverse le test du rapport de vraisemblance pour trouver les bornes exactes. L'intervalle obtenu n'est généralement pas symétrique autour de $\hat\beta_j$, contrairement à celui de Wald. Pour obtenir l'intervalle de Wald depuis R, il faut plutôt utiliser `confint.default(modele)`.
 ```{r}
-confint.default(modele.logit)
+confint.default(modele_agrege_classe_logit)
 ```
 Les deux méthodes convergent vers des résultats similaires avec de grands échantillons et des coefficients modérés. L'intervalle par vraisemblance profilée reste toutefois préférable en général, car il ne dépend pas de la courbure locale en $\hat\beta_j$ — il est donc, comme le test du rapport de vraisemblance, immunisé contre le [phénomène de Hauck-Donner](#sec-hauckdonner) décrit ci-dessous, et reste fiable en présence de [séparation](#sec-separation) ou de petits échantillons, situations où l'intervalle de Wald peut devenir trompeur (artificiellement trop large, voire non significatif alors que l'effet est réel). En pratique, l'intervalle de Wald garde son utilité pour l'intuition et les calculs rapides à la main, mais l'intervalle par vraisemblance profilée est préférable pour les résultats rapportés.
 :::
@@ -697,7 +700,7 @@ plot(dat_separe$x, dat_separe$y)
 mod_separe <- glm(y ~ x, data = dat_separe, family = binomial)
 summary(mod_separe)$coefficients
 ```
-On constate ici que la valeur-p n'est pas significative au seuil 5%.
+On constate ici que, dans le cas normal, la valeur-p de `x` est d'environ $0{,}0037$ — bien sous le seuil de 5\%, donc on rejette $H_0:\beta_1=0$, comme attendu puisque l'effet simulé est réel. Dans le cas de séparation quasi-complète, la valeur-p de `x` grimpe à environ $0{,}074$ — au-dessus du seuil de 5\%, donc le test de Wald ne rejette pas $H_0$, alors même que l'effet simulé y est beaucoup plus fort que dans le cas normal ($\beta_1=15$ contre $\beta_1=5$). C'est exactement le phénomène de Hauck-Donner : le test de Wald devient trompeur sous séparation.
 
 Si on regarde les valeurs-p des tests des rapports de vraisemblance pour les deux cas:
 
@@ -709,6 +712,8 @@ anova(mod_normal_reduit, mod_normal, test = "Chisq")
 mod_separe_reduit <- glm(y ~ 1, data = dat_separe, family = binomial)
 anova(mod_separe_reduit, mod_separe, test = "Chisq")
 ```
+
+Contrairement au test de Wald, le test du rapport de vraisemblance rejette $H_0$ dans les deux cas au seuil de 5\% : $p \approx 2{,}15\times10^{-12}$ pour le cas normal et $p \approx 4{,}73\times10^{-13}$ pour le cas séparé, tous deux très largement inférieurs à $0{,}05$. Il détecte donc correctement l'effet significatif même sous séparation quasi-complète, là où le test de Wald échouait.
 
 :::
 
@@ -724,8 +729,69 @@ et on applique $g^{-1}$ aux deux bornes. Cet intervalle respecte toujours $[0,1]
 
 Les deux méthodes donnent en pratique des résultats très similaires.
 
+:::{.env-exemple titre="IC pour la probabilité de survie en deuxième classe — [`empress_agrege`](#data-empress-agrege)"}
 
+On reprend le modèle `modele_agrege_classe_logit` (`classe_num` seulement) pour estimer un intervalle de confiance à 95\% pour la probabilité de survie d'un passager de deuxième classe, soit $\boldsymbol{X}^* = (1, 2)^\top$.
 
+```{r empress-ic-pi}
+X_etoile <- data.frame(classe_num = 2)
+
+# Prédiction sur l'échelle du prédicteur linéaire, avec erreur-type
+eta_etoile <- predict(modele_agrege_classe_logit, newdata = X_etoile, type = "link", se.fit = TRUE)
+eta_etoile$fit
+eta_etoile$se.fit
+
+z <- qnorm(0.975)
+
+# Approche 1 : transformation des bornes sur eta*
+bornes_eta <- eta_etoile$fit + c(-1, 1) * z * eta_etoile$se.fit
+ic_transform <- plogis(bornes_eta)
+ic_transform
+
+# Approche 2 : méthode du delta
+pi_etoile <- plogis(eta_etoile$fit)
+h <- (pi_etoile * (1 - pi_etoile))^2
+se_pi <- sqrt(h * eta_etoile$se.fit^2)
+ic_delta <- pi_etoile + c(-1, 1) * z * se_pi
+ic_delta
+```
+
+La probabilité de survie estimée pour un passager de deuxième classe est $\hat\pi^* \approx 0{,}246$. L'intervalle par transformation est $[0{,}213\,;\,0{,}282]$, celui par la méthode du delta $[0{,}211\,;\,0{,}280]$ : très proches, comme annoncé.
+
+On peut étendre la comparaison à toute la plage de `classe_num` :
+
+```{r empress-ic-pi-plot}
+#| warning: false
+grille <- data.frame(classe_num = seq(1, 3, length.out = 200))
+
+pred <- predict(modele_agrege_classe_logit, newdata = grille, type = "link", se.fit = TRUE)
+grille$pi_hat <- plogis(pred$fit)
+
+grille$ic_transform_bas  <- plogis(pred$fit - z * pred$se.fit)
+grille$ic_transform_haut <- plogis(pred$fit + z * pred$se.fit)
+
+grille$se_pi_delta   <- sqrt((grille$pi_hat * (1 - grille$pi_hat))^2 * pred$se.fit^2)
+grille$ic_delta_bas  <- grille$pi_hat - z * grille$se_pi_delta
+grille$ic_delta_haut <- grille$pi_hat + z * grille$se_pi_delta
+
+ggplot(grille, aes(x = classe_num)) +
+  geom_ribbon(aes(ymin = ic_transform_bas, ymax = ic_transform_haut, fill = "Transformation"),
+              alpha = 0.3) +
+  geom_ribbon(aes(ymin = ic_delta_bas, ymax = ic_delta_haut, fill = "Delta"),
+              alpha = 0.3) +
+  geom_line(aes(y = pi_hat), linewidth = 1) +
+  labs(
+    x = "Classe (1 = première, 2 = deuxième, 3 = troisième)",
+    y = "Probabilité de survie estimée",
+    fill = "Méthode",
+    title = "IC à 95% pour la probabilité de survie prédite"
+  ) +
+  theme_minimal()
+```
+
+Les deux bandes de confiance sont pratiquement superposées sur toute la plage de `classe_num` : avec un échantillon de cette taille et un effet modéré, le choix de la méthode importe peu ici. À noter, la borne inférieure de l'IC delta descend jusqu'à environ $0{,}149$ en troisième classe (`classe_num` = 3) sans jamais devenir négative dans cet exemple — mais rien ne garantit ce résultat en général : contrairement à l'IC obtenu par transformation, qui reste automatiquement dans $[0,1]$, l'IC delta pourrait déborder de cet intervalle avec d'autres données ou d'autres valeurs de $\boldsymbol{X}^*$.
+
+:::
 
 :::{.env-logit titre="Méthode du delta"}
 Avec le lien logit, $g^{-1}(u) = \dfrac{e^u}{1+e^u}$, dont la dérivée est
@@ -759,69 +825,7 @@ qu'on estime en substituant $\hat\theta$ à $\theta$ (d'où $\hat{\text V}(\hat\
 Contrairement à la première approche (transformer les bornes de l'IC sur $\eta^*$), cette méthode approxime directement la variance de $\hat\pi^*$ sur son échelle naturelle — mais comme elle repose sur une approximation linéaire locale, l'intervalle de confiance qui en résulte n'est pas garanti de rester dans $[0,1]$, contrairement à celui obtenu par transformation.
 :::
 
-:::{.env-exemple titre="IC pour la probabilité de survie en deuxième classe — [`empress_agrege`](#data-empress-agrege)"}
 
-On reprend le modèle `modele.logit` (`classe_num` seulement) pour estimer un intervalle de confiance à 95\% pour la probabilité de survie d'un passager de deuxième classe, soit $\boldsymbol{X}^* = (1, 2)^\top$.
-
-```{r empress-ic-pi}
-X_etoile <- data.frame(classe_num = 2)
-
-# Prédiction sur l'échelle du prédicteur linéaire, avec erreur-type
-eta_etoile <- predict(modele.logit, newdata = X_etoile, type = "link", se.fit = TRUE)
-eta_etoile$fit
-eta_etoile$se.fit
-
-z <- qnorm(0.975)
-
-# Approche 1 : transformation des bornes sur eta*
-bornes_eta <- eta_etoile$fit + c(-1, 1) * z * eta_etoile$se.fit
-ic_transform <- plogis(bornes_eta)
-ic_transform
-
-# Approche 2 : méthode du delta
-pi_etoile <- plogis(eta_etoile$fit)
-h <- (pi_etoile * (1 - pi_etoile))^2
-se_pi <- sqrt(h * eta_etoile$se.fit^2)
-ic_delta <- pi_etoile + c(-1, 1) * z * se_pi
-ic_delta
-```
-
-La probabilité de survie estimée pour un passager de deuxième classe est $\hat\pi^* \approx 0{,}246$. L'intervalle par transformation est $[0{,}213\,;\,0{,}282]$, celui par la méthode du delta $[0{,}211\,;\,0{,}280]$ : très proches, comme annoncé.
-
-On peut étendre la comparaison à toute la plage de `classe_num` :
-
-```{r empress-ic-pi-plot}
-#| warning: false
-grille <- data.frame(classe_num = seq(1, 3, length.out = 200))
-
-pred <- predict(modele.logit, newdata = grille, type = "link", se.fit = TRUE)
-grille$pi_hat <- plogis(pred$fit)
-
-grille$ic_transform_bas  <- plogis(pred$fit - z * pred$se.fit)
-grille$ic_transform_haut <- plogis(pred$fit + z * pred$se.fit)
-
-grille$se_pi_delta   <- sqrt((grille$pi_hat * (1 - grille$pi_hat))^2 * pred$se.fit^2)
-grille$ic_delta_bas  <- grille$pi_hat - z * grille$se_pi_delta
-grille$ic_delta_haut <- grille$pi_hat + z * grille$se_pi_delta
-
-ggplot(grille, aes(x = classe_num)) +
-  geom_ribbon(aes(ymin = ic_transform_bas, ymax = ic_transform_haut, fill = "Transformation"),
-              alpha = 0.3) +
-  geom_ribbon(aes(ymin = ic_delta_bas, ymax = ic_delta_haut, fill = "Delta"),
-              alpha = 0.3) +
-  geom_line(aes(y = pi_hat), linewidth = 1) +
-  labs(
-    x = "Classe (1 = première, 2 = deuxième, 3 = troisième)",
-    y = "Probabilité de survie estimée",
-    fill = "Méthode",
-    title = "IC à 95% pour la probabilité de survie prédite"
-  ) +
-  theme_minimal()
-```
-
-Les deux bandes de confiance sont pratiquement superposées sur toute la plage de `classe_num` : avec un échantillon de cette taille et un effet modéré, le choix de la méthode importe peu ici. À noter, la borne inférieure de l'IC delta descend jusqu'à environ $0{,}149$ en troisième classe (`classe_num` = 3) sans jamais devenir négative dans cet exemple — mais rien ne garantit ce résultat en général : contrairement à l'IC obtenu par transformation, qui reste automatiquement dans $[0,1]$, l'IC delta pourrait déborder de cet intervalle avec d'autres données ou d'autres valeurs de $\boldsymbol{X}^*$.
-
-:::
 
 
 ## Sélection de modèles
@@ -897,24 +901,24 @@ On teste $H_0: \beta_{\text{sexe}} = \beta_{\text{groupe\_age}} = 0$ (modèle av
 
 ```{r empress-deviance-test}
 #| message: false
-modele.reduit <- glm(
+modele_agrege_reduit <- glm(
   cbind(survivants, effectif - survivants) ~ classe_num,
   data = empress_agrege,
   family = binomial
 )
-modele.complet <- glm(
+modele_agrege_complet <- glm(
   cbind(survivants, effectif - survivants) ~ classe_num + sexe + groupe_age,
   data = empress_agrege,
   family = binomial
 )
 
-stat.test <- deviance(modele.reduit) - deviance(modele.complet)
-ddl.test <- df.residual(modele.reduit) - df.residual(modele.complet)
+stat.test <- deviance(modele_agrege_reduit) - deviance(modele_agrege_complet)
+ddl.test <- df.residual(modele_agrege_reduit) - df.residual(modele_agrege_complet)
 valeurp <- 1 - pchisq(stat.test, df = ddl.test)
 valeurp
 ```
 
-On rejette clairement $H_0$ ($p \approx 3\times 10^{-16}$) : le sexe et le groupe d'âge ajoutent une information importante que la classe seule ne capture pas. On verra plus loin, en examinant les coefficients du modèle complet, que l'effet du sexe va dans le sens contraire de l'idée reçue « les femmes et les enfants d'abord » — cohérent avec le fait que le navire a coulé en moins de 15 minutes, laissant peu de place à une évacuation ordonnée.
+On rejette clairement $H_0$, puisque $p \approx 3\times 10^{-16}$ est largement inférieur au seuil de 5\% : le sexe et le groupe d'âge ajoutent une information importante que la classe seule ne capture pas. On verra plus loin, en examinant les coefficients du modèle complet, que l'effet du sexe va dans le sens contraire de l'idée reçue « les femmes et les enfants d'abord » — cohérent avec le fait que le navire a coulé en moins de 15 minutes, laissant peu de place à une évacuation ordonnée.
 :::
 
 ### Comparaison de modèles non emboîtés : AIC et BIC
@@ -925,12 +929,12 @@ Le modèle ayant le plus petit $AIC$ (ou $BIC$) est préférable. En R : `AIC(mo
 
 ::: {.env-exemple titre="Modèles non emboîtés avec `empress_individus`"}
 ```{r modele-non-emboites}
-mod1 <- glm(survecu ~ classe + sexe, data = empress_individus, family = binomial)
+modele_indiv_classe_sexe <- glm(survecu ~ classe + sexe, data = empress_individus, family = binomial)
 
-mod2 <- glm(survecu ~ classe + groupe_age, data = empress_individus, family = binomial)
+modele_indiv_classe_age <- glm(survecu ~ classe + groupe_age, data = empress_individus, family = binomial)
 
-AIC(mod1)
-AIC(mod2)
+AIC(modele_indiv_classe_sexe)
+AIC(modele_indiv_classe_age)
 ```
 Le modèle 2 (`classe + groupe_age`) a un AIC légèrement plus faible que le modèle 1 (`classe + sexe`) et lui est donc préférable — mais l'écart est mince (moins d'un point), signe qu'aucun des deux modèles n'est pleinement satisfaisant : chacun omet une variable importante, comme le confirme la sélection automatique ci-dessous.
 :::
@@ -945,26 +949,28 @@ Les méthodes pas à pas *forward*, *backward* et *stepwise* fonctionnent exacte
 ```{r empress-selection}
 #| message: false
 # Modèle complet : effets additifs des trois variables explicatives disponibles
-modele.complet.sel <- glm(survecu ~ classe + sexe + groupe_age,
+modele_indiv_complet <- glm(survecu ~ classe + sexe + groupe_age,
                            data = empress_individus, family = binomial)
 
 # Backward : part du modèle complet, retire des termes
-modele.backward <- step(modele.complet.sel, direction = "backward")
+modele_indiv_backward <- step(modele_indiv_complet, direction = "backward")
 
 # Forward : part du modèle vide, ajoute des termes jusqu'au modèle complet
-modele.vide <- glm(survecu ~ 1, data = empress_individus, family = binomial)
-modele.forward <- step(modele.vide, direction = "forward",
-                        scope = formula(modele.complet.sel))
+modele_indiv_vide <- glm(survecu ~ 1, data = empress_individus, family = binomial)
+modele_indiv_forward <- step(modele_indiv_vide, direction = "forward",
+                        scope = formula(modele_indiv_complet))
 
 # Stepwise: part du modèle complet, ajoute et retire au besoin
-modele.step <- step(modele.complet.sel, direction = "both")
+modele_indiv_final <- step(modele_indiv_complet, direction = "both")
 
-summary(modele.backward)
-summary(modele.forward)
-summary(modele.step)
+summary(modele_indiv_backward)
+summary(modele_indiv_forward)
+summary(modele_indiv_final)
 
 ```
 Dans cet exemple, les trois méthodes convergent vers le même modèle final (`classe + sexe + groupe_age`), ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local (et encore moins à l'optimum global). Ici, les trois variables sont conservées : aucune ne peut être retirée sans détériorer significativement l'ajustement.
+
+Notons toutefois que tous les coefficients du modèle final ne sont pas individuellement significatifs au seuil de 5\% : `classeTroisième` a une valeur-p d'environ $0{,}30$, largement au-dessus de $0,05$ — on ne rejette donc pas $H_0:\beta_{\text{classeTroisième}}=0$ — alors que `classePremière` ($p\approx 0{,}0003$), `sexeHomme` ($p\approx 2{,}6\times10^{-7}$) et `groupe_ageEnfant` ($p\approx 5{,}4\times10^{-5}$) le sont largement. La variable `classe` reste néanmoins dans le modèle : c'est sa contribution *globale* (via le test emboîté, comparant tous ses niveaux à la fois) qui détermine si on la retire, pas la significativité d'un seul de ses coefficients.
 
 :::
 
@@ -992,16 +998,16 @@ L'hypothèse nulle du test est que le modèle est adéquat.
 
 ::: {.env-exemple titre="Test d'adéquation avec l'exemple [`empress_agrege`](#data-empress-agrege)"}
 
-On reprend ici le modèle `modele.logit` ajusté plus haut, avec `classe_num` comme seule variable explicative :
+On reprend ici le modèle `modele_agrege_classe_logit` ajusté plus haut, avec `classe_num` comme seule variable explicative :
 
 ```{r empress-adequation}
 # Déviance
-D <- deviance(modele.logit)
-ddl <- df.residual(modele.logit)
+D <- deviance(modele_agrege_classe_logit)
+ddl <- df.residual(modele_agrege_classe_logit)
 p.deviance <- 1 - pchisq(D, df = ddl)
 
 # Khi-deux de Pearson
-chi2.pearson <- sum(residuals(modele.logit, type = "pearson")^2)
+chi2.pearson <- sum(residuals(modele_agrege_classe_logit, type = "pearson")^2)
 p.pearson <- 1 - pchisq(chi2.pearson, df = ddl)
 
 data.frame(
@@ -1012,7 +1018,7 @@ data.frame(
 )
 ```
 
-Les deux tests rejettent nettement l'adéquation du modèle ($p < 0{,}001$) : la classe seule ne suffit pas à expliquer la survie. C'est cohérent avec le test emboîté vu plus haut, qui montrait que le sexe et le groupe d'âge ajoutent une information essentielle.
+Les deux valeurs-p ($p \approx 1{,}68\times10^{-14}$ pour la déviance et $p \approx 2{,}78\times10^{-11}$ pour le khi-deux de Pearson) sont largement inférieures au seuil de 5\%, donc on rejette l'adéquation du modèle : la classe seule ne suffit pas à expliquer la survie. C'est cohérent avec le test emboîté vu plus haut, qui montrait que le sexe et le groupe d'âge ajoutent une information essentielle.
 
 :::
 
@@ -1057,16 +1063,12 @@ Le principe est identique à la régression linéaire. Les définitions des levi
 
 :::{.env-exemple titre="Diagnostics de surdispersion — données `empress_agrege`"}
 
-On reprend le modèle `modele.complet` ajusté plus haut (`classe_num + sexe + groupe_age`) sur les données agrégées.
-
-```{r}
-mod <- modele.complet
-```
+On reprend le modèle `modele_agrege_complet` ajusté plus haut (`classe_num + sexe + groupe_age`) sur les données agrégées.
 
 **Résidus en fonction du numéro d'observation**
 
 ```{r}
-res_dev <- residuals(mod, type = "deviance")
+res_dev <- residuals(modele_agrege_complet, type = "deviance")
 
 plot(res_dev, xlab = "Numéro d'observation", ylab = "Résidu de déviance",
      pch = 19)
@@ -1079,27 +1081,27 @@ Ici, aucun résidu ne dépasse les seuils à $\pm 3$ (pointillés rouges), mais 
 **Estimation de $\phi$ et passage au modèle quasibinomial**
 
 ```{r}
-chi2_p <- sum(residuals(mod, type = "pearson")^2)
+chi2_p <- sum(residuals(modele_agrege_complet, type = "pearson")^2)
 n <- nrow(empress_agrege)
-p <- length(coef(mod))
+p <- length(coef(modele_agrege_complet))
 phi_hat <- chi2_p / (n - p)
 phi_hat
 ```
 
 ```{r}
-mod_quasi <- glm(cbind(survivants, effectif - survivants) ~ classe_num + sexe + groupe_age,
+modele_agrege_complet_quasi <- glm(cbind(survivants, effectif - survivants) ~ classe_num + sexe + groupe_age,
                   family = quasibinomial, data = empress_agrege)
-summary(mod_quasi)
-summary(mod)
+summary(modele_agrege_complet_quasi)
+summary(modele_agrege_complet)
 
 ```
 
-On estime $\hat\phi \approx 2{,}4$ : la variance observée est environ 2,4 fois plus grande que ce que prédit le modèle binomial, un signe net d'extra-variabilité. Le passage au modèle quasibinomial gonfle les erreurs-types en conséquence, sans changer les estimations ponctuelles des $\beta_j$.
+On estime $\hat\phi \approx 2{,}4$ : la variance observée est environ 2,4 fois plus grande que ce que prédit le modèle binomial, un signe net d'extra-variabilité. Le passage au modèle quasibinomial gonfle les erreurs-types en conséquence, sans changer les estimations ponctuelles des $\beta_j$. Malgré ce gonflement, les trois valeurs-p restent sous le seuil de 5\% (`classe_num` : $p\approx 0{,}027$ ; `sexeHomme` : $p\approx 0{,}011$ ; `groupe_ageEnfant` : $p\approx 0{,}034$) : les trois effets demeurent significatifs une fois la surdispersion prise en compte.
 
 **Vérification de la linéarité : $\hat\pi_i$ contre $\tilde\pi_i$**
 
 ```{r}
-pi_hat   <- fitted(mod_quasi)
+pi_hat   <- fitted(modele_agrege_complet_quasi)
 pi_tilde <- empress_agrege$survivants / empress_agrege$effectif
 
 plot(pi_tilde, pi_hat, xlab = expression(tilde(pi)[i]),
@@ -1113,35 +1115,35 @@ Les points suivent globalement la droite $y = x$ (corrélation d'environ 0,87), 
 **Observations aberrantes et valeurs influentes**
 
 ```{r}
-lev   <- hatvalues(mod_quasi)
-rstd  <- rstandard(mod_quasi, type = "pearson")
-rstu  <- rstudent(mod_quasi)
-cook  <- cooks.distance(mod_quasi)
-dfb   <- dfbetas(mod_quasi)
-dff   <- dffits(mod_quasi)
+lev   <- hatvalues(modele_agrege_complet_quasi)
+rstd  <- rstandard(modele_agrege_complet_quasi, type = "pearson")
+rstu  <- rstudent(modele_agrege_complet_quasi)
+cook  <- cooks.distance(modele_agrege_complet_quasi)
+dfb   <- dfbetas(modele_agrege_complet_quasi)
+dff   <- dffits(modele_agrege_complet_quasi)
 
 plot(lev, cook, xlab = "Levier", ylab = "Distance de Cook", pch = 19)
 ```
 
 ```{r}
-plot(mod_quasi, which = 1)
+plot(modele_agrege_complet_quasi, which = 1)
 ```
 Le graphique des résidus vs valeurs ajustées met en évidence un point nettement à l'écart des autres.
 
 ```{r}
-plot(mod_quasi, which = 2)
+plot(modele_agrege_complet_quasi, which = 2)
 ```
 
 Le QQ-plot ne montre pas d'écart marqué à la normalité asymptotique des résidus, malgré le petit nombre d'observations.
 
 ```{r}
-plot(mod_quasi, which = 3)
+plot(modele_agrege_complet_quasi, which = 3)
 ```
 
 Le graphique Scale-Location confirme une dispersion des résidus qui n'est pas parfaitement constante.
 
 ```{r}
-plot(mod_quasi, which = 4)
+plot(modele_agrege_complet_quasi, which = 4)
 ```
 
 La distance de Cook pointe très clairement vers une seule observation influente.
@@ -1186,14 +1188,11 @@ $$\mbox{AUC} \in \begin{cases}
 
 :::{.env-exemple titre="Courbe ROC avec l'exemple [`empress_individus`](#data-empress-individus)"}
 
-On ajuste ici le modèle logistique complet, avec `classe`, `sexe` et `groupe_age` comme variables explicatives, et on construit la courbe ROC directement à partir des estimateurs $\widehat{Spec}(u)$ et $\widehat{Sens}(u)$ définis plus haut :
+On reprend ici `modele_indiv_final`, le modèle retenu par la sélection automatique (`classe + sexe + groupe_age`), et on construit la courbe ROC directement à partir des estimateurs $\widehat{Spec}(u)$ et $\widehat{Sens}(u)$ définis plus haut :
 
 ```{r empress-roc}
 #| message: false
-modele.roc <- glm(survecu ~ classe + sexe + groupe_age,
-                   data = empress_individus, family = binomial)
-
-pi_hat <- fitted(modele.roc)
+pi_hat <- fitted(modele_indiv_final)
 y <- empress_individus$survecu
 
 seuils <- seq(0, 1, by = 0.01)
@@ -1386,7 +1385,7 @@ valeurp <- 1 - pchisq(stat.test, df = 2)
 valeurp
 ```
 
-On ne rejette pas $H_0$ : le modèle réduit est adéquat.
+Puisque la valeur-p affichée ci-dessus est supérieure au seuil de 5\%, on ne rejette pas $H_0$ : le modèle réduit est adéquat.
 :::
 
 ### AIC et sélection automatique avec `nminer`
@@ -1440,7 +1439,7 @@ summary(modele.forward.nminer)
 summary(modele.step.nminer)
 
 ```
-Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local (et encore moins à l'optimum global).
+Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local (et encore moins à l'optimum global). Comme toujours, on compare chaque valeur-p des tableaux `summary()` ci-dessus au seuil de 5\% pour juger de la significativité individuelle de chaque coefficient du modèle retenu.
 
 :::
 
@@ -1470,6 +1469,8 @@ data.frame(
   p.valeur = c(p.deviance, p.pearson)
 )
 ```
+
+On compare chacune des deux valeurs de `p.valeur` ci-dessus au seuil de 5\% : si elle lui est supérieure, on ne rejette pas l'adéquation du modèle ; si elle lui est inférieure, on la rejette à ce seuil.
 
 :::
 

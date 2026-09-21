@@ -13,19 +13,47 @@ library(clinfun)
 
 Les modèles de régression linéaire ne permettent de considérer que les cas où la variable réponse $Y_i$ est normale. Cependant, dans plusieurs situations, on a une variable réponse discrète qui ne peut prendre qu'un nombre fini (ou dénombrable) de valeurs possibles. Dans ce chapitre, on s'intéresse au cas où $Y_i$ suit une loi de Bernoulli ou une loi binomiale.
 
-:::{.env-exemple}
+:::{.env-exemple titre="Jeu de données : le naufrage de l'*Empress of Ireland*"}
 
-Cinq exemples tirés des librairies R `GLMsData` [@dunn2018glm] et `faraway` [@faraway] :
+Le 29 mai 1914, le paquebot *Empress of Ireland* a coulé en moins de 15 minutes dans le fleuve Saint-Laurent, près de Rimouski, après une collision avec le charbonnier norvégien *Storstad*. Sur les 1057 passagers à bord, seulement 217 ont survécu. Les données recensent, pour chaque passager, sa classe de billet (`classe` : première, deuxième ou troisième), son sexe (`sexe`) et son groupe d'âge (`groupe_age` : adulte ou enfant), ainsi qu'un indicateur de survie.
 
-1. [`quilpie`]{#data-quilpie} : observations de 1921 à 1988 de la quantité de pluie mesurée en juillet à Quilpie (Australie), une ville semi-aride du Queensland où les précipitations conditionnent fortement l'agriculture locale. La réponse vaut 1 si la quantité de pluie dépasse 10 mm (un seuil jugé suffisant pour amorcer les semis) et 0 sinon ; la variable explicative est un indice de pression atmosphérique, le *Southern Oscillation Index* (SOI), qui capture les phases El Niño/La Niña connues pour influencer les précipitations dans cette région.
+On dispose de ces données sous deux formes, utilisées tout au long du chapitre :
 
-1. [`nminer`]{#data-nminer} : 31 transects de deux hectares en milieu boisé (eucalyptus) dans l'ouest de Victoria (Australie) ; la réponse vaut 1 si au moins un mineur bruyant (*Manorina melanocephala*, un oiseau indigène particulièrement agressif qui chasse les espèces plus petites) est détecté dans le transect et 0 sinon. Les variables explicatives décrivent l'habitat : densité d'eucalyptus (`Eucs`), superficie du transect (`Area`), présence de pâturage (`Grazed`), présence d'arbustes (`Shrubs`), nombre d'arbres de type buloke (`Bulokes`) et quantité de bois mort au sol (`Timber`).
+- une version [`empress_individus`]{#data-empress-individus} **individuelle** ([{{< fa download >}}](Jeux%20de%20données/empress_individus.csv)), avec une ligne par passager (1057 lignes) et une réponse binaire `survecu` ;
+- une version [`empress_agrege`]{#data-empress-agrege} **agrégée** ([{{< fa download >}}](Jeux%20de%20données/empress_agrege.csv)), avec un `effectif` total et un nombre de `survivants` pour chaque combinaison classe-sexe-groupe d'âge (11 lignes), accompagnée d'une variable numérique auxiliaire `classe_num` (1 = première, 2 = deuxième, 3 = troisième) qui sert de proxy pour l'éloignement du pont supérieur (et donc des canots de sauvetage).
 
-1. [`deposit`]{#data-deposit} : 18 observations sur l'efficacité de trois insecticides ($A$, $B$ ou $C$) appliqués à différentes doses (en mg) sur des insectes ; la réponse $Y_i$ est le nombre d'insectes tués parmi les $m_i$ insectes exposés à chaque combinaison insecticide-dose.
+La version individuelle s'obtient en dépliant la version agrégée avec `uncount()` :
 
-1. [`turbines`]{#data-turbines} : 11 observations issues d'une expérience de fiabilité sur des roues de turbine [@nelson1982] ; la réponse $Y_i$ est le nombre de roues présentant des fissures parmi $m_i$ roues mises à l'essai, en fonction du nombre d'heures de fonctionnement.
+```{r empress-donnees}
+empress_agrege <- data.frame(
+  classe     = c("Première", "Première", "Première",
+                 "Deuxième", "Deuxième", "Deuxième", "Deuxième",
+                 "Troisième", "Troisième", "Troisième", "Troisième"),
+  sexe       = c("Homme", "Femme", "Femme",
+                 "Homme", "Homme", "Femme", "Femme",
+                 "Homme", "Homme", "Femme", "Femme"),
+  groupe_age = c("Adulte", "Adulte", "Enfant",
+                 "Adulte", "Enfant", "Adulte", "Enfant",
+                 "Adulte", "Enfant", "Adulte", "Enfant"),
+  effectif   = c(49, 34, 4, 114, 11, 107, 21, 446, 54, 169, 48),
+  survivants = c(24, 11, 1,  33,  0,  13,  2, 115,  1,  17,  0)
+)
 
-1. [`troutegg`]{#data-troutegg} : 20 observations issues d'une expérience où des boîtes d'œufs de truite ont été enfouies à cinq emplacements différents d'un cours d'eau (`location`) et retirées après quatre durées différentes (`period`, en semaines) ; la réponse $Y_i$ est le nombre d'œufs survivants parmi les $m_i$ œufs de la boîte.
+empress_agrege$classe_num <- as.numeric(
+  factor(empress_agrege$classe, levels = c("Première", "Deuxième", "Troisième"))
+)
+
+empress_individus <- empress_agrege |>
+  uncount(effectif, .remove = FALSE) |>
+  group_by(classe, sexe, groupe_age) |>
+  mutate(survecu = as.numeric(row_number() <= first(survivants))) |>
+  ungroup() |>
+  select(classe, sexe, groupe_age, classe_num, survecu)
+
+empress_agrege
+```
+
+Aucun garçon de première classe n'était à bord : la combinaison (première, homme, enfant) est donc structurellement absente des données.
 
 :::
 
@@ -33,7 +61,7 @@ Cinq exemples tirés des librairies R `GLMsData` [@dunn2018glm] et `faraway` [@f
 
 ### Données individuelles (Bernoulli)
 
-Dans les deux premiers exemples, la variable réponse $Y_i \in \{0,1\}$. Les données sont sous la forme $\{(Y_i,\boldsymbol{X}_i),\, i=1,\ldots,n\}$. On dit que $Y_i$ suit une loi de Bernoulli de paramètre $\pi_i \in [0,1]$ :
+Dans la version individuelle `empress_individus`, la variable réponse $Y_i \in \{0,1\}$ (le passager $i$ a survécu ou non). Les données sont sous la forme $\{(Y_i,\boldsymbol{X}_i),\, i=1,\ldots,n\}$. On dit que $Y_i$ suit une loi de Bernoulli de paramètre $\pi_i \in [0,1]$ :
 
 $$
 \begin{aligned}
@@ -50,7 +78,7 @@ $$\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
 
 ### Données groupées (binomiale)
 
-Dans les deux derniers exemples, $Y_i \in \{0,1,\ldots,m_i\}$, où $m_i$ est un entier connu représentant le nombre total d'expériences indépendantes ; $Y_i$ est le nombre de succès. On écrit $Y_i \sim \mathrm{Bin}(m_i,\pi_i)$ :
+Dans la version agrégée `empress_agrege`, $Y_i \in \{0,1,\ldots,m_i\}$, où $m_i$ est l'effectif (`effectif`) du $i$-ème groupe classe-sexe-groupe d'âge ; $Y_i$ est le nombre de survivants (`survivants`) dans ce groupe. On écrit $Y_i \sim \mathrm{Bin}(m_i,\pi_i)$ :
 
 $$
 \begin{aligned}
@@ -79,7 +107,6 @@ En pratique, les trois liens donnent souvent des résultats très similaires.
 
 Voici une comparaison des probabilités prédites pour les trois liens, en fonction de $\eta_i$.
 ```{r comparaison-liens}
-#| echo: false
 #| warning: false
 evaluer_liens <- function(x) {
   data.frame(
@@ -406,48 +433,45 @@ $$
 :::
 
 
-:::{.env-exemple titre="Jeu de données [`turbines`](#data-turbines)"}
+:::{.env-exemple titre="Jeu de données [`empress_agrege`](#data-empress-agrege) : comparaison des liens"}
 
-On ajuste le modèle avec les trois fonctions de lien :
+On ajuste le modèle avec les trois fonctions de lien, en utilisant `classe_num` comme variable explicative :
 
-```{r turbines-ajustement}
+```{r empress-ajustement}
 #| message: false
-data(turbines)
-
-
-turbines_obs <- turbines |>
-  mutate(prop_observee = Fissures / Turbines)
+empress_obs <- empress_agrege |>
+  mutate(prop_observee = survivants / effectif)
 
 ggplot() +
   geom_point(
-    data = turbines_obs,
-    aes(x = Hours, y = prop_observee, size = Turbines),
+    data = empress_obs,
+    aes(x = classe_num, y = prop_observee, size = effectif),
     color = "black",
     alpha = 0.6
   ) +
   labs(
-    x = "Heures d'utilisation",
-    y = "Pourcentage de fissure",
+    x = "Classe (1 = première, 2 = deuxième, 3 = troisième)",
+    y = "Proportion de survivants",
     color = "Fonction de lien",
-    size = "Nombre de turbines",
-    title = "Pourcentage de fissure selon la durée d'utilisation"
+    size = "Effectif du groupe",
+    title = "Proportion de survivants selon la classe"
   ) +
   theme_minimal()
 
 
 modele.logit <- glm(
-  cbind(Fissures, Turbines - Fissures) ~ Hours,
-  data = turbines,
+  cbind(survivants, effectif - survivants) ~ classe_num,
+  data = empress_agrege,
   family = binomial(link = "logit")
 )
 modele.probit <- glm(
-  cbind(Fissures, Turbines - Fissures) ~ Hours,
-  data = turbines,
+  cbind(survivants, effectif - survivants) ~ classe_num,
+  data = empress_agrege,
   family = binomial(link = "probit")
 )
 modele.cloglog <- glm(
-  cbind(Fissures, Turbines - Fissures) ~ Hours,
-  data = turbines,
+  cbind(survivants, effectif - survivants) ~ classe_num,
+  data = empress_agrege,
   family = binomial(link = "cloglog")
 )
 summary(modele.logit)$coefficients
@@ -457,10 +481,10 @@ summary(modele.cloglog)$coefficients
 
 La sortie de `summary()` nous donne les estimations des écarts-types des estimations sous `Std. Error`, comme pour la régression linéaire.
 
-```{r turbines-comparaison-liens-plot}
+```{r empress-comparaison-liens-plot}
 #| warning: false
 grille <- data.frame(
-  Hours = seq(min(turbines$Hours), max(turbines$Hours), length.out = 200)
+  classe_num = seq(min(empress_agrege$classe_num), max(empress_agrege$classe_num), length.out = 200)
 )
 
 predire_modele <- function(modele, nom_lien) {
@@ -477,26 +501,26 @@ predictions <- bind_rows(
   predire_modele(modele.cloglog, "Cloglog")
 )
 
-turbines_obs <- turbines |>
-  mutate(prop_observee = Fissures / Turbines)
+empress_obs <- empress_agrege |>
+  mutate(prop_observee = survivants / effectif)
 
 ggplot() +
   geom_point(
-    data = turbines_obs,
-    aes(x = Hours, y = prop_observee, size = Turbines),
+    data = empress_obs,
+    aes(x = classe_num, y = prop_observee, size = effectif),
     color = "black",
     alpha = 0.6
   ) +
   geom_line(
     data = predictions,
-    aes(x = Hours, y = p_hat, color = lien),
+    aes(x = classe_num, y = p_hat, color = lien),
     linewidth = 1
   ) +
   labs(
-    x = "Heures d'utilisation",
-    y = "Probabilité de fissure estimée",
+    x = "Classe (1 = première, 2 = deuxième, 3 = troisième)",
+    y = "Probabilité de survie estimée",
     color = "Fonction de lien",
-    size = "Nombre de turbines",
+    size = "Effectif du groupe",
     title = "Comparaison des fonctions de lien logit, probit et cloglog"
   ) +
   theme_minimal()
@@ -504,10 +528,10 @@ ggplot() +
 
 
 
-Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. 
+Les trois liens mènent à des coefficients significatifs (plus la classe est élevée, moins la probabilité de survie est grande) et à des courbes prédites $\hat\pi^*$ très similaires : à `classe_num` fixé, les probabilités prédites diffèrent de moins de 1 point de pourcentage d'un lien à l'autre.
 :::
 
-### Intervalles de confiance pour les $\beta_j$
+### Intervalles de confiance et tests de significativité pour les $\beta_j$
 
 Les intervalles de confiance et tests concernant les $\beta_j$ sont obtenus par la méthode de **Wald**. Un intervalle de confiance de niveau $(1-\alpha)$ pour $\beta_j$ est
 $$\left[\hat\beta_j - z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\right],$$
@@ -516,14 +540,14 @@ où $z_\gamma$ est le quantile de la $\mathcal{N}(0,1)$ défini par $P(Z > z_\ga
 Pour tester $H_0: \beta_j = 0$ contre $H_1: \beta_j\neq 0$, on rejette $H_0$ au seuil $\alpha$ si $|z_{obs}| > z_{\alpha/2}$, avec $z_{obs} = \hat\beta_j/\sqrt{\hat{\text V}(\hat\beta_j)}$. Le seuil observé ($p$-valeur) est $\alpha^* = 2P(Z > |z_{obs}|)$.
 
 
-::: {.env-exemple titre="Intervalle de confiance pour $\beta_1$ dans l'exemple `turbines`"}
-En utilisant le lien logit, on construit un intervalle de confiance de niveau 95\% pour $\beta_1$ en utilsant les informations données par la sortie:
+::: {.env-exemple titre="Intervalle de confiance pour $\beta_1$ dans l'exemple `empress_agrege`"}
+En utilisant le lien logit, on construit un intervalle de confiance de niveau 95\% pour $\beta_1$ (l'effet de `classe_num`) en utilsant les informations données par la sortie:
 
 ```{r}
 summary(modele.logit)$coefficients
 ```
 
-L'intervalle est $[\hat{\beta_1}-1,96\times \sqrt{\hat{\text V}(\hat\beta_1)};\hat{\beta_1}+1,96\times \sqrt{\hat{\text V}(\hat\beta_1)}]=[0,000776;0,001222]$.
+L'intervalle est $[\hat{\beta_1}-1,96\times \sqrt{\hat{\text V}(\hat\beta_1)};\hat{\beta_1}+1,96\times \sqrt{\hat{\text V}(\hat\beta_1)}]=[-0,6422;-0,2069]$.
 
 On peut bien sûr l'extraire à partir de R directement:
 
@@ -702,6 +726,7 @@ Les deux méthodes donnent en pratique des résultats très similaires.
 
 
 
+
 :::{.env-logit titre="Méthode du delta"}
 Avec le lien logit, $g^{-1}(u) = \dfrac{e^u}{1+e^u}$, dont la dérivée est
 
@@ -734,7 +759,69 @@ qu'on estime en substituant $\hat\theta$ à $\theta$ (d'où $\hat{\text V}(\hat\
 Contrairement à la première approche (transformer les bornes de l'IC sur $\eta^*$), cette méthode approxime directement la variance de $\hat\pi^*$ sur son échelle naturelle — mais comme elle repose sur une approximation linéaire locale, l'intervalle de confiance qui en résulte n'est pas garanti de rester dans $[0,1]$, contrairement à celui obtenu par transformation.
 :::
 
+:::{.env-exemple titre="IC pour la probabilité de survie en deuxième classe — [`empress_agrege`](#data-empress-agrege)"}
 
+On reprend le modèle `modele.logit` (`classe_num` seulement) pour estimer un intervalle de confiance à 95\% pour la probabilité de survie d'un passager de deuxième classe, soit $\boldsymbol{X}^* = (1, 2)^\top$.
+
+```{r empress-ic-pi}
+X_etoile <- data.frame(classe_num = 2)
+
+# Prédiction sur l'échelle du prédicteur linéaire, avec erreur-type
+eta_etoile <- predict(modele.logit, newdata = X_etoile, type = "link", se.fit = TRUE)
+eta_etoile$fit
+eta_etoile$se.fit
+
+z <- qnorm(0.975)
+
+# Approche 1 : transformation des bornes sur eta*
+bornes_eta <- eta_etoile$fit + c(-1, 1) * z * eta_etoile$se.fit
+ic_transform <- plogis(bornes_eta)
+ic_transform
+
+# Approche 2 : méthode du delta
+pi_etoile <- plogis(eta_etoile$fit)
+h <- (pi_etoile * (1 - pi_etoile))^2
+se_pi <- sqrt(h * eta_etoile$se.fit^2)
+ic_delta <- pi_etoile + c(-1, 1) * z * se_pi
+ic_delta
+```
+
+La probabilité de survie estimée pour un passager de deuxième classe est $\hat\pi^* \approx 0{,}246$. L'intervalle par transformation est $[0{,}213\,;\,0{,}282]$, celui par la méthode du delta $[0{,}211\,;\,0{,}280]$ : très proches, comme annoncé.
+
+On peut étendre la comparaison à toute la plage de `classe_num` :
+
+```{r empress-ic-pi-plot}
+#| warning: false
+grille <- data.frame(classe_num = seq(1, 3, length.out = 200))
+
+pred <- predict(modele.logit, newdata = grille, type = "link", se.fit = TRUE)
+grille$pi_hat <- plogis(pred$fit)
+
+grille$ic_transform_bas  <- plogis(pred$fit - z * pred$se.fit)
+grille$ic_transform_haut <- plogis(pred$fit + z * pred$se.fit)
+
+grille$se_pi_delta   <- sqrt((grille$pi_hat * (1 - grille$pi_hat))^2 * pred$se.fit^2)
+grille$ic_delta_bas  <- grille$pi_hat - z * grille$se_pi_delta
+grille$ic_delta_haut <- grille$pi_hat + z * grille$se_pi_delta
+
+ggplot(grille, aes(x = classe_num)) +
+  geom_ribbon(aes(ymin = ic_transform_bas, ymax = ic_transform_haut, fill = "Transformation"),
+              alpha = 0.3) +
+  geom_ribbon(aes(ymin = ic_delta_bas, ymax = ic_delta_haut, fill = "Delta"),
+              alpha = 0.3) +
+  geom_line(aes(y = pi_hat), linewidth = 1) +
+  labs(
+    x = "Classe (1 = première, 2 = deuxième, 3 = troisième)",
+    y = "Probabilité de survie estimée",
+    fill = "Méthode",
+    title = "IC à 95% pour la probabilité de survie prédite"
+  ) +
+  theme_minimal()
+```
+
+Les deux bandes de confiance sont pratiquement superposées sur toute la plage de `classe_num` : avec un échantillon de cette taille et un effet modéré, le choix de la méthode importe peu ici. À noter, la borne inférieure de l'IC delta descend jusqu'à environ $0{,}149$ en troisième classe (`classe_num` = 3) sans jamais devenir négative dans cet exemple — mais rien ne garantit ce résultat en général : contrairement à l'IC obtenu par transformation, qui reste automatiquement dans $[0,1]$, l'IC delta pourrait déborder de cet intervalle avec d'autres données ou d'autres valeurs de $\boldsymbol{X}^*$.
+
+:::
 
 
 ## Sélection de modèles
@@ -803,32 +890,31 @@ Pour comparer deux modèles emboîtés de déviances $D_1$ (complet) et $D_2$ (r
 Sous $H_0$ (le modèle réduit est adéquat), $\chi^2$ suit une loi du khi-deux à $d$ degrés de liberté, où $d$ est la différence du nombre de paramètres.
 :::
 
-:::{.env-exemple titre="Introduction des termes quadratiques et cubiques dans l'exemple [`turbines`](#data-turbines)"}
+:::{.env-exemple titre="Ajout du sexe et du groupe d'âge dans l'exemple [`empress_agrege`](#data-empress-agrege)"}
 
 
-On teste $H_0: \beta_2 = \beta_3 = 0$ (modèle avec `Hours` seulement contre modèle avec termes en `Hours`$^2$ et `Hours`$^3$) :
+On teste $H_0: \beta_{\text{sexe}} = \beta_{\text{groupe\_age}} = 0$ (modèle avec `classe_num` seulement contre modèle avec `sexe` et `groupe_age` en plus) :
 
-```{r turbines-deviance-test}
+```{r empress-deviance-test}
 #| message: false
-data(turbines)
-
 modele.reduit <- glm(
-  cbind(Fissures, Turbines - Fissures) ~ Hours,
-  data = turbines,
+  cbind(survivants, effectif - survivants) ~ classe_num,
+  data = empress_agrege,
   family = binomial
 )
 modele.complet <- glm(
-  cbind(Fissures, Turbines - Fissures) ~ Hours + I(Hours^2) + I(Hours^3),
-  data = turbines,
+  cbind(survivants, effectif - survivants) ~ classe_num + sexe + groupe_age,
+  data = empress_agrege,
   family = binomial
 )
 
 stat.test <- deviance(modele.reduit) - deviance(modele.complet)
-valeurp <- 1 - pchisq(stat.test, df = 2)
+ddl.test <- df.residual(modele.reduit) - df.residual(modele.complet)
+valeurp <- 1 - pchisq(stat.test, df = ddl.test)
 valeurp
 ```
 
-On ne rejette pas $H_0$ : le modèle réduit est adéquat.
+On rejette clairement $H_0$ ($p \approx 3\times 10^{-16}$) : le sexe et le groupe d'âge ajoutent une information importante que la classe seule ne capture pas. On verra plus loin, en examinant les coefficients du modèle complet, que l'effet du sexe va dans le sens contraire de l'idée reçue « les femmes et les enfants d'abord » — cohérent avec le fait que le navire a coulé en moins de 15 minutes, laissant peu de place à une évacuation ordonnée.
 :::
 
 ### Comparaison de modèles non emboîtés : AIC et BIC
@@ -837,60 +923,48 @@ Comme pour les modèles linéaires, on utilise
 $$AIC = -2\,l(\hat\mu;y) + 2(p+1), \qquad BIC = -2\,l(\hat\mu;y) + \log(n)(p+1).$$
 Le modèle ayant le plus petit $AIC$ (ou $BIC$) est préférable. En R : `AIC(modele)` et `AIC(modele, k=log(n))`.
 
-::: {.env-exemple titre="Modèles non emboîtés avec `nminer`"}
+::: {.env-exemple titre="Modèles non emboîtés avec `empress_individus`"}
 ```{r modele-non-emboites}
-data(nminer)
-nminer$Detecte <- as.numeric(nminer$Minerab > 0)
-mod1 <- glm(Detecte ~  Area + Grazed + Shrubs  + Timber,
-            data = nminer, family = binomial)
+mod1 <- glm(survecu ~ classe + sexe, data = empress_individus, family = binomial)
 
-mod2 <- glm(Detecte ~ Eucs + Grazed + Bulokes,
-            data = nminer, family = binomial)
+mod2 <- glm(survecu ~ classe + groupe_age, data = empress_individus, family = binomial)
 
 AIC(mod1)
 AIC(mod2)
 ```
-Le modèle 2 a un AIC plus faible que le modèle 1 et lui est donc préférable. 
-
-*À noter, les variables explicatives ont été choisies au hasard ici.*
+Le modèle 2 (`classe + groupe_age`) a un AIC légèrement plus faible que le modèle 1 (`classe + sexe`) et lui est donc préférable — mais l'écart est mince (moins d'un point), signe qu'aucun des deux modèles n'est pleinement satisfaisant : chacun omet une variable importante, comme le confirme la sélection automatique ci-dessous.
 :::
 
 ### Sélection automatique
 
 Les méthodes pas à pas *forward*, *backward* et *stepwise* fonctionnent exactement comme pour les modèles linéaires (fonction `step` avec l'argument `direction`). 
 
-:::{.env-exemple titre="Sélection automatique sur le jeu de données [`nminer`](#data-nminer)"}
+:::{.env-exemple titre="Sélection automatique sur le jeu de données [`empress_individus`](#data-empress-individus)"}
 
 
-```{r nminer-selection}
+```{r empress-selection}
 #| message: false
-data(nminer)
-
-# On construit la réponse binaire décrite dans le texte :
-# 1 si au moins un mineur bruyant a été détecté, 0 sinon
-nminer$Detecte <- as.numeric(nminer$Minerab > 0)
-
-# Modèle complet : effets additifs de toutes les variables explicatives disponibles
-modele.complet <- glm(Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber,
-                       data = nminer, family = binomial)
+# Modèle complet : effets additifs des trois variables explicatives disponibles
+modele.complet.sel <- glm(survecu ~ classe + sexe + groupe_age,
+                           data = empress_individus, family = binomial)
 
 # Backward : part du modèle complet, retire des termes
-modele.backward <- step(modele.complet, direction = "backward")
+modele.backward <- step(modele.complet.sel, direction = "backward")
 
 # Forward : part du modèle vide, ajoute des termes jusqu'au modèle complet
-modele.vide <- glm(Detecte ~ 1, data = nminer, family = binomial)
+modele.vide <- glm(survecu ~ 1, data = empress_individus, family = binomial)
 modele.forward <- step(modele.vide, direction = "forward",
-                        scope = formula(modele.complet))
+                        scope = formula(modele.complet.sel))
 
 # Stepwise: part du modèle complet, ajoute et retire au besoin
-modele.step <- step(modele.complet, direction = "both")
+modele.step <- step(modele.complet.sel, direction = "both")
 
 summary(modele.backward)
 summary(modele.forward)
 summary(modele.step)
 
 ```
-Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local (et encore moins à l'optimum global).
+Dans cet exemple, les trois méthodes convergent vers le même modèle final (`classe + sexe + groupe_age`), ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local (et encore moins à l'optimum global). Ici, les trois variables sont conservées : aucune ne peut être retirée sans détériorer significativement l'ajustement.
 
 :::
 
@@ -916,14 +990,11 @@ Lorsque tous les $m_i \to \infty$, $D$ et $\chi^2_P$ convergent en loi vers une 
 
 L'hypothèse nulle du test est que le modèle est adéquat.
 
-::: {.env-exemple titre="Test d'adéquation avec l'exemple [`turbines`](#data-turbines)"}
+::: {.env-exemple titre="Test d'adéquation avec l'exemple [`empress_agrege`](#data-empress-agrege)"}
 
-```{r turbines-adequation}
-data(turbines)
+On reprend ici le modèle `modele.logit` ajusté plus haut, avec `classe_num` comme seule variable explicative :
 
-modele.logit <- glm(cbind(Fissures, Turbines - Fissures) ~ Hours,
-                     data = turbines, family = binomial(link = "logit"))
-
+```{r empress-adequation}
 # Déviance
 D <- deviance(modele.logit)
 ddl <- df.residual(modele.logit)
@@ -940,6 +1011,8 @@ data.frame(
   p.valeur = c(p.deviance, p.pearson)
 )
 ```
+
+Les deux tests rejettent nettement l'adéquation du modèle ($p < 0{,}001$) : la classe seule ne suffit pas à expliquer la survie. C'est cohérent avec le test emboîté vu plus haut, qui montrait que le sexe et le groupe d'âge ajoutent une information essentielle.
 
 :::
 
@@ -982,16 +1055,12 @@ Pour vérifier la linéarité du prédicteur, on trace le nuage de points $\{(\h
 Le principe est identique à la régression linéaire. Les définitions des leviers, résidus standardisés et studentisés diffèrent, mais ces quantités ont la même interprétation. Il en va de même pour la distance de Cook, les DFBETAS et les DFFITS.
 
 
-:::{.env-exemple titre="Diagnostics de surdispersion — données `troutegg`"}
+:::{.env-exemple titre="Diagnostics de surdispersion — données `empress_agrege`"}
 
-On ajuste un modèle binomial sur les données `troutegg`, qui recensent la survie d'œufs de truite selon l'emplacement dans le cours d'eau et la période de retrait.
+On reprend le modèle `modele.complet` ajusté plus haut (`classe_num + sexe + groupe_age`) sur les données agrégées.
 
 ```{r}
-library(faraway)
-data(troutegg)
-
-mod <- glm(cbind(survive, total - survive) ~ location + period,
-           family = binomial, data = troutegg)
+mod <- modele.complet
 ```
 
 **Résidus en fonction du numéro d'observation**
@@ -1005,31 +1074,33 @@ abline(h = 0, lty = 2)
 abline(h = c(-3, 3), lty = 3, col = "red")
 ```
 
-Ici, quelques résidus dépassent les seuils à $\pm 3$ (pointillés rouges), ce qui suggère de l'extra-variabilité.
+Ici, aucun résidu ne dépasse les seuils à $\pm 3$ (pointillés rouges), mais plusieurs approchent $\pm 1{,}5$ pour seulement 11 observations, ce qui reste un signal à vérifier.
 
 **Estimation de $\phi$ et passage au modèle quasibinomial**
 
 ```{r}
 chi2_p <- sum(residuals(mod, type = "pearson")^2)
-n <- nrow(troutegg)
+n <- nrow(empress_agrege)
 p <- length(coef(mod))
 phi_hat <- chi2_p / (n - p)
 phi_hat
 ```
 
 ```{r}
-mod_quasi <- glm(cbind(survive, total - survive) ~ location + period,
-                  family = quasibinomial, data = troutegg)
+mod_quasi <- glm(cbind(survivants, effectif - survivants) ~ classe_num + sexe + groupe_age,
+                  family = quasibinomial, data = empress_agrege)
 summary(mod_quasi)
 summary(mod)
 
 ```
 
+On estime $\hat\phi \approx 2{,}4$ : la variance observée est environ 2,4 fois plus grande que ce que prédit le modèle binomial, un signe net d'extra-variabilité. Le passage au modèle quasibinomial gonfle les erreurs-types en conséquence, sans changer les estimations ponctuelles des $\beta_j$.
+
 **Vérification de la linéarité : $\hat\pi_i$ contre $\tilde\pi_i$**
 
 ```{r}
 pi_hat   <- fitted(mod_quasi)
-pi_tilde <- troutegg$survive / troutegg$total
+pi_tilde <- empress_agrege$survivants / empress_agrege$effectif
 
 plot(pi_tilde, pi_hat, xlab = expression(tilde(pi)[i]),
      ylab = expression(hat(pi)[i]), pch = 19,
@@ -1037,7 +1108,7 @@ plot(pi_tilde, pi_hat, xlab = expression(tilde(pi)[i]),
 abline(0, 1, lty = 2)
 ```
 
-Les points suivent d'assez près la droite $y = x$, sans courbure systématique apparente, ce qui appuie l'hypothèse de linéarité du prédicteur pour ce modèle.
+Les points suivent globalement la droite $y = x$ (corrélation d'environ 0,87), mais avec une dispersion notable pour un aussi petit nombre de groupes — cohérent avec l'extra-variabilité détectée ci-dessus.
 
 **Observations aberrantes et valeurs influentes**
 
@@ -1055,28 +1126,28 @@ plot(lev, cook, xlab = "Levier", ylab = "Distance de Cook", pch = 19)
 ```{r}
 plot(mod_quasi, which = 1)
 ```
-Le graphique des résidus vs valeurs ajustées montre plusieurs points nettement à l'écart (dont les observations 1, 15 et 20), suggérant que le modèle ne s'ajuste pas également bien à toutes les combinaisons de `location` et `period`.
+Le graphique des résidus vs valeurs ajustées met en évidence un point nettement à l'écart des autres.
 
 ```{r}
 plot(mod_quasi, which = 2)
 ```
 
-Le QQ-plot des résidus s'éloigne un peu de la droite de référence dans la queue supérieure (observations 14, 15 et 20), ce qui traduit un mauvais ajustement pour certaines observations plutôt qu'une déviation normale isolée.
+Le QQ-plot ne montre pas d'écart marqué à la normalité asymptotique des résidus, malgré le petit nombre d'observations.
 
 ```{r}
 plot(mod_quasi, which = 3)
 ```
 
-Le graphique Scale-Location révèle une dispersion des résidus qui n'est pas constante et plusieurs valeurs extrêmes (1, 14, 15, 20), malgré l'inclusion du paramètre de surdispersion.
+Le graphique Scale-Location confirme une dispersion des résidus qui n'est pas parfaitement constante.
 
 ```{r}
 plot(mod_quasi, which = 4)
 ```
 
-La distance de Cook pointe vers certaines observations influentes (14, 15, 19 et 20).
+La distance de Cook pointe très clairement vers une seule observation influente.
 
 
-Le seuil usuel pour un levier élevé est $2(p+1)/n$ ; pour la distance de Cook, on examine plutôt les valeurs qui se détachent nettement des autres.
+Le seuil usuel pour un levier élevé est $2(p+1)/n$, ici environ $0{,}73$. L'observation 8 (troisième classe, hommes adultes) le dépasse largement, avec un levier de $0{,}87$ et une distance de Cook de $3{,}32$ — loin devant toutes les autres observations (qui restent sous $0{,}14$). Ses DFBETAS et son DFFITS ($\approx 4{,}6$, contre moins de $0{,}9$ en valeur absolue ailleurs) confirment qu'elle déplace fortement l'ajustement. Ce n'est pas surprenant : ce groupe représente à lui seul 446 des 1057 passagers (42 %), donc le modèle doit nécessairement bien reproduire son taux de survie sous peine de voir la déviance globale exploser — un effet de poids d'échantillon plutôt qu'une anomalie des données.
 
 :::
 
@@ -1113,6 +1184,397 @@ $$\mbox{AUC} \in \begin{cases}
 \end{cases}$$
 :::
 
+:::{.env-exemple titre="Courbe ROC avec l'exemple [`empress_individus`](#data-empress-individus)"}
+
+On ajuste ici le modèle logistique complet, avec `classe`, `sexe` et `groupe_age` comme variables explicatives, et on construit la courbe ROC directement à partir des estimateurs $\widehat{Spec}(u)$ et $\widehat{Sens}(u)$ définis plus haut :
+
+```{r empress-roc}
+#| message: false
+modele.roc <- glm(survecu ~ classe + sexe + groupe_age,
+                   data = empress_individus, family = binomial)
+
+pi_hat <- fitted(modele.roc)
+y <- empress_individus$survecu
+
+seuils <- seq(0, 1, by = 0.01)
+sens <- sapply(seuils, function(u) mean(pi_hat[y == 1] > u))
+spec <- sapply(seuils, function(u) mean(pi_hat[y == 0] < u))
+
+roc <- data.frame(seuil = seuils, sensibilite = sens, specificite = spec) |>
+  arrange(1 - specificite)
+
+ggplot(roc, aes(x = 1 - specificite, y = sensibilite)) +
+  geom_line(linewidth = 1) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "grey50") +
+  labs(x = "1 - Spécificité", y = "Sensibilité", title = "Courbe ROC") +
+  theme_minimal()
+
+# Aire sous la courbe par la règle du trapèze
+auc <- sum(diff(1 - roc$specificite) *
+             (head(roc$sensibilite, -1) + tail(roc$sensibilite, -1)) / 2)
+auc
+```
+
+L'aire sous la courbe est d'environ 0.68 : le modèle est mauvais selon l'échelle donnée plus haut. La classe, le sexe et le groupe d'âge influencent bien la survie (comme le confirment les tests précédents), mais ils sont loin de suffire à prédire, au niveau individuel, qui a survécu ou non — beaucoup d'autres facteurs (emplacement exact au moment de l'impact, capacité physique, chance) ont joué un rôle.
+:::
+
+## Pour aller plus loin
+
+Les exemples ci-dessus s'appuient tous sur le jeu de données `empress`. Les librairies R `GLMsData` [@dunn2018glm] et `faraway` [@faraway] offrent d'autres jeux de données classiques pour la régression binaire, repris ici avec les mêmes analyses que dans les sections précédentes.
+
+:::{.env-exemple}
+
+Cinq exemples tirés des librairies R `GLMsData` [@dunn2018glm] et `faraway` [@faraway] :
+
+1. [`quilpie`]{#data-quilpie} : observations de 1921 à 1988 de la quantité de pluie mesurée en juillet à Quilpie (Australie), une ville semi-aride du Queensland où les précipitations conditionnent fortement l'agriculture locale. La réponse vaut 1 si la quantité de pluie dépasse 10 mm (un seuil jugé suffisant pour amorcer les semis) et 0 sinon ; la variable explicative est un indice de pression atmosphérique, le *Southern Oscillation Index* (SOI), qui capture les phases El Niño/La Niña connues pour influencer les précipitations dans cette région.
+
+1. [`nminer`]{#data-nminer} : 31 transects de deux hectares en milieu boisé (eucalyptus) dans l'ouest de Victoria (Australie) ; la réponse vaut 1 si au moins un mineur bruyant (*Manorina melanocephala*, un oiseau indigène particulièrement agressif qui chasse les espèces plus petites) est détecté dans le transect et 0 sinon. Les variables explicatives décrivent l'habitat : densité d'eucalyptus (`Eucs`), superficie du transect (`Area`), présence de pâturage (`Grazed`), présence d'arbustes (`Shrubs`), nombre d'arbres de type buloke (`Bulokes`) et quantité de bois mort au sol (`Timber`).
+
+1. [`deposit`]{#data-deposit} : 18 observations sur l'efficacité de trois insecticides ($A$, $B$ ou $C$) appliqués à différentes doses (en mg) sur des insectes ; la réponse $Y_i$ est le nombre d'insectes tués parmi les $m_i$ insectes exposés à chaque combinaison insecticide-dose.
+
+1. [`turbines`]{#data-turbines} : 11 observations issues d'une expérience de fiabilité sur des roues de turbine [@nelson1982] ; la réponse $Y_i$ est le nombre de roues présentant des fissures parmi $m_i$ roues mises à l'essai, en fonction du nombre d'heures de fonctionnement.
+
+1. [`troutegg`]{#data-troutegg} : 20 observations issues d'une expérience où des boîtes d'œufs de truite ont été enfouies à cinq emplacements différents d'un cours d'eau (`location`) et retirées après quatre durées différentes (`period`, en semaines) ; la réponse $Y_i$ est le nombre d'œufs survivants parmi les $m_i$ œufs de la boîte.
+
+:::
+
+### Comparaison des liens avec `turbines`
+
+:::{.env-exemple titre="Jeu de données [`turbines`](#data-turbines)"}
+
+On ajuste le modèle avec les trois fonctions de lien :
+
+```{r turbines-ajustement}
+#| message: false
+data(turbines)
+
+
+turbines_obs <- turbines |>
+  mutate(prop_observee = Fissures / Turbines)
+
+ggplot() +
+  geom_point(
+    data = turbines_obs,
+    aes(x = Hours, y = prop_observee, size = Turbines),
+    color = "black",
+    alpha = 0.6
+  ) +
+  labs(
+    x = "Heures d'utilisation",
+    y = "Pourcentage de fissure",
+    color = "Fonction de lien",
+    size = "Nombre de turbines",
+    title = "Pourcentage de fissure selon la durée d'utilisation"
+  ) +
+  theme_minimal()
+
+
+modele.logit.turbines <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours,
+  data = turbines,
+  family = binomial(link = "logit")
+)
+modele.probit.turbines <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours,
+  data = turbines,
+  family = binomial(link = "probit")
+)
+modele.cloglog.turbines <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours,
+  data = turbines,
+  family = binomial(link = "cloglog")
+)
+summary(modele.logit.turbines)$coefficients
+summary(modele.probit.turbines)$coefficients
+summary(modele.cloglog.turbines)$coefficients
+```
+
+La sortie de `summary()` nous donne les estimations des écarts-types des estimations sous `Std. Error`, comme pour la régression linéaire.
+
+```{r turbines-comparaison-liens-plot}
+#| warning: false
+grille <- data.frame(
+  Hours = seq(min(turbines$Hours), max(turbines$Hours), length.out = 200)
+)
+
+predire_modele <- function(modele, nom_lien) {
+  grille |>
+    mutate(
+      p_hat = predict(modele, newdata = grille, type = "response"),
+      lien = nom_lien
+    )
+}
+
+predictions <- bind_rows(
+  predire_modele(modele.logit.turbines, "Logit"),
+  predire_modele(modele.probit.turbines, "Probit"),
+  predire_modele(modele.cloglog.turbines, "Cloglog")
+)
+
+turbines_obs <- turbines |>
+  mutate(prop_observee = Fissures / Turbines)
+
+ggplot() +
+  geom_point(
+    data = turbines_obs,
+    aes(x = Hours, y = prop_observee, size = Turbines),
+    color = "black",
+    alpha = 0.6
+  ) +
+  geom_line(
+    data = predictions,
+    aes(x = Hours, y = p_hat, color = lien),
+    linewidth = 1
+  ) +
+  labs(
+    x = "Heures d'utilisation",
+    y = "Probabilité de fissure estimée",
+    color = "Fonction de lien",
+    size = "Nombre de turbines",
+    title = "Comparaison des fonctions de lien logit, probit et cloglog"
+  ) +
+  theme_minimal()
+```
+
+
+
+Les trois liens mènent à des coefficients significatifs et à des courbes prédites $\hat\pi^*$ très similaires. 
+:::
+
+::: {.env-exemple titre="Intervalle de confiance pour $\beta_1$ dans l'exemple `turbines`"}
+En utilisant le lien logit, on construit un intervalle de confiance de niveau 95\% pour $\beta_1$ en utilsant les informations données par la sortie:
+
+```{r}
+summary(modele.logit.turbines)$coefficients
+```
+
+L'intervalle est $[\hat{\beta_1}-1,96\times \sqrt{\hat{\text V}(\hat\beta_1)};\hat{\beta_1}+1,96\times \sqrt{\hat{\text V}(\hat\beta_1)}]=[0,000776;0,001222]$.
+
+On peut bien sûr l'extraire à partir de R directement:
+
+```{r}
+confint(modele.logit.turbines)
+```
+
+On constate que les deux intervalles ne sont pas identiques.
+:::
+
+### Test emboîté avec `turbines`
+
+:::{.env-exemple titre="Introduction des termes quadratiques et cubiques dans l'exemple [`turbines`](#data-turbines)"}
+
+
+On teste $H_0: \beta_2 = \beta_3 = 0$ (modèle avec `Hours` seulement contre modèle avec termes en `Hours`$^2$ et `Hours`$^3$) :
+
+```{r turbines-deviance-test}
+#| message: false
+data(turbines)
+
+modele.reduit.turbines <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours,
+  data = turbines,
+  family = binomial
+)
+modele.complet.turbines <- glm(
+  cbind(Fissures, Turbines - Fissures) ~ Hours + I(Hours^2) + I(Hours^3),
+  data = turbines,
+  family = binomial
+)
+
+stat.test <- deviance(modele.reduit.turbines) - deviance(modele.complet.turbines)
+valeurp <- 1 - pchisq(stat.test, df = 2)
+valeurp
+```
+
+On ne rejette pas $H_0$ : le modèle réduit est adéquat.
+:::
+
+### AIC et sélection automatique avec `nminer`
+
+::: {.env-exemple titre="Modèles non emboîtés avec `nminer`"}
+```{r modele-non-emboites-nminer}
+data(nminer)
+nminer$Detecte <- as.numeric(nminer$Minerab > 0)
+mod1.nminer <- glm(Detecte ~  Area + Grazed + Shrubs  + Timber,
+            data = nminer, family = binomial)
+
+mod2.nminer <- glm(Detecte ~ Eucs + Grazed + Bulokes,
+            data = nminer, family = binomial)
+
+AIC(mod1.nminer)
+AIC(mod2.nminer)
+```
+Le modèle 2 a un AIC plus faible que le modèle 1 et lui est donc préférable. 
+
+*À noter, les variables explicatives ont été choisies au hasard ici.*
+:::
+
+:::{.env-exemple titre="Sélection automatique sur le jeu de données [`nminer`](#data-nminer)"}
+
+
+```{r nminer-selection}
+#| message: false
+data(nminer)
+
+# On construit la réponse binaire décrite dans le texte :
+# 1 si au moins un mineur bruyant a été détecté, 0 sinon
+nminer$Detecte <- as.numeric(nminer$Minerab > 0)
+
+# Modèle complet : effets additifs de toutes les variables explicatives disponibles
+modele.complet.nminer <- glm(Detecte ~ Eucs + Area + Grazed + Shrubs + Bulokes + Timber,
+                       data = nminer, family = binomial)
+
+# Backward : part du modèle complet, retire des termes
+modele.backward.nminer <- step(modele.complet.nminer, direction = "backward")
+
+# Forward : part du modèle vide, ajoute des termes jusqu'au modèle complet
+modele.vide.nminer <- glm(Detecte ~ 1, data = nminer, family = binomial)
+modele.forward.nminer <- step(modele.vide.nminer, direction = "forward",
+                        scope = formula(modele.complet.nminer))
+
+# Stepwise: part du modèle complet, ajoute et retire au besoin
+modele.step.nminer <- step(modele.complet.nminer, direction = "both")
+
+summary(modele.backward.nminer)
+summary(modele.forward.nminer)
+summary(modele.step.nminer)
+
+```
+Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n'est pas toujours le cas : comme chacune n'explore qu'un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu'elles aboutissent au même optimum local (et encore moins à l'optimum global).
+
+:::
+
+### Test d'adéquation avec `turbines`
+
+::: {.env-exemple titre="Test d'adéquation avec l'exemple [`turbines`](#data-turbines)"}
+
+```{r turbines-adequation}
+data(turbines)
+
+modele.logit.adeq <- glm(cbind(Fissures, Turbines - Fissures) ~ Hours,
+                     data = turbines, family = binomial(link = "logit"))
+
+# Déviance
+D <- deviance(modele.logit.adeq)
+ddl <- df.residual(modele.logit.adeq)
+p.deviance <- 1 - pchisq(D, df = ddl)
+
+# Khi-deux de Pearson
+chi2.pearson <- sum(residuals(modele.logit.adeq, type = "pearson")^2)
+p.pearson <- 1 - pchisq(chi2.pearson, df = ddl)
+
+data.frame(
+  Statistique = c("Déviance", "Khi-deux de Pearson"),
+  Valeur = c(D, chi2.pearson),
+  ddl = ddl,
+  p.valeur = c(p.deviance, p.pearson)
+)
+```
+
+:::
+
+### Diagnostics de surdispersion avec `troutegg`
+
+:::{.env-exemple titre="Diagnostics de surdispersion — données `troutegg`"}
+
+On ajuste un modèle binomial sur les données `troutegg`, qui recensent la survie d'œufs de truite selon l'emplacement dans le cours d'eau et la période de retrait.
+
+```{r}
+library(faraway)
+data(troutegg)
+
+mod.troutegg <- glm(cbind(survive, total - survive) ~ location + period,
+           family = binomial, data = troutegg)
+```
+
+**Résidus en fonction du numéro d'observation**
+
+```{r}
+res_dev.troutegg <- residuals(mod.troutegg, type = "deviance")
+
+plot(res_dev.troutegg, xlab = "Numéro d'observation", ylab = "Résidu de déviance",
+     pch = 19)
+abline(h = 0, lty = 2)
+abline(h = c(-3, 3), lty = 3, col = "red")
+```
+
+Ici, quelques résidus dépassent les seuils à $\pm 3$ (pointillés rouges), ce qui suggère de l'extra-variabilité.
+
+**Estimation de $\phi$ et passage au modèle quasibinomial**
+
+```{r}
+chi2_p.troutegg <- sum(residuals(mod.troutegg, type = "pearson")^2)
+n.troutegg <- nrow(troutegg)
+p.troutegg <- length(coef(mod.troutegg))
+phi_hat.troutegg <- chi2_p.troutegg / (n.troutegg - p.troutegg)
+phi_hat.troutegg
+```
+
+```{r}
+mod_quasi.troutegg <- glm(cbind(survive, total - survive) ~ location + period,
+                  family = quasibinomial, data = troutegg)
+summary(mod_quasi.troutegg)
+summary(mod.troutegg)
+
+```
+
+**Vérification de la linéarité : $\hat\pi_i$ contre $\tilde\pi_i$**
+
+```{r}
+pi_hat.troutegg   <- fitted(mod_quasi.troutegg)
+pi_tilde.troutegg <- troutegg$survive / troutegg$total
+
+plot(pi_tilde.troutegg, pi_hat.troutegg, xlab = expression(tilde(pi)[i]),
+     ylab = expression(hat(pi)[i]), pch = 19,
+     xlim = c(0, 1), ylim = c(0, 1))
+abline(0, 1, lty = 2)
+```
+
+Les points suivent d'assez près la droite $y = x$, sans courbure systématique apparente, ce qui appuie l'hypothèse de linéarité du prédicteur pour ce modèle.
+
+**Observations aberrantes et valeurs influentes**
+
+```{r}
+lev.troutegg   <- hatvalues(mod_quasi.troutegg)
+rstd.troutegg  <- rstandard(mod_quasi.troutegg, type = "pearson")
+rstu.troutegg  <- rstudent(mod_quasi.troutegg)
+cook.troutegg  <- cooks.distance(mod_quasi.troutegg)
+dfb.troutegg   <- dfbetas(mod_quasi.troutegg)
+dff.troutegg   <- dffits(mod_quasi.troutegg)
+
+plot(lev.troutegg, cook.troutegg, xlab = "Levier", ylab = "Distance de Cook", pch = 19)
+```
+
+```{r}
+plot(mod_quasi.troutegg, which = 1)
+```
+Le graphique des résidus vs valeurs ajustées montre plusieurs points nettement à l'écart (dont les observations 1, 15 et 20), suggérant que le modèle ne s'ajuste pas également bien à toutes les combinaisons de `location` et `period`.
+
+```{r}
+plot(mod_quasi.troutegg, which = 2)
+```
+
+Le QQ-plot des résidus s'éloigne un peu de la droite de référence dans la queue supérieure (observations 14, 15 et 20), ce qui traduit un mauvais ajustement pour certaines observations plutôt qu'une déviation normale isolée.
+
+```{r}
+plot(mod_quasi.troutegg, which = 3)
+```
+
+Le graphique Scale-Location révèle une dispersion des résidus qui n'est pas constante et plusieurs valeurs extrêmes (1, 14, 15, 20), malgré l'inclusion du paramètre de surdispersion.
+
+```{r}
+plot(mod_quasi.troutegg, which = 4)
+```
+
+La distance de Cook pointe vers certaines observations influentes (14, 15, 19 et 20).
+
+
+Le seuil usuel pour un levier élevé est $2(p+1)/n$ ; pour la distance de Cook, on examine plutôt les valeurs qui se détachent nettement des autres.
+
+:::
+
+### Courbe ROC avec `quilpie`
+
 :::{.env-exemple titre="Courbe ROC avec l'exemple [`quilpie`](#data-quilpie)"}
 
 On ajuste ici un modèle logistique avec la variable explicative SOI et le lien logit :
@@ -1121,9 +1583,9 @@ On ajuste ici un modèle logistique avec la variable explicative SOI et le lien 
 #| message: false
 data(quilpie)
 
-modele <- glm(y ~ SOI, family = binomial, data = quilpie)
+modele.quilpie <- glm(y ~ SOI, family = binomial, data = quilpie)
 courbe.roc <- roc.curve(
-  marker = as.vector(fitted(modele)),
+  marker = as.vector(fitted(modele.quilpie)),
   status = quilpie$y,
   method = c("empirical")
 )

@@ -85,3 +85,4 @@ editor: source
 filters:
   - webr                              # exécution de code R dans le navigateur
   - filtres/titre-environnements.lua  # filtre custom pour les environnements (théorème, exemple, etc.)
+  - fontawesome

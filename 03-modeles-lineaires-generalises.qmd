@@ -535,6 +535,67 @@ $$
 Si $X_{ij}$ augmente d'une unité, toutes les autres variables étant fixées, $\mu_i$ est multiplié par $e^{\beta_j}$ : l'effet est multiplicatif sur l'échelle de la réponse, exactement comme le rapport de cotes $e^{\beta_j}$ l'était sur la cote en régression logistique. Si $\beta_j > 0$, alors $e^{\beta_j}>1$ et $\mu_i$ croît avec $X_{ij}$ ; si $\beta_j<0$, $\mu_i$ décroît.
 :::
 
+### Variables explicatives *offset*
+
+:::{.env-theo titre="Approximation de la loi binomiale par la loi de Poisson"}
+
+Soit $Y_i \sim \text{Bin}(m_i, \pi_i)$. Si $m_i \to \infty$ et $\pi_i \to 0$ de sorte que $\mu_i = m_i\pi_i$ reste fixe (ou converge vers une constante), alors la loi de $Y_i$ converge vers une loi de Poisson de moyenne $\mu_i$ :
+
+$$
+P(Y_i = y) = \binom{m_i}{y}\pi_i^y(1-\pi_i)^{m_i-y} \;\longrightarrow\; e^{-\mu_i}\frac{\mu_i^y}{y!}.
+$$
+
+**Intuition.** Quand $\pi_i$ est petit, l'événement $\{Y_i = y\}$ correspond à $y$ « succès » très improbables parmi un très grand nombre d'essais. Le nombre d'essais $m_i$ n'a alors presque plus d'importance en soi : ce qui détermine la loi de $Y_i$, c'est essentiellement le produit $\mu_i = m_i \pi_i$, c'est-à-dire le nombre de succès *attendu*. Deux strates avec des $(m_i,\pi_i)$ très différents mais le même $\mu_i$ (par exemple $m_i=10\,000,\ \pi_i=0{,}001$ contre $m_i=1000,\ \pi_i=0{,}01$) produisent des distributions de $Y_i$ presque identiques.
+
+**Repère pratique.** L'approximation est jugée satisfaisante lorsque $m_i$ est grand (disons $m_i \geq 20$) et $\pi_i$ est petit (disons $\pi_i \leq 0{,}05$), de sorte que $\mu_i = m_i\pi_i$ demeure modéré. C'est le cas de la première strate de `danishlc` : $m_1 = 3059$, $\tilde\pi_1 \approx 3.6\times10^{-3}$, ce qui donne $\mu_1 \approx 11$ — un dénombrement rare typique.
+
+**Conséquence pour la modélisation.** Dans ce régime, les deux paramètres $(m_i,\pi_i)$ ne sont plus identifiables séparément à partir de $Y_i$ seul : seule leur combinaison $\mu_i$ compte. Il devient donc plus naturel — et numériquement plus stable — de modéliser directement $\mu_i$ comme un compte de Poisson plutôt que $\pi_i$ comme une proportion binomiale. Comme $\mu_i$ dépend mécaniquement de $m_i$ (une strate plus grande produit plus de cas même à risque individuel égal), on ne relie pas les covariables à $\mu_i$ directement, mais au taux $\mu_i/m_i$, ce qui mène à la variable offset $\log(m_i)$ introduite plus bas.
+:::
+
+Lorsque la probabilité individuelle de l'événement est très petite (par exemple $\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}$ pour la première strate de `danishlc`), une régression logistique n'est généralement pas appropriée : les nombres de cas se comportent alors davantage comme un dénombrement rare que comme une proportion binomiale. On modélise plutôt l'espérance du taux $Y_i/m_i$ :
+
+$$
+\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
+\quad\Longleftrightarrow\quad
+\log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.
+$$
+
+:::{.env-definition titre="Variable offset"}
+
+Le terme $\log(m_i)$ dans l'équation ci-dessus est une variable explicative dont le coefficient est fixé à $1$ plutôt qu'estimé : on parle de variable offset. Une variable offset est utile lorsque l'espérance de $Y_i$ est proportionnelle à une autre quantité connue (une population exposée, une durée d'exposition, un effort d'échantillonnage), et qu'on souhaite modéliser un taux plutôt qu'un compte brut.
+:::
+
+:::{.env-exemple titre="Ajustement sur [`danishlc`](#data-danishlc)"}
+
+```{r}
+#| message: false
+library(GLMsData)
+library(dplyr)
+library(ggplot2)
+data(danishlc)
+
+modele.additif <- glm(Cases ~ offset(log(Pop)) + City + Age,
+                      family = poisson, data = danishlc)
+summary(modele.additif)$coefficients
+```
+
+On peut visualiser le taux d'incidence prédit par tranche d'âge :
+
+```{r}
+danishlc |>
+  mutate(taux_predit = predict(modele.additif, type = "response") / Pop * 1000,
+         taux_observe = Cases / Pop * 1000) |>
+  ggplot(aes(x = Age)) +
+  geom_point(aes(y = taux_observe, color = City), size = 2) +
+  geom_line(aes(y = taux_predit, color = City, group = City)) +
+  labs(x = "Tranche d'âge", y = "Cas pour 1000 habitants",
+       title = "Taux d'incidence observés et prédits, par ville et tranche d'âge") +
+  theme_minimal()
+```
+
+Le taux prédit suit d'assez près les taux observés pour la plupart des combinaisons ville-âge.
+:::
+
 ### Vraisemblance et score
 
 La log-vraisemblance générale, avant de substituer le lien log, s'écrit
@@ -599,74 +660,6 @@ $$
 évalué en $\hat\mu_i = e^{\hat\eta_i}$. Comme pour la binomiale, $\phi=1$ ici : aucun paramètre de dispersion additionnel n'est estimé dans le modèle de Poisson usuel.
 :::
 
-### Variables explicatives *offset*
-
-:::{.env-theo titre="Approximation de la loi binomiale par la loi de Poisson"}
-
-Soit $Y_i \sim \text{Bin}(m_i, \pi_i)$. Si $m_i \to \infty$ et $\pi_i \to 0$ de sorte que $\mu_i = m_i\pi_i$ reste fixe (ou converge vers une constante), alors la loi de $Y_i$ converge vers une loi de Poisson de moyenne $\mu_i$ :
-
-$$
-P(Y_i = y) = \binom{m_i}{y}\pi_i^y(1-\pi_i)^{m_i-y} \;\longrightarrow\; e^{-\mu_i}\frac{\mu_i^y}{y!}.
-$$
-
-**Intuition.** Quand $\pi_i$ est petit, l'événement $\{Y_i = y\}$ correspond à $y$ « succès » très improbables parmi un très grand nombre d'essais. Le nombre d'essais $m_i$ n'a alors presque plus d'importance en soi : ce qui détermine la loi de $Y_i$, c'est essentiellement le produit $\mu_i = m_i \pi_i$, c'est-à-dire le nombre de succès *attendu*. Deux strates avec des $(m_i,\pi_i)$ très différents mais le même $\mu_i$ (par exemple $m_i=10\,000,\ \pi_i=0{,}001$ contre $m_i=1000,\ \pi_i=0{,}01$) produisent des distributions de $Y_i$ presque identiques.
-
-**Repère pratique.** L'approximation est jugée satisfaisante lorsque $m_i$ est grand (disons $m_i \geq 20$) et $\pi_i$ est petit (disons $\pi_i \leq 0{,}05$), de sorte que $\mu_i = m_i\pi_i$ demeure modéré. C'est le cas de la première strate de `danishlc` : $m_1 = 3059$, $\tilde\pi_1 \approx 3.6\times10^{-3}$, ce qui donne $\mu_1 \approx 11$ — un dénombrement rare typique.
-
-**Conséquence pour la modélisation.** Dans ce régime, les deux paramètres $(m_i,\pi_i)$ ne sont plus identifiables séparément à partir de $Y_i$ seul : seule leur combinaison $\mu_i$ compte. Il devient donc plus naturel — et numériquement plus stable — de modéliser directement $\mu_i$ comme un compte de Poisson plutôt que $\pi_i$ comme une proportion binomiale. Comme $\mu_i$ dépend mécaniquement de $m_i$ (une strate plus grande produit plus de cas même à risque individuel égal), on ne relie pas les covariables à $\mu_i$ directement, mais au taux $\mu_i/m_i$, ce qui mène à la variable offset $\log(m_i)$ introduite plus bas.
-:::
-
-Lorsque la probabilité individuelle de l'événement est très petite (par exemple $\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}$ pour la première strate de `danishlc`), une régression logistique n'est généralement pas appropriée : les nombres de cas se comportent alors davantage comme un dénombrement rare que comme une proportion binomiale. On modélise plutôt l'espérance du taux $Y_i/m_i$ :
-
-$$
-\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
-\quad\Longleftrightarrow\quad
-\log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.
-$$
-
-:::{.env-definition titre="Variable offset"}
-
-Le terme $\log(m_i)$ dans l'équation ci-dessus est une variable explicative dont le coefficient est fixé à $1$ plutôt qu'estimé : on parle de variable offset. Une variable offset est utile lorsque l'espérance de $Y_i$ est proportionnelle à une autre quantité connue (une population exposée, une durée d'exposition, un effort d'échantillonnage), et qu'on souhaite modéliser un taux plutôt qu'un compte brut.
-:::
-
-:::{.env-exemple titre="Ajustement sur [`danishlc`](#data-danishlc)"}
-
-```{r}
-#| message: false
-library(GLMsData)
-library(dplyr)
-library(ggplot2)
-data(danishlc)
-
-modele.additif <- glm(Cases ~ offset(log(Pop)) + City + Age,
-                      family = poisson, data = danishlc)
-summary(modele.additif)$coefficients
-```
-
-```{r}
-modele.sans.ville <- update(modele.additif, . ~ . - City)
-anova(modele.sans.ville, modele.additif, test = "Chisq")
-```
-
-Le test par différence de déviances montre une différence significative entre les tranches d'âge, mais pas entre les villes : on ne rejette pas l'hypothèse que le modèle sans effet de ville est adéquat.
-
-On peut visualiser le taux d'incidence prédit par tranche d'âge :
-
-```{r}
-danishlc |>
-  mutate(taux_predit = predict(modele.additif, type = "response") / Pop * 1000,
-         taux_observe = Cases / Pop * 1000) |>
-  ggplot(aes(x = Age)) +
-  geom_point(aes(y = taux_observe, color = City), size = 2) +
-  geom_line(aes(y = taux_predit, color = City, group = City)) +
-  labs(x = "Tranche d'âge", y = "Cas pour 1000 habitants",
-       title = "Taux d'incidence observés et prédits, par ville et tranche d'âge") +
-  theme_minimal()
-```
-
-Le taux prédit suit d'assez près les taux observés pour la plupart des combinaisons ville-âge.
-:::
-
 ### Déviance et adéquation
 
 La déviance individuelle, obtenue en appliquant la définition générale $d(y,\mu)=2\{\ell(y,y)-\ell(y,\mu)\}$ à la loi de Poisson, se dérive comme suit.
@@ -693,6 +686,26 @@ X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D 
 $$
 
 qui suivent toutes deux approximativement une $\chi^2_{n-(p+1)}$ si le modèle est bien adapté et si les $\mu_i$ ne sont pas trop petits.
+
+::: {.env-exemple titre="Adéquation sur `danishlc`"}
+```{r deviance}
+mu_hat <- fitted(modele.additif)
+n <- nrow(danishlc)
+p <- length(coef(modele.additif)) - 1
+
+X2 <- sum((danishlc$Cases - mu_hat)^2 / mu_hat)
+D  <- deviance(modele.additif)
+
+1 - pchisq(X2, df = n - (p + 1))
+1 - pchisq(D,  df = n - (p + 1))
+```
+
+:::{.env-remarque titre="Adéquation et taille des $\mu_i$"}
+
+Les deux statistiques d'adéquation ne mènent pas au rejet du modèle ($p \approx 0{,}09$ pour $X^2$, $p \approx 0{,}08$ pour la déviance), ce qui est cohérent avec l'absence de surdispersion détectée plus bas. Il faut toutefois interpréter ces résultats avec prudence : les $\hat\mu_i$ sont tous modestes (entre 7 et 13 environ), ce qui place l'approximation $\chi^2$ dans une zone où elle reste raisonnable, mais moins fiable que pour des comptes plus élevés. Combiné au faible nombre de degrés de liberté ($n-(p+1)=15$), cela explique en partie l'écart entre les deux valeurs-p.
+
+:::
+:::
 
 ### Variabilité extra-Poissonienne {#sec-surdispersion}
 
@@ -739,6 +752,20 @@ alpha.etoile
 ```
 
 On obtient $\alpha^* \approx 0.143$ : on ne détecte pas de variabilité extra-Poissonienne significative pour ces données, et le modèle de Poisson usuel demeure approprié.
+:::
+
+### Comparaison de modèles emboîtés
+
+Comme en régression logistique, on peut comparer deux modèles emboîtés par différence de déviances plutôt que d'examiner l'adéquation d'un seul modèle.
+
+:::{.env-exemple titre="Effet de la ville sur [`danishlc`](#data-danishlc)"}
+
+```{r}
+modele.sans.ville <- update(modele.additif, . ~ . - City)
+anova(modele.sans.ville, modele.additif, test = "Chisq")
+```
+
+Le test par différence de déviances montre une différence significative entre les tranches d'âge, mais pas entre les villes : on ne rejette pas l'hypothèse que le modèle sans effet de ville est adéquat.
 :::
 
 ### Graphiques et observations aberrantes

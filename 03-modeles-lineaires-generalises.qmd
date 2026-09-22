@@ -502,20 +502,33 @@ De même, les outils de validation vus aux chapitres sur les régressions linéa
 
 ## Exemple détaillé : la régression de Poisson {#sec-poisson}
 
-La variable réponse $Y_i \in \mathbb{N}$ dénote ici un dénombrement (nombre de nouveaux cas d'une maladie, nombre d'absences, nombre de sinistres, etc.). La régression de Poisson suppose $Y_i \sim \mathcal{P}(\mu_i)$ :
+La variable réponse $Y_i \in \mathbb{N}$ dénote ici un dénombrement (nombre de survivants dans un groupe, nombre de nouveaux cas d'une maladie, nombre de sinistres, etc.). La régression de Poisson suppose $Y_i \sim \mathcal{P}(\mu_i)$ :
 
 $$
 P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.
 $$
 
-:::{.env-exemple titre="Jeux de données"}
+:::{.env-exemple titre="Jeu de données [`empress`]{#data-empress}"}
 
-Deux exemples utilisés dans cette section :
+Le 29 mai 1914, le paquebot *Empress of Ireland* coule dans le fleuve Saint-Laurent, au large de Pointe-au-Père (Rimouski), après une collision avec le charbonnier *Storstad*. Le navire sombre en moins de quinze minutes. Le jeu de données porte sur les 1057 passagers à bord (l'équipage est exclu) et existe en deux versions :
 
-1. [`danishlc`]{#data-danishlc} (librairie `GLMsData`) : nombre de nouveaux cas de cancer du poumon par ville (4 villes) et par tranche d'âge (6 tranches), au Danemark, ainsi que la population $m_i$ de chaque strate.
+1. `empress_individus.csv` : une ligne par passager, avec la classe (`classe`, et sa version numérique `classe_num` valant 1, 2 ou 3), le sexe (`sexe`), le groupe d'âge (`groupe_age`) et une indicatrice de survie (`survecu`).
 
-1. [`ships`]{#data-ships} (librairie `MASS`) : nombre d'incidents de fissure de coque (`incidents`) recensés sur des cargos, selon le type de navire (`type`), l'année de construction (`year`) et la période de service (`period`), avec le nombre-mois de service (`service`) comme mesure d'exposition.
+1. `empress_agrege.csv` : une ligne par strate classe $\times$ sexe $\times$ groupe d'âge (11 strates, aucun garçon ne voyageant en première classe), avec le nombre de passagers $m_i$ (`effectif`) et le nombre de survivants $y_i$ (`survivants`).
 
+Cette section utilise la version agrégée ; la version individuelle est utilisée au chapitre sur la validation croisée.
+
+```{r empress-chargement}
+#| message: false
+library(dplyr)
+library(ggplot2)
+
+niveaux.classe <- c("Première", "Deuxième", "Troisième")
+
+empress.agr <- read.csv("Jeux de données/empress_agrege.csv")
+empress.agr$classe <- factor(empress.agr$classe, levels = niveaux.classe)
+empress.agr
+```
 :::
 
 Avec la fonction de lien canonique $g(\mu_i) = \log(\mu_i)$, on a
@@ -547,12 +560,12 @@ $$
 
 **Intuition.** Quand $\pi_i$ est petit, l'événement $\{Y_i = y\}$ correspond à $y$ « succès » très improbables parmi un très grand nombre d'essais. Le nombre d'essais $m_i$ n'a alors presque plus d'importance en soi : ce qui détermine la loi de $Y_i$, c'est essentiellement le produit $\mu_i = m_i \pi_i$, c'est-à-dire le nombre de succès *attendu*. Deux strates avec des $(m_i,\pi_i)$ très différents mais le même $\mu_i$ (par exemple $m_i=10\,000,\ \pi_i=0{,}001$ contre $m_i=1000,\ \pi_i=0{,}01$) produisent des distributions de $Y_i$ presque identiques.
 
-**Repère pratique.** L'approximation est jugée satisfaisante lorsque $m_i$ est grand (disons $m_i \geq 20$) et $\pi_i$ est petit (disons $\pi_i \leq 0{,}05$), de sorte que $\mu_i = m_i\pi_i$ demeure modéré. C'est le cas de la première strate de `danishlc` : $m_1 = 3059$, $\tilde\pi_1 \approx 3.6\times10^{-3}$, ce qui donne $\mu_1 \approx 11$ — un dénombrement rare typique.
+**Repère pratique.** L'approximation est jugée satisfaisante lorsque $m_i$ est grand (disons $m_i \geq 20$) et $\pi_i$ est petit (disons $\pi_i \leq 0{,}05$), de sorte que $\mu_i = m_i\pi_i$ demeure modéré. C'est le cas de la strate des garçons de troisième classe d'[`empress`](#data-empress) : $m = 54$ et $\tilde\pi = 1/54 \approx 0{,}019$, d'où $\mu \approx 1$. Ce ne l'est pas pour les hommes adultes de première classe ($m = 49$, $\tilde\pi = 24/49 \approx 0{,}49$), un point sur lequel on reviendra lors des diagnostics.
 
 **Conséquence pour la modélisation.** Dans ce régime, les deux paramètres $(m_i,\pi_i)$ ne sont plus identifiables séparément à partir de $Y_i$ seul : seule leur combinaison $\mu_i$ compte. Il devient donc plus naturel — et numériquement plus stable — de modéliser directement $\mu_i$ comme un compte de Poisson plutôt que $\pi_i$ comme une proportion binomiale. Comme $\mu_i$ dépend mécaniquement de $m_i$ (une strate plus grande produit plus de cas même à risque individuel égal), on ne relie pas les covariables à $\mu_i$ directement, mais au taux $\mu_i/m_i$, ce qui mène à la variable offset $\log(m_i)$ introduite plus bas.
 :::
 
-Lorsque la probabilité individuelle de l'événement est très petite (par exemple $\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}$ pour la première strate de `danishlc`), une régression logistique n'est généralement pas appropriée : les nombres de cas se comportent alors davantage comme un dénombrement rare que comme une proportion binomiale. On modélise plutôt l'espérance du taux $Y_i/m_i$ :
+Lorsque la probabilité individuelle de l'événement est petite (par exemple $\tilde\pi = 1/54 \approx 0{,}019$ pour les garçons de troisième classe), les nombres de cas se comportent davantage comme un dénombrement rare que comme une proportion binomiale, et la régression de Poisson devient une alternative naturelle à la régression logistique. On modélise alors l'espérance du taux $Y_i/m_i$ :
 
 $$
 \log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
@@ -565,35 +578,35 @@ $$
 Le terme $\log(m_i)$ dans l'équation ci-dessus est une variable explicative dont le coefficient est fixé à $1$ plutôt qu'estimé : on parle de variable offset. Une variable offset est utile lorsque l'espérance de $Y_i$ est proportionnelle à une autre quantité connue (une population exposée, une durée d'exposition, un effort d'échantillonnage), et qu'on souhaite modéliser un taux plutôt qu'un compte brut.
 :::
 
-:::{.env-exemple titre="Ajustement sur [`danishlc`](#data-danishlc)"}
+:::{.env-exemple titre="Ajustement sur [`empress`](#data-empress)"}
 
-```{r}
-#| message: false
-library(GLMsData)
-library(dplyr)
-library(ggplot2)
-data(danishlc)
+On modélise le nombre de survivants de chaque strate, avec l'effectif de la strate comme offset et des effets additifs de la classe, du sexe et du groupe d'âge.
 
-modele.additif <- glm(Cases ~ offset(log(Pop)) + City + Age,
-                      family = poisson, data = danishlc)
+```{r empress-poisson}
+modele.additif <- glm(survivants ~ offset(log(effectif)) + classe + sexe + groupe_age,
+                      family = poisson, data = empress.agr)
 summary(modele.additif)$coefficients
+exp(coef(modele.additif))
 ```
 
-On peut visualiser le taux d'incidence prédit par tranche d'âge :
+Les autres variables étant fixées, le taux de survie des hommes est environ 2,15 fois celui des femmes, celui des enfants environ 0,15 fois celui des adultes, et ceux des passagers de deuxième et de troisième classe environ 0,52 et 0,45 fois celui des passagers de première classe. L'effet du sexe va à l'encontre du principe « les femmes et les enfants d'abord » : le naufrage, survenu en pleine nuit et en quelques minutes, a laissé peu de temps pour organiser l'évacuation.
 
-```{r}
-danishlc |>
-  mutate(taux_predit = predict(modele.additif, type = "response") / Pop * 1000,
-         taux_observe = Cases / Pop * 1000) |>
-  ggplot(aes(x = Age)) +
-  geom_point(aes(y = taux_observe, color = City), size = 2) +
-  geom_line(aes(y = taux_predit, color = City, group = City)) +
-  labs(x = "Tranche d'âge", y = "Cas pour 1000 habitants",
-       title = "Taux d'incidence observés et prédits, par ville et tranche d'âge") +
+On peut comparer les taux de survie observés et prédits dans chaque strate :
+
+```{r empress-taux}
+empress.agr |>
+  mutate(taux_predit = predict(modele.additif, type = "response") / effectif,
+         taux_observe = survivants / effectif) |>
+  ggplot(aes(x = classe, color = sexe)) +
+  geom_point(aes(y = taux_observe), size = 2) +
+  geom_line(aes(y = taux_predit, group = sexe)) +
+  facet_wrap(~ groupe_age) +
+  labs(x = "Classe", y = "Taux de survie", color = "Sexe",
+       title = "Taux de survie observés (points) et prédits (lignes)") +
   theme_minimal()
 ```
 
-Le taux prédit suit d'assez près les taux observés pour la plupart des combinaisons ville-âge.
+Les taux prédits suivent d'assez près les taux observés chez les adultes. Les écarts sont plus marqués chez les enfants, où les effectifs sont petits (4 filles seulement en première classe).
 :::
 
 ### Vraisemblance et score
@@ -687,23 +700,24 @@ $$
 
 qui suivent toutes deux approximativement une $\chi^2_{n-(p+1)}$ si le modèle est bien adapté et si les $\mu_i$ ne sont pas trop petits.
 
-::: {.env-exemple titre="Adéquation sur `danishlc`"}
-```{r deviance}
+::: {.env-exemple titre="Adéquation sur [`empress`](#data-empress)"}
+```{r empress-deviance}
 mu_hat <- fitted(modele.additif)
-n <- nrow(danishlc)
+n <- nrow(empress.agr)
 p <- length(coef(modele.additif)) - 1
 
-X2 <- sum((danishlc$Cases - mu_hat)^2 / mu_hat)
+X2 <- sum((empress.agr$survivants - mu_hat)^2 / mu_hat)
 D  <- deviance(modele.additif)
 
+c(X2 = X2, D = D, dl = n - (p + 1))
 1 - pchisq(X2, df = n - (p + 1))
 1 - pchisq(D,  df = n - (p + 1))
+round(mu_hat, 2)
 ```
 
 :::{.env-remarque titre="Adéquation et taille des $\mu_i$"}
 
-Les deux statistiques d'adéquation ne mènent pas au rejet du modèle ($p \approx 0{,}09$ pour $X^2$, $p \approx 0{,}08$ pour la déviance), ce qui est cohérent avec l'absence de surdispersion détectée plus bas. Il faut toutefois interpréter ces résultats avec prudence : les $\hat\mu_i$ sont tous modestes (entre 7 et 13 environ), ce qui place l'approximation $\chi^2$ dans une zone où elle reste raisonnable, mais moins fiable que pour des comptes plus élevés. Combiné au faible nombre de degrés de liberté ($n-(p+1)=15$), cela explique en partie l'écart entre les deux valeurs-p.
-
+Les deux statistiques ne mènent pas à la même conclusion au seuil de 5 % : la déviance ne rejette pas le modèle (valeur-p $\approx 0{,}13$), alors que la statistique de Pearson le rejette (valeur-p $\approx 0{,}035$). L'écart s'explique par la taille des $\hat\mu_i$ : quatre strates ont une valeur ajustée inférieure à 1, ce qui place l'approximation $\chi^2$ hors de sa zone de validité. La statistique $X^2$, qui divise par $\hat\mu_i$, y est particulièrement sensible : les filles de première classe ($y = 1$, $\hat\mu \approx 0{,}16$) et de deuxième classe ($y = 2$, $\hat\mu \approx 0{,}43$) fournissent à elles seules environ les trois quarts de $X^2$. Avec seulement $n-(p+1) = 6$ degrés de liberté, aucune des deux valeurs-p ne doit être prise au pied de la lettre.
 :::
 :::
 
@@ -725,7 +739,7 @@ P(Y_i = y_i) = \frac{\Gamma(y_i + 1/\alpha)}{\Gamma(y_i+1)\Gamma(1/\alpha)}\left
 $$
 :::
 
-On montre que $E[Y_i] = \mu_i$ et $Var[Y_i] = \mu_i + \alpha\mu_i^2$ : la variance excède toujours l'espérance dès que $\alpha>0$, et la loi de Poisson est retrouvée à la limite $\alpha \to 0$. Avec $\mu_i = e^{x_i^\top\boldsymbol\beta}$, les coefficients $\boldsymbol\beta$ gardent exactement la même interprétation multiplicative que pour la régression de Poisson. En R, on ajuste ce modèle avec la fonction `glm.nb` de la librairie `MASS`, qui estime conjointement $\boldsymbol\beta$ et $\alpha$ par maximum de vraisemblance.
+On montre que $E[Y_i] = \mu_i$ et $Var[Y_i] = \mu_i + \alpha\mu_i^2$ : la variance excède toujours l'espérance dès que $\alpha>0$, et la loi de Poisson est retrouvée à la limite $\alpha \to 0$. Avec $\mu_i = e^{x_i^\top\boldsymbol\beta}$, les coefficients $\boldsymbol\beta$ gardent exactement la même interprétation multiplicative que pour la régression de Poisson. En R, on ajuste ce modèle avec la fonction `glm.nb` de la librairie `MASS`, qui estime conjointement $\boldsymbol\beta$ et $\alpha$ par maximum de vraisemblance (la fonction rapporte $\theta = 1/\alpha$).
 
 :::{.env-propriete titre="Test de surdispersion"}
 
@@ -738,83 +752,89 @@ $$
 où $\chi^2_0$ désigne la loi dégénérée en $0$. Le seuil observé est donc $\alpha^* = P(\chi^2_1 > Q_{obs})/2$, soit la moitié de ce qu'on obtiendrait avec une $\chi^2_1$ usuelle.
 :::
 
-:::{.env-exemple titre="Test de surdispersion sur [`danishlc`](#data-danishlc)"}
+:::{.env-exemple titre="Test de surdispersion sur [`empress`](#data-empress)"}
 
-```{r}
+```{r empress-nb}
 #| message: false
+#| warning: false
 library(MASS)
 
-modele.nb <- glm.nb(Cases ~ offset(log(Pop)) + City + Age, data = danishlc)
+modele.nb <- glm.nb(survivants ~ offset(log(effectif)) + classe + sexe + groupe_age,
+                    data = empress.agr)
+modele.nb$theta
 
-Q.obs <- deviance(modele.additif) - deviance(modele.nb)
+Q.obs <- max(deviance(modele.additif) - deviance(modele.nb), 0)
 alpha.etoile <- (1 - pchisq(Q.obs, df = 1)) / 2
 alpha.etoile
 ```
 
-On obtient $\alpha^* \approx 0.143$ : on ne détecte pas de variabilité extra-Poissonienne significative pour ces données, et le modèle de Poisson usuel demeure approprié.
+L'estimation de $\theta$ est très grande, donc $\hat\alpha = 1/\hat\theta$ est pratiquement nul : le maximum de vraisemblance se trouve à la frontière $\alpha = 0$, et `glm.nb` peut signaler que l'algorithme a atteint sa limite d'itérations. On a alors $Q_{obs} \approx 0$ et $\alpha^* \approx 0{,}5$ : on ne détecte pas de variabilité extra-Poissonienne, et le modèle de Poisson usuel demeure approprié.
 :::
 
 ### Comparaison de modèles emboîtés
 
 Comme en régression logistique, on peut comparer deux modèles emboîtés par différence de déviances plutôt que d'examiner l'adéquation d'un seul modèle.
 
-:::{.env-exemple titre="Effet de la ville sur [`danishlc`](#data-danishlc)"}
+:::{.env-exemple titre="Effet de la classe sur [`empress`](#data-empress)"}
 
-```{r}
-modele.sans.ville <- update(modele.additif, . ~ . - City)
-anova(modele.sans.ville, modele.additif, test = "Chisq")
+On teste d'abord l'effet de la classe, puis on vérifie si cet effet peut se résumer à une tendance log-linéaire en remplaçant le facteur `classe` par la variable numérique `classe_num`. Ce second modèle est emboîté dans le premier : un seul coefficient pour la classe au lieu de deux.
+
+```{r empress-emboites}
+modele.sans.classe <- update(modele.additif, . ~ . - classe)
+anova(modele.sans.classe, modele.additif, test = "Chisq")
+
+modele.classe.num <- update(modele.additif, . ~ . - classe + classe_num)
+anova(modele.classe.num, modele.additif, test = "Chisq")
 ```
 
-Le test par différence de déviances montre une différence significative entre les tranches d'âge, mais pas entre les villes : on ne rejette pas l'hypothèse que le modèle sans effet de ville est adéquat.
+Le premier test rejette nettement l'hypothèse d'absence d'effet de la classe (différence de déviances d'environ 15,4 à 2 degrés de liberté, valeur-p $\approx 0{,}0005$). Le second ne rejette pas le modèle avec tendance log-linéaire (différence d'environ 2,2 à 1 degré de liberté, valeur-p $\approx 0{,}14$) : chaque classe inférieure multiplierait alors le taux de survie par un même facteur. Les coefficients du modèle additif ($-0{,}65$ pour la deuxième classe, $-0{,}80$ pour la troisième) suggèrent plutôt un écart concentré entre la première classe et les deux autres, mais 11 strates ne suffisent pas à trancher.
 :::
 
 ### Graphiques et observations aberrantes
 
 Comme en régression logistique, on trace les résidus de déviance en fonction du numéro d'observation pour repérer une extra-variabilité, et on examine leviers, distance de Cook et DFBETAS pour repérer les observations influentes.
 
-:::{.env-exemple titre="Diagnostics — données [`ships`](#data-ships)"}
+:::{.env-exemple titre="Diagnostics sur [`empress`](#data-empress)"}
 
-```{r}
-#| message: false
-library(MASS)
-data(ships)
+Résidus en fonction du numéro d'observation :
 
-ships <- ships |> filter(service > 0)
-
-mod <- glm(incidents ~ type + year + period + offset(log(service)),
-           family = poisson, data = ships)
-```
-
-**Résidus en fonction du numéro d'observation**
-
-```{r}
-res_dev <- residuals(mod, type = "deviance")
+```{r empress-residus}
+res_dev <- residuals(modele.additif, type = "deviance")
 
 plot(res_dev, xlab = "Numéro d'observation", ylab = "Résidu de déviance",
-     pch = 19)
+     pch = 19, ylim = c(-2.5, 2.5))
 abline(h = 0, lty = 2)
 abline(h = c(-2, 2), lty = 3, col = "red")
 ```
 
-Quelques résidus dépassent les seuils à $\pm 2$, ce qui peut suggérer une légère extra-variabilité.
+Aucun résidu de déviance ne dépasse les seuils de $\pm 2$ ; les plus grands (environ 1,7 et 1,4) correspondent aux filles de deuxième et de première classe, déjà repérées dans l'analyse de l'adéquation.
 
-**Estimation de $\phi$**
+Estimation de $\phi$ :
 
-```{r}
-chi2_p <- sum(residuals(mod, type = "pearson")^2)
-n <- nrow(ships)
-p <- length(coef(mod))
-phi_hat <- chi2_p / (n - p)
+```{r empress-phi}
+chi2_p <- sum(residuals(modele.additif, type = "pearson")^2)
+phi_hat <- chi2_p / (n - (p + 1))
 phi_hat
 ```
 
-**Observations aberrantes et valeurs influentes**
+On obtient $\tilde\phi_P \approx 2{,}3$, ce qui pourrait suggérer de la surdispersion. Cette valeur est toutefois gonflée par les deux mêmes strates à très petit $\hat\mu_i$ et repose sur seulement 6 degrés de liberté ; elle doit être lue à la lumière du test de surdispersion, qui ne détectait aucune variabilité extra-Poissonienne.
 
-```{r}
-plot(mod, which = 4)
+Observations aberrantes et valeurs influentes :
+
+```{r empress-cook}
+plot(modele.additif, which = 4)
+
+h <- hatvalues(modele.additif)
+round(h, 3)
+which(h > 2 * (p + 1) / n)
 ```
 
-La distance de Cook pointe vers quelques observations plus influentes que les autres, à examiner de plus près (grands cargos avec peu de mois de service, par exemple).
+La strate des hommes adultes de troisième classe (observation 8) se détache nettement, avec une distance de Cook d'environ 4,7 et un levier d'environ 0,92. Elle regroupe 446 des 1057 passagers et 115 des 217 survivants : elle pèse donc très lourd dans l'estimation, puisque le poids IRLS vaut $w_i = \hat\mu_i$. La strate des hommes adultes de première classe (observation 1, distance de Cook d'environ 1,4) est la seconde plus influente ; c'est aussi celle où le taux de survie ($\approx 0{,}49$) s'éloigne le plus du régime où l'approximation de Poisson est justifiée.
 
-Le seuil usuel pour un levier élevé est $2(p+1)/n$ ; pour la distance de Cook, on examine les valeurs qui se détachent nettement des autres.
+Le seuil usuel pour un levier élevé est $2(p+1)/n$. Ici, il vaut $10/11 \approx 0{,}91$ : avec aussi peu d'observations que de paramètres ou presque, ce repère devient peu discriminant, et il vaut mieux examiner les valeurs qui se détachent nettement des autres.
+:::
+
+:::{.env-remarque titre="Poisson ou binomial?"}
+
+Plusieurs taux de survie d'[`empress`](#data-empress) sont modérés, et le modèle binomial `glm(cbind(survivants, effectif - survivants) ~ classe + sexe + groupe_age, family = binomial)` serait plus naturel pour ces données. Il mène aux mêmes conclusions qualitatives (effets de la classe, du sexe et du groupe d'âge de mêmes signes), mais ses coefficients s'interprètent comme des rapports de cotes plutôt que comme des rapports de taux. L'exemple sert ici à illustrer l'offset et les outils propres à la régression de Poisson.
 :::

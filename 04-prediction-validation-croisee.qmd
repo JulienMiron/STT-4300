@@ -1,67 +1,387 @@
 # Prédiction, mesures de performance et validation croisée {#sec-cv}
 
+```{r setup-cv}
+#| include: false
+library(boot)
+```
+
 ## Adéquation versus précision de prédiction
 
-Considérons le jeu de données `Auto` (librairie `ISLR`, $n = 392$) : la réponse est `mpg` (miles par gallon) et la variable explicative est la puissance `horsepower`. On veut choisir parmi les modèles :
+:::{.env-exemple titre="Jeu de données arbres"}
+Le jeu de données [`arbres`]{#data-arbres} est un extrait de 200 arbres des placettes-échantillons permanentes de l'inventaire forestier du Québec, relevés entre 2015 et 2025 dans une trentaine de régions écologiques. L'extrait retient les quatre espèces les plus fréquentes (bouleau à papier, épinette noire, érable rouge et sapin baumier), à raison de 50 arbres par espèce et d'un seul arbre par placette. On y trouve notamment le diamètre à hauteur de poitrine (`diameter_cm`), la hauteur (`height_m`), l'espèce (`species_fr`) et la position de l'arbre dans le couvert forestier (`canopy_stratum`).
+
+Seuls les arbres d'au moins 9 cm de diamètre sont mesurés à l'inventaire. L'extrait n'est pas représentatif de la composition de la forêt, puisque le nombre d'arbres par espèce a été fixé.
+:::
+
+On veut prédire la hauteur $H_i$ d'un arbre à partir de son diamètre $D_i$. La relation hauteur-diamètre est une relation allométrique : on la modélise sur l'échelle log-log. Notons $e(i)$ l'espèce de l'arbre $i$ et $s(i)$ sa strate. On veut choisir parmi cinq modèles de complexité croissante :
 
 $$
 \begin{aligned}
-\mbox{Modèle 1 : } Y_i &= \beta_0 + \beta_1 X_i + \epsilon_i,\\
-\mbox{Modèle 2 : } Y_i &= \beta_0 + \beta_1 X_i + \beta_2\log(X_i) + \epsilon_i,\\
-\mbox{Modèle 3 : } Y_i &= \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \epsilon_i,\\
-\mbox{Modèle 4 : } Y_i &= \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \beta_3 X_i^3 + \epsilon_i.
+\mbox{Modèle 1 : } \log H_i &= \beta_0 + \beta_1\log D_i + \epsilon_i,\\
+\mbox{Modèle 2 : } \log H_i &= \beta_{0,e(i)} + \beta_1\log D_i + \epsilon_i,\\
+\mbox{Modèle 3 : } \log H_i &= \beta_{0,e(i)} + \beta_{1,e(i)}\log D_i + \epsilon_i,\\
+\mbox{Modèle 4 : } \log H_i &= \beta_{0,e(i)} + \beta_{1,e(i)}\log D_i + \delta_{s(i)} + \epsilon_i,\\
+\mbox{Modèle 5 : } \log H_i &= \sum_{k=0}^{3}\beta_{k,e(i)}\left(\log D_i\right)^k + \delta_{s(i)} + \epsilon_i.
 \end{aligned}
 $$
 
-Pour chaque modèle, on peut calculer $SSE = \sum_i(Y_i - \hat Y_i)^2$, l'$AIC$, le $BIC$, ou effectuer des tests pour modèles emboîtés : toutes ces procédures cherchent le modèle avec le meilleur **ajustement** aux données.
+Le modèle 2 permet une ordonnée à l'origine par espèce et le modèle 3 une pente par espèce. Le modèle 4 ajoute l'effet de la strate. Le modèle 5 remplace chaque droite par un polynôme cubique propre à l'espèce. Ces modèles comptent respectivement 2, 5, 8, 10 et 18 paramètres de moyenne.
 
-Supposons plutôt qu'on veuille prédire la réponse $Y_0$ d'une nouvelle observation $X_0$ : on cherche alors le modèle qui minimise $E[(Y_0 - \hat Y_0)^2]$. Les deux critères (adéquation et précision de la prédiction) sont différents et peuvent être contradictoires : avec $n$ points, un polynôme d'ordre $n-1$ a une adéquation parfaite ($SSE = 0$) mais sera inutile pour prédire des valeurs futures (**surajustement**).
+```{r arbres-donnees}
+arbres <- read.csv("Jeux de données/arbres.csv")
+arbres$espece <- factor(arbres$species_fr)
+
+# Seulement 4 arbres dominants : on les regroupe avec les codominants
+arbres$strate <- factor(
+  ifelse(arbres$canopy_stratum == "Dominant", "Codominant", arbres$canopy_stratum),
+  levels = c("Codominant", "Intermédiaire", "Opprimé")
+)
+
+formules <- list(
+  M1 = log(height_m) ~ log(diameter_cm),
+  M2 = log(height_m) ~ log(diameter_cm) + espece,
+  M3 = log(height_m) ~ log(diameter_cm) * espece,
+  M4 = log(height_m) ~ log(diameter_cm) * espece + strate,
+  M5 = log(height_m) ~ poly(log(diameter_cm), 3) * espece + strate
+)
+modeles <- lapply(formules, lm, data = arbres)
+
+# Erreur d'entraînement : SSE / n
+sapply(modeles, function(m) mean(residuals(m)^2))
+```
+
+Pour chaque modèle, on peut calculer $SSE = \sum_i(y_i - \hat y_i)^2$, où $\hat y_i$ est la valeur ajustée par le modèle estimé sur toutes les données, l'AIC, le BIC, ou effectuer des tests pour modèles emboîtés. Toutes ces procédures cherchent le modèle qui s'ajuste le mieux aux données observées. Ici, l'erreur d'entraînement $SSE/n$ diminue d'un modèle à l'autre jusqu'au modèle 5, comme c'est toujours le cas pour des modèles emboîtés ajustés par moindres carrés.
+
+Supposons plutôt qu'on veuille prédire la hauteur $H_0$ d'un nouvel arbre de diamètre $D_0$. On cherche alors le modèle qui minimise $E[(Y_0 - \hat Y_0)^2]$, avec $Y_0 = \log H_0$. Les deux critères, adéquation et précision de la prédiction, sont différents et peuvent être contradictoires. Avec $n$ points distincts, un polynôme de degré $n-1$ a une adéquation parfaite ($SSE = 0$), mais il sera inutile pour prédire de nouvelles valeurs : c'est le surajustement.
 
 On distingue donc :
 
-- le **taux d'erreur d'entraînement**, évalué par $SSE$, qui mesure l'adéquation aux données observées ;
+- le taux d'erreur d'entraînement, évalué par $SSE$, qui mesure l'adéquation aux données observées ;
 
-- le **taux d'erreur test**, qui mesure la précision de prédiction pour une observation future.
+- le taux d'erreur test, qui mesure la précision de la prédiction pour une observation future.
+
+Le taux d'erreur test n'est pas observable directement. Les méthodes de validation croisée présentées ci-dessous l'estiment à partir des seules données disponibles.
 
 ## Validation croisée
 
 ### Approche par ensemble de validation
 
-On partage le jeu de données en deux parties : un **jeu d'entraînement** (pour estimer les paramètres) et un **jeu test** (pour estimer le taux d'erreur test). Avec $n_1$ observations d'entraînement et $n_2 = n - n_1$ observations test :
-$$\widehat{Err}_{test} = \frac{1}{n_2}\sum_{i = n_1+1}^{n}(Y_i - \hat Y_i)^2,$$
-où $\hat Y_i$ est calculé avec les paramètres estimés sur le jeu d'entraînement.
+On partage le jeu de données en deux parties : un jeu d'entraînement pour estimer les paramètres et un jeu test pour estimer le taux d'erreur test. Avec $n_1$ observations d'entraînement et $n_2 = n - n_1$ observations test,
+
+$$
+\widehat{Err}_{test} = \frac{1}{n_2}\sum_{i = n_1+1}^{n}\left(y_i - \hat y_{i,\text{ent}}\right)^2,
+$$
+
+où $\hat y_{i,\text{ent}}$ est la prédiction de l'observation $i$ calculée avec les paramètres estimés sur le seul jeu d'entraînement.
 
 Cette approche a deux défauts : (i) la partition est arbitraire, ce qui introduit de la variabilité ; (ii) on n'estime $\beta$ qu'avec une fraction des données, ce qui augmente la variance de $\hat\beta$. Pour le premier défaut, on peut répéter la partition aléatoirement un grand nombre de fois et moyenner les erreurs obtenues.
 
-### Validation croisée avec exclusion d'une observation (LOOCV)
+:::{.env-exemple titre="Variabilité de l'ensemble de validation sur [`arbres`](#data-arbres)"}
+On répète 1000 fois une partition aléatoire en deux moitiés de 100 arbres et on note, à chaque fois, le modèle qui a la plus petite erreur test.
 
-Pour remédier au deuxième défaut, pour $i = 1,\ldots,n$, on estime $\beta$ avec toutes les observations **sauf** la $i^{\text{ème}}$ et on calcule $\hat y_{i,(-i)}$. Le critère est
-$$VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(y_i - \hat y_{i,(-i)}\right)^2.$$
+```{r arbres-validation}
+set.seed(4300)
+choix <- replicate(1000, {
+  i <- sample(nrow(arbres), 100)
+  err <- sapply(formules, function(f) {
+    m <- lm(f, data = arbres[i, ])
+    mean((log(arbres$height_m[-i]) - predict(m, arbres[-i, ]))^2)
+  })
+  names(which.min(err))
+})
+table(factor(choix, levels = names(formules)))
+```
 
-:::{.env-propriete}
-**Propriété (Formule explicite pour la régression linéaire).**
+Le modèle 4 est choisi le plus souvent, mais pas toujours : selon la partition tirée, chacun des autres modèles peut l'emporter. Une seule partition, comme on le fait en pratique avec cette approche, aurait donc pu mener à un autre choix. C'est le défaut (i).
+:::
 
-$$VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat y_i}{1 - h_i}\right)^2,$$
-où $h_i$ est le levier de l'observation $i$. Il n'est donc pas nécessaire d'ajuster $n$ régressions : un seul ajustement suffit.
+### Validation croisée avec exclusion d'une observation (LOOCV de *leave one out cross validation*)
+
+Pour remédier au deuxième défaut, on procède ainsi : pour $i = 1,\ldots,n$, on estime $\beta$ avec toutes les observations sauf la $i^{\text{ème}}$, puis on calcule $\hat y_{i,(-i)}$. Le critère est
+
+$$
+VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(y_i - \hat y_{i,(-i)}\right)^2.
+$$
+
+:::{.env-propriete titre="Formule explicite pour la régression linéaire"}
+$$
+VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat y_i}{1 - h_i}\right)^2,
+$$
+
+où $\hat y_i$ est la valeur ajustée par le modèle estimé sur toutes les données et $h_i$ est le levier de l'observation $i$. Il n'est donc pas nécessaire d'ajuster $n$ régressions : un seul ajustement suffit.
+:::
+
+En R, la fonction `cv.glm` de la librairie `boot` calcule $VC_{(n)}$ en réajustant réellement le modèle $n$ fois. Elle exige un objet `glm` ; un modèle linéaire s'obtient avec `glm` et la famille gaussienne, qui est la famille par défaut.
+
+:::{.env-exemple titre="LOOCV sur [`arbres`](#data-arbres)"}
+```{r arbres-loocv}
+loocv <- function(m) mean((residuals(m) / (1 - hatvalues(m)))^2)
+vc.n <- sapply(modeles, loocv)
+vc.n
+```
+
+On vérifie que la formule explicite donne exactement le résultat obtenu en ajustant 200 régressions. Les modèles sont créés avec `do.call` : `cv.glm` réévalue l'appel enregistré dans l'objet, et un appel créé directement par `lapply(formules, glm, ...)` ferait référence à une fonction `FUN` qui n'existe plus au moment du réajustement.
+
+```{r arbres-loocv-verif}
+modeles.glm <- lapply(formules, function(f)
+  do.call("glm", list(formula = f, data = quote(arbres))))
+
+c(formule = unname(vc.n["M4"]), cv.glm = cv.glm(arbres, modeles.glm$M4)$delta[1])
+```
+
+$VC_{(n)}$ est minimal pour le modèle 4 ($VC_{(n)} \approx `r round(vc.n["M4"], 4)`$). Contrairement à l'erreur d'entraînement, $VC_{(n)}$ augmente du modèle 4 au modèle 5 : les huit paramètres supplémentaires du modèle 5 améliorent l'ajustement, mais ils détériorent la prédiction. C'est du surajustement.
 :::
 
 ### Validation croisée à $K$ blocs
 
-Pour d'autres modèles (notamment les MLG), le calcul de $VC_{(n)}$ requiert l'ajustement de $n$ modèles, ce qui peut être coûteux. On considère alors la validation croisée à $K$ blocs (en pratique $K = 5$ ou $K = 10$). On partage le jeu de données en $K$ parties de tailles quasiment égales $A_1,\ldots,A_K$. Pour $k = 1,\ldots,K$, on estime $\beta$ à partir de toutes les données sauf $A_k$ et on calcule
-$$MSE_k = \frac{1}{n_k}\sum_{i\in A_k}\left\{y_i - \hat y_{i,(-k)}\right\}^2,$$
+Pour d'autres modèles, notamment les GLM, le calcul exact de $VC_{(n)}$ requiert l'ajustement de $n$ modèles, ce qui peut être coûteux (voir toutefois l'approximation de la @sec-cv-approx). On considère alors la validation croisée à $K$ blocs, en pratique avec $K = 5$ ou $K = 10$. On partage le jeu de données en $K$ parties de tailles quasiment égales $A_1,\ldots,A_K$. Pour $k = 1,\ldots,K$, on estime $\beta$ à partir de toutes les données sauf $A_k$, et on calcule
+
+$$
+MSE_k = \frac{1}{n_k}\sum_{i\in A_k}\left\{y_i - \hat y_{i,(-k)}\right\}^2,
+$$
+
 où $n_k$ est la taille de $A_k$. On estime le taux d'erreur test par
-$$VC_{(K)} = \frac{1}{K}\sum_{k=1}^K MSE_k.$$
 
-En R, la fonction `cv.glm` de la librairie `boot` calcule $VC_{(n)}$ (par défaut) et $VC_{(K)}$ (argument `K`).
+$$
+VC_{(K)} = \frac{1}{K}\sum_{k=1}^K MSE_k.
+$$
 
-:::{.env-exemple}
-**Exemple (`Auto`).**
+Avec `cv.glm`, on obtient $VC_{(K)}$ au moyen de l'argument `K`.
 
-Sur les quatre modèles polynomiaux, la validation croisée ($VC_{(n)}$, $VC_{(5)}$ et $VC_{(10)}$) désigne systématiquement le modèle 3 (quadratique) comme le meilleur pour la prédiction ($VC_{(n)} \approx 19.25$), alors que l'approche par ensemble de validation unique pouvait suggérer le modèle 4.
+:::{.env-exemple titre="Validation croisée à $K$ blocs sur [`arbres`](#data-arbres)"}
+```{r arbres-kblocs}
+vc.K <- sapply(c(5, 10), function(K)
+  sapply(modeles.glm, function(m) {
+    set.seed(4300)   # même partition pour tous les modèles
+    cv.glm(arbres, m, K = K)$delta[1]
+  }))
+colnames(vc.K) <- c("VC_5", "VC_10")
+cbind(VC_n = vc.n, vc.K)
+```
+
+Les trois critères désignent le modèle 4. Le partage en blocs est aléatoire, mais en répétant l'expérience avec d'autres graines, on constate que ce choix est beaucoup plus stable qu'avec un ensemble de validation unique. En effet, chaque observation sert ici exactement une fois au test, et chaque modèle est ajusté sur 80 % ou 90 % des données plutôt que sur la moitié.
+
+La réinitialisation de la graine avant chaque appel est importante. Sans elle, chaque modèle serait évalué sur une partition différente, et une partie des écarts entre modèles serait due au hasard de la partition plutôt qu'aux modèles eux-mêmes.
 :::
 
-## Mesures de performance pour la classification
+:::{.env-remarque titre="Sur quelle échelle mesure-t-on l'erreur?"}
+Ici, l'erreur est mesurée sur l'échelle de $\log H$, et les cinq modèles peuvent être comparés parce qu'ils ont la même réponse. Pour comparer un modèle sur $\log H$ à un modèle sur $H$, il faut calculer les deux erreurs sur la même échelle. Par exemple, on ramène les prédictions du modèle log-log à l'échelle originale avec $\exp(\hat y_{i,(-k)})$ avant de calculer $MSE_k$. Il faut alors se rappeler que $\exp(\hat y_{i,(-k)})$ estime la médiane conditionnelle de $H_i$, et non son espérance.
+:::
 
-Pour une réponse binaire, le taux d'erreur test devient le **taux de mauvaise classification**
-$$\frac{1}{n}\sum_{i=1}^n \mathbf{1}_{\{y_i \neq \hat y_i\}},$$
-avec $\hat y_i = \mathbf{1}_{\{\hat\pi_i > u\}}$ pour un seuil $u$ (souvent $1/2$). Les notions de **sensibilité**, **spécificité**, **courbe ROC** et **AUC** présentées à la @sec-roc fournissent des mesures de performance qui ne dépendent pas du choix d'un seuil unique : l'AUC est notamment utilisée comme critère de validation croisée en classification (voir @sec-knn).
+## Validation croisée pour les GLM {#sec-cv-GLM}
+
+Les critères $VC_{(n)}$ et $VC_{(K)}$ ont été présentés avec l'erreur quadratique, qui est naturelle pour une réponse normale. Pour un GLM, la réponse est binaire, binomiale ou un dénombrement, et sa variance dépend de sa moyenne. L'erreur quadratique demeure utilisable, mais d'autres fonctions de perte sont souvent mieux adaptées. Pour une fonction de perte $L(y,\mu)$, le critère de validation croisée à $K$ blocs devient
+
+$$
+VC_{(K)} = \frac{1}{K}\sum_{k=1}^K \frac{1}{n_k}\sum_{i\in A_k} L\left(y_i, \hmu{i,(-k)}\right),
+$$
+
+où $\hmu{i,(-k)} = g^{-1}\left(\boldsymbol x_i^\top\hb_{(-k)}\right)$ est la moyenne prédite pour l'observation $i$ par le modèle ajusté sans le bloc $A_k$. On retrouve $VC_{(n)}$ avec $K = n$.
+
+### Régression logistique et classification
+
+Pour une réponse binaire, on prédit la classe de l'observation $i$ par $\hat c_i = \mathbf{1}_{\{\hpi{i} > u\}}$, pour un seuil $u$ (souvent $1/2$). Le taux d'erreur test devient alors le taux de mauvaise classification. Cette perte n'est toutefois pas la seule possible.
+
+:::{.env-definition titre="Fonctions de perte pour une réponse binaire"}
+Pour $y\in\{0,1\}$ et une probabilité prédite $\hat\pi$ :
+
+$$
+\begin{aligned}
+\text{Mauvaise classification : } & L(y,\hat\pi) = \mathbf{1}_{\{y \neq \mathbf{1}_{\{\hat\pi > u\}}\}},\\
+\text{Score de Brier : } & L(y,\hat\pi) = (y-\hat\pi)^2,\\
+\text{Déviance (log-perte) : } & L(y,\hat\pi) = -2\left[y\log\hat\pi + (1-y)\log(1-\hat\pi)\right].
+\end{aligned}
+$$
+
+La troisième perte est exactement la déviance individuelle $d_i$ d'une observation de Bernoulli (voir la [déviance](#sec-deviance)).
+:::
+
+:::{.env-remarque titre="Quelle perte choisir?"}
+Le taux de mauvaise classification ne retient que le côté du seuil $u$ où tombe $\hat\pi$. Une prédiction $\hat\pi = 0{,}51$ et une prédiction $\hat\pi = 0{,}99$ sont donc traitées de la même façon. Ce critère est de plus discontinu, il dépend du choix arbitraire de $u$, et il est très variable lorsque $n$ est petit.
+
+Le score de Brier et la déviance sont des règles de score propres : leur espérance est minimisée lorsque $\hat\pi$ égale la vraie probabilité $\pi$. Ils évaluent donc la qualité des probabilités prédites elles-mêmes, et pas seulement la classification qui en découle. La déviance pénalise lourdement les erreurs commises avec assurance. Elle devient infinie si $\hat\pi_{i,(-k)} \in \{0,1\}$ alors que $y_i$ prend l'autre valeur, ce qui peut se produire lorsqu'un jeu d'entraînement présente une [séparation](#sec-separation). En pratique, on tronque $\hat\pi$ dans $[\varepsilon, 1-\varepsilon]$.
+
+La sensibilité, la spécificité, la courbe ROC et l'AUC présentées à la @sec-roc fournissent d'autres mesures de performance. L'AUC ne dépend d'aucun seuil, et elle est notamment utilisée comme critère de validation croisée en classification (voir @sec-knn). Elle ne mesure toutefois que la capacité du modèle à ordonner les observations, et pas la calibration des probabilités.
+:::
+
+:::{.env-remarque titre="Données groupées"}
+Avec des données binomiales groupées, chaque ligne regroupe $m_i$ essais. Exclure une ligne revient à exclure tout un groupe : on évalue alors la prédiction pour une nouvelle combinaison des variables explicatives, et non pour un nouvel individu. Les deux versions du jeu de données [`empress`](#data-empress), individuelle et agrégée, illustrent cette différence dans les exemples plus bas. De plus, la fonction `cv.glm` passe à la fonction de coût les proportions $y_i/m_i$, sans pondération par $m_i$ ; il faut en tenir compte si l'on veut une perte pondérée.
+:::
+
+### Régression de Poisson
+
+:::{.env-definition titre="Fonctions de perte pour un dénombrement"}
+Pour $y\in\mathbb{N}$ et une moyenne prédite $\hat\mu > 0$ :
+
+$$
+\begin{aligned}
+\text{Erreur quadratique : } & L(y,\hat\mu) = (y-\hat\mu)^2,\\
+\text{Perte de Pearson : } & L(y,\hat\mu) = \frac{(y-\hat\mu)^2}{\hat\mu},\\
+\text{Déviance de Poisson : } & L(y,\hat\mu) = 2\left[y\log\left(\frac{y}{\hat\mu}\right) - (y-\hat\mu)\right],
+\end{aligned}
+$$
+
+avec la convention $0\log 0 = 0$.
+:::
+
+:::{.env-remarque titre="Particularités du cas Poisson"}
+Puisque $Var[Y_i] = \mu_i$, l'erreur quadratique est dominée par les observations dont les dénombrements sont élevés. La perte de Pearson et la déviance standardisent implicitement chaque erreur par sa variance.
+
+En présence d'une [variable offset](#sec-poisson), la prédiction d'une observation exclue utilise sa propre exposition :
+
+$$
+\hmu{i,(-k)} = m_i \exp\left(\boldsymbol x_i^\top\hb_{(-k)}\right).
+$$
+
+En R, il est plus sûr d'écrire l'offset dans la formule (`offset(log(m))`) pour que `predict` l'applique correctement aux nouvelles données.
+
+Enfin, les modèles de Poisson et quasi-Poisson produisent les mêmes $\hmu{i}$ : la validation croisée ne peut pas les départager. Le choix du paramètre de dispersion relève de l'inférence (voir la [surdispersion](#sec-surdispersion)). Pour comparer un modèle de Poisson à un modèle binomial négatif, il faut utiliser la même perte pour les deux modèles.
+:::
+
+### Approximation de $VC_{(n)}$ sans réajustement {#sec-cv-approx}
+
+Contrairement à la régression linéaire, il n'existe pas de formule exacte de $VC_{(n)}$ pour un GLM. Une approximation fondée sur un seul ajustement est toutefois disponible.
+
+:::{.env-propriete titre="Approximation de l'erreur de validation croisée"}
+Pour un GLM avec lien canonique et $\phi = 1$ (logistique, Poisson), on a
+
+$$
+y_i - \hmu{i,(-i)} \approx \frac{y_i - \hmu{i}}{1-h_i},
+\qquad\text{d'où}\qquad
+VC_{(n)} \approx \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i-\hmu{i}}{1-h_i}\right)^2,
+$$
+
+où $h_i$ est le $i^{\text{ème}}$ élément diagonal de la matrice chapeau
+
+$$
+\boldsymbol H = \boldsymbol W^{1/2}\boldsymbol X\left(\boldsymbol X^\top\boldsymbol W\boldsymbol X\right)^{-1}\boldsymbol X^\top\boldsymbol W^{1/2},
+$$
+
+obtenu en R avec `hatvalues()`.
+:::
+
+:::{.env-theo titre="Idée de la dérivation"}
+Sous le lien canonique, le score s'écrit
+
+$$
+U(\boldsymbol\beta) = \sum_{j=1}^n \boldsymbol x_j (y_j - \mu_j),
+$$
+
+et le poids de l'observation $j$ vaut $w_j = \partial\mu_j/\partial\eta_j$. Posons $\boldsymbol J = \boldsymbol X^\top\boldsymbol W\boldsymbol X$. Sans l'observation $i$, le score évalué en $\hb$ vaut
+
+$$
+U_{(-i)}(\hb) = -\boldsymbol x_i(y_i - \hmu{i}).
+$$
+
+Une seule itération de Newton-Raphson à partir de $\hb$, combinée à la formule de Sherman-Morrison, donne
+
+$$
+\hb_{(-i)} \approx \hb - \left(\boldsymbol J - w_i\boldsymbol x_i\boldsymbol x_i^\top\right)^{-1}\boldsymbol x_i(y_i-\hmu{i})
+= \hb - \frac{\boldsymbol J^{-1}\boldsymbol x_i\,(y_i-\hmu{i})}{1-h_i}.
+$$
+
+On en déduit
+
+$$
+\heta{i,(-i)} \approx \heta{i} - \frac{h_i}{w_i}\,\frac{y_i-\hmu{i}}{1-h_i}.
+$$
+
+On linéarise ensuite $g^{-1}$ :
+
+$$
+\hmu{i,(-i)} \approx \hmu{i} + w_i\left(\heta{i,(-i)}-\heta{i}\right)
+= \hmu{i} - h_i\,\frac{y_i-\hmu{i}}{1-h_i},
+$$
+
+ce qui donne le résultat. Les deux approximations (un seul pas de Newton et la linéarisation de $g^{-1}$) deviennent exactes dans le modèle linéaire normal, où l'on retrouve la formule explicite de la LOOCV.
+:::
+
+### Exemples sur les données de l'Empress of Ireland
+
+La fonction `cv.glm` accepte un argument `cost`, une fonction `cost(y, yhat)` où `yhat` est la moyenne prédite (échelle de la réponse). Par défaut, `cost` est l'erreur quadratique, c'est-à-dire le score de Brier pour une réponse binaire.
+
+```{r empress-cv-donnees}
+niveaux.classe <- c("Première", "Deuxième", "Troisième")
+
+empress <- read.csv("Jeux de données/empress_individus.csv")
+empress$classe <- factor(empress$classe, levels = niveaux.classe)
+
+empress.agr <- read.csv("Jeux de données/empress_agrege.csv")
+empress.agr$classe <- factor(empress.agr$classe, levels = niveaux.classe)
+```
+
+:::{.env-exemple titre="Régression logistique sur [`empress`](#data-empress)"}
+
+On compare quatre modèles pour la probabilité de survie d'un passager : la classe seule, les effets additifs de la classe, du sexe et du groupe d'âge, la même chose avec la classe traitée comme variable numérique (tendance linéaire sur l'échelle logit), et un modèle avec interaction entre la classe et le sexe.
+
+```{r empress-cv-logistique}
+#| warning: false
+m1 <- glm(survecu ~ classe, data = empress, family = binomial)
+m2 <- glm(survecu ~ classe + sexe + groupe_age, data = empress, family = binomial)
+m3 <- glm(survecu ~ classe_num + sexe + groupe_age, data = empress, family = binomial)
+m4 <- glm(survecu ~ classe * sexe + groupe_age, data = empress, family = binomial)
+
+# y : réponse observée, p : probabilité prédite
+cout.classif <- function(y, p) mean(y != (p > 0.5))
+cout.brier   <- function(y, p) mean((y - p)^2)
+cout.dev     <- function(y, p) {
+  p <- pmin(pmax(p, 1e-8), 1 - 1e-8)   # évite log(0) en cas de séparation
+  -2 * mean(y * log(p) + (1 - y) * log(1 - p))
+}
+
+modeles.logit <- list(m1 = m1, m2 = m2, m3 = m3, m4 = m4)
+couts.logit   <- list(classif = cout.classif, brier = cout.brier, deviance = cout.dev)
+
+# VC_(10) : même graine avant chaque appel pour que tous les modèles
+# soient évalués sur la même partition en blocs
+sapply(couts.logit, function(cout)
+  sapply(modeles.logit, function(m) {
+    set.seed(4300)
+    cv.glm(empress, m, cost = cout, K = 10)$delta[1]
+  }))
+```
+
+La colonne du taux de mauvaise classification illustre bien ses limites. Seuls `r sum(empress$survecu)` des `r nrow(empress)` passagers ont survécu, et aucune strate n'atteint une proportion de survie de 50 %. Avec le seuil $u = 1/2$, les modèles prédisent donc à peu près toujours le décès, et le taux de mauvaise classification est à peu près le même pour tous, proche de la proportion de survivants. Le score de Brier et la déviance, qui évaluent les probabilités prédites elles-mêmes, permettent au contraire de départager les modèles.
+
+Avec $n = `r nrow(empress)`$, le calcul exact de $VC_{(n)}$ demande autant d'ajustements. On le compare à l'approximation de la @sec-cv-approx, qui n'en demande qu'un seul :
+
+```{r empress-cv-approx}
+h <- hatvalues(m2)
+approx <- mean(((empress$survecu - fitted(m2)) / (1 - h))^2)
+
+temps <- system.time(exact <- cv.glm(empress, m2)$delta[1])
+
+c(approx = approx, exact = exact)
+temps["elapsed"]
+```
+:::
+
+:::{.env-exemple titre="Régression de Poisson sur les données agrégées de [`empress`](#data-empress)"}
+
+On modélise maintenant le nombre de survivants $Y_i$ de chacune des `r nrow(empress.agr)` strates. L'effectif $m_i$ de la strate sert d'offset, de sorte que $\mu_i = m_i\exp(\boldsymbol x_i^\top\boldsymbol\beta)$ et que $\exp(\boldsymbol x_i^\top\boldsymbol\beta)$ s'interprète comme un taux de survie.
+
+```{r empress-cv-poisson}
+#| warning: false
+p1 <- glm(survivants ~ classe + offset(log(effectif)),
+          family = poisson, data = empress.agr)
+p2 <- glm(survivants ~ classe + sexe + groupe_age + offset(log(effectif)),
+          family = poisson, data = empress.agr)
+p3 <- glm(survivants ~ classe_num + sexe + groupe_age + offset(log(effectif)),
+          family = poisson, data = empress.agr)
+
+cout.dev.pois <- function(y, mu) 2 * mean(ifelse(y > 0, y * log(y / mu), 0) - (y - mu))
+cout.pearson  <- function(y, mu) mean((y - mu)^2 / mu)
+cout.eq       <- function(y, mu) mean((y - mu)^2)
+
+modeles.pois <- list(p1 = p1, p2 = p2, p3 = p3)
+couts.pois   <- list(deviance = cout.dev.pois, pearson = cout.pearson, quadratique = cout.eq)
+
+# VC_(n) sur les strates : chaque étape exclut une strate complète
+sapply(couts.pois, function(cout)
+  sapply(modeles.pois, function(m) cv.glm(empress.agr, m, cost = cout)$delta[1]))
+```
+
+La colonne quadratique est dominée par la strate des hommes adultes de troisième classe, qui compte `r max(empress.agr$effectif)` passagers et donc le plus grand $\hmu{i}$. Les colonnes déviance et Pearson donnent un poids plus équilibré aux strates.
+
+Deux mises en garde s'imposent. D'abord, l'unité exclue est ici une strate entière : on évalue la capacité du modèle à prédire une combinaison classe × sexe × âge à partir des autres, ce qui est une question différente de celle de l'exemple précédent (voir la remarque sur les données groupées). Pour la même raison, un modèle avec interactions ne peut pas toujours être évalué ainsi : si l'on retire la seule strate qui permet d'estimer un coefficient d'interaction, ce coefficient devient inestimable. Ensuite, la loi de Poisson n'est qu'une approximation de la loi binomiale lorsque les proportions sont petites. Plusieurs taux de survie sont ici modérés (près de 50 % chez les hommes adultes de première classe), et un modèle binomial serait plus naturel. L'exemple sert à illustrer l'offset et le choix de la perte, pas à recommander ce modèle.
+:::

@@ -82,7 +82,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-118537708b9c1bdeb3824d6ddaac134b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-d4441400c42cc7b7d49f9a5a07110dfd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -742,17 +742,42 @@ AIC = -2\,\ell(\hb,\tilde\phi_P\mid\Delta) + 2(p+1), \qquad BIC = -2\,\ell(\hb,\
 </section>
 <section id="sec-poisson" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression de Poisson</h2>
-<p>La variable réponse <span class="math inline">\(Y_i \in \mathbb{N}\)</span> dénote ici un dénombrement (nombre de nouveaux cas d’une maladie, nombre d’absences, nombre de sinistres, etc.). La régression de Poisson suppose <span class="math inline">\(Y_i \sim \mathcal{P}(\mu_i)\)</span> :</p>
+<p>La variable réponse <span class="math inline">\(Y_i \in \mathbb{N}\)</span> dénote ici un dénombrement (nombre de survivants dans un groupe, nombre de nouveaux cas d’une maladie, nombre de sinistres, etc.). La régression de Poisson suppose <span class="math inline">\(Y_i \sim \mathcal{P}(\mu_i)\)</span> :</p>
 <p><span class="math display">\[
 P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.
 \]</span></p>
-<div class="env-exemple" data-titre="Jeux de données">
-<p><span class="env-titre">Exemple — Jeux de données</span></p>
-<p>Deux exemples utilisés dans cette section :</p>
+<div class="env-exemple" data-titre="Jeu de données [`empress`]{#data-empress}">
+<p><span class="env-titre">Exemple — Jeu de données <span id="data-empress"><code>empress</code></span></span></p>
+<p>Le 29 mai 1914, le paquebot <em>Empress of Ireland</em> coule dans le fleuve Saint-Laurent, au large de Pointe-au-Père (Rimouski), après une collision avec le charbonnier <em>Storstad</em>. Le navire sombre en moins de quinze minutes. Le jeu de données porte sur les 1057 passagers à bord (l’équipage est exclu) et existe en deux versions :</p>
 <ol type="1">
-<li><p><span id="data-danishlc"><code>danishlc</code></span> (librairie <code>GLMsData</code>) : nombre de nouveaux cas de cancer du poumon par ville (4 villes) et par tranche d’âge (6 tranches), au Danemark, ainsi que la population <span class="math inline">\(m_i\)</span> de chaque strate.</p></li>
-<li><p><span id="data-ships"><code>ships</code></span> (librairie <code>MASS</code>) : nombre d’incidents de fissure de coque (<code>incidents</code>) recensés sur des cargos, selon le type de navire (<code>type</code>), l’année de construction (<code>year</code>) et la période de service (<code>period</code>), avec le nombre-mois de service (<code>service</code>) comme mesure d’exposition.</p></li>
+<li><p><code>empress_individus.csv</code> : une ligne par passager, avec la classe (<code>classe</code>, et sa version numérique <code>classe_num</code> valant 1, 2 ou 3), le sexe (<code>sexe</code>), le groupe d’âge (<code>groupe_age</code>) et une indicatrice de survie (<code>survecu</code>).</p></li>
+<li><p><code>empress_agrege.csv</code> : une ligne par strate classe <span class="math inline">\(\times\)</span> sexe <span class="math inline">\(\times\)</span> groupe d’âge (11 strates, aucun garçon ne voyageant en première classe), avec le nombre de passagers <span class="math inline">\(m_i\)</span> (<code>effectif</code>) et le nombre de survivants <span class="math inline">\(y_i\)</span> (<code>survivants</code>).</p></li>
 </ol>
+<p>Cette section utilise la version agrégée ; la version individuelle est utilisée au chapitre sur la validation croisée.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>niveaux.classe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Première"</span>, <span class="st">"Deuxième"</span>, <span class="st">"Troisième"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>empress.agr <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/empress_agrege.csv"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>empress.agr<span class="sc">$</span>classe <span class="ot">&lt;-</span> <span class="fu">factor</span>(empress.agr<span class="sc">$</span>classe, <span class="at">levels =</span> niveaux.classe)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>empress.agr</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      classe  sexe groupe_age effectif survivants classe_num
+1   Première Homme     Adulte       49         24          1
+2   Première Femme     Adulte       34         11          1
+3   Première Femme     Enfant        4          1          1
+4   Deuxième Homme     Adulte      114         33          2
+5   Deuxième Homme     Enfant       11          0          2
+6   Deuxième Femme     Adulte      107         13          2
+7   Deuxième Femme     Enfant       21          2          2
+8  Troisième Homme     Adulte      446        115          3
+9  Troisième Homme     Enfant       54          1          3
+10 Troisième Femme     Adulte      169         17          3
+11 Troisième Femme     Enfant       48          0          3</code></pre>
+</div>
+</div>
 </div>
 <p>Avec la fonction de lien canonique <span class="math inline">\(g(\mu_i) = \log(\mu_i)\)</span>, on a</p>
 <p><span class="math display">\[
@@ -775,10 +800,10 @@ P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \m
 P(Y_i = y) = \binom{m_i}{y}\pi_i^y(1-\pi_i)^{m_i-y} \;\longrightarrow\; e^{-\mu_i}\frac{\mu_i^y}{y!}.
 \]</span></p>
 <p><strong>Intuition.</strong> Quand <span class="math inline">\(\pi_i\)</span> est petit, l’événement <span class="math inline">\(\{Y_i = y\}\)</span> correspond à <span class="math inline">\(y\)</span> « succès » très improbables parmi un très grand nombre d’essais. Le nombre d’essais <span class="math inline">\(m_i\)</span> n’a alors presque plus d’importance en soi : ce qui détermine la loi de <span class="math inline">\(Y_i\)</span>, c’est essentiellement le produit <span class="math inline">\(\mu_i = m_i \pi_i\)</span>, c’est-à-dire le nombre de succès <em>attendu</em>. Deux strates avec des <span class="math inline">\((m_i,\pi_i)\)</span> très différents mais le même <span class="math inline">\(\mu_i\)</span> (par exemple <span class="math inline">\(m_i=10\,000,\ \pi_i=0{,}001\)</span> contre <span class="math inline">\(m_i=1000,\ \pi_i=0{,}01\)</span>) produisent des distributions de <span class="math inline">\(Y_i\)</span> presque identiques.</p>
-<p><strong>Repère pratique.</strong> L’approximation est jugée satisfaisante lorsque <span class="math inline">\(m_i\)</span> est grand (disons <span class="math inline">\(m_i \geq 20\)</span>) et <span class="math inline">\(\pi_i\)</span> est petit (disons <span class="math inline">\(\pi_i \leq 0{,}05\)</span>), de sorte que <span class="math inline">\(\mu_i = m_i\pi_i\)</span> demeure modéré. C’est le cas de la première strate de <code>danishlc</code> : <span class="math inline">\(m_1 = 3059\)</span>, <span class="math inline">\(\tilde\pi_1 \approx 3.6\times10^{-3}\)</span>, ce qui donne <span class="math inline">\(\mu_1 \approx 11\)</span> — un dénombrement rare typique.</p>
+<p><strong>Repère pratique.</strong> L’approximation est jugée satisfaisante lorsque <span class="math inline">\(m_i\)</span> est grand (disons <span class="math inline">\(m_i \geq 20\)</span>) et <span class="math inline">\(\pi_i\)</span> est petit (disons <span class="math inline">\(\pi_i \leq 0{,}05\)</span>), de sorte que <span class="math inline">\(\mu_i = m_i\pi_i\)</span> demeure modéré. C’est le cas de la strate des garçons de troisième classe d’<a href="#data-empress"><code>empress</code></a> : <span class="math inline">\(m = 54\)</span> et <span class="math inline">\(\tilde\pi = 1/54 \approx 0{,}019\)</span>, d’où <span class="math inline">\(\mu \approx 1\)</span>. Ce ne l’est pas pour les hommes adultes de première classe (<span class="math inline">\(m = 49\)</span>, <span class="math inline">\(\tilde\pi = 24/49 \approx 0{,}49\)</span>), un point sur lequel on reviendra lors des diagnostics.</p>
 <p><strong>Conséquence pour la modélisation.</strong> Dans ce régime, les deux paramètres <span class="math inline">\((m_i,\pi_i)\)</span> ne sont plus identifiables séparément à partir de <span class="math inline">\(Y_i\)</span> seul : seule leur combinaison <span class="math inline">\(\mu_i\)</span> compte. Il devient donc plus naturel — et numériquement plus stable — de modéliser directement <span class="math inline">\(\mu_i\)</span> comme un compte de Poisson plutôt que <span class="math inline">\(\pi_i\)</span> comme une proportion binomiale. Comme <span class="math inline">\(\mu_i\)</span> dépend mécaniquement de <span class="math inline">\(m_i\)</span> (une strate plus grande produit plus de cas même à risque individuel égal), on ne relie pas les covariables à <span class="math inline">\(\mu_i\)</span> directement, mais au taux <span class="math inline">\(\mu_i/m_i\)</span>, ce qui mène à la variable offset <span class="math inline">\(\log(m_i)\)</span> introduite plus bas.</p>
 </div>
-<p>Lorsque la probabilité individuelle de l’événement est très petite (par exemple <span class="math inline">\(\tilde\pi_1 = 11/3059 \approx 3.6\times10^{-3}\)</span> pour la première strate de <code>danishlc</code>), une régression logistique n’est généralement pas appropriée : les nombres de cas se comportent alors davantage comme un dénombrement rare que comme une proportion binomiale. On modélise plutôt l’espérance du taux <span class="math inline">\(Y_i/m_i\)</span> :</p>
+<p>Lorsque la probabilité individuelle de l’événement est petite (par exemple <span class="math inline">\(\tilde\pi = 1/54 \approx 0{,}019\)</span> pour les garçons de troisième classe), les nombres de cas se comportent davantage comme un dénombrement rare que comme une proportion binomiale, et la régression de Poisson devient une alternative naturelle à la régression logistique. On modélise alors l’espérance du taux <span class="math inline">\(Y_i/m_i\)</span> :</p>
 <p><span class="math display">\[
 \log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
 \quad\Longleftrightarrow\quad
@@ -788,50 +813,51 @@ P(Y_i = y) = \binom{m_i}{y}\pi_i^y(1-\pi_i)^{m_i-y} \;\longrightarrow\; e^{-\mu_
 <p><span class="env-titre">Définition — Variable offset</span></p>
 <p>Le terme <span class="math inline">\(\log(m_i)\)</span> dans l’équation ci-dessus est une variable explicative dont le coefficient est fixé à <span class="math inline">\(1\)</span> plutôt qu’estimé : on parle de variable offset. Une variable offset est utile lorsque l’espérance de <span class="math inline">\(Y_i\)</span> est proportionnelle à une autre quantité connue (une population exposée, une durée d’exposition, un effort d’échantillonnage), et qu’on souhaite modéliser un taux plutôt qu’un compte brut.</p>
 </div>
-<div class="env-exemple" data-titre="Ajustement sur [`danishlc`](#data-danishlc)">
-<p><span class="env-titre">Exemple — Ajustement sur <a href="#data-danishlc"><code>danishlc</code></a></span></p>
+<div class="env-exemple" data-titre="Ajustement sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Ajustement sur <a href="#data-empress"><code>empress</code></a></span></p>
+<p>On modélise le nombre de survivants de chaque strate, avec l’effectif de la strate comme offset et des effets additifs de la classe, du sexe et du groupe d’âge.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GLMsData)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(danishlc)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family =</span> poisson, <span class="at">data =</span> danishlc)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.additif)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(survivants <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(effectif)) <span class="sc">+</span> classe <span class="sc">+</span> sexe <span class="sc">+</span> groupe_age,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family =</span> poisson, <span class="at">data =</span> empress.agr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.additif)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>               Estimate Std. Error     z value     Pr(&gt;|z|)
-(Intercept) -4.21241109  0.2081915 -20.2333461 4.980576e-91
-CityHorsens -0.33005999  0.1815033  -1.8184791 6.899094e-02
-CityKolding -0.37154616  0.1878063  -1.9783480 4.788946e-02
-CityVejle   -0.27231769  0.1878534  -1.4496291 1.471620e-01
-Age40-54    -1.41965342  0.2502707  -5.6724722 1.407514e-08
-Age55-59    -0.31863942  0.2520492  -1.2641953 2.061599e-01
-Age60-64     0.09895893  0.2356616   0.4199197 6.745441e-01
-Age65-69     0.34805283  0.2334288   1.4910451 1.359497e-01
-Age70-74     0.43720988  0.2392942   1.8270809 6.768761e-02</code></pre>
+<pre><code>                   Estimate Std. Error   z value     Pr(&gt;|z|)
+(Intercept)      -1.3576348  0.2108504 -6.438852 1.203801e-10
+classeDeuxième   -0.6542217  0.2208236 -2.962644 3.050087e-03
+classeTroisième  -0.8020421  0.1888224 -4.247599 2.160736e-05
+sexeHomme         0.7651304  0.1714048  4.463880 8.048867e-06
+groupe_ageEnfant -1.8689502  0.5061053 -3.692809 2.217905e-04</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(modele.additif))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     (Intercept)   classeDeuxième  classeTroisième        sexeHomme 
+       0.2572685        0.5198465        0.4484123        2.1492747 
+groupe_ageEnfant 
+       0.1542855 </code></pre>
 </div>
 </div>
-<p>On peut visualiser le taux d’incidence prédit par tranche d’âge :</p>
+<p>Les autres variables étant fixées, le taux de survie des hommes est environ 2,15 fois celui des femmes, celui des enfants environ 0,15 fois celui des adultes, et ceux des passagers de deuxième et de troisième classe environ 0,52 et 0,45 fois celui des passagers de première classe. L’effet du sexe va à l’encontre du principe « les femmes et les enfants d’abord » : le naufrage, survenu en pleine nuit et en quelques minutes, a laissé peu de temps pour organiser l’évacuation.</p>
+<p>On peut comparer les taux de survie observés et prédits dans chaque strate :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>danishlc <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taux_predit =</span> <span class="fu">predict</span>(modele.additif, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">/</span> Pop <span class="sc">*</span> <span class="dv">1000</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">taux_observe =</span> Cases <span class="sc">/</span> Pop <span class="sc">*</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Age)) <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> taux_observe, <span class="at">color =</span> City), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> taux_predit, <span class="at">color =</span> City, <span class="at">group =</span> City)) <span class="sc">+</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Tranche d'âge"</span>, <span class="at">y =</span> <span class="st">"Cas pour 1000 habitants"</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Taux d'incidence observés et prédits, par ville et tranche d'âge"</span>) <span class="sc">+</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>empress.agr <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taux_predit =</span> <span class="fu">predict</span>(modele.additif, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">/</span> effectif,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">taux_observe =</span> survivants <span class="sc">/</span> effectif) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> classe, <span class="at">color =</span> sexe)) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> taux_observe), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> taux_predit, <span class="at">group =</span> sexe)) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> groupe_age) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Classe"</span>, <span class="at">y =</span> <span class="st">"Taux de survie"</span>, <span class="at">color =</span> <span class="st">"Sexe"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Taux de survie observés (points) et prédits (lignes)"</span>) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="03-modeles-lineaires-generalises_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="03-modeles-lineaires-generalises_files/figure-html/empress-taux-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Le taux prédit suit d’assez près les taux observés pour la plupart des combinaisons ville-âge.</p>
+<p>Les taux prédits suivent d’assez près les taux observés chez les adultes. Les écarts sont plus marqués chez les enfants, où les effectifs sont petits (4 filles seulement en première classe).</p>
 </div>
 </section>
 <section id="vraisemblance-et-score-1" class="level3" data-number="3.6.2">
@@ -899,28 +925,38 @@ d(y,\mu) = 2\left\{y\log\!\left(\frac{y}{\mu}\right) - (y - \mu)\right\}.
 X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D = \sum_{i=1}^n d(y_i,\hat\mu_i),
 \]</span></p>
 <p>qui suivent toutes deux approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien adapté et si les <span class="math inline">\(\mu_i\)</span> ne sont pas trop petits.</p>
-<div class="env-exemple" data-titre="Adéquation sur `danishlc`">
-<p><span class="env-titre">Exemple — Adéquation sur <code>danishlc</code></span></p>
+<div class="env-exemple" data-titre="Adéquation sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Adéquation sur <a href="#data-empress"><code>empress</code></a></span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mu_hat <span class="ot">&lt;-</span> <span class="fu">fitted</span>(modele.additif)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(danishlc)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(modele.additif)) <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">sum</span>((danishlc<span class="sc">$</span>Cases <span class="sc">-</span> mu_hat)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> mu_hat)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>D  <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.additif)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(X2, <span class="at">df =</span> n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mu_hat <span class="ot">&lt;-</span> <span class="fu">fitted</span>(modele.additif)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(empress.agr)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(modele.additif)) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">sum</span>((empress.agr<span class="sc">$</span>survivants <span class="sc">-</span> mu_hat)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> mu_hat)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>D  <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.additif)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">X2 =</span> X2, <span class="at">D =</span> D, <span class="at">dl =</span> n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.09390116</code></pre>
+<pre><code>       X2         D        dl 
+13.564715  9.884635  6.000000 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(D,  <span class="at">df =</span> n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(X2, <span class="at">df =</span> n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.07509017</code></pre>
+<pre><code>[1] 0.03489506</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(D,  <span class="at">df =</span> n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1295951</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(mu_hat, <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     1      2      3      4      5      6      7      8      9     10     11 
+ 27.09   8.75   0.16  32.77   0.49  14.31   0.43 110.58   2.07  19.50   0.85 </code></pre>
 </div>
 </div>
 <div class="env-remarque" data-titre="Adéquation et taille des $\mu_i$">
 <p><span class="env-titre">Remarque — Adéquation et taille des <span class="math inline">\(\mu_i\)</span></span></p>
-<p>Les deux statistiques d’adéquation ne mènent pas au rejet du modèle (<span class="math inline">\(p \approx 0{,}09\)</span> pour <span class="math inline">\(X^2\)</span>, <span class="math inline">\(p \approx 0{,}08\)</span> pour la déviance), ce qui est cohérent avec l’absence de surdispersion détectée plus bas. Il faut toutefois interpréter ces résultats avec prudence : les <span class="math inline">\(\hat\mu_i\)</span> sont tous modestes (entre 7 et 13 environ), ce qui place l’approximation <span class="math inline">\(\chi^2\)</span> dans une zone où elle reste raisonnable, mais moins fiable que pour des comptes plus élevés. Combiné au faible nombre de degrés de liberté (<span class="math inline">\(n-(p+1)=15\)</span>), cela explique en partie l’écart entre les deux valeurs-p.</p>
+<p>Les deux statistiques ne mènent pas à la même conclusion au seuil de 5 % : la déviance ne rejette pas le modèle (valeur-p <span class="math inline">\(\approx 0{,}13\)</span>), alors que la statistique de Pearson le rejette (valeur-p <span class="math inline">\(\approx 0{,}035\)</span>). L’écart s’explique par la taille des <span class="math inline">\(\hat\mu_i\)</span> : quatre strates ont une valeur ajustée inférieure à 1, ce qui place l’approximation <span class="math inline">\(\chi^2\)</span> hors de sa zone de validité. La statistique <span class="math inline">\(X^2\)</span>, qui divise par <span class="math inline">\(\hat\mu_i\)</span>, y est particulièrement sensible : les filles de première classe (<span class="math inline">\(y = 1\)</span>, <span class="math inline">\(\hat\mu \approx 0{,}16\)</span>) et de deuxième classe (<span class="math inline">\(y = 2\)</span>, <span class="math inline">\(\hat\mu \approx 0{,}43\)</span>) fournissent à elles seules environ les trois quarts de <span class="math inline">\(X^2\)</span>. Avec seulement <span class="math inline">\(n-(p+1) = 6\)</span> degrés de liberté, aucune des deux valeurs-p ne doit être prise au pied de la lettre.</p>
 </div>
 </div>
 </section>
@@ -938,7 +974,7 @@ X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D 
 P(Y_i = y_i) = \frac{\Gamma(y_i + 1/\alpha)}{\Gamma(y_i+1)\Gamma(1/\alpha)}\left(\frac{1/\alpha}{\mu_i + 1/\alpha}\right)^{1/\alpha}\left(\frac{\mu_i}{\mu_i + 1/\alpha}\right)^{y_i}, \quad y_i = 0,1,2,\ldots,\ \alpha &gt; 0.
 \]</span></p>
 </div>
-<p>On montre que <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \mu_i + \alpha\mu_i^2\)</span> : la variance excède toujours l’espérance dès que <span class="math inline">\(\alpha&gt;0\)</span>, et la loi de Poisson est retrouvée à la limite <span class="math inline">\(\alpha \to 0\)</span>. Avec <span class="math inline">\(\mu_i = e^{x_i^\top\boldsymbol\beta}\)</span>, les coefficients <span class="math inline">\(\boldsymbol\beta\)</span> gardent exactement la même interprétation multiplicative que pour la régression de Poisson. En R, on ajuste ce modèle avec la fonction <code>glm.nb</code> de la librairie <code>MASS</code>, qui estime conjointement <span class="math inline">\(\boldsymbol\beta\)</span> et <span class="math inline">\(\alpha\)</span> par maximum de vraisemblance.</p>
+<p>On montre que <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \mu_i + \alpha\mu_i^2\)</span> : la variance excède toujours l’espérance dès que <span class="math inline">\(\alpha&gt;0\)</span>, et la loi de Poisson est retrouvée à la limite <span class="math inline">\(\alpha \to 0\)</span>. Avec <span class="math inline">\(\mu_i = e^{x_i^\top\boldsymbol\beta}\)</span>, les coefficients <span class="math inline">\(\boldsymbol\beta\)</span> gardent exactement la même interprétation multiplicative que pour la régression de Poisson. En R, on ajuste ce modèle avec la fonction <code>glm.nb</code> de la librairie <code>MASS</code>, qui estime conjointement <span class="math inline">\(\boldsymbol\beta\)</span> et <span class="math inline">\(\alpha\)</span> par maximum de vraisemblance (la fonction rapporte <span class="math inline">\(\theta = 1/\alpha\)</span>).</p>
 <div class="env-propriete" data-titre="Test de surdispersion">
 <p><span class="env-titre">Propriété — Test de surdispersion</span></p>
 <p>Comme la régression de Poisson correspond au cas particulier <span class="math inline">\(\alpha=0\)</span> de la binomiale négative, on peut tester <span class="math inline">\(H_0 : \alpha = 0\)</span> en comparant les déviances des deux modèles emboîtés, <span class="math inline">\(D_0\)</span> (Poisson) et <span class="math inline">\(D_1\)</span> (binomiale négative) : <span class="math inline">\(Q_{obs} = D_0 - D_1\)</span>. Comme <span class="math inline">\(\alpha=0\)</span> se trouve à la frontière de l’espace des paramètres (on ne peut avoir <span class="math inline">\(\alpha&lt;0\)</span>), la statistique de test ne suit pas simplement une <span class="math inline">\(\chi^2_1\)</span> sous <span class="math inline">\(H_0\)</span>, mais un mélange</p>
@@ -947,104 +983,122 @@ Q \sim \tfrac{1}{2}\chi^2_0 + \tfrac{1}{2}\chi^2_1 \quad\text{sous } H_0,
 \]</span></p>
 <p>où <span class="math inline">\(\chi^2_0\)</span> désigne la loi dégénérée en <span class="math inline">\(0\)</span>. Le seuil observé est donc <span class="math inline">\(\alpha^* = P(\chi^2_1 &gt; Q_{obs})/2\)</span>, soit la moitié de ce qu’on obtiendrait avec une <span class="math inline">\(\chi^2_1\)</span> usuelle.</p>
 </div>
-<div class="env-exemple" data-titre="Test de surdispersion sur [`danishlc`](#data-danishlc)">
-<p><span class="env-titre">Exemple — Test de surdispersion sur <a href="#data-danishlc"><code>danishlc</code></a></span></p>
+<div class="env-exemple" data-titre="Test de surdispersion sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Test de surdispersion sur <a href="#data-empress"><code>empress</code></a></span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>modele.nb <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(Cases <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(Pop)) <span class="sc">+</span> City <span class="sc">+</span> Age, <span class="at">data =</span> danishlc)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in theta.ml(Y, mu, sum(w), w, limit = control$maxit, trace =
-control$trace &gt; : iteration limit reached
-Warning in theta.ml(Y, mu, sum(w), w, limit = control$maxit, trace =
-control$trace &gt; : iteration limit reached</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Q.obs <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.additif) <span class="sc">-</span> <span class="fu">deviance</span>(modele.nb)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>alpha.etoile <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(Q.obs, <span class="at">df =</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>alpha.etoile</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>modele.nb <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(survivants <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(effectif)) <span class="sc">+</span> classe <span class="sc">+</span> sexe <span class="sc">+</span> groupe_age,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> empress.agr)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>modele.nb<span class="sc">$</span>theta</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.484151</code></pre>
+<pre><code>[1] 25506.2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Q.obs <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">deviance</span>(modele.additif) <span class="sc">-</span> <span class="fu">deviance</span>(modele.nb), <span class="dv">0</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>alpha.etoile <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(Q.obs, <span class="at">df =</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>alpha.etoile</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4828094</code></pre>
 </div>
 </div>
-<p>On obtient <span class="math inline">\(\alpha^* \approx 0.143\)</span> : on ne détecte pas de variabilité extra-Poissonienne significative pour ces données, et le modèle de Poisson usuel demeure approprié.</p>
+<p>L’estimation de <span class="math inline">\(\theta\)</span> est très grande, donc <span class="math inline">\(\hat\alpha = 1/\hat\theta\)</span> est pratiquement nul : le maximum de vraisemblance se trouve à la frontière <span class="math inline">\(\alpha = 0\)</span>, et <code>glm.nb</code> peut signaler que l’algorithme a atteint sa limite d’itérations. On a alors <span class="math inline">\(Q_{obs} \approx 0\)</span> et <span class="math inline">\(\alpha^* \approx 0{,}5\)</span> : on ne détecte pas de variabilité extra-Poissonienne, et le modèle de Poisson usuel demeure approprié.</p>
 </div>
 </section>
 <section id="comparaison-de-modèles-emboîtés-1" class="level3" data-number="3.6.6">
 <h3 data-number="3.6.6" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés-1"><span class="header-section-number">3.6.6</span> Comparaison de modèles emboîtés</h3>
 <p>Comme en régression logistique, on peut comparer deux modèles emboîtés par différence de déviances plutôt que d’examiner l’adéquation d’un seul modèle.</p>
-<div class="env-exemple" data-titre="Effet de la ville sur [`danishlc`](#data-danishlc)">
-<p><span class="env-titre">Exemple — Effet de la ville sur <a href="#data-danishlc"><code>danishlc</code></a></span></p>
+<div class="env-exemple" data-titre="Effet de la classe sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Effet de la classe sur <a href="#data-empress"><code>empress</code></a></span></p>
+<p>On teste d’abord l’effet de la classe, puis on vérifie si cet effet peut se résumer à une tendance log-linéaire en remplaçant le facteur <code>classe</code> par la variable numérique <code>classe_num</code>. Ce second modèle est emboîté dans le premier : un seul coefficient pour la classe au lieu de deux.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>modele.sans.ville <span class="ot">&lt;-</span> <span class="fu">update</span>(modele.additif, . <span class="sc">~</span> . <span class="sc">-</span> City)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modele.sans.ville, modele.additif, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>modele.sans.classe <span class="ot">&lt;-</span> <span class="fu">update</span>(modele.additif, . <span class="sc">~</span> . <span class="sc">-</span> classe)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modele.sans.classe, modele.additif, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 
-Model 1: Cases ~ Age + offset(log(Pop))
-Model 2: Cases ~ offset(log(Pop)) + City + Age
+Model 1: survivants ~ sexe + groupe_age + offset(log(effectif))
+Model 2: survivants ~ offset(log(effectif)) + classe + sexe + groupe_age
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1         8    25.2806                          
+2         6     9.8846  2   15.396 0.0004537 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>modele.classe.num <span class="ot">&lt;-</span> <span class="fu">update</span>(modele.additif, . <span class="sc">~</span> . <span class="sc">-</span> classe <span class="sc">+</span> classe_num)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modele.classe.num, modele.additif, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: survivants ~ sexe + groupe_age + classe_num + offset(log(effectif))
+Model 2: survivants ~ offset(log(effectif)) + classe + sexe + groupe_age
   Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)
-1        18     28.306                     
-2        15     23.448  3    4.859   0.1824</code></pre>
+1         7    12.0837                     
+2         6     9.8846  1   2.1991   0.1381</code></pre>
 </div>
 </div>
-<p>Le test par différence de déviances montre une différence significative entre les tranches d’âge, mais pas entre les villes : on ne rejette pas l’hypothèse que le modèle sans effet de ville est adéquat.</p>
+<p>Le premier test rejette nettement l’hypothèse d’absence d’effet de la classe (différence de déviances d’environ 15,4 à 2 degrés de liberté, valeur-p <span class="math inline">\(\approx 0{,}0005\)</span>). Le second ne rejette pas le modèle avec tendance log-linéaire (différence d’environ 2,2 à 1 degré de liberté, valeur-p <span class="math inline">\(\approx 0{,}14\)</span>) : chaque classe inférieure multiplierait alors le taux de survie par un même facteur. Les coefficients du modèle additif (<span class="math inline">\(-0{,}65\)</span> pour la deuxième classe, <span class="math inline">\(-0{,}80\)</span> pour la troisième) suggèrent plutôt un écart concentré entre la première classe et les deux autres, mais 11 strates ne suffisent pas à trancher.</p>
 </div>
 </section>
 <section id="graphiques-et-observations-aberrantes" class="level3" data-number="3.6.7">
 <h3 data-number="3.6.7" class="anchored" data-anchor-id="graphiques-et-observations-aberrantes"><span class="header-section-number">3.6.7</span> Graphiques et observations aberrantes</h3>
 <p>Comme en régression logistique, on trace les résidus de déviance en fonction du numéro d’observation pour repérer une extra-variabilité, et on examine leviers, distance de Cook et DFBETAS pour repérer les observations influentes.</p>
-<div class="env-exemple" data-titre="Diagnostics — données [`ships`](#data-ships)">
-<p><span class="env-titre">Exemple — Diagnostics — données <a href="#data-ships"><code>ships</code></a></span></p>
+<div class="env-exemple" data-titre="Diagnostics sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Diagnostics sur <a href="#data-empress"><code>empress</code></a></span></p>
+<p>Résidus en fonction du numéro d’observation :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ships)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>ships <span class="ot">&lt;-</span> ships <span class="sc">|&gt;</span> <span class="fu">filter</span>(service <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(incidents <span class="sc">~</span> type <span class="sc">+</span> year <span class="sc">+</span> period <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(service)),</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> poisson, <span class="at">data =</span> ships)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><strong>Résidus en fonction du numéro d’observation</strong></p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>res_dev <span class="ot">&lt;-</span> <span class="fu">residuals</span>(mod, <span class="at">type =</span> <span class="st">"deviance"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_dev, <span class="at">xlab =</span> <span class="st">"Numéro d'observation"</span>, <span class="at">ylab =</span> <span class="st">"Résidu de déviance"</span>,</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>res_dev <span class="ot">&lt;-</span> <span class="fu">residuals</span>(modele.additif, <span class="at">type =</span> <span class="st">"deviance"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_dev, <span class="at">xlab =</span> <span class="st">"Numéro d'observation"</span>, <span class="at">ylab =</span> <span class="st">"Résidu de déviance"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="fl">2.5</span>))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="03-modeles-lineaires-generalises_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="03-modeles-lineaires-generalises_files/figure-html/empress-residus-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Quelques résidus dépassent les seuils à <span class="math inline">\(\pm 2\)</span>, ce qui peut suggérer une légère extra-variabilité.</p>
-<p><strong>Estimation de <span class="math inline">\(\phi\)</span></strong></p>
+<p>Aucun résidu de déviance ne dépasse les seuils de <span class="math inline">\(\pm 2\)</span> ; les plus grands (environ 1,7 et 1,4) correspondent aux filles de deuxième et de première classe, déjà repérées dans l’analyse de l’adéquation.</p>
+<p>Estimation de <span class="math inline">\(\phi\)</span> :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>chi2_p <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(mod, <span class="at">type =</span> <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(ships)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(mod))</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>phi_hat <span class="ot">&lt;-</span> chi2_p <span class="sc">/</span> (n <span class="sc">-</span> p)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>phi_hat</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>chi2_p <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(modele.additif, <span class="at">type =</span> <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>phi_hat <span class="ot">&lt;-</span> chi2_p <span class="sc">/</span> (n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>phi_hat</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.438925</code></pre>
+<pre><code>[1] 2.260786</code></pre>
 </div>
 </div>
-<p><strong>Observations aberrantes et valeurs influentes</strong></p>
+<p>On obtient <span class="math inline">\(\tilde\phi_P \approx 2{,}3\)</span>, ce qui pourrait suggérer de la surdispersion. Cette valeur est toutefois gonflée par les deux mêmes strates à très petit <span class="math inline">\(\hat\mu_i\)</span> et repose sur seulement 6 degrés de liberté ; elle doit être lue à la lumière du test de surdispersion, qui ne détectait aucune variabilité extra-Poissonienne.</p>
+<p>Observations aberrantes et valeurs influentes :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod, <span class="at">which =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(modele.additif, <span class="at">which =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="03-modeles-lineaires-generalises_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="03-modeles-lineaires-generalises_files/figure-html/empress-cook-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(modele.additif)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(h, <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    1     2     3     4     5     6     7     8     9    10    11 
+0.801 0.389 0.046 0.775 0.133 0.503 0.119 0.917 0.526 0.564 0.227 </code></pre>
 </div>
-<p>La distance de Cook pointe vers quelques observations plus influentes que les autres, à examiner de plus près (grands cargos avec peu de mois de service, par exemple).</p>
-<p>Le seuil usuel pour un levier élevé est <span class="math inline">\(2(p+1)/n\)</span> ; pour la distance de Cook, on examine les valeurs qui se détachent nettement des autres.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(h <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> (p <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> n)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>8 
+8 </code></pre>
+</div>
+</div>
+<p>La strate des hommes adultes de troisième classe (observation 8) se détache nettement, avec une distance de Cook d’environ 4,7 et un levier d’environ 0,92. Elle regroupe 446 des 1057 passagers et 115 des 217 survivants : elle pèse donc très lourd dans l’estimation, puisque le poids IRLS vaut <span class="math inline">\(w_i = \hat\mu_i\)</span>. La strate des hommes adultes de première classe (observation 1, distance de Cook d’environ 1,4) est la seconde plus influente ; c’est aussi celle où le taux de survie (<span class="math inline">\(\approx 0{,}49\)</span>) s’éloigne le plus du régime où l’approximation de Poisson est justifiée.</p>
+<p>Le seuil usuel pour un levier élevé est <span class="math inline">\(2(p+1)/n\)</span>. Ici, il vaut <span class="math inline">\(10/11 \approx 0{,}91\)</span> : avec aussi peu d’observations que de paramètres ou presque, ce repère devient peu discriminant, et il vaut mieux examiner les valeurs qui se détachent nettement des autres.</p>
+</div>
+<div class="env-remarque" data-titre="Poisson ou binomial?">
+<p><span class="env-titre">Remarque — Poisson ou binomial?</span></p>
+<p>Plusieurs taux de survie d’<a href="#data-empress"><code>empress</code></a> sont modérés, et le modèle binomial <code>glm(cbind(survivants, effectif - survivants) ~ classe + sexe + groupe_age, family = binomial)</code> serait plus naturel pour ces données. Il mène aux mêmes conclusions qualitatives (effets de la classe, du sexe et du groupe d’âge de mêmes signes), mais ses coefficients s’interprètent comme des rapports de cotes plutôt que comme des rapports de taux. L’exemple sert ici à illustrer l’offset et les outils propres à la régression de Poisson.</p>
 </div>
 
 

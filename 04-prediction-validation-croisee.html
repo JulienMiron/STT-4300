@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -47,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-d4441400c42cc7b7d49f9a5a07110dfd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-118537708b9c1bdeb3824d6ddaac134b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -238,10 +273,16 @@ window.Quarto = {
   <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link" data-scroll-target="#validation-croisée"><span class="header-section-number">4.2</span> Validation croisée</a>
   <ul class="collapse">
   <li><a href="#approche-par-ensemble-de-validation" id="toc-approche-par-ensemble-de-validation" class="nav-link" data-scroll-target="#approche-par-ensemble-de-validation"><span class="header-section-number">4.2.1</span> Approche par ensemble de validation</a></li>
-  <li><a href="#validation-croisée-avec-exclusion-dune-observation-loocv" id="toc-validation-croisée-avec-exclusion-dune-observation-loocv" class="nav-link" data-scroll-target="#validation-croisée-avec-exclusion-dune-observation-loocv"><span class="header-section-number">4.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV)</a></li>
+  <li><a href="#validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" id="toc-validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" class="nav-link" data-scroll-target="#validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation"><span class="header-section-number">4.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV de <em>leave one out cross validation</em>)</a></li>
   <li><a href="#validation-croisée-à-k-blocs" id="toc-validation-croisée-à-k-blocs" class="nav-link" data-scroll-target="#validation-croisée-à-k-blocs"><span class="header-section-number">4.2.3</span> Validation croisée à <span class="math inline">\(K\)</span> blocs</a></li>
   </ul></li>
-  <li><a href="#mesures-de-performance-pour-la-classification" id="toc-mesures-de-performance-pour-la-classification" class="nav-link" data-scroll-target="#mesures-de-performance-pour-la-classification"><span class="header-section-number">4.3</span> Mesures de performance pour la classification</a></li>
+  <li><a href="#sec-cv-GLM" id="toc-sec-cv-GLM" class="nav-link" data-scroll-target="#sec-cv-GLM"><span class="header-section-number">4.3</span> Validation croisée pour les GLM</a>
+  <ul class="collapse">
+  <li><a href="#régression-logistique-et-classification" id="toc-régression-logistique-et-classification" class="nav-link" data-scroll-target="#régression-logistique-et-classification"><span class="header-section-number">4.3.1</span> Régression logistique et classification</a></li>
+  <li><a href="#régression-de-poisson" id="toc-régression-de-poisson" class="nav-link" data-scroll-target="#régression-de-poisson"><span class="header-section-number">4.3.2</span> Régression de Poisson</a></li>
+  <li><a href="#sec-cv-approx" id="toc-sec-cv-approx" class="nav-link" data-scroll-target="#sec-cv-approx"><span class="header-section-number">4.3.3</span> Approximation de <span class="math inline">\(VC_{(n)}\)</span> sans réajustement</a></li>
+  <li><a href="#exemples-sur-les-données-de-lempress-of-ireland" id="toc-exemples-sur-les-données-de-lempress-of-ireland" class="nav-link" data-scroll-target="#exemples-sur-les-données-de-lempress-of-ireland"><span class="header-section-number">4.3.4</span> Exemples sur les données de l’Empress of Ireland</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/04-prediction-validation-croisee.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
@@ -275,55 +316,371 @@ window.Quarto = {
 
 <section id="adéquation-versus-précision-de-prédiction" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="adéquation-versus-précision-de-prédiction"><span class="header-section-number">4.1</span> Adéquation versus précision de prédiction</h2>
-<p>Considérons le jeu de données <code>Auto</code> (librairie <code>ISLR</code>, <span class="math inline">\(n = 392\)</span>) : la réponse est <code>mpg</code> (miles par gallon) et la variable explicative est la puissance <code>horsepower</code>. On veut choisir parmi les modèles :</p>
+<div class="env-exemple" data-titre="Jeu de données arbres">
+<p><span class="env-titre">Exemple — Jeu de données arbres</span></p>
+<p>Le jeu de données <span id="data-arbres"><code>arbres</code></span> est un extrait de 200 arbres des placettes-échantillons permanentes de l’inventaire forestier du Québec, relevés entre 2015 et 2025 dans une trentaine de régions écologiques. L’extrait retient les quatre espèces les plus fréquentes (bouleau à papier, épinette noire, érable rouge et sapin baumier), à raison de 50 arbres par espèce et d’un seul arbre par placette. On y trouve notamment le diamètre à hauteur de poitrine (<code>diameter_cm</code>), la hauteur (<code>height_m</code>), l’espèce (<code>species_fr</code>) et la position de l’arbre dans le couvert forestier (<code>canopy_stratum</code>).</p>
+<p>Seuls les arbres d’au moins 9 cm de diamètre sont mesurés à l’inventaire. L’extrait n’est pas représentatif de la composition de la forêt, puisque le nombre d’arbres par espèce a été fixé.</p>
+</div>
+<p>On veut prédire la hauteur <span class="math inline">\(H_i\)</span> d’un arbre à partir de son diamètre <span class="math inline">\(D_i\)</span>. La relation hauteur-diamètre est une relation allométrique : on la modélise sur l’échelle log-log. Notons <span class="math inline">\(e(i)\)</span> l’espèce de l’arbre <span class="math inline">\(i\)</span> et <span class="math inline">\(s(i)\)</span> sa strate. On veut choisir parmi cinq modèles de complexité croissante :</p>
 <p><span class="math display">\[
 \begin{aligned}
-\mbox{Modèle 1 : } Y_i &amp;= \beta_0 + \beta_1 X_i + \epsilon_i,\\
-\mbox{Modèle 2 : } Y_i &amp;= \beta_0 + \beta_1 X_i + \beta_2\log(X_i) + \epsilon_i,\\
-\mbox{Modèle 3 : } Y_i &amp;= \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \epsilon_i,\\
-\mbox{Modèle 4 : } Y_i &amp;= \beta_0 + \beta_1 X_i + \beta_2 X_i^2 + \beta_3 X_i^3 + \epsilon_i.
+\mbox{Modèle 1 : } \log H_i &amp;= \beta_0 + \beta_1\log D_i + \epsilon_i,\\
+\mbox{Modèle 2 : } \log H_i &amp;= \beta_{0,e(i)} + \beta_1\log D_i + \epsilon_i,\\
+\mbox{Modèle 3 : } \log H_i &amp;= \beta_{0,e(i)} + \beta_{1,e(i)}\log D_i + \epsilon_i,\\
+\mbox{Modèle 4 : } \log H_i &amp;= \beta_{0,e(i)} + \beta_{1,e(i)}\log D_i + \delta_{s(i)} + \epsilon_i,\\
+\mbox{Modèle 5 : } \log H_i &amp;= \sum_{k=0}^{3}\beta_{k,e(i)}\left(\log D_i\right)^k + \delta_{s(i)} + \epsilon_i.
 \end{aligned}
 \]</span></p>
-<p>Pour chaque modèle, on peut calculer <span class="math inline">\(SSE = \sum_i(Y_i - \hat Y_i)^2\)</span>, l’<span class="math inline">\(AIC\)</span>, le <span class="math inline">\(BIC\)</span>, ou effectuer des tests pour modèles emboîtés : toutes ces procédures cherchent le modèle avec le meilleur <strong>ajustement</strong> aux données.</p>
-<p>Supposons plutôt qu’on veuille prédire la réponse <span class="math inline">\(Y_0\)</span> d’une nouvelle observation <span class="math inline">\(X_0\)</span> : on cherche alors le modèle qui minimise <span class="math inline">\(E[(Y_0 - \hat Y_0)^2]\)</span>. Les deux critères (adéquation et précision de la prédiction) sont différents et peuvent être contradictoires : avec <span class="math inline">\(n\)</span> points, un polynôme d’ordre <span class="math inline">\(n-1\)</span> a une adéquation parfaite (<span class="math inline">\(SSE = 0\)</span>) mais sera inutile pour prédire des valeurs futures (<strong>surajustement</strong>).</p>
+<p>Le modèle 2 permet une ordonnée à l’origine par espèce et le modèle 3 une pente par espèce. Le modèle 4 ajoute l’effet de la strate. Le modèle 5 remplace chaque droite par un polynôme cubique propre à l’espèce. Ces modèles comptent respectivement 2, 5, 8, 10 et 18 paramètres de moyenne.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/arbres.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>arbres<span class="sc">$</span>espece <span class="ot">&lt;-</span> <span class="fu">factor</span>(arbres<span class="sc">$</span>species_fr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Seulement 4 arbres dominants : on les regroupe avec les codominants</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>arbres<span class="sc">$</span>strate <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ifelse</span>(arbres<span class="sc">$</span>canopy_stratum <span class="sc">==</span> <span class="st">"Dominant"</span>, <span class="st">"Codominant"</span>, arbres<span class="sc">$</span>canopy_stratum),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Codominant"</span>, <span class="st">"Intermédiaire"</span>, <span class="st">"Opprimé"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>formules <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">M1 =</span> <span class="fu">log</span>(height_m) <span class="sc">~</span> <span class="fu">log</span>(diameter_cm),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">M2 =</span> <span class="fu">log</span>(height_m) <span class="sc">~</span> <span class="fu">log</span>(diameter_cm) <span class="sc">+</span> espece,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">M3 =</span> <span class="fu">log</span>(height_m) <span class="sc">~</span> <span class="fu">log</span>(diameter_cm) <span class="sc">*</span> espece,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">M4 =</span> <span class="fu">log</span>(height_m) <span class="sc">~</span> <span class="fu">log</span>(diameter_cm) <span class="sc">*</span> espece <span class="sc">+</span> strate,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">M5 =</span> <span class="fu">log</span>(height_m) <span class="sc">~</span> <span class="fu">poly</span>(<span class="fu">log</span>(diameter_cm), <span class="dv">3</span>) <span class="sc">*</span> espece <span class="sc">+</span> strate</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>modeles <span class="ot">&lt;-</span> <span class="fu">lapply</span>(formules, lm, <span class="at">data =</span> arbres)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Erreur d'entraînement : SSE / n</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(modeles, <span class="cf">function</span>(m) <span class="fu">mean</span>(<span class="fu">residuals</span>(m)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        M1         M2         M3         M4         M5 
+0.03932338 0.03401792 0.03092351 0.02850735 0.02727676 </code></pre>
+</div>
+</div>
+<p>Pour chaque modèle, on peut calculer <span class="math inline">\(SSE = \sum_i(y_i - \hat y_i)^2\)</span>, où <span class="math inline">\(\hat y_i\)</span> est la valeur ajustée par le modèle estimé sur toutes les données, l’AIC, le BIC, ou effectuer des tests pour modèles emboîtés. Toutes ces procédures cherchent le modèle qui s’ajuste le mieux aux données observées. Ici, l’erreur d’entraînement <span class="math inline">\(SSE/n\)</span> diminue d’un modèle à l’autre jusqu’au modèle 5, comme c’est toujours le cas pour des modèles emboîtés ajustés par moindres carrés.</p>
+<p>Supposons plutôt qu’on veuille prédire la hauteur <span class="math inline">\(H_0\)</span> d’un nouvel arbre de diamètre <span class="math inline">\(D_0\)</span>. On cherche alors le modèle qui minimise <span class="math inline">\(E[(Y_0 - \hat Y_0)^2]\)</span>, avec <span class="math inline">\(Y_0 = \log H_0\)</span>. Les deux critères, adéquation et précision de la prédiction, sont différents et peuvent être contradictoires. Avec <span class="math inline">\(n\)</span> points distincts, un polynôme de degré <span class="math inline">\(n-1\)</span> a une adéquation parfaite (<span class="math inline">\(SSE = 0\)</span>), mais il sera inutile pour prédire de nouvelles valeurs : c’est le surajustement.</p>
 <p>On distingue donc :</p>
 <ul>
-<li><p>le <strong>taux d’erreur d’entraînement</strong>, évalué par <span class="math inline">\(SSE\)</span>, qui mesure l’adéquation aux données observées ;</p></li>
-<li><p>le <strong>taux d’erreur test</strong>, qui mesure la précision de prédiction pour une observation future.</p></li>
+<li><p>le taux d’erreur d’entraînement, évalué par <span class="math inline">\(SSE\)</span>, qui mesure l’adéquation aux données observées ;</p></li>
+<li><p>le taux d’erreur test, qui mesure la précision de la prédiction pour une observation future.</p></li>
 </ul>
+<p>Le taux d’erreur test n’est pas observable directement. Les méthodes de validation croisée présentées ci-dessous l’estiment à partir des seules données disponibles.</p>
 </section>
 <section id="validation-croisée" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="validation-croisée"><span class="header-section-number">4.2</span> Validation croisée</h2>
 <section id="approche-par-ensemble-de-validation" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="approche-par-ensemble-de-validation"><span class="header-section-number">4.2.1</span> Approche par ensemble de validation</h3>
-<p>On partage le jeu de données en deux parties : un <strong>jeu d’entraînement</strong> (pour estimer les paramètres) et un <strong>jeu test</strong> (pour estimer le taux d’erreur test). Avec <span class="math inline">\(n_1\)</span> observations d’entraînement et <span class="math inline">\(n_2 = n - n_1\)</span> observations test : <span class="math display">\[\widehat{Err}_{test} = \frac{1}{n_2}\sum_{i = n_1+1}^{n}(Y_i - \hat Y_i)^2,\]</span> où <span class="math inline">\(\hat Y_i\)</span> est calculé avec les paramètres estimés sur le jeu d’entraînement.</p>
+<p>On partage le jeu de données en deux parties : un jeu d’entraînement pour estimer les paramètres et un jeu test pour estimer le taux d’erreur test. Avec <span class="math inline">\(n_1\)</span> observations d’entraînement et <span class="math inline">\(n_2 = n - n_1\)</span> observations test,</p>
+<p><span class="math display">\[
+\widehat{Err}_{test} = \frac{1}{n_2}\sum_{i = n_1+1}^{n}\left(y_i - \hat y_{i,\text{ent}}\right)^2,
+\]</span></p>
+<p>où <span class="math inline">\(\hat y_{i,\text{ent}}\)</span> est la prédiction de l’observation <span class="math inline">\(i\)</span> calculée avec les paramètres estimés sur le seul jeu d’entraînement.</p>
 <p>Cette approche a deux défauts : (i) la partition est arbitraire, ce qui introduit de la variabilité ; (ii) on n’estime <span class="math inline">\(\beta\)</span> qu’avec une fraction des données, ce qui augmente la variance de <span class="math inline">\(\hat\beta\)</span>. Pour le premier défaut, on peut répéter la partition aléatoirement un grand nombre de fois et moyenner les erreurs obtenues.</p>
+<div class="env-exemple" data-titre="Variabilité de l'ensemble de validation sur [`arbres`](#data-arbres)">
+<p><span class="env-titre">Exemple — Variabilité de l’ensemble de validation sur <a href="#data-arbres"><code>arbres</code></a></span></p>
+<p>On répète 1000 fois une partition aléatoire en deux moitiés de 100 arbres et on note, à chaque fois, le modèle qui a la plus petite erreur test.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>choix <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  i <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(arbres), <span class="dv">100</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  err <span class="ot">&lt;-</span> <span class="fu">sapply</span>(formules, <span class="cf">function</span>(f) {</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(f, <span class="at">data =</span> arbres[i, ])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>((<span class="fu">log</span>(arbres<span class="sc">$</span>height_m[<span class="sc">-</span>i]) <span class="sc">-</span> <span class="fu">predict</span>(m, arbres[<span class="sc">-</span>i, ]))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(<span class="fu">which.min</span>(err))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">factor</span>(choix, <span class="at">levels =</span> <span class="fu">names</span>(formules)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ M1  M2  M3  M4  M5 
+ 15  95 170 664  56 </code></pre>
+</div>
+</div>
+<p>Le modèle 4 est choisi le plus souvent, mais pas toujours : selon la partition tirée, chacun des autres modèles peut l’emporter. Une seule partition, comme on le fait en pratique avec cette approche, aurait donc pu mener à un autre choix. C’est le défaut (i).</p>
+</div>
 </section>
-<section id="validation-croisée-avec-exclusion-dune-observation-loocv" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="validation-croisée-avec-exclusion-dune-observation-loocv"><span class="header-section-number">4.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV)</h3>
-<p>Pour remédier au deuxième défaut, pour <span class="math inline">\(i = 1,\ldots,n\)</span>, on estime <span class="math inline">\(\beta\)</span> avec toutes les observations <strong>sauf</strong> la <span class="math inline">\(i^{\text{ème}}\)</span> et on calcule <span class="math inline">\(\hat y_{i,(-i)}\)</span>. Le critère est <span class="math display">\[VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(y_i - \hat y_{i,(-i)}\right)^2.\]</span></p>
-<div class="env-propriete">
-<p><span class="env-titre">Propriété</span></p>
-<p><strong>Propriété (Formule explicite pour la régression linéaire).</strong></p>
-<p><span class="math display">\[VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat y_i}{1 - h_i}\right)^2,\]</span> où <span class="math inline">\(h_i\)</span> est le levier de l’observation <span class="math inline">\(i\)</span>. Il n’est donc pas nécessaire d’ajuster <span class="math inline">\(n\)</span> régressions : un seul ajustement suffit.</p>
+<section id="validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation"><span class="header-section-number">4.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV de <em>leave one out cross validation</em>)</h3>
+<p>Pour remédier au deuxième défaut, on procède ainsi : pour <span class="math inline">\(i = 1,\ldots,n\)</span>, on estime <span class="math inline">\(\beta\)</span> avec toutes les observations sauf la <span class="math inline">\(i^{\text{ème}}\)</span>, puis on calcule <span class="math inline">\(\hat y_{i,(-i)}\)</span>. Le critère est</p>
+<p><span class="math display">\[
+VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(y_i - \hat y_{i,(-i)}\right)^2.
+\]</span></p>
+<div class="env-propriete" data-titre="Formule explicite pour la régression linéaire">
+<p><span class="env-titre">Propriété — Formule explicite pour la régression linéaire</span></p>
+<p><span class="math display">\[
+VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat y_i}{1 - h_i}\right)^2,
+\]</span></p>
+<p>où <span class="math inline">\(\hat y_i\)</span> est la valeur ajustée par le modèle estimé sur toutes les données et <span class="math inline">\(h_i\)</span> est le levier de l’observation <span class="math inline">\(i\)</span>. Il n’est donc pas nécessaire d’ajuster <span class="math inline">\(n\)</span> régressions : un seul ajustement suffit.</p>
+</div>
+<p>En R, la fonction <code>cv.glm</code> de la librairie <code>boot</code> calcule <span class="math inline">\(VC_{(n)}\)</span> en réajustant réellement le modèle <span class="math inline">\(n\)</span> fois. Elle exige un objet <code>glm</code> ; un modèle linéaire s’obtient avec <code>glm</code> et la famille gaussienne, qui est la famille par défaut.</p>
+<div class="env-exemple" data-titre="LOOCV sur [`arbres`](#data-arbres)">
+<p><span class="env-titre">Exemple — LOOCV sur <a href="#data-arbres"><code>arbres</code></a></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>loocv <span class="ot">&lt;-</span> <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>vc.n <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modeles, loocv)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>vc.n</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        M1         M2         M3         M4         M5 
+0.04009088 0.03576446 0.03349013 0.03175003 0.03303419 </code></pre>
+</div>
+</div>
+<p>On vérifie que la formule explicite donne exactement le résultat obtenu en ajustant 200 régressions. Les modèles sont créés avec <code>do.call</code> : <code>cv.glm</code> réévalue l’appel enregistré dans l’objet, et un appel créé directement par <code>lapply(formules, glm, ...)</code> ferait référence à une fonction <code>FUN</code> qui n’existe plus au moment du réajustement.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>modeles.glm <span class="ot">&lt;-</span> <span class="fu">lapply</span>(formules, <span class="cf">function</span>(f)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do.call</span>(<span class="st">"glm"</span>, <span class="fu">list</span>(<span class="at">formula =</span> f, <span class="at">data =</span> <span class="fu">quote</span>(arbres))))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">formule =</span> <span class="fu">unname</span>(vc.n[<span class="st">"M4"</span>]), <span class="at">cv.glm =</span> <span class="fu">cv.glm</span>(arbres, modeles.glm<span class="sc">$</span>M4)<span class="sc">$</span>delta[<span class="dv">1</span>])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   formule     cv.glm 
+0.03175003 0.03175003 </code></pre>
+</div>
+</div>
+<p><span class="math inline">\(VC_{(n)}\)</span> est minimal pour le modèle 4 (<span class="math inline">\(VC_{(n)} \approx 0.0318\)</span>). Contrairement à l’erreur d’entraînement, <span class="math inline">\(VC_{(n)}\)</span> augmente du modèle 4 au modèle 5 : les huit paramètres supplémentaires du modèle 5 améliorent l’ajustement, mais ils détériorent la prédiction. C’est du surajustement.</p>
 </div>
 </section>
 <section id="validation-croisée-à-k-blocs" class="level3" data-number="4.2.3">
 <h3 data-number="4.2.3" class="anchored" data-anchor-id="validation-croisée-à-k-blocs"><span class="header-section-number">4.2.3</span> Validation croisée à <span class="math inline">\(K\)</span> blocs</h3>
-<p>Pour d’autres modèles (notamment les MLG), le calcul de <span class="math inline">\(VC_{(n)}\)</span> requiert l’ajustement de <span class="math inline">\(n\)</span> modèles, ce qui peut être coûteux. On considère alors la validation croisée à <span class="math inline">\(K\)</span> blocs (en pratique <span class="math inline">\(K = 5\)</span> ou <span class="math inline">\(K = 10\)</span>). On partage le jeu de données en <span class="math inline">\(K\)</span> parties de tailles quasiment égales <span class="math inline">\(A_1,\ldots,A_K\)</span>. Pour <span class="math inline">\(k = 1,\ldots,K\)</span>, on estime <span class="math inline">\(\beta\)</span> à partir de toutes les données sauf <span class="math inline">\(A_k\)</span> et on calcule <span class="math display">\[MSE_k = \frac{1}{n_k}\sum_{i\in A_k}\left\{y_i - \hat y_{i,(-k)}\right\}^2,\]</span> où <span class="math inline">\(n_k\)</span> est la taille de <span class="math inline">\(A_k\)</span>. On estime le taux d’erreur test par <span class="math display">\[VC_{(K)} = \frac{1}{K}\sum_{k=1}^K MSE_k.\]</span></p>
-<p>En R, la fonction <code>cv.glm</code> de la librairie <code>boot</code> calcule <span class="math inline">\(VC_{(n)}\)</span> (par défaut) et <span class="math inline">\(VC_{(K)}\)</span> (argument <code>K</code>).</p>
-<div class="env-exemple">
-<p><span class="env-titre">Exemple</span></p>
-<p><strong>Exemple (<code>Auto</code>).</strong></p>
-<p>Sur les quatre modèles polynomiaux, la validation croisée (<span class="math inline">\(VC_{(n)}\)</span>, <span class="math inline">\(VC_{(5)}\)</span> et <span class="math inline">\(VC_{(10)}\)</span>) désigne systématiquement le modèle 3 (quadratique) comme le meilleur pour la prédiction (<span class="math inline">\(VC_{(n)} \approx 19.25\)</span>), alors que l’approche par ensemble de validation unique pouvait suggérer le modèle 4.</p>
+<p>Pour d’autres modèles, notamment les GLM, le calcul exact de <span class="math inline">\(VC_{(n)}\)</span> requiert l’ajustement de <span class="math inline">\(n\)</span> modèles, ce qui peut être coûteux (voir toutefois l’approximation de la <a href="#sec-cv-approx" class="quarto-xref"><span>Section 4.3.3</span></a>). On considère alors la validation croisée à <span class="math inline">\(K\)</span> blocs, en pratique avec <span class="math inline">\(K = 5\)</span> ou <span class="math inline">\(K = 10\)</span>. On partage le jeu de données en <span class="math inline">\(K\)</span> parties de tailles quasiment égales <span class="math inline">\(A_1,\ldots,A_K\)</span>. Pour <span class="math inline">\(k = 1,\ldots,K\)</span>, on estime <span class="math inline">\(\beta\)</span> à partir de toutes les données sauf <span class="math inline">\(A_k\)</span>, et on calcule</p>
+<p><span class="math display">\[
+MSE_k = \frac{1}{n_k}\sum_{i\in A_k}\left\{y_i - \hat y_{i,(-k)}\right\}^2,
+\]</span></p>
+<p>où <span class="math inline">\(n_k\)</span> est la taille de <span class="math inline">\(A_k\)</span>. On estime le taux d’erreur test par</p>
+<p><span class="math display">\[
+VC_{(K)} = \frac{1}{K}\sum_{k=1}^K MSE_k.
+\]</span></p>
+<p>Avec <code>cv.glm</code>, on obtient <span class="math inline">\(VC_{(K)}\)</span> au moyen de l’argument <code>K</code>.</p>
+<div class="env-exemple" data-titre="Validation croisée à $K$ blocs sur [`arbres`](#data-arbres)">
+<p><span class="env-titre">Exemple — Validation croisée à <span class="math inline">\(K\)</span> blocs sur <a href="#data-arbres"><code>arbres</code></a></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>vc.K <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>), <span class="cf">function</span>(K)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(modeles.glm, <span class="cf">function</span>(m) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(<span class="dv">4300</span>)   <span class="co"># même partition pour tous les modèles</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cv.glm</span>(arbres, m, <span class="at">K =</span> K)<span class="sc">$</span>delta[<span class="dv">1</span>]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  }))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vc.K) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"VC_5"</span>, <span class="st">"VC_10"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="at">VC_n =</span> vc.n, vc.K)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         VC_n       VC_5      VC_10
+M1 0.04009088 0.04004830 0.04007688
+M2 0.03576446 0.03560323 0.03588449
+M3 0.03349013 0.03368676 0.03348481
+M4 0.03175003 0.03196452 0.03209201
+M5 0.03303419 0.03345063 0.03320921</code></pre>
+</div>
+</div>
+<p>Les trois critères désignent le modèle 4. Le partage en blocs est aléatoire, mais en répétant l’expérience avec d’autres graines, on constate que ce choix est beaucoup plus stable qu’avec un ensemble de validation unique. En effet, chaque observation sert ici exactement une fois au test, et chaque modèle est ajusté sur 80 % ou 90 % des données plutôt que sur la moitié.</p>
+<p>La réinitialisation de la graine avant chaque appel est importante. Sans elle, chaque modèle serait évalué sur une partition différente, et une partie des écarts entre modèles serait due au hasard de la partition plutôt qu’aux modèles eux-mêmes.</p>
+</div>
+<div class="env-remarque" data-titre="Sur quelle échelle mesure-t-on l'erreur?">
+<p><span class="env-titre">Remarque — Sur quelle échelle mesure-t-on l’erreur?</span></p>
+<p>Ici, l’erreur est mesurée sur l’échelle de <span class="math inline">\(\log H\)</span>, et les cinq modèles peuvent être comparés parce qu’ils ont la même réponse. Pour comparer un modèle sur <span class="math inline">\(\log H\)</span> à un modèle sur <span class="math inline">\(H\)</span>, il faut calculer les deux erreurs sur la même échelle. Par exemple, on ramène les prédictions du modèle log-log à l’échelle originale avec <span class="math inline">\(\exp(\hat y_{i,(-k)})\)</span> avant de calculer <span class="math inline">\(MSE_k\)</span>. Il faut alors se rappeler que <span class="math inline">\(\exp(\hat y_{i,(-k)})\)</span> estime la médiane conditionnelle de <span class="math inline">\(H_i\)</span>, et non son espérance.</p>
 </div>
 </section>
 </section>
-<section id="mesures-de-performance-pour-la-classification" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="mesures-de-performance-pour-la-classification"><span class="header-section-number">4.3</span> Mesures de performance pour la classification</h2>
-<p>Pour une réponse binaire, le taux d’erreur test devient le <strong>taux de mauvaise classification</strong> <span class="math display">\[\frac{1}{n}\sum_{i=1}^n \mathbf{1}_{\{y_i \neq \hat y_i\}},\]</span> avec <span class="math inline">\(\hat y_i = \mathbf{1}_{\{\hat\pi_i &gt; u\}}\)</span> pour un seuil <span class="math inline">\(u\)</span> (souvent <span class="math inline">\(1/2\)</span>). Les notions de <strong>sensibilité</strong>, <strong>spécificité</strong>, <strong>courbe ROC</strong> et <strong>AUC</strong> présentées à la <a href="02-regression-logistique.html#sec-roc" class="quarto-xref"><span>Section 2.5</span></a> fournissent des mesures de performance qui ne dépendent pas du choix d’un seuil unique : l’AUC est notamment utilisée comme critère de validation croisée en classification (voir <a href="06-knn-noyau.html" class="quarto-xref"><span>Chapitre 6</span></a>).</p>
+<section id="sec-cv-GLM" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-cv-GLM"><span class="header-section-number">4.3</span> Validation croisée pour les GLM</h2>
+<p>Les critères <span class="math inline">\(VC_{(n)}\)</span> et <span class="math inline">\(VC_{(K)}\)</span> ont été présentés avec l’erreur quadratique, qui est naturelle pour une réponse normale. Pour un GLM, la réponse est binaire, binomiale ou un dénombrement, et sa variance dépend de sa moyenne. L’erreur quadratique demeure utilisable, mais d’autres fonctions de perte sont souvent mieux adaptées. Pour une fonction de perte <span class="math inline">\(L(y,\mu)\)</span>, le critère de validation croisée à <span class="math inline">\(K\)</span> blocs devient</p>
+<p><span class="math display">\[
+VC_{(K)} = \frac{1}{K}\sum_{k=1}^K \frac{1}{n_k}\sum_{i\in A_k} L\left(y_i, \hmu{i,(-k)}\right),
+\]</span></p>
+<p>où <span class="math inline">\(\hmu{i,(-k)} = g^{-1}\left(\boldsymbol x_i^\top\hb_{(-k)}\right)\)</span> est la moyenne prédite pour l’observation <span class="math inline">\(i\)</span> par le modèle ajusté sans le bloc <span class="math inline">\(A_k\)</span>. On retrouve <span class="math inline">\(VC_{(n)}\)</span> avec <span class="math inline">\(K = n\)</span>.</p>
+<section id="régression-logistique-et-classification" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="régression-logistique-et-classification"><span class="header-section-number">4.3.1</span> Régression logistique et classification</h3>
+<p>Pour une réponse binaire, on prédit la classe de l’observation <span class="math inline">\(i\)</span> par <span class="math inline">\(\hat c_i = \mathbf{1}_{\{\hpi{i} &gt; u\}}\)</span>, pour un seuil <span class="math inline">\(u\)</span> (souvent <span class="math inline">\(1/2\)</span>). Le taux d’erreur test devient alors le taux de mauvaise classification. Cette perte n’est toutefois pas la seule possible.</p>
+<div class="env-definition" data-titre="Fonctions de perte pour une réponse binaire">
+<p><span class="env-titre">Définition — Fonctions de perte pour une réponse binaire</span></p>
+<p>Pour <span class="math inline">\(y\in\{0,1\}\)</span> et une probabilité prédite <span class="math inline">\(\hat\pi\)</span> :</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Mauvaise classification : } &amp; L(y,\hat\pi) = \mathbf{1}_{\{y \neq \mathbf{1}_{\{\hat\pi &gt; u\}}\}},\\
+\text{Score de Brier : } &amp; L(y,\hat\pi) = (y-\hat\pi)^2,\\
+\text{Déviance (log-perte) : } &amp; L(y,\hat\pi) = -2\left[y\log\hat\pi + (1-y)\log(1-\hat\pi)\right].
+\end{aligned}
+\]</span></p>
+<p>La troisième perte est exactement la déviance individuelle <span class="math inline">\(d_i\)</span> d’une observation de Bernoulli (voir la <a href="02-regression-logistique.html#sec-deviance">déviance</a>).</p>
+</div>
+<div class="env-remarque" data-titre="Quelle perte choisir?">
+<p><span class="env-titre">Remarque — Quelle perte choisir?</span></p>
+<p>Le taux de mauvaise classification ne retient que le côté du seuil <span class="math inline">\(u\)</span> où tombe <span class="math inline">\(\hat\pi\)</span>. Une prédiction <span class="math inline">\(\hat\pi = 0{,}51\)</span> et une prédiction <span class="math inline">\(\hat\pi = 0{,}99\)</span> sont donc traitées de la même façon. Ce critère est de plus discontinu, il dépend du choix arbitraire de <span class="math inline">\(u\)</span>, et il est très variable lorsque <span class="math inline">\(n\)</span> est petit.</p>
+<p>Le score de Brier et la déviance sont des règles de score propres : leur espérance est minimisée lorsque <span class="math inline">\(\hat\pi\)</span> égale la vraie probabilité <span class="math inline">\(\pi\)</span>. Ils évaluent donc la qualité des probabilités prédites elles-mêmes, et pas seulement la classification qui en découle. La déviance pénalise lourdement les erreurs commises avec assurance. Elle devient infinie si <span class="math inline">\(\hat\pi_{i,(-k)} \in \{0,1\}\)</span> alors que <span class="math inline">\(y_i\)</span> prend l’autre valeur, ce qui peut se produire lorsqu’un jeu d’entraînement présente une <a href="02-regression-logistique.html#sec-separation">séparation</a>. En pratique, on tronque <span class="math inline">\(\hat\pi\)</span> dans <span class="math inline">\([\varepsilon, 1-\varepsilon]\)</span>.</p>
+<p>La sensibilité, la spécificité, la courbe ROC et l’AUC présentées à la <a href="02-regression-logistique.html#sec-roc" class="quarto-xref"><span>Section 2.5</span></a> fournissent d’autres mesures de performance. L’AUC ne dépend d’aucun seuil, et elle est notamment utilisée comme critère de validation croisée en classification (voir <a href="06-knn-noyau.html" class="quarto-xref"><span>Chapitre 6</span></a>). Elle ne mesure toutefois que la capacité du modèle à ordonner les observations, et pas la calibration des probabilités.</p>
+</div>
+<div class="env-remarque" data-titre="Données groupées">
+<p><span class="env-titre">Remarque — Données groupées</span></p>
+<p>Avec des données binomiales groupées, chaque ligne regroupe <span class="math inline">\(m_i\)</span> essais. Exclure une ligne revient à exclure tout un groupe : on évalue alors la prédiction pour une nouvelle combinaison des variables explicatives, et non pour un nouvel individu. Les deux versions du jeu de données <a href="#data-empress"><code>empress</code></a>, individuelle et agrégée, illustrent cette différence dans les exemples plus bas. De plus, la fonction <code>cv.glm</code> passe à la fonction de coût les proportions <span class="math inline">\(y_i/m_i\)</span>, sans pondération par <span class="math inline">\(m_i\)</span> ; il faut en tenir compte si l’on veut une perte pondérée.</p>
+</div>
+</section>
+<section id="régression-de-poisson" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="régression-de-poisson"><span class="header-section-number">4.3.2</span> Régression de Poisson</h3>
+<div class="env-definition" data-titre="Fonctions de perte pour un dénombrement">
+<p><span class="env-titre">Définition — Fonctions de perte pour un dénombrement</span></p>
+<p>Pour <span class="math inline">\(y\in\mathbb{N}\)</span> et une moyenne prédite <span class="math inline">\(\hat\mu &gt; 0\)</span> :</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Erreur quadratique : } &amp; L(y,\hat\mu) = (y-\hat\mu)^2,\\
+\text{Perte de Pearson : } &amp; L(y,\hat\mu) = \frac{(y-\hat\mu)^2}{\hat\mu},\\
+\text{Déviance de Poisson : } &amp; L(y,\hat\mu) = 2\left[y\log\left(\frac{y}{\hat\mu}\right) - (y-\hat\mu)\right],
+\end{aligned}
+\]</span></p>
+<p>avec la convention <span class="math inline">\(0\log 0 = 0\)</span>.</p>
+</div>
+<div class="env-remarque" data-titre="Particularités du cas Poisson">
+<p><span class="env-titre">Remarque — Particularités du cas Poisson</span></p>
+<p>Puisque <span class="math inline">\(Var[Y_i] = \mu_i\)</span>, l’erreur quadratique est dominée par les observations dont les dénombrements sont élevés. La perte de Pearson et la déviance standardisent implicitement chaque erreur par sa variance.</p>
+<p>En présence d’une <a href="03-modeles-lineaires-generalises.html#sec-poisson">variable offset</a>, la prédiction d’une observation exclue utilise sa propre exposition :</p>
+<p><span class="math display">\[
+\hmu{i,(-k)} = m_i \exp\left(\boldsymbol x_i^\top\hb_{(-k)}\right).
+\]</span></p>
+<p>En R, il est plus sûr d’écrire l’offset dans la formule (<code>offset(log(m))</code>) pour que <code>predict</code> l’applique correctement aux nouvelles données.</p>
+<p>Enfin, les modèles de Poisson et quasi-Poisson produisent les mêmes <span class="math inline">\(\hmu{i}\)</span> : la validation croisée ne peut pas les départager. Le choix du paramètre de dispersion relève de l’inférence (voir la <a href="03-modeles-lineaires-generalises.html#sec-surdispersion">surdispersion</a>). Pour comparer un modèle de Poisson à un modèle binomial négatif, il faut utiliser la même perte pour les deux modèles.</p>
+</div>
+</section>
+<section id="sec-cv-approx" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="sec-cv-approx"><span class="header-section-number">4.3.3</span> Approximation de <span class="math inline">\(VC_{(n)}\)</span> sans réajustement</h3>
+<p>Contrairement à la régression linéaire, il n’existe pas de formule exacte de <span class="math inline">\(VC_{(n)}\)</span> pour un GLM. Une approximation fondée sur un seul ajustement est toutefois disponible.</p>
+<div class="env-propriete" data-titre="Approximation de l'erreur de validation croisée">
+<p><span class="env-titre">Propriété — Approximation de l’erreur de validation croisée</span></p>
+<p>Pour un GLM avec lien canonique et <span class="math inline">\(\phi = 1\)</span> (logistique, Poisson), on a</p>
+<p><span class="math display">\[
+y_i - \hmu{i,(-i)} \approx \frac{y_i - \hmu{i}}{1-h_i},
+\qquad\text{d'où}\qquad
+VC_{(n)} \approx \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i-\hmu{i}}{1-h_i}\right)^2,
+\]</span></p>
+<p>où <span class="math inline">\(h_i\)</span> est le <span class="math inline">\(i^{\text{ème}}\)</span> élément diagonal de la matrice chapeau</p>
+<p><span class="math display">\[
+\boldsymbol H = \boldsymbol W^{1/2}\boldsymbol X\left(\boldsymbol X^\top\boldsymbol W\boldsymbol X\right)^{-1}\boldsymbol X^\top\boldsymbol W^{1/2},
+\]</span></p>
+<p>obtenu en R avec <code>hatvalues()</code>.</p>
+</div>
+<div class="env-theo" data-titre="Idée de la dérivation">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Idée de la dérivation</span></p>
+<p>Sous le lien canonique, le score s’écrit</p>
+<p><span class="math display">\[
+U(\boldsymbol\beta) = \sum_{j=1}^n \boldsymbol x_j (y_j - \mu_j),
+\]</span></p>
+<p>et le poids de l’observation <span class="math inline">\(j\)</span> vaut <span class="math inline">\(w_j = \partial\mu_j/\partial\eta_j\)</span>. Posons <span class="math inline">\(\boldsymbol J = \boldsymbol X^\top\boldsymbol W\boldsymbol X\)</span>. Sans l’observation <span class="math inline">\(i\)</span>, le score évalué en <span class="math inline">\(\hb\)</span> vaut</p>
+<p><span class="math display">\[
+U_{(-i)}(\hb) = -\boldsymbol x_i(y_i - \hmu{i}).
+\]</span></p>
+<p>Une seule itération de Newton-Raphson à partir de <span class="math inline">\(\hb\)</span>, combinée à la formule de Sherman-Morrison, donne</p>
+<p><span class="math display">\[
+\hb_{(-i)} \approx \hb - \left(\boldsymbol J - w_i\boldsymbol x_i\boldsymbol x_i^\top\right)^{-1}\boldsymbol x_i(y_i-\hmu{i})
+= \hb - \frac{\boldsymbol J^{-1}\boldsymbol x_i\,(y_i-\hmu{i})}{1-h_i}.
+\]</span></p>
+<p>On en déduit</p>
+<p><span class="math display">\[
+\heta{i,(-i)} \approx \heta{i} - \frac{h_i}{w_i}\,\frac{y_i-\hmu{i}}{1-h_i}.
+\]</span></p>
+<p>On linéarise ensuite <span class="math inline">\(g^{-1}\)</span> :</p>
+<p><span class="math display">\[
+\hmu{i,(-i)} \approx \hmu{i} + w_i\left(\heta{i,(-i)}-\heta{i}\right)
+= \hmu{i} - h_i\,\frac{y_i-\hmu{i}}{1-h_i},
+\]</span></p>
+<p>ce qui donne le résultat. Les deux approximations (un seul pas de Newton et la linéarisation de <span class="math inline">\(g^{-1}\)</span>) deviennent exactes dans le modèle linéaire normal, où l’on retrouve la formule explicite de la LOOCV.</p>
+</div>
+</section>
+<section id="exemples-sur-les-données-de-lempress-of-ireland" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="exemples-sur-les-données-de-lempress-of-ireland"><span class="header-section-number">4.3.4</span> Exemples sur les données de l’Empress of Ireland</h3>
+<p>La fonction <code>cv.glm</code> accepte un argument <code>cost</code>, une fonction <code>cost(y, yhat)</code> où <code>yhat</code> est la moyenne prédite (échelle de la réponse). Par défaut, <code>cost</code> est l’erreur quadratique, c’est-à-dire le score de Brier pour une réponse binaire.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>niveaux.classe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Première"</span>, <span class="st">"Deuxième"</span>, <span class="st">"Troisième"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>empress <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/empress_individus.csv"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>empress<span class="sc">$</span>classe <span class="ot">&lt;-</span> <span class="fu">factor</span>(empress<span class="sc">$</span>classe, <span class="at">levels =</span> niveaux.classe)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>empress.agr <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/empress_agrege.csv"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>empress.agr<span class="sc">$</span>classe <span class="ot">&lt;-</span> <span class="fu">factor</span>(empress.agr<span class="sc">$</span>classe, <span class="at">levels =</span> niveaux.classe)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="env-exemple" data-titre="Régression logistique sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Régression logistique sur <a href="#data-empress"><code>empress</code></a></span></p>
+<p>On compare quatre modèles pour la probabilité de survie d’un passager : la classe seule, les effets additifs de la classe, du sexe et du groupe d’âge, la même chose avec la classe traitée comme variable numérique (tendance linéaire sur l’échelle logit), et un modèle avec interaction entre la classe et le sexe.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(survecu <span class="sc">~</span> classe, <span class="at">data =</span> empress, <span class="at">family =</span> binomial)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(survecu <span class="sc">~</span> classe <span class="sc">+</span> sexe <span class="sc">+</span> groupe_age, <span class="at">data =</span> empress, <span class="at">family =</span> binomial)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(survecu <span class="sc">~</span> classe_num <span class="sc">+</span> sexe <span class="sc">+</span> groupe_age, <span class="at">data =</span> empress, <span class="at">family =</span> binomial)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">glm</span>(survecu <span class="sc">~</span> classe <span class="sc">*</span> sexe <span class="sc">+</span> groupe_age, <span class="at">data =</span> empress, <span class="at">family =</span> binomial)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># y : réponse observée, p : probabilité prédite</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>cout.classif <span class="ot">&lt;-</span> <span class="cf">function</span>(y, p) <span class="fu">mean</span>(y <span class="sc">!=</span> (p <span class="sc">&gt;</span> <span class="fl">0.5</span>))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>cout.brier   <span class="ot">&lt;-</span> <span class="cf">function</span>(y, p) <span class="fu">mean</span>((y <span class="sc">-</span> p)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>cout.dev     <span class="ot">&lt;-</span> <span class="cf">function</span>(y, p) {</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">pmin</span>(<span class="fu">pmax</span>(p, <span class="fl">1e-8</span>), <span class="dv">1</span> <span class="sc">-</span> <span class="fl">1e-8</span>)   <span class="co"># évite log(0) en cas de séparation</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span><span class="dv">2</span> <span class="sc">*</span> <span class="fu">mean</span>(y <span class="sc">*</span> <span class="fu">log</span>(p) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">-</span> y) <span class="sc">*</span> <span class="fu">log</span>(<span class="dv">1</span> <span class="sc">-</span> p))</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>modeles.logit <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">m1 =</span> m1, <span class="at">m2 =</span> m2, <span class="at">m3 =</span> m3, <span class="at">m4 =</span> m4)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>couts.logit   <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">classif =</span> cout.classif, <span class="at">brier =</span> cout.brier, <span class="at">deviance =</span> cout.dev)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># VC_(10) : même graine avant chaque appel pour que tous les modèles</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># soient évalués sur la même partition en blocs</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(couts.logit, <span class="cf">function</span>(cout)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(modeles.logit, <span class="cf">function</span>(m) {</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cv.glm</span>(empress, m, <span class="at">cost =</span> cout, <span class="at">K =</span> <span class="dv">10</span>)<span class="sc">$</span>delta[<span class="dv">1</span>]</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  }))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     classif     brier  deviance
+m1 0.2052980 0.1600676 0.9997842
+m2 0.2090823 0.1517565 0.9392754
+m3 0.2052980 0.1521921 0.9413214
+m4 0.2090823 0.1518934 0.9396020</code></pre>
+</div>
+</div>
+<p>La colonne du taux de mauvaise classification illustre bien ses limites. Seuls 217 des 1057 passagers ont survécu, et aucune strate n’atteint une proportion de survie de 50 %. Avec le seuil <span class="math inline">\(u = 1/2\)</span>, les modèles prédisent donc à peu près toujours le décès, et le taux de mauvaise classification est à peu près le même pour tous, proche de la proportion de survivants. Le score de Brier et la déviance, qui évaluent les probabilités prédites elles-mêmes, permettent au contraire de départager les modèles.</p>
+<p>Avec <span class="math inline">\(n = 1057\)</span>, le calcul exact de <span class="math inline">\(VC_{(n)}\)</span> demande autant d’ajustements. On le compare à l’approximation de la <a href="#sec-cv-approx" class="quarto-xref"><span>Section 4.3.3</span></a>, qui n’en demande qu’un seul :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(m2)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>approx <span class="ot">&lt;-</span> <span class="fu">mean</span>(((empress<span class="sc">$</span>survecu <span class="sc">-</span> <span class="fu">fitted</span>(m2)) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> h))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>temps <span class="ot">&lt;-</span> <span class="fu">system.time</span>(exact <span class="ot">&lt;-</span> <span class="fu">cv.glm</span>(empress, m2)<span class="sc">$</span>delta[<span class="dv">1</span>])</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">approx =</span> approx, <span class="at">exact =</span> exact)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   approx     exact 
+0.1520801 0.1520766 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>temps[<span class="st">"elapsed"</span>]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>elapsed 
+  5.419 </code></pre>
+</div>
+</div>
+</div>
+<div class="env-exemple" data-titre="Régression de Poisson sur les données agrégées de [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Régression de Poisson sur les données agrégées de <a href="#data-empress"><code>empress</code></a></span></p>
+<p>On modélise maintenant le nombre de survivants <span class="math inline">\(Y_i\)</span> de chacune des 11 strates. L’effectif <span class="math inline">\(m_i\)</span> de la strate sert d’offset, de sorte que <span class="math inline">\(\mu_i = m_i\exp(\boldsymbol x_i^\top\boldsymbol\beta)\)</span> et que <span class="math inline">\(\exp(\boldsymbol x_i^\top\boldsymbol\beta)\)</span> s’interprète comme un taux de survie.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(survivants <span class="sc">~</span> classe <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(effectif)),</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> poisson, <span class="at">data =</span> empress.agr)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(survivants <span class="sc">~</span> classe <span class="sc">+</span> sexe <span class="sc">+</span> groupe_age <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(effectif)),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> poisson, <span class="at">data =</span> empress.agr)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(survivants <span class="sc">~</span> classe_num <span class="sc">+</span> sexe <span class="sc">+</span> groupe_age <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(effectif)),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> poisson, <span class="at">data =</span> empress.agr)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>cout.dev.pois <span class="ot">&lt;-</span> <span class="cf">function</span>(y, mu) <span class="dv">2</span> <span class="sc">*</span> <span class="fu">mean</span>(<span class="fu">ifelse</span>(y <span class="sc">&gt;</span> <span class="dv">0</span>, y <span class="sc">*</span> <span class="fu">log</span>(y <span class="sc">/</span> mu), <span class="dv">0</span>) <span class="sc">-</span> (y <span class="sc">-</span> mu))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>cout.pearson  <span class="ot">&lt;-</span> <span class="cf">function</span>(y, mu) <span class="fu">mean</span>((y <span class="sc">-</span> mu)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> mu)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>cout.eq       <span class="ot">&lt;-</span> <span class="cf">function</span>(y, mu) <span class="fu">mean</span>((y <span class="sc">-</span> mu)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>modeles.pois <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">p1 =</span> p1, <span class="at">p2 =</span> p2, <span class="at">p3 =</span> p3)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>couts.pois   <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">deviance =</span> cout.dev.pois, <span class="at">pearson =</span> cout.pearson, <span class="at">quadratique =</span> cout.eq)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># VC_(n) sur les strates : chaque étape exclut une strate complète</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(couts.pois, <span class="cf">function</span>(cout)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(modeles.pois, <span class="cf">function</span>(m) <span class="fu">cv.glm</span>(empress.agr, m, <span class="at">cost =</span> cout)<span class="sc">$</span>delta[<span class="dv">1</span>]))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    deviance   pearson quadratique
+p1 20.958223 29.565991    774.9233
+p2  4.467199  5.709436    215.2962
+p3  4.589782  6.085684    237.1694</code></pre>
+</div>
+</div>
+<p>La colonne quadratique est dominée par la strate des hommes adultes de troisième classe, qui compte 446 passagers et donc le plus grand <span class="math inline">\(\hmu{i}\)</span>. Les colonnes déviance et Pearson donnent un poids plus équilibré aux strates.</p>
+<p>Deux mises en garde s’imposent. D’abord, l’unité exclue est ici une strate entière : on évalue la capacité du modèle à prédire une combinaison classe × sexe × âge à partir des autres, ce qui est une question différente de celle de l’exemple précédent (voir la remarque sur les données groupées). Pour la même raison, un modèle avec interactions ne peut pas toujours être évalué ainsi : si l’on retire la seule strate qui permet d’estimer un coefficient d’interaction, ce coefficient devient inestimable. Ensuite, la loi de Poisson n’est qu’une approximation de la loi binomiale lorsque les proportions sont petites. Plusieurs taux de survie sont ici modérés (près de 50 % chez les hommes adultes de première classe), et un modèle binomial serait plus naturel. L’exemple sert à illustrer l’offset et le choix de la perte, pas à recommander ce modèle.</p>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

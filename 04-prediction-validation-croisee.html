@@ -303,7 +303,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">22 septembre 2026</p>
+      <p class="date-modified">23 septembre 2026</p>
     </div>
   </div>
     
@@ -332,6 +332,14 @@ window.Quarto = {
 \end{aligned}
 \]</span></p>
 <p>Le modèle 2 permet une ordonnée à l’origine par espèce et le modèle 3 une pente par espèce. Le modèle 4 ajoute l’effet de la strate. Le modèle 5 remplace chaque droite par un polynôme cubique propre à l’espèce. Ces modèles comptent respectivement 2, 5, 8, 10 et 18 paramètres de moyenne.</p>
+<div class="env-remarque" data-titre="Pourquoi ces modèles sont-ils linéaires?">
+<p><span class="env-titre">Remarque — Pourquoi ces modèles sont-ils linéaires?</span></p>
+<p>Les cinq modèles s’écrivent <span class="math inline">\(\boldsymbol Y = \boldsymbol X\boldsymbol\beta + \boldsymbol\epsilon\)</span> avec <span class="math inline">\(Y_i = \log H_i\)</span> : ils sont linéaires dans les paramètres, même s’ils ne le sont pas dans les variables. Les effets propres à une espèce ou à une strate correspondent à des colonnes d’indicatrices, les interactions à des produits de colonnes, et les termes <span class="math inline">\((\log D_i)^k\)</span> du modèle 5 à des colonnes supplémentaires. Sur l’échelle originale, le modèle 1 équivaut à</p>
+<p><span class="math display">\[
+H_i = e^{\beta_0} D_i^{\beta_1} e^{\epsilon_i},
+\]</span></p>
+<p>une loi de puissance avec une erreur multiplicative : c’est un modèle intrinsèquement linéaire. À l’inverse, le modèle <span class="math inline">\(H_i = \beta_0 D_i^{\beta_1} + \epsilon_i\)</span>, dont l’erreur est additive sur l’échelle originale, n’est pas linéaire et exigerait les moindres carrés non linéaires.</p>
+</div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/arbres.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>arbres<span class="sc">$</span>espece <span class="ot">&lt;-</span> <span class="fu">factor</span>(arbres<span class="sc">$</span>species_fr)</span>
@@ -624,7 +632,7 @@ U_{(-i)}(\hb) = -\boldsymbol x_i(y_i - \hmu{i}).
 m1 0.2052980 0.1600676 0.9997842
 m2 0.2090823 0.1517565 0.9392754
 m3 0.2052980 0.1521921 0.9413214
-m4 0.2100284 0.1518934 0.9396020</code></pre>
+m4 0.2090823 0.1518934 0.9396020</code></pre>
 </div>
 </div>
 <p>La colonne du taux de mauvaise classification illustre bien ses limites. Seuls 217 des 1057 passagers ont survécu, et aucune strate n’atteint une proportion de survie de 50 %. Avec le seuil <span class="math inline">\(u = 1/2\)</span>, les modèles prédisent donc à peu près toujours le décès, et le taux de mauvaise classification est à peu près le même pour tous, proche de la proportion de survivants. Le score de Brier et la déviance, qui évaluent les probabilités prédites elles-mêmes, permettent au contraire de départager les modèles.</p>
@@ -643,7 +651,7 @@ m4 0.2100284 0.1518934 0.9396020</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>temps[<span class="st">"elapsed"</span>]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>elapsed 
-  6.072 </code></pre>
+  4.643 </code></pre>
 </div>
 </div>
 </div>

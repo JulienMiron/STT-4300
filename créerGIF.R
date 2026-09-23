@@ -246,7 +246,7 @@ for (i in seq_len(n_frames)) {
   df <- data.frame(coef = noms, valeur = abs(para), label = labels_coef)
 
   p <- ggplot(df, aes(coef, valeur)) +
-    geom_col(fill = couleur_pts, alpha = 0.75) +
+    geom_col(fill = c(couleur_accent, rep(couleur_pts, n_coef)), alpha = 0.75) +
     geom_text(aes(label = label), parse = TRUE, vjust = -0.4,
               color = couleur_ligne, size = 16, fontface = "bold") +
     geom_hline(yintercept = 0, color = couleur_ligne, linewidth = epaisseur_ligne) +

@@ -27,6 +27,44 @@ où $g$ est une fonction de pénalité connue et $\lambda \geq 0$ est le **coeff
 L'ordonnée à l'origine $\beta_0$ n'est pas pénalisée. Par ailleurs, les variables explicatives sont généralement standardisées avant l'ajustement, car la pénalité n'est pas invariante à l'échelle des variables.
 :::
 
+:::{.env-exemple titre="Jeu de données [`Hitters`]{#data-hitters}"}
+Données sur les joueurs des ligues majeures de baseball, tirées de la librairie `ISLR` [@james2021]. Elles proviennent de la collection StatLib de l'université Carnegie Mellon et ont été préparées pour une séance d'affiches de la section *Statistical Graphics* de l'American Statistical Association en 1988. Le jeu compte 322 joueurs et 20 variables. La réponse est `Salary`, le salaire annuel au jour d'ouverture de la saison 1987, en milliers de dollars. Les 19 variables explicatives se répartissent en quatre groupes :
+
+- les statistiques offensives de la saison 1986 : présences au bâton (`AtBat`), coups sûrs (`Hits`), circuits (`HmRun`), points marqués (`Runs`), points produits (`RBI`) et buts sur balles (`Walks`) ;
+
+- les statistiques offensives cumulées sur la carrière : `CAtBat`, `CHits`, `CHmRun`, `CRuns`, `CRBI` et `CWalks`, ainsi que le nombre d'années dans les ligues majeures (`Years`) ;
+
+- les statistiques défensives de la saison 1986 : retraits (`PutOuts`), assistances (`Assists`) et erreurs (`Errors`) ;
+
+- trois variables catégorielles à deux modalités : la ligue à la fin de 1986 (`League`, `A` pour américaine ou `N` pour nationale), la division à la fin de 1986 (`Division`, `E` pour est ou `W` pour ouest) et la ligue au début de 1987 (`NewLeague`).
+
+Le salaire est manquant pour 59 joueurs ; on retire ces joueurs, ce qui laisse $n = 263$ observations. La fonction `model.matrix` transforme les trois variables catégorielles en indicatrices (`LeagueN`, `DivisionW` et `NewLeagueN`), d'où une matrice $X$ à 19 colonnes.
+
+
+```{r hitters-donnees}
+#| message: false
+library(ISLR)
+
+dim(Hitters)
+sum(is.na(Hitters$Salary))
+
+Hitters <- na.omit(Hitters)
+x <- model.matrix(Salary ~ ., Hitters)[, -1]
+y <- Hitters$Salary
+
+dim(x)
+summary(y)
+round(cor(Hitters[, c("Years", "CAtBat", "CHits", "CRuns", "CRBI")]), 2)
+```
+
+Deux caractéristiques de ces données sont à retenir pour la suite. D'abord, les variables de carrière sont très fortement corrélées entre elles, puisqu'elles croissent toutes avec l'ancienneté du joueur. Cette colinéarité gonfle la variance des estimateurs des moindres carrés, et c'est précisément la situation où la régularisation est utile. Ensuite, la distribution du salaire est fortement asymétrique à droite : la moyenne dépasse nettement la médiane.
+
+:::{.env-remarque}
+**Remarque.**
+
+À cause de cette asymétrie, on modélise souvent $\log(\texttt{Salary})$ plutôt que `Salary`. On conserve ici le salaire sur son échelle d'origine, comme dans @james2021, pour que les erreurs test rapportées dans les exemples soient comparables à celles de cet ouvrage.
+:::
+:::
 ### Régression ridge
 
 La régression ridge minimise
@@ -44,10 +82,84 @@ $$
 
 L'estimateur est donc biaisé, sauf si $\lambda = 0$. Lorsque $\lambda = 0$, $\hat\beta^{(R)}_\lambda = \hat\beta$ ; lorsque $\lambda\to\infty$, tous les $\hat\beta^{(R)}_{j,\lambda}$ ($j\geq1$) tendent vers 0 et l'ordonnée à l'origine tend vers $\bar Y$. On parle d'un phénomène de **rétrécissement** (*shrinkage*).
 
-:::{.env-exemple}
-**Exemple (`Hitters`, librairie `ISLR`).**
+:::{.env-exemple titre="Régression ridge sur [`Hitters`](#data-hitters)"}
+On ajuste la régression ridge avec `glmnet(x, y, alpha = 0)` sur une grille de 100 valeurs de $\lambda$ allant de $10^{10}$ à $10^{-2}$. La fonction `glmnet` standardise les variables explicatives avant l'ajustement (argument `standardize = TRUE` par défaut), mais retourne les coefficients sur l'échelle d'origine des variables.
 
-La réponse est le salaire d'un joueur de baseball (19 variables explicatives). En R, la régression ridge s'ajuste avec `glmnet(x, y, alpha=0)`. Avec $\lambda = e^6$, on observe $\sum_j[\hat\beta^{(R)}_{j,\lambda}]^2 = 5721$ contre $\sum_j\hat\beta_j^2 = 18469$ pour les moindres carrés : rétrécissement marqué. Sur une partition entraînement/test, le taux d'erreur test passe de $124\,716$ (moindres carrés) à $91\,274$ (ridge), soit une diminution de près de 27%.
+```{r hitters-ridge}
+#| message: false
+library(glmnet)
+
+grille.lambda <- 10^seq(10, -2, length.out = 100)
+reg.ridge <- glmnet(x, y, alpha = 0, lambda = grille.lambda)
+```
+
+```{r hitters-cv-cache}
+#| include: false
+# Affichage des nombres à la française dans le texte
+nombre <- function(v, d = 0) {
+  format(round(v, d), big.mark = "\u202f", decimal.mark = ",", nsmall = d)
+}
+exposant <- function(l) gsub(",", "{,}", nombre(log(l), 2))
+
+# Choix de lambda par validation croisée. Le même code, avec les mêmes
+# germes, est présenté à la section « Sélection du paramètre lambda ».
+set.seed(4300)
+cv.ridge <- cv.glmnet(x, y, alpha = 0, lambda = grille.lambda)
+set.seed(4300)
+cv.lasso <- cv.glmnet(x, y, alpha = 1, lambda = grille.lambda)
+
+lambda.ridge <- cv.ridge$lambda.min
+lambda.lasso <- cv.lasso$lambda.min
+```
+
+On retient $\lambda = e^{`r exposant(lambda.ridge)`}$, valeur choisie par validation croisée ; cette méthode est présentée plus bas, à la @sec-choix-lambda. Cette valeur s'entend au sens de `glmnet` (voir la remarque qui suit l'exemple).
+
+```{r hitters-ridge-coef}
+reg.mc <- lm(Salary ~ ., data = Hitters)
+coef.mc <- coef(reg.mc)[-1]
+coef.ridge <- as.vector(coef(reg.ridge, s = lambda.ridge))[-1]
+
+knitr::kable(
+  data.frame(Variable = colnames(x),
+             "Moindres carrés" = coef.mc,
+             "Ridge" = coef.ridge,
+             check.names = FALSE),
+  digits = 2, row.names = FALSE
+)
+```
+
+La somme des carrés des coefficients (sans l'ordonnée à l'origine) vaut `r nombre(sum(coef.ridge^2))` pour ridge, contre `r nombre(sum(coef.mc^2))` pour les moindres carrés. Aucun coefficient n'est exactement nul : ridge rétrécit les coefficients sans effectuer de sélection.
+
+Le rétrécissement porte sur le vecteur des coefficients standardisés dans son ensemble, et non sur chaque coefficient séparément. En présence de variables corrélées, comme les variables de carrière, un coefficient individuel peut donc augmenter en valeur absolue, voire changer de signe : ridge répartit l'effet entre les variables corrélées plutôt que de laisser des coefficients de signes opposés se compenser.
+
+Pour évaluer la précision de prédiction, on sépare les données en deux moitiés : une pour l'entraînement et une pour le test. Pour que la comparaison soit honnête, $\lambda$ est choisi par validation croisée sur l'échantillon d'entraînement seulement : les observations test ne doivent servir ni à estimer les coefficients, ni à choisir $\lambda$.
+
+```{r hitters-ridge-test}
+set.seed(1)
+entrainement <- sample(nrow(x), nrow(x) / 2)
+test <- -entrainement
+y.test <- y[test]
+
+# Modèle nul : on prédit par la moyenne de l'échantillon d'entraînement
+err.nul <- mean((mean(y[entrainement]) - y.test)^2)
+
+# Moindres carrés
+mc.ent <- lm(y[entrainement] ~ x[entrainement, ])
+err.mc <- mean((cbind(1, x[test, ]) %*% coef(mc.ent) - y.test)^2)
+
+# Ridge, lambda choisi par validation croisée sur l'entraînement (voir plus bas)
+set.seed(4300)
+cv.ridge.ent <- cv.glmnet(x[entrainement, ], y[entrainement],
+                          alpha = 0, lambda = grille.lambda)
+ridge.ent <- glmnet(x[entrainement, ], y[entrainement],
+                    alpha = 0, lambda = grille.lambda)
+err.ridge <- mean((predict(ridge.ent, s = cv.ridge.ent$lambda.min,
+                           newx = x[test, ]) - y.test)^2)
+
+c("Modèle nul" = err.nul, "Moindres carrés" = err.mc, "Ridge" = err.ridge)
+```
+
+Sur l'échantillon d'entraînement, la validation croisée retient $\lambda = e^{`r exposant(cv.ridge.ent$lambda.min)`}$. L'erreur quadratique moyenne test vaut alors `r nombre(err.mc)` pour les moindres carrés et `r nombre(err.ridge)` pour ridge, soit une diminution de `r nombre(100 * (1 - err.ridge / err.mc), 1)` %. À titre de référence, le modèle nul, qui ignore toutes les variables explicatives, donne `r nombre(err.nul)`.
 :::
 
 ### Régression lasso
@@ -58,10 +170,70 @@ Il n'existe pas d'expression explicite pour $\hat\beta^{(L)}_\lambda$, mais des 
 
 La caractéristique clé du lasso : pour les grandes valeurs de $\lambda$, certains coefficients $\hat\beta^{(L)}_{j,\lambda}$ deviennent **identiquement égaux à 0**. Le lasso effectue donc une **sélection de variables** automatique, intuitive et naturelle. Comme pour ridge : quand $\lambda$ croît, le biais croît et la variance diminue.
 
-:::{.env-exemple}
-**Exemple (`Hitters`, suite).**
+:::{.env-exemple titre="Lasso sur [`Hitters`](#data-hitters)"}
+On ajuste le lasso avec `glmnet(x, y, alpha = 1)` sur la même grille, avec $\lambda = e^{`r exposant(lambda.lasso)`}$, là aussi choisi par validation croisée (@sec-choix-lambda).
 
-Avec $\lambda = e^2$, le lasso annule les coefficients de `HmRun`, `Runs`, `RBI`, `CAtBat`, `CHits`, `Assists` et `NewLeagueN` : le modèle retenu ne contient plus que 12 variables.
+```{r hitters-lasso}
+reg.lasso <- glmnet(x, y, alpha = 1, lambda = grille.lambda)
+
+coef.lasso <- as.vector(coef(reg.lasso, s = lambda.lasso))[-1]
+names(coef.lasso) <- colnames(x)
+round(coef.lasso[coef.lasso != 0], 2)
+
+nuls <- paste0("`", colnames(x)[coef.lasso == 0], "`")
+liste.nuls <- paste(paste(head(nuls, -1), collapse = ", "), "et", tail(nuls, 1))
+```
+
+Le lasso annule `r sum(coef.lasso == 0)` coefficients, ceux de `r liste.nuls`. Le modèle retenu ne contient plus que `r sum(coef.lasso != 0)` variables. Parmi des variables fortement corrélées, comme les statistiques de carrière, le lasso tend à en retenir une seule et à annuler les autres, alors que ridge répartit l'effet entre elles.
+
+On calcule l'erreur test sur la même partition que pour ridge, en choisissant encore $\lambda$ par validation croisée sur l'échantillon d'entraînement.
+
+```{r hitters-lasso-test}
+set.seed(4300)
+cv.lasso.ent <- cv.glmnet(x[entrainement, ], y[entrainement],
+                          alpha = 1, lambda = grille.lambda)
+lasso.ent <- glmnet(x[entrainement, ], y[entrainement],
+                    alpha = 1, lambda = grille.lambda)
+err.lasso <- mean((predict(lasso.ent, s = cv.lasso.ent$lambda.min,
+                           newx = x[test, ]) - y.test)^2)
+err.lasso
+```
+
+L'erreur test du lasso vaut `r nombre(err.lasso)`, contre `r nombre(err.ridge)` pour ridge et `r nombre(err.mc)` pour les moindres carrés.
+
+La @fig-hitters-erreur-test montre l'erreur test en fonction de $\log\lambda$ pour les deux méthodes. Lorsque $\lambda$ est petit, les deux estimateurs sont proches des moindres carrés : la variance domine. Lorsque $\lambda$ est grand, tous les coefficients sont nuls ou presque, et l'erreur rejoint celle du modèle nul : le biais domine. Entre les deux, la courbe en U illustre le compromis biais-variance. Le lasso rejoint le modèle nul pour une valeur finie de $\lambda$, où tous ses coefficients s'annulent, alors que ridge ne s'en approche qu'asymptotiquement.
+
+```{r}
+#| label: fig-hitters-erreur-test
+#| fig-cap: "Erreur quadratique moyenne test en fonction de $\\log\\lambda$ pour ridge et le lasso sur les données `Hitters`. Les lignes verticales indiquent les valeurs de $\\lambda$ choisies par validation croisée sur l'échantillon d'entraînement ; les lignes horizontales donnent l'erreur des moindres carrés (tirets) et celle du modèle nul (pointillés)."
+#| fig-width: 7
+#| fig-height: 4
+library(ggplot2)
+
+courbe <- function(ajustement, methode) {
+  data.frame(
+    log.lambda = log(ajustement$lambda),
+    erreur = colMeans((predict(ajustement, newx = x[test, ]) - y.test)^2),
+    methode = methode
+  )
+}
+erreurs <- rbind(courbe(ridge.ent, "Ridge"), courbe(lasso.ent, "Lasso"))
+choix <- data.frame(
+  methode = c("Ridge", "Lasso"),
+  log.lambda = log(c(cv.ridge.ent$lambda.min, cv.lasso.ent$lambda.min))
+)
+
+ggplot(erreurs, aes(log.lambda, erreur, colour = methode)) +
+  geom_line(linewidth = 0.8) +
+  geom_vline(data = choix, aes(xintercept = log.lambda, colour = methode),
+             linetype = "longdash") +
+  geom_hline(yintercept = err.mc, linetype = "dashed") +
+  geom_hline(yintercept = err.nul, linetype = "dotted") +
+  coord_cartesian(xlim = c(-5, 12)) +
+  labs(x = expression(log(lambda)), y = "Erreur quadratique moyenne test",
+       colour = NULL) +
+  theme_minimal()
+```
 :::
 
 ### Interprétation géométrique
@@ -158,12 +330,8 @@ Une autre représentation classique consiste à tracer les estimations $\hat\bet
 #| message: false
 #| fig-width: 9
 #| fig-height: 4.5
-library(ISLR)
 library(glmnet)
 
-Hitters <- na.omit(Hitters)
-x <- model.matrix(Salary ~ ., Hitters)[, -1]
-y <- Hitters$Salary
 grille.lambda <- 10^seq(10, -2, length.out = 100)
 
 reg.ridge <- glmnet(x, y, alpha = 0, lambda = grille.lambda)
@@ -176,16 +344,20 @@ plot(reg.lasso, xvar = "lambda")
 title("Lasso", line = 2.5)
 ```
 
-### Sélection du paramètre $\lambda$
+### Sélection du paramètre $\lambda$ {#sec-choix-lambda}
 
-La méthode la plus intuitive est basée sur le taux d'erreur test, estimé par **validation croisée** pour une grille de valeurs de $\lambda$ ; on choisit la valeur qui minimise le taux d'erreur test. En R, avec les objets `x`, `y` et `grille.lambda` définis plus haut :
+La méthode la plus intuitive est basée sur le taux d'erreur test, estimé par validation croisée pour une grille de valeurs de $\lambda$ ; on choisit la valeur qui minimise le taux d'erreur test. C'est ainsi qu'ont été choisies les valeurs de $\lambda$ utilisées dans les exemples précédents. En R, avec les objets `x`, `y` et `grille.lambda` définis plus haut :
 
-```{r}
-reg.ridge.select <- cv.glmnet(x, y, alpha = 0, lambda = grille.lambda)
-reg.ridge.select$lambda.min
+```{r hitters-cv}
+set.seed(4300)
+cv.ridge <- cv.glmnet(x, y, alpha = 0, lambda = grille.lambda)
+set.seed(4300)
+cv.lasso <- cv.glmnet(x, y, alpha = 1, lambda = grille.lambda)
+
+c(Ridge = cv.ridge$lambda.min, Lasso = cv.lasso$lambda.min)
 ```
 
-Sur les données `Hitters`, on obtient $\lambda = e^{2.2}$ pour ridge et $\lambda = e^3$ pour le lasso.
+Sur les données `Hitters`, on obtient $\lambda = e^{`r exposant(cv.ridge$lambda.min)`}$ pour ridge et $\lambda = e^{`r exposant(cv.lasso$lambda.min)`}$ pour le lasso.
 
 ## Régularisation en régression logistique {#sec-regularisation-logistique}
 

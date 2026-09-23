@@ -29,6 +29,7 @@ book:
     collapse-level: 1              # replie tout sauf les titres de chapitre
     logo: images/logit_plot.png    # affichée au-dessus du titre dans la sidebar
 
+
   chapters:
     - index.qmd
     - 01-regression-lineaire.qmd

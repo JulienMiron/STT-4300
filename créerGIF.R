@@ -5,7 +5,7 @@ library(ggplot2)
 library(gifski)
 library(mgcv)   # requis seulement pour le chapitre GAM
 
-base_dir    <- "/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/GitHub/STT-4300/images"
+base_dir    <- "/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/Quarto/STT-4300/images"
 n_frames    <- 150
 largeur_img <- 8
 hauteur_img <- 5.5
@@ -16,6 +16,8 @@ delai_gif   <- 0.08
 n_pts       <- 75 
 n_groupes   <- 75 # pour la régression linéaire logistique
 n_coef      <- 5 # pour le nombre de paramètres de LASSO
+
+changer <- c(5)
 
 
 
@@ -66,46 +68,50 @@ creer_gif <- function(dir_out, nom_gif, n_frames_gif = n_frames) {
 # ================================================================
 # 02 — Régression logistique
 # ================================================================
-set.seed(42)
-dir_out <- preparer_dossier("frames")
+if (2 %in% changer){
+  set.seed(42)
+  dir_out <- preparer_dossier("frames")
 
-X     <- seq(0, 7, length.out = n_groupes)
-Poids <- sample(5:10, n_groupes, replace = TRUE)
-X_mid <- mean(X)
-beta1_amp <- 1.2
+  X     <- seq(0, 7, length.out = n_groupes)
+  Poids <- sample(5:10, n_groupes, replace = TRUE)
+  X_mid <- mean(X)
+  beta1_amp <- 1.2
 
-phases       <- runif(n_groupes, 0, 2 * pi)
-amplitude    <- runif(n_groupes, 0.08, 0.15)
-offset_indiv <- rnorm(n_groupes, 0, 0.10)
+  phases       <- runif(n_groupes, 0, 2 * pi)
+  amplitude    <- runif(n_groupes, 0.08, 0.15)
+  offset_indiv <- rnorm(n_groupes, 0, 0.10)
 
-for (i in seq_len(n_frames)) {
-  t <- (i - 1) / n_frames * 2 * pi
-  beta1_t <- beta1_amp * cos(t)
-  eta_t   <- beta1_t * (X - X_mid)
-  p_t     <- plogis(eta_t)
-  jitter  <- amplitude * sin(t + phases)
-  Y_t     <- pmin(pmax(p_t + jitter + offset_indiv, 0.01), 0.99)
+  for (i in seq_len(n_frames)) {
+    t <- (i - 1) / n_frames * 2 * pi
+    beta1_t <- beta1_amp * cos(t)
+    eta_t   <- beta1_t * (X - X_mid)
+    p_t     <- plogis(eta_t)
+    jitter  <- amplitude * sin(t + phases)
+    Y_t     <- pmin(pmax(p_t + jitter + offset_indiv, 0.01), 0.99)
 
-  df <- data.frame(X = X, Y = Y_t, Poids = Poids)
-  modele <- glm(Y ~ X, data = df, family = binomial(link = "logit"), weights = Poids)
-  grille <- data.frame(X = seq(min(X), max(X), length.out = 200))
-  grille$Y_hat <- predict(modele, newdata = grille, type = "response")
+    df <- data.frame(X = X, Y = Y_t, Poids = Poids)
+    modele <- glm(Y ~ X, data = df, family = binomial(link = "logit"), weights = Poids)
+    grille <- data.frame(X = seq(min(X), max(X), length.out = 200))
+    grille$Y_hat <- predict(modele, newdata = grille, type = "response")
 
-  p <- ggplot() +
-    geom_point(data = df, aes(X, Y, size = Poids), color = couleur_pts, alpha = alpha_pts) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
-    coord_cartesian(xlim = range(X), ylim = c(0, 1)) +
-    theme_gif
+    p <- ggplot() +
+      geom_point(data = df, aes(X, Y, size = Poids), color = couleur_pts, alpha = alpha_pts) +
+      geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
+      coord_cartesian(xlim = range(X), ylim = c(0, 1)) +
+      theme_gif
 
-  sauvegarder_frame(p, dir_out, i)
+    sauvegarder_frame(p, dir_out, i)
+  }
+
+  creer_gif(dir_out, "logit_plot.gif")
 }
 
-creer_gif(dir_out, "logit_plot.gif")
 
 
 # ================================================================
 # 01 — Régression linéaire
 # ================================================================
+if (1 %in% changer){
 set.seed(1)
 dir_out <- preparer_dossier("frames_lineaire")
 
@@ -140,11 +146,12 @@ for (i in seq_len(n_frames)) {
 }
 
 creer_gif(dir_out, "lineaire_plot.gif")
-
+}
 
 # ================================================================
 # 03 — Modèles linéaires généralisés (Poisson)
 # ================================================================
+if (3 %in% changer){
 set.seed(2)
 dir_out <- preparer_dossier("frames_poisson")
 
@@ -182,11 +189,12 @@ for (i in seq_len(n_frames)) {
 }
 
 creer_gif(dir_out, "glm_plot.gif")
-
+}
 
 # ================================================================
 # 04 — Prédiction et validation croisée
 # ================================================================
+if (4 %in% changer){
 set.seed(3)
 dir_out <- preparer_dossier("frames_vc")
  
@@ -217,23 +225,25 @@ for (i in seq_len(n_frames_vc)) {
 }
  
 creer_gif(dir_out, "cv_plot.gif", n_frames_gif = n_frames_vc)
-
+}
 # ================================================================
 # 05 — Sélection et régularisation (LASSO)
 # ================================================================
+if (5 %in% changer){
 set.seed(4)
 dir_out <- preparer_dossier("frames_lasso")
 
 coef_base <- runif(n_coef, -2, 2)
-noms      <- factor(paste0("b", 1:n_coef), levels = paste0("b", 1:n_coef))
-labels_coef <- paste0("abs(hat(beta)[", 1:n_coef, "])")   # |beta_j chapeau|, syntaxe plotmath
+noms      <- factor(c("lambda", paste0("b", 1:n_coef)), levels = c("lambda", paste0("b", 1:n_coef)))
+labels_coef <- c("lambda", paste0("abs(hat(beta)[", 1:n_coef, "])"))   # |beta_j chapeau|, syntaxe plotmath
 
 for (i in seq_len(n_frames)) {
   t <- (i - 1) / n_frames * 2 * pi
   lambda_t <- (cos(t) + 1) / 2   # oscille entre 0 et 1
   coef_t   <- sign(coef_base) * pmax(abs(coef_base) - lambda_t * 1.8, 0)
+  para <- c(lambda_t, coef_t)
 
-  df <- data.frame(coef = noms, valeur = abs(coef_t), label = labels_coef)
+  df <- data.frame(coef = noms, valeur = abs(para), label = labels_coef)
 
   p <- ggplot(df, aes(coef, valeur)) +
     geom_col(fill = couleur_pts, alpha = 0.75) +
@@ -247,11 +257,12 @@ for (i in seq_len(n_frames)) {
 }
 
 creer_gif(dir_out, "regularisation_plot.gif")
-
+}
 
 # ================================================================
 # 06 — KNN et noyau
 # ================================================================
+if (6 %in% changer){
 set.seed(5)
 dir_out <- preparer_dossier("frames_knn")
 
@@ -277,11 +288,12 @@ for (i in seq_len(n_frames)) {
 }
 
 creer_gif(dir_out, "knn_noyau_plot.gif")
-
+}
 
 # ================================================================
 # 07 — Splines
 # ================================================================
+if (7 %in% changer){
 set.seed(6)
 dir_out <- preparer_dossier("frames_splines")
 
@@ -308,11 +320,12 @@ for (i in seq_len(n_frames)) {
 }
 
 creer_gif(dir_out, "splines_plot.gif")
-
+}
 
 # ================================================================
 # 08 — GAM
 # ================================================================
+if (8 %in% changer){
 set.seed(7)
 dir_out <- preparer_dossier("frames_gam")   # corrigé : était "frames_splines" par erreur
 
@@ -339,11 +352,12 @@ for (i in seq_len(n_frames)) {
 }
 
 creer_gif(dir_out, "gam_plot.gif")
-
+}
 
 # ================================================================
 # Index — nuage de points qui se réorganise (sans ajustement)
 # ================================================================
+if (0 %in% changer){
 set.seed(9)
 dir_out <- preparer_dossier("frames_index")
 
@@ -444,3 +458,4 @@ for (i in seq_len(n_frames)) {
 }
  
 creer_gif(dir_out, "index_plot.gif", n_frames_gif = n_frames)
+}

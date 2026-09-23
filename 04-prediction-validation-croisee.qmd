@@ -27,6 +27,15 @@ $$
 
 Le modèle 2 permet une ordonnée à l'origine par espèce et le modèle 3 une pente par espèce. Le modèle 4 ajoute l'effet de la strate. Le modèle 5 remplace chaque droite par un polynôme cubique propre à l'espèce. Ces modèles comptent respectivement 2, 5, 8, 10 et 18 paramètres de moyenne.
 
+:::{.env-remarque titre="Pourquoi ces modèles sont-ils linéaires?"}
+Les cinq modèles s'écrivent $\boldsymbol Y = \boldsymbol X\boldsymbol\beta + \boldsymbol\epsilon$ avec $Y_i = \log H_i$ : ils sont linéaires dans les paramètres, même s'ils ne le sont pas dans les variables. Les effets propres à une espèce ou à une strate correspondent à des colonnes d'indicatrices, les interactions à des produits de colonnes, et les termes $(\log D_i)^k$ du modèle 5 à des colonnes supplémentaires. Sur l'échelle originale, le modèle 1 équivaut à
+
+$$
+H_i = e^{\beta_0} D_i^{\beta_1} e^{\epsilon_i},
+$$
+
+une loi de puissance avec une erreur multiplicative : c'est un modèle intrinsèquement linéaire. À l'inverse, le modèle $H_i = \beta_0 D_i^{\beta_1} + \epsilon_i$, dont l'erreur est additive sur l'échelle originale, n'est pas linéaire et exigerait les moindres carrés non linéaires.
+:::
 ```{r arbres-donnees}
 arbres <- read.csv("Jeux de données/arbres.csv")
 arbres$espece <- factor(arbres$species_fr)

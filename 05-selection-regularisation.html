@@ -276,7 +276,7 @@ window.Quarto = {
   <li><a href="#régression-lasso" id="toc-régression-lasso" class="nav-link" data-scroll-target="#régression-lasso"><span class="header-section-number">5.2.2</span> Régression lasso</a></li>
   <li><a href="#interprétation-géométrique" id="toc-interprétation-géométrique" class="nav-link" data-scroll-target="#interprétation-géométrique"><span class="header-section-number">5.2.3</span> Interprétation géométrique</a></li>
   <li><a href="#trajectoires-des-coefficients" id="toc-trajectoires-des-coefficients" class="nav-link" data-scroll-target="#trajectoires-des-coefficients"><span class="header-section-number">5.2.4</span> Trajectoires des coefficients</a></li>
-  <li><a href="#sélection-du-paramètre-lambda" id="toc-sélection-du-paramètre-lambda" class="nav-link" data-scroll-target="#sélection-du-paramètre-lambda"><span class="header-section-number">5.2.5</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></a></li>
+  <li><a href="#sec-choix-lambda" id="toc-sec-choix-lambda" class="nav-link" data-scroll-target="#sec-choix-lambda"><span class="header-section-number">5.2.5</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></a></li>
   </ul></li>
   <li><a href="#sec-regularisation-logistique" id="toc-sec-regularisation-logistique" class="nav-link" data-scroll-target="#sec-regularisation-logistique"><span class="header-section-number">5.3</span> Régularisation en régression logistique</a>
   <ul class="collapse">
@@ -333,6 +333,57 @@ window.Quarto = {
 <p><strong>Remarque.</strong></p>
 <p>L’ordonnée à l’origine <span class="math inline">\(\beta_0\)</span> n’est pas pénalisée. Par ailleurs, les variables explicatives sont généralement standardisées avant l’ajustement, car la pénalité n’est pas invariante à l’échelle des variables.</p>
 </div>
+<div class="env-exemple" data-titre="Jeu de données [`Hitters`]{#data-hitters}">
+<p><span class="env-titre">Exemple — Jeu de données <span id="data-hitters"><code>Hitters</code></span></span></p>
+<p>Données sur les joueurs des ligues majeures de baseball, tirées de la librairie <code>ISLR</code> <span class="citation" data-cites="james2021">(<a href="#ref-james2021" role="doc-biblioref"><strong>james2021?</strong></a>)</span>. Elles proviennent de la collection StatLib de l’université Carnegie Mellon et ont été préparées pour une séance d’affiches de la section <em>Statistical Graphics</em> de l’American Statistical Association en 1988. Le jeu compte 322 joueurs et 20 variables. La réponse est <code>Salary</code>, le salaire annuel au jour d’ouverture de la saison 1987, en milliers de dollars. Les 19 variables explicatives se répartissent en quatre groupes :</p>
+<ul>
+<li><p>les statistiques offensives de la saison 1986 : présences au bâton (<code>AtBat</code>), coups sûrs (<code>Hits</code>), circuits (<code>HmRun</code>), points marqués (<code>Runs</code>), points produits (<code>RBI</code>) et buts sur balles (<code>Walks</code>) ;</p></li>
+<li><p>les statistiques offensives cumulées sur la carrière : <code>CAtBat</code>, <code>CHits</code>, <code>CHmRun</code>, <code>CRuns</code>, <code>CRBI</code> et <code>CWalks</code>, ainsi que le nombre d’années dans les ligues majeures (<code>Years</code>) ;</p></li>
+<li><p>les statistiques défensives de la saison 1986 : retraits (<code>PutOuts</code>), assistances (<code>Assists</code>) et erreurs (<code>Errors</code>) ;</p></li>
+<li><p>trois variables catégorielles à deux modalités : la ligue à la fin de 1986 (<code>League</code>, <code>A</code> pour américaine ou <code>N</code> pour nationale), la division à la fin de 1986 (<code>Division</code>, <code>E</code> pour est ou <code>W</code> pour ouest) et la ligue au début de 1987 (<code>NewLeague</code>).</p></li>
+</ul>
+<p>Le salaire est manquant pour 59 joueurs ; on retire ces joueurs, ce qui laisse <span class="math inline">\(n = 263\)</span> observations. La fonction <code>model.matrix</code> transforme les trois variables catégorielles en indicatrices (<code>LeagueN</code>, <code>DivisionW</code> et <code>NewLeagueN</code>), d’où une matrice <span class="math inline">\(X\)</span> à 19 colonnes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Hitters)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 322  20</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(Hitters<span class="sc">$</span>Salary))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 59</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(Salary <span class="sc">~</span> ., Hitters)[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Hitters<span class="sc">$</span>Salary</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(x)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 263  19</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(y)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   67.5   190.0   425.0   535.9   750.0  2460.0 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cor</span>(Hitters[, <span class="fu">c</span>(<span class="st">"Years"</span>, <span class="st">"CAtBat"</span>, <span class="st">"CHits"</span>, <span class="st">"CRuns"</span>, <span class="st">"CRBI"</span>)]), <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Years CAtBat CHits CRuns CRBI
+Years   1.00   0.92  0.90  0.88 0.86
+CAtBat  0.92   1.00  1.00  0.98 0.95
+CHits   0.90   1.00  1.00  0.98 0.95
+CRuns   0.88   0.98  0.98  1.00 0.95
+CRBI    0.86   0.95  0.95  0.95 1.00</code></pre>
+</div>
+</div>
+<p>Deux caractéristiques de ces données sont à retenir pour la suite. D’abord, les variables de carrière sont très fortement corrélées entre elles, puisqu’elles croissent toutes avec l’ancienneté du joueur. Cette colinéarité gonfle la variance des estimateurs des moindres carrés, et c’est précisément la situation où la régularisation est utile. Ensuite, la distribution du salaire est fortement asymétrique à droite : la moyenne dépasse nettement la médiane.</p>
+<div class="env-remarque">
+<p><span class="env-titre">Remarque</span></p>
+<p><strong>Remarque.</strong></p>
+<p>À cause de cette asymétrie, on modélise souvent <span class="math inline">\(\log(\texttt{Salary})\)</span> plutôt que <code>Salary</code>. On conserve ici le salaire sur son échelle d’origine, comme dans <span class="citation" data-cites="james2021">(<a href="#ref-james2021" role="doc-biblioref"><strong>james2021?</strong></a>)</span>, pour que les erreurs test rapportées dans les exemples soient comparables à celles de cet ouvrage.</p>
+</div>
+</div>
 <section id="régression-ridge" class="level3" data-number="5.2.1">
 <h3 data-number="5.2.1" class="anchored" data-anchor-id="régression-ridge"><span class="header-section-number">5.2.1</span> Régression ridge</h3>
 <p>La régression ridge minimise <span class="math display">\[l^{(R)}_\lambda(\beta) = \sum_{i=1}^n\left\{Y_i - (\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip})\right\}^2 + \lambda\sum_{j=1}^p\beta_j^2.\]</span> En écriture matricielle, <span class="math inline">\(l^{(R)}_\lambda(\beta) = (Y - X\beta)^\top(Y-X\beta) + \lambda\,\beta^\top\tilde I_p\,\beta\)</span>, où <span class="math inline">\(\tilde I_p\)</span> est diagonale de taille <span class="math inline">\(p+1\)</span> avec un 0 en première position (pas de pénalité sur <span class="math inline">\(\beta_0\)</span>) et des 1 ailleurs. La solution est explicite : <span class="math display">\[\boxed{\hat\beta^{(R)}_\lambda = (X^\top X + \lambda\tilde I_p)^{-1}X^\top Y}\]</span> et on en déduit</p>
@@ -343,20 +394,249 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 \end{aligned}
 \]</span></p>
 <p>L’estimateur est donc biaisé, sauf si <span class="math inline">\(\lambda = 0\)</span>. Lorsque <span class="math inline">\(\lambda = 0\)</span>, <span class="math inline">\(\hat\beta^{(R)}_\lambda = \hat\beta\)</span> ; lorsque <span class="math inline">\(\lambda\to\infty\)</span>, tous les <span class="math inline">\(\hat\beta^{(R)}_{j,\lambda}\)</span> (<span class="math inline">\(j\geq1\)</span>) tendent vers 0 et l’ordonnée à l’origine tend vers <span class="math inline">\(\bar Y\)</span>. On parle d’un phénomène de <strong>rétrécissement</strong> (<em>shrinkage</em>).</p>
-<div class="env-exemple">
-<p><span class="env-titre">Exemple</span></p>
-<p><strong>Exemple (<code>Hitters</code>, librairie <code>ISLR</code>).</strong></p>
-<p>La réponse est le salaire d’un joueur de baseball (19 variables explicatives). En R, la régression ridge s’ajuste avec <code>glmnet(x, y, alpha=0)</code>. Avec <span class="math inline">\(\lambda = e^6\)</span>, on observe <span class="math inline">\(\sum_j[\hat\beta^{(R)}_{j,\lambda}]^2 = 5721\)</span> contre <span class="math inline">\(\sum_j\hat\beta_j^2 = 18469\)</span> pour les moindres carrés : rétrécissement marqué. Sur une partition entraînement/test, le taux d’erreur test passe de <span class="math inline">\(124\,716\)</span> (moindres carrés) à <span class="math inline">\(91\,274\)</span> (ridge), soit une diminution de près de 27%.</p>
+<div class="env-exemple" data-titre="Régression ridge sur [`Hitters`](#data-hitters)">
+<p><span class="env-titre">Exemple — Régression ridge sur <a href="#data-hitters"><code>Hitters</code></a></span></p>
+<p>On ajuste la régression ridge avec <code>glmnet(x, y, alpha = 0)</code> sur une grille de 100 valeurs de <span class="math inline">\(\lambda\)</span> allant de <span class="math inline">\(10^{10}\)</span> à <span class="math inline">\(10^{-2}\)</span>. La fonction <code>glmnet</code> standardise les variables explicatives avant l’ajustement (argument <code>standardize = TRUE</code> par défaut), mais retourne les coefficients sur l’échelle d’origine des variables.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>grille.lambda <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>reg.ridge <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grille.lambda)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>On retient <span class="math inline">\(\lambda = e^{5{,}44}\)</span>, valeur choisie par validation croisée ; cette méthode est présentée plus bas, à la <a href="#sec-choix-lambda" class="quarto-xref"><span>Section 5.2.5</span></a>. Cette valeur s’entend au sens de <code>glmnet</code> (voir la remarque qui suit l’exemple).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>reg.mc <span class="ot">&lt;-</span> <span class="fu">lm</span>(Salary <span class="sc">~</span> ., <span class="at">data =</span> Hitters)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>coef.mc <span class="ot">&lt;-</span> <span class="fu">coef</span>(reg.mc)[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>coef.ridge <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">coef</span>(reg.ridge, <span class="at">s =</span> lambda.ridge))[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">Variable =</span> <span class="fu">colnames</span>(x),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Moindres carrés"</span> <span class="ot">=</span> coef.mc,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Ridge"</span> <span class="ot">=</span> coef.ridge,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">check.names =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: right;">Moindres carrés</th>
+<th style="text-align: right;">Ridge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">AtBat</td>
+<td style="text-align: right;">-1.98</td>
+<td style="text-align: right;">0.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hits</td>
+<td style="text-align: right;">7.50</td>
+<td style="text-align: right;">0.98</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HmRun</td>
+<td style="text-align: right;">4.33</td>
+<td style="text-align: right;">0.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Runs</td>
+<td style="text-align: right;">-2.38</td>
+<td style="text-align: right;">1.10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RBI</td>
+<td style="text-align: right;">-1.04</td>
+<td style="text-align: right;">0.87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Walks</td>
+<td style="text-align: right;">6.23</td>
+<td style="text-align: right;">1.76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Years</td>
+<td style="text-align: right;">-3.49</td>
+<td style="text-align: right;">0.43</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CAtBat</td>
+<td style="text-align: right;">-0.17</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CHits</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.06</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CHmRun</td>
+<td style="text-align: right;">-0.17</td>
+<td style="text-align: right;">0.44</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CRuns</td>
+<td style="text-align: right;">1.45</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CRBI</td>
+<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CWalks</td>
+<td style="text-align: right;">-0.81</td>
+<td style="text-align: right;">0.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LeagueN</td>
+<td style="text-align: right;">62.60</td>
+<td style="text-align: right;">26.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DivisionW</td>
+<td style="text-align: right;">-116.85</td>
+<td style="text-align: right;">-89.21</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PutOuts</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Assists</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.04</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Errors</td>
+<td style="text-align: right;">-3.36</td>
+<td style="text-align: right;">-1.72</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NewLeagueN</td>
+<td style="text-align: right;">-24.76</td>
+<td style="text-align: right;">7.76</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>La somme des carrés des coefficients (sans l’ordonnée à l’origine) vaut 8 710 pour ridge, contre 18 337 pour les moindres carrés. Aucun coefficient n’est exactement nul : ridge rétrécit les coefficients sans effectuer de sélection.</p>
+<p>Le rétrécissement porte sur le vecteur des coefficients standardisés dans son ensemble, et non sur chaque coefficient séparément. En présence de variables corrélées, comme les variables de carrière, un coefficient individuel peut donc augmenter en valeur absolue, voire changer de signe : ridge répartit l’effet entre les variables corrélées plutôt que de laisser des coefficients de signes opposés se compenser.</p>
+<p>Pour évaluer la précision de prédiction, on sépare les données en deux moitiés : une pour l’entraînement et une pour le test. Pour que la comparaison soit honnête, <span class="math inline">\(\lambda\)</span> est choisi par validation croisée sur l’échantillon d’entraînement seulement : les observations test ne doivent servir ni à estimer les coefficients, ni à choisir <span class="math inline">\(\lambda\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>entrainement <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(x), <span class="fu">nrow</span>(x) <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="sc">-</span>entrainement</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>y.test <span class="ot">&lt;-</span> y[test]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Modèle nul : on prédit par la moyenne de l'échantillon d'entraînement</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>err.nul <span class="ot">&lt;-</span> <span class="fu">mean</span>((<span class="fu">mean</span>(y[entrainement]) <span class="sc">-</span> y.test)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Moindres carrés</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>mc.ent <span class="ot">&lt;-</span> <span class="fu">lm</span>(y[entrainement] <span class="sc">~</span> x[entrainement, ])</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>err.mc <span class="ot">&lt;-</span> <span class="fu">mean</span>((<span class="fu">cbind</span>(<span class="dv">1</span>, x[test, ]) <span class="sc">%*%</span> <span class="fu">coef</span>(mc.ent) <span class="sc">-</span> y.test)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ridge, lambda choisi par validation croisée sur l'entraînement (voir plus bas)</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>cv.ridge.ent <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x[entrainement, ], y[entrainement],</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>ridge.ent <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x[entrainement, ], y[entrainement],</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>err.ridge <span class="ot">&lt;-</span> <span class="fu">mean</span>((<span class="fu">predict</span>(ridge.ent, <span class="at">s =</span> cv.ridge.ent<span class="sc">$</span>lambda.min,</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                           <span class="at">newx =</span> x[test, ]) <span class="sc">-</span> y.test)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="st">"Modèle nul"</span> <span class="ot">=</span> err.nul, <span class="st">"Moindres carrés"</span> <span class="ot">=</span> err.mc, <span class="st">"Ridge"</span> <span class="ot">=</span> err.ridge)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Modèle nul Moindres carrés           Ridge 
+       224669.9        168593.3        140081.9 </code></pre>
+</div>
+</div>
+<p>Sur l’échantillon d’entraînement, la validation croisée retient <span class="math inline">\(\lambda = e^{5{,}72}\)</span>. L’erreur quadratique moyenne test vaut alors 168 593 pour les moindres carrés et 140 082 pour ridge, soit une diminution de 16,9 %. À titre de référence, le modèle nul, qui ignore toutes les variables explicatives, donne 224 670.</p>
 </div>
 </section>
 <section id="régression-lasso" class="level3" data-number="5.2.2">
 <h3 data-number="5.2.2" class="anchored" data-anchor-id="régression-lasso"><span class="header-section-number">5.2.2</span> Régression lasso</h3>
 <p>La régression lasso minimise <span class="math display">\[l^{(L)}_\lambda(\beta) = \sum_{i=1}^n\left\{Y_i - (\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip})\right\}^2 + \lambda\sum_{j=1}^p|\beta_j|.\]</span> Il n’existe pas d’expression explicite pour <span class="math inline">\(\hat\beta^{(L)}_\lambda\)</span>, mais des algorithmes d’optimisation efficaces existent (en R : <code>glmnet(x, y, alpha=1)</code>).</p>
 <p>La caractéristique clé du lasso : pour les grandes valeurs de <span class="math inline">\(\lambda\)</span>, certains coefficients <span class="math inline">\(\hat\beta^{(L)}_{j,\lambda}\)</span> deviennent <strong>identiquement égaux à 0</strong>. Le lasso effectue donc une <strong>sélection de variables</strong> automatique, intuitive et naturelle. Comme pour ridge : quand <span class="math inline">\(\lambda\)</span> croît, le biais croît et la variance diminue.</p>
-<div class="env-exemple">
-<p><span class="env-titre">Exemple</span></p>
-<p><strong>Exemple (<code>Hitters</code>, suite).</strong></p>
-<p>Avec <span class="math inline">\(\lambda = e^2\)</span>, le lasso annule les coefficients de <code>HmRun</code>, <code>Runs</code>, <code>RBI</code>, <code>CAtBat</code>, <code>CHits</code>, <code>Assists</code> et <code>NewLeagueN</code> : le modèle retenu ne contient plus que 12 variables.</p>
+<div class="env-exemple" data-titre="Lasso sur [`Hitters`](#data-hitters)">
+<p><span class="env-titre">Exemple — Lasso sur <a href="#data-hitters"><code>Hitters</code></a></span></p>
+<p>On ajuste le lasso avec <code>glmnet(x, y, alpha = 1)</code> sur la même grille, avec <span class="math inline">\(\lambda = e^{0{,}98}\)</span>, là aussi choisi par validation croisée (<a href="#sec-choix-lambda" class="quarto-xref"><span>Section 5.2.5</span></a>).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>reg.lasso <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>coef.lasso <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">coef</span>(reg.lasso, <span class="at">s =</span> lambda.lasso))[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(coef.lasso) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(x)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(coef.lasso[coef.lasso <span class="sc">!=</span> <span class="dv">0</span>], <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    AtBat      Hits     Walks     Years    CHmRun     CRuns      CRBI    CWalks 
+    -1.56      5.69      4.75     -9.52      0.52      0.66      0.39     -0.53 
+  LeagueN DivisionW   PutOuts   Assists    Errors 
+    32.11   -119.26      0.27      0.17     -2.06 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>nuls <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"`"</span>, <span class="fu">colnames</span>(x)[coef.lasso <span class="sc">==</span> <span class="dv">0</span>], <span class="st">"`"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>liste.nuls <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">paste</span>(<span class="fu">head</span>(nuls, <span class="sc">-</span><span class="dv">1</span>), <span class="at">collapse =</span> <span class="st">", "</span>), <span class="st">"et"</span>, <span class="fu">tail</span>(nuls, <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Le lasso annule 6 coefficients, ceux de <code>HmRun</code>, <code>Runs</code>, <code>RBI</code>, <code>CAtBat</code>, <code>CHits</code> et <code>NewLeagueN</code>. Le modèle retenu ne contient plus que 13 variables. Parmi des variables fortement corrélées, comme les statistiques de carrière, le lasso tend à en retenir une seule et à annuler les autres, alors que ridge répartit l’effet entre elles.</p>
+<p>On calcule l’erreur test sur la même partition que pour ridge, en choisissant encore <span class="math inline">\(\lambda\)</span> par validation croisée sur l’échantillon d’entraînement.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>cv.lasso.ent <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x[entrainement, ], y[entrainement],</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>lasso.ent <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x[entrainement, ], y[entrainement],</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>err.lasso <span class="ot">&lt;-</span> <span class="fu">mean</span>((<span class="fu">predict</span>(lasso.ent, <span class="at">s =</span> cv.lasso.ent<span class="sc">$</span>lambda.min,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">newx =</span> x[test, ]) <span class="sc">-</span> y.test)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>err.lasso</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 144217.6</code></pre>
+</div>
+</div>
+<p>L’erreur test du lasso vaut 144 218, contre 140 082 pour ridge et 168 593 pour les moindres carrés.</p>
+<p>La <a href="#fig-hitters-erreur-test" class="quarto-xref">Figure&nbsp;<span>5.1</span></a> montre l’erreur test en fonction de <span class="math inline">\(\log\lambda\)</span> pour les deux méthodes. Lorsque <span class="math inline">\(\lambda\)</span> est petit, les deux estimateurs sont proches des moindres carrés : la variance domine. Lorsque <span class="math inline">\(\lambda\)</span> est grand, tous les coefficients sont nuls ou presque, et l’erreur rejoint celle du modèle nul : le biais domine. Entre les deux, la courbe en U illustre le compromis biais-variance. Le lasso rejoint le modèle nul pour une valeur finie de <span class="math inline">\(\lambda\)</span>, où tous ses coefficients s’annulent, alors que ridge ne s’en approche qu’asymptotiquement.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>courbe <span class="ot">&lt;-</span> <span class="cf">function</span>(ajustement, methode) {</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">log.lambda =</span> <span class="fu">log</span>(ajustement<span class="sc">$</span>lambda),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">erreur =</span> <span class="fu">colMeans</span>((<span class="fu">predict</span>(ajustement, <span class="at">newx =</span> x[test, ]) <span class="sc">-</span> y.test)<span class="sc">^</span><span class="dv">2</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">methode =</span> methode</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>erreurs <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">courbe</span>(ridge.ent, <span class="st">"Ridge"</span>), <span class="fu">courbe</span>(lasso.ent, <span class="st">"Lasso"</span>))</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>choix <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">methode =</span> <span class="fu">c</span>(<span class="st">"Ridge"</span>, <span class="st">"Lasso"</span>),</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">log.lambda =</span> <span class="fu">log</span>(<span class="fu">c</span>(cv.ridge.ent<span class="sc">$</span>lambda.min, cv.lasso.ent<span class="sc">$</span>lambda.min))</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(erreurs, <span class="fu">aes</span>(log.lambda, erreur, <span class="at">colour =</span> methode)) <span class="sc">+</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">data =</span> choix, <span class="fu">aes</span>(<span class="at">xintercept =</span> log.lambda, <span class="at">colour =</span> methode),</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"longdash"</span>) <span class="sc">+</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> err.mc, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> err.nul, <span class="at">linetype =</span> <span class="st">"dotted"</span>) <span class="sc">+</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">log</span>(lambda)), <span class="at">y =</span> <span class="st">"Erreur quadratique moyenne test"</span>,</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-hitters-erreur-test" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hitters-erreur-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-selection-regularisation_files/figure-html/fig-hitters-erreur-test-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hitters-erreur-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.1: Erreur quadratique moyenne test en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge et le lasso sur les données <code>Hitters</code>. Les lignes verticales indiquent les valeurs de <span class="math inline">\(\lambda\)</span> choisies par validation croisée sur l’échantillon d’entraînement ; les lignes horizontales donnent l’erreur des moindres carrés (tirets) et celle du modèle nul (pointillés).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="interprétation-géométrique" class="level3" data-number="5.2.3">
@@ -374,7 +654,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 \]</span></p>
 <p>Une grande valeur de <span class="math inline">\(\lambda\)</span> correspond à une petite valeur de <span class="math inline">\(s\)</span>.</p>
 </div>
-<p>Lorsque les variables explicatives sont centrées, la somme des carrés résiduels s’écrit, à une constante près, <span class="math inline">\((\beta - \hat\beta)^\top X^\top X(\beta - \hat\beta)\)</span> : ses courbes de niveau sont des ellipses centrées en l’estimateur des moindres carrés <span class="math inline">\(\hat\beta\)</span>. Avec <span class="math inline">\(p = 2\)</span>, on peut donc représenter le problème dans le plan <span class="math inline">\((\beta_1, \beta_2)\)</span> (<a href="#fig-geometrie-ridge-lasso" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>). La région admissible est un disque pour ridge et un losange pour le lasso, et la solution est le point où l’ellipse de plus petit niveau touche la région admissible.</p>
+<p>Lorsque les variables explicatives sont centrées, la somme des carrés résiduels s’écrit, à une constante près, <span class="math inline">\((\beta - \hat\beta)^\top X^\top X(\beta - \hat\beta)\)</span> : ses courbes de niveau sont des ellipses centrées en l’estimateur des moindres carrés <span class="math inline">\(\hat\beta\)</span>. Avec <span class="math inline">\(p = 2\)</span>, on peut donc représenter le problème dans le plan <span class="math inline">\((\beta_1, \beta_2)\)</span> (<a href="#fig-geometrie-ridge-lasso" class="quarto-xref">Figure&nbsp;<span>5.2</span></a>). La région admissible est un disque pour ridge et un losange pour le lasso, et la solution est le point où l’ellipse de plus petit niveau touche la région admissible.</p>
 <p>Le losange possède des coins situés sur les axes. Lorsque le contact se fait en un coin, l’un des coefficients est exactement nul. Le disque n’a pas de coin : le contact se fait presque toujours hors des axes, si bien que ridge rétrécit les coefficients sans jamais les annuler. En dimension <span class="math inline">\(p\)</span>, la région du lasso est un polyèdre dont les sommets et les arêtes se trouvent sur des sous-espaces de coordonnées, ce qui explique que plusieurs coefficients puissent être annulés simultanément.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -384,7 +664,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <img src="05-selection-regularisation_files/figure-html/fig-geometrie-ridge-lasso-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-geometrie-ridge-lasso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.1: Courbes de niveau de la somme des carrés résiduels (ellipses centrées en <span class="math inline">\(\hat\beta\)</span>) et régions admissibles de ridge (disque) et du lasso (losange). Le point bleu est l’estimateur régularisé : le lasso atteint un coin du losange, où <span class="math inline">\(\hat\beta_1 = 0\)</span>.
+Figure&nbsp;5.2: Courbes de niveau de la somme des carrés résiduels (ellipses centrées en <span class="math inline">\(\hat\beta\)</span>) et régions admissibles de ridge (disque) et du lasso (losange). Le point bleu est l’estimateur régularisé : le lasso atteint un coin du losange, où <span class="math inline">\(\hat\beta_1 = 0\)</span>.
 </figcaption>
 </figure>
 </div>
@@ -393,24 +673,20 @@ Figure&nbsp;5.1: Courbes de niveau de la somme des carrés résiduels (ellipses 
 </section>
 <section id="trajectoires-des-coefficients" class="level3" data-number="5.2.4">
 <h3 data-number="5.2.4" class="anchored" data-anchor-id="trajectoires-des-coefficients"><span class="header-section-number">5.2.4</span> Trajectoires des coefficients</h3>
-<p>Une autre représentation classique consiste à tracer les estimations <span class="math inline">\(\hat\beta_{j,\lambda}\)</span> en fonction de <span class="math inline">\(\log\lambda\)</span> (<a href="#fig-trajectoires-hitters" class="quarto-xref">Figure&nbsp;<span>5.2</span></a>). Pour ridge, toutes les trajectoires tendent doucement vers 0 sans jamais l’atteindre : l’axe du haut, qui indique le nombre de coefficients non nuls, reste à 19. Pour le lasso, les trajectoires atteignent 0 l’une après l’autre à mesure que <span class="math inline">\(\lambda\)</span> augmente, et le nombre de variables retenues diminue.</p>
+<p>Une autre représentation classique consiste à tracer les estimations <span class="math inline">\(\hat\beta_{j,\lambda}\)</span> en fonction de <span class="math inline">\(\log\lambda\)</span> (<a href="#fig-trajectoires-hitters" class="quarto-xref">Figure&nbsp;<span>5.3</span></a>). Pour ridge, toutes les trajectoires tendent doucement vers 0 sans jamais l’atteindre : l’axe du haut, qui indique le nombre de coefficients non nuls, reste à 19. Pour le lasso, les trajectoires atteignent 0 l’une après l’autre à mesure que <span class="math inline">\(\lambda\)</span> augmente, et le nombre de variables retenues diminue.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>Hitters <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(Hitters)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(Salary <span class="sc">~</span> ., Hitters)[, <span class="sc">-</span><span class="dv">1</span>]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Hitters<span class="sc">$</span>Salary</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>grille.lambda <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>reg.ridge <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grille.lambda)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>reg.lasso <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">lambda =</span> grille.lambda)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg.ridge, <span class="at">xvar =</span> <span class="st">"lambda"</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Ridge"</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg.lasso, <span class="at">xvar =</span> <span class="st">"lambda"</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Lasso"</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>grille.lambda <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>reg.ridge <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>reg.lasso <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg.ridge, <span class="at">xvar =</span> <span class="st">"lambda"</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Ridge"</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reg.lasso, <span class="at">xvar =</span> <span class="st">"lambda"</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Lasso"</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-trajectoires-hitters" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -418,24 +694,29 @@ Figure&nbsp;5.1: Courbes de niveau de la somme des carrés résiduels (ellipses 
 <img src="05-selection-regularisation_files/figure-html/fig-trajectoires-hitters-1.png" class="img-fluid figure-img" width="864">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trajectoires-hitters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.2: Trajectoires des coefficients estimés en fonction de <span class="math inline">\(\log\lambda\)</span> pour les données <code>Hitters</code>. Chaque courbe correspond à une variable explicative ; l’axe du haut donne le nombre de coefficients non nuls.
+Figure&nbsp;5.3: Trajectoires des coefficients estimés en fonction de <span class="math inline">\(\log\lambda\)</span> pour les données <code>Hitters</code>. Chaque courbe correspond à une variable explicative ; l’axe du haut donne le nombre de coefficients non nuls.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="sélection-du-paramètre-lambda" class="level3" data-number="5.2.5">
-<h3 data-number="5.2.5" class="anchored" data-anchor-id="sélection-du-paramètre-lambda"><span class="header-section-number">5.2.5</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></h3>
-<p>La méthode la plus intuitive est basée sur le taux d’erreur test, estimé par <strong>validation croisée</strong> pour une grille de valeurs de <span class="math inline">\(\lambda\)</span> ; on choisit la valeur qui minimise le taux d’erreur test. En R, avec les objets <code>x</code>, <code>y</code> et <code>grille.lambda</code> définis plus haut :</p>
+<section id="sec-choix-lambda" class="level3" data-number="5.2.5">
+<h3 data-number="5.2.5" class="anchored" data-anchor-id="sec-choix-lambda"><span class="header-section-number">5.2.5</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></h3>
+<p>La méthode la plus intuitive est basée sur le taux d’erreur test, estimé par validation croisée pour une grille de valeurs de <span class="math inline">\(\lambda\)</span> ; on choisit la valeur qui minimise le taux d’erreur test. C’est ainsi qu’ont été choisies les valeurs de <span class="math inline">\(\lambda\)</span> utilisées dans les exemples précédents. En R, avec les objets <code>x</code>, <code>y</code> et <code>grille.lambda</code> définis plus haut :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>reg.ridge.select <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grille.lambda)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>reg.ridge.select<span class="sc">$</span>lambda.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>cv.ridge <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>cv.lasso <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">lambda =</span> grille.lambda)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">Ridge =</span> cv.ridge<span class="sc">$</span>lambda.min, <span class="at">Lasso =</span> cv.lasso<span class="sc">$</span>lambda.min)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 8.111308</code></pre>
+<pre><code>     Ridge      Lasso 
+231.012970   2.656088 </code></pre>
 </div>
 </div>
-<p>Sur les données <code>Hitters</code>, on obtient <span class="math inline">\(\lambda = e^{2.2}\)</span> pour ridge et <span class="math inline">\(\lambda = e^3\)</span> pour le lasso.</p>
+<p>Sur les données <code>Hitters</code>, on obtient <span class="math inline">\(\lambda = e^{5{,}44}\)</span> pour ridge et <span class="math inline">\(\lambda = e^{0{,}98}\)</span> pour le lasso.</p>
 </section>
 </section>
 <section id="sec-regularisation-logistique" class="level2" data-number="5.3">
@@ -501,17 +782,17 @@ l_\lambda(\boldsymbol\beta) = -2\sum_{i=1}^n\left\{y_i\,\eta_i - m_i\log\left(1 
 <p><span class="env-titre">Exemple — Régularisation sur <a href="#data-empress"><code>empress</code></a></span></p>
 <p>On ajuste le modèle avec toutes les interactions entre la classe, le sexe et le groupe d’âge. Ce modèle est pratiquement saturé, et deux cellules ne comptent aucun survivant : les garçons de deuxième classe (0 sur 11) et les filles de troisième classe (0 sur 48). Il y a donc séparation quasi-complète, et le maximum de vraisemblance diverge. La cellule « première classe, homme, enfant » est vide, d’où un coefficient non estimable (<code>NA</code>).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>niveaux.classe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Première"</span>, <span class="st">"Deuxième"</span>, <span class="st">"Troisième"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>empress <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/empress_individus.csv"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>empress<span class="sc">$</span>classe <span class="ot">&lt;-</span> <span class="fu">factor</span>(empress<span class="sc">$</span>classe, <span class="at">levels =</span> niveaux.classe)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>empress.agr <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/empress_agrege.csv"</span>)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>empress.agr<span class="sc">$</span>classe <span class="ot">&lt;-</span> <span class="fu">factor</span>(empress.agr<span class="sc">$</span>classe, <span class="at">levels =</span> niveaux.classe)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>m.sature <span class="ot">&lt;-</span> <span class="fu">glm</span>(survecu <span class="sc">~</span> classe <span class="sc">*</span> sexe <span class="sc">*</span> groupe_age,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> empress, <span class="at">family =</span> binomial)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m.sature)<span class="sc">$</span>coefficients, <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>niveaux.classe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Première"</span>, <span class="st">"Deuxième"</span>, <span class="st">"Troisième"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>empress <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/empress_individus.csv"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>empress<span class="sc">$</span>classe <span class="ot">&lt;-</span> <span class="fu">factor</span>(empress<span class="sc">$</span>classe, <span class="at">levels =</span> niveaux.classe)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>empress.agr <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/empress_agrege.csv"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>empress.agr<span class="sc">$</span>classe <span class="ot">&lt;-</span> <span class="fu">factor</span>(empress.agr<span class="sc">$</span>classe, <span class="at">levels =</span> niveaux.classe)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>m.sature <span class="ot">&lt;-</span> <span class="fu">glm</span>(survecu <span class="sc">~</span> classe <span class="sc">*</span> sexe <span class="sc">*</span> groupe_age,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> empress, <span class="at">family =</span> binomial)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(m.sature)<span class="sc">$</span>coefficients, <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                          Estimate Std. Error z value Pr(&gt;|z|)
 (Intercept)                                  -0.74       0.37   -2.01     0.04
@@ -529,18 +810,18 @@ classeDeuxième:sexeHomme:groupe_ageEnfant   -28.86    1322.47   -0.02     0.98<
 </div>
 <p>Les coefficients associés aux cellules sans survivant sont très grands en valeur absolue, avec des erreurs types démesurées. On ajuste maintenant les versions ridge et lasso, en choisissant <span class="math inline">\(\lambda\)</span> par validation croisée à 10 plis sur la déviance.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x.emp <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(survecu <span class="sc">~</span> classe <span class="sc">*</span> sexe <span class="sc">*</span> groupe_age, empress)[, <span class="sc">-</span><span class="dv">1</span>]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y.emp <span class="ot">&lt;-</span> empress<span class="sc">$</span>survecu</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>cv.ridge.emp <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x.emp, y.emp, <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">alpha =</span> <span class="dv">0</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>cv.lasso.emp <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x.emp, y.emp, <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">alpha =</span> <span class="dv">1</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.ridge.emp)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Ridge"</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.lasso.emp)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Lasso"</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>x.emp <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(survecu <span class="sc">~</span> classe <span class="sc">*</span> sexe <span class="sc">*</span> groupe_age, empress)[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>y.emp <span class="ot">&lt;-</span> empress<span class="sc">$</span>survecu</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>cv.ridge.emp <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x.emp, y.emp, <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">alpha =</span> <span class="dv">0</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>cv.lasso.emp <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(x.emp, y.emp, <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">alpha =</span> <span class="dv">1</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.ridge.emp)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Ridge"</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cv.lasso.emp)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Lasso"</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-empress-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -548,7 +829,7 @@ classeDeuxième:sexeHomme:groupe_ageEnfant   -28.86    1322.47   -0.02     0.98<
 <img src="05-selection-regularisation_files/figure-html/fig-empress-cv-1.png" class="img-fluid figure-img" width="864">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-empress-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.3: Déviance binomiale estimée par validation croisée en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge (gauche) et le lasso (droite). Les lignes pointillées indiquent <code>lambda.min</code> et <code>lambda.1se</code>.
+Figure&nbsp;5.4: Déviance binomiale estimée par validation croisée en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge (gauche) et le lasso (droite). Les lignes pointillées indiquent <code>lambda.min</code> et <code>lambda.1se</code>.
 </figcaption>
 </figure>
 </div>
@@ -556,12 +837,12 @@ Figure&nbsp;5.3: Déviance binomiale estimée par validation croisée en fonctio
 </div>
 <p>Les coefficients régularisés restent finis :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">MV    =</span> <span class="fu">coef</span>(m.sature),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ridge =</span> <span class="fu">as.vector</span>(<span class="fu">coef</span>(cv.ridge.emp, <span class="at">s =</span> <span class="st">"lambda.min"</span>)),</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Lasso =</span> <span class="fu">as.vector</span>(<span class="fu">coef</span>(cv.lasso.emp, <span class="at">s =</span> <span class="st">"lambda.min"</span>))</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(coefs, <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">MV    =</span> <span class="fu">coef</span>(m.sature),</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ridge =</span> <span class="fu">as.vector</span>(<span class="fu">coef</span>(cv.ridge.emp, <span class="at">s =</span> <span class="st">"lambda.min"</span>)),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Lasso =</span> <span class="fu">as.vector</span>(<span class="fu">coef</span>(cv.lasso.emp, <span class="at">s =</span> <span class="st">"lambda.min"</span>))</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(coefs, <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                MV  Ridge  Lasso
 (Intercept)                                 -0.738 -1.038 -1.047
@@ -580,18 +861,18 @@ classeTroisième:sexeHomme:groupe_ageEnfant      NA -0.334  0.000</code></pre>
 </div>
 <p>On compare enfin les probabilités de survie estimées dans chaque cellule avec les proportions observées.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>x.agr <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> classe <span class="sc">*</span> sexe <span class="sc">*</span> groupe_age, empress.agr)[, <span class="sc">-</span><span class="dv">1</span>]</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>probas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  empress.agr[, <span class="fu">c</span>(<span class="st">"classe"</span>, <span class="st">"sexe"</span>, <span class="st">"groupe_age"</span>)],</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Observee =</span> empress.agr<span class="sc">$</span>survivants <span class="sc">/</span> empress.agr<span class="sc">$</span>effectif,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">MV    =</span> <span class="fu">predict</span>(m.sature, <span class="at">newdata =</span> empress.agr, <span class="at">type =</span> <span class="st">"response"</span>),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ridge =</span> <span class="fu">as.vector</span>(<span class="fu">predict</span>(cv.ridge.emp, <span class="at">newx =</span> x.agr,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">s =</span> <span class="st">"lambda.min"</span>, <span class="at">type =</span> <span class="st">"response"</span>)),</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Lasso =</span> <span class="fu">as.vector</span>(<span class="fu">predict</span>(cv.lasso.emp, <span class="at">newx =</span> x.agr,</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">s =</span> <span class="st">"lambda.min"</span>, <span class="at">type =</span> <span class="st">"response"</span>))</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(probas, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x.agr <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> classe <span class="sc">*</span> sexe <span class="sc">*</span> groupe_age, empress.agr)[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>probas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  empress.agr[, <span class="fu">c</span>(<span class="st">"classe"</span>, <span class="st">"sexe"</span>, <span class="st">"groupe_age"</span>)],</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Observee =</span> empress.agr<span class="sc">$</span>survivants <span class="sc">/</span> empress.agr<span class="sc">$</span>effectif,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">MV    =</span> <span class="fu">predict</span>(m.sature, <span class="at">newdata =</span> empress.agr, <span class="at">type =</span> <span class="st">"response"</span>),</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Ridge =</span> <span class="fu">as.vector</span>(<span class="fu">predict</span>(cv.ridge.emp, <span class="at">newx =</span> x.agr,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                            <span class="at">s =</span> <span class="st">"lambda.min"</span>, <span class="at">type =</span> <span class="st">"response"</span>)),</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Lasso =</span> <span class="fu">as.vector</span>(<span class="fu">predict</span>(cv.lasso.emp, <span class="at">newx =</span> x.agr,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">s =</span> <span class="st">"lambda.min"</span>, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(probas, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>

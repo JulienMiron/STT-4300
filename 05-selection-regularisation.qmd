@@ -4,7 +4,7 @@
 
 Les chapitres précédents ont présenté deux familles d'outils de sélection de variables :
 
-- les **tests pour modèles emboîtés** (test $F$ en régression linéaire, différence de déviances pour les MLG) ;
+- les **tests pour modèles emboîtés** (test $F$ en régression linéaire, différence de déviances pour les GLM) ;
 
 - les **critères d'information** $AIC$ et $BIC$, combinés aux procédures pas à pas *forward*, *backward* et *stepwise*, pour les modèles non emboîtés ou lorsque le nombre de sous-modèles ($2^p$) est trop grand pour une recherche exhaustive.
 
@@ -64,12 +64,100 @@ La caractéristique clé du lasso : pour les grandes valeurs de $\lambda$, certa
 Avec $\lambda = e^2$, le lasso annule les coefficients de `HmRun`, `Runs`, `RBI`, `CAtBat`, `CHits`, `Assists` et `NewLeagueN` : le modèle retenu ne contient plus que 12 variables.
 :::
 
-### Sélection du paramètre $\lambda$
+### Interprétation géométrique
 
-La méthode la plus intuitive est basée sur le taux d'erreur test, estimé par **validation croisée** pour une grille de valeurs de $\lambda$ ; on choisit la valeur qui minimise le taux d'erreur test. En R :
+:::{.env-propriete titre="Formulation sous contrainte"}
+Pour chaque $\lambda \geq 0$, il existe une valeur $s \geq 0$ (qui dépend des données) telle que l'estimateur ridge est solution de
+
+$$
+\min_{\beta}\ \sum_{i=1}^n\left\{Y_i - \left(\beta_0 + \sum_{j=1}^p\beta_j X_{ij}\right)\right\}^2
+\quad \text{sous la contrainte} \quad \sum_{j=1}^p\beta_j^2 \leq s,
+$$
+
+et l'estimateur lasso est solution du même problème sous la contrainte
+
+$$
+\sum_{j=1}^p|\beta_j| \leq s.
+$$
+
+Une grande valeur de $\lambda$ correspond à une petite valeur de $s$.
+:::
+
+Lorsque les variables explicatives sont centrées, la somme des carrés résiduels s'écrit, à une constante près, $(\beta - \hat\beta)^\top X^\top X(\beta - \hat\beta)$ : ses courbes de niveau sont des ellipses centrées en l'estimateur des moindres carrés $\hat\beta$. Avec $p = 2$, on peut donc représenter le problème dans le plan $(\beta_1, \beta_2)$ (@fig-geometrie-ridge-lasso). La région admissible est un disque pour ridge et un losange pour le lasso, et la solution est le point où l'ellipse de plus petit niveau touche la région admissible.
+
+Le losange possède des coins situés sur les axes. Lorsque le contact se fait en un coin, l'un des coefficients est exactement nul. Le disque n'a pas de coin : le contact se fait presque toujours hors des axes, si bien que ridge rétrécit les coefficients sans jamais les annuler. En dimension $p$, la région du lasso est un polyèdre dont les sommets et les arêtes se trouvent sur des sous-espaces de coordonnées, ce qui explique que plusieurs coefficients puissent être annulés simultanément.
 
 ```{r}
+#| label: fig-geometrie-ridge-lasso
+#| fig-cap: "Courbes de niveau de la somme des carrés résiduels (ellipses centrées en $\\hat\\beta$) et régions admissibles de ridge (disque) et du lasso (losange). Le point bleu est l'estimateur régularisé : le lasso atteint un coin du losange, où $\\hat\\beta_1 = 0$."
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4.5
+library(ggplot2)
+
+beta.chapeau <- c(1.6, 2.4)
+theta <- -35 * pi / 180
+rotation <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), 2)
+A <- rotation %*% diag(c(1, 4)) %*% t(rotation)
+
+# Somme des carrés résiduels, à une constante près
+scr <- function(b1, b2) {
+  d1 <- b1 - beta.chapeau[1]
+  d2 <- b2 - beta.chapeau[2]
+  A[1, 1] * d1^2 + 2 * A[1, 2] * d1 * d2 + A[2, 2] * d2^2
+}
+
+s <- 1
+angle <- seq(0, 2 * pi, length.out = 4001)
+norme1 <- abs(cos(angle)) + abs(sin(angle))
+etiquettes <- c("Ridge~~(beta[1]^2+beta[2]^2<=s)",
+                "Lasso~~(abs(beta[1])+abs(beta[2])<=s)")
+bords <- list(
+  data.frame(b1 = s * cos(angle), b2 = s * sin(angle)),
+  data.frame(b1 = s * cos(angle) / norme1, b2 = s * sin(angle) / norme1)
+)
+
+regions <- solutions <- contours <- NULL
+for (k in 1:2) {
+  q <- scr(bords[[k]]$b1, bords[[k]]$b2)
+  grille <- expand.grid(b1 = seq(-1.5, 4.5, length.out = 300),
+                        b2 = seq(-1.5, 5.5, length.out = 300))
+  grille$z <- scr(grille$b1, grille$b2) / min(q)  # niveau 1 = contact
+  regions   <- rbind(regions,   cbind(bords[[k]], methode = etiquettes[k]))
+  solutions <- rbind(solutions, cbind(bords[[k]][which.min(q), ], methode = etiquettes[k]))
+  contours  <- rbind(contours,  cbind(grille, methode = etiquettes[k]))
+}
+regions$methode   <- factor(regions$methode,   levels = etiquettes)
+solutions$methode <- factor(solutions$methode, levels = etiquettes)
+contours$methode  <- factor(contours$methode,  levels = etiquettes)
+
+ggplot() +
+  geom_hline(yintercept = 0, colour = "grey60") +
+  geom_vline(xintercept = 0, colour = "grey60") +
+  geom_polygon(data = regions, aes(b1, b2),
+               fill = "#4C9BE8", alpha = 0.35, colour = "#1F5FA8") +
+  geom_contour(data = contours, aes(b1, b2, z = z),
+               breaks = c(0.1, 0.3, 0.6, 1), colour = "#C0392B") +
+  annotate("point", x = beta.chapeau[1], y = beta.chapeau[2]) +
+  annotate("text", x = beta.chapeau[1] + 0.3, y = beta.chapeau[2] + 0.25,
+           label = "hat(beta)", parse = TRUE) +
+  geom_point(data = solutions, aes(b1, b2), size = 2.5, colour = "#1F5FA8") +
+  facet_wrap(~ methode, labeller = label_parsed) +
+  coord_equal(xlim = c(-1.5, 4.5), ylim = c(-1.5, 5.5), expand = FALSE) +
+  labs(x = expression(beta[1]), y = expression(beta[2])) +
+  theme_minimal()
+```
+
+### Trajectoires des coefficients
+
+Une autre représentation classique consiste à tracer les estimations $\hat\beta_{j,\lambda}$ en fonction de $\log\lambda$ (@fig-trajectoires-hitters). Pour ridge, toutes les trajectoires tendent doucement vers 0 sans jamais l'atteindre : l'axe du haut, qui indique le nombre de coefficients non nuls, reste à 19. Pour le lasso, les trajectoires atteignent 0 l'une après l'autre à mesure que $\lambda$ augmente, et le nombre de variables retenues diminue.
+
+```{r}
+#| label: fig-trajectoires-hitters
+#| fig-cap: "Trajectoires des coefficients estimés en fonction de $\\log\\lambda$ pour les données `Hitters`. Chaque courbe correspond à une variable explicative ; l'axe du haut donne le nombre de coefficients non nuls."
 #| message: false
+#| fig-width: 9
+#| fig-height: 4.5
 library(ISLR)
 library(glmnet)
 
@@ -78,8 +166,167 @@ x <- model.matrix(Salary ~ ., Hitters)[, -1]
 y <- Hitters$Salary
 grille.lambda <- 10^seq(10, -2, length.out = 100)
 
-reg.ridge.select <- cv.glmnet(x, y, alpha=0, lambda=grille.lambda)
+reg.ridge <- glmnet(x, y, alpha = 0, lambda = grille.lambda)
+reg.lasso <- glmnet(x, y, alpha = 1, lambda = grille.lambda)
+
+par(mfrow = c(1, 2))
+plot(reg.ridge, xvar = "lambda")
+title("Ridge", line = 2.5)
+plot(reg.lasso, xvar = "lambda")
+title("Lasso", line = 2.5)
+```
+
+### Sélection du paramètre $\lambda$
+
+La méthode la plus intuitive est basée sur le taux d'erreur test, estimé par **validation croisée** pour une grille de valeurs de $\lambda$ ; on choisit la valeur qui minimise le taux d'erreur test. En R, avec les objets `x`, `y` et `grille.lambda` définis plus haut :
+
+```{r}
+reg.ridge.select <- cv.glmnet(x, y, alpha = 0, lambda = grille.lambda)
 reg.ridge.select$lambda.min
 ```
 
 Sur les données `Hitters`, on obtient $\lambda = e^{2.2}$ pour ridge et $\lambda = e^3$ pour le lasso.
+
+## Régularisation en régression logistique {#sec-regularisation-logistique}
+
+Les idées précédentes s'étendent directement aux GLM. En régression logistique, la régularisation est utile pour deux raisons. D'abord, comme en régression linéaire, elle réduit la variance des estimateurs lorsque le nombre de variables explicatives est grand par rapport à l'information disponible (en régression logistique, c'est surtout le nombre d'événements du groupe le plus rare qui compte). Ensuite, elle règle le problème de la [séparation](#sec-separation) : alors que l'estimateur du maximum de vraisemblance n'existe pas en présence de séparation, l'estimateur régularisé existe toujours.
+
+### Log-vraisemblance pénalisée
+
+Le critère des moindres carrés est remplacé par moins deux fois la log-vraisemblance. On minimise
+
+$$
+l_\lambda(\boldsymbol\beta) = -2\,\ell(\boldsymbol\beta;\boldsymbol y) + \lambda\, g(\beta_1,\ldots,\beta_p),
+$$
+
+avec $g(\beta_1,\ldots,\beta_p) = \sum_{j=1}^p\beta_j^2$ pour ridge et $g(\beta_1,\ldots,\beta_p) = \sum_{j=1}^p|\beta_j|$ pour le lasso. Comme la [déviance](#sec-deviance) vaut $D(\boldsymbol\beta) = 2\{\ell_{\text{sat}} - \ell(\boldsymbol\beta)\}$, où $\ell_{\text{sat}}$ ne dépend pas de $\boldsymbol\beta$, cela revient à minimiser la déviance pénalisée $D(\boldsymbol\beta) + \lambda\, g(\beta_1,\ldots,\beta_p)$.
+
+:::{.env-remarque}
+**Remarque.**
+
+En régression linéaire normale, $-2\,\ell(\boldsymbol\beta) = \sigma^{-2}\sum_{i=1}^n(Y_i - \boldsymbol x_i^\top\boldsymbol\beta)^2 + \text{constante}$. Le critère ci-dessus généralise donc exactement celui de la section précédente, la constante $\sigma^2$ étant absorbée dans $\lambda$.
+:::
+
+:::{.env-logit titre="Log-vraisemblance pénalisée"}
+Avec le lien logit et $\eta_i = \beta_0 + \beta_1X_{i1} + \cdots + \beta_pX_{ip}$, on minimise
+
+$$
+l_\lambda(\boldsymbol\beta) = -2\sum_{i=1}^n\left\{y_i\,\eta_i - m_i\log\left(1 + e^{\eta_i}\right)\right\} + \lambda\, g(\beta_1,\ldots,\beta_p),
+$$
+
+où le terme $\log\binom{m_i}{y_i}$, qui ne dépend pas de $\boldsymbol\beta$, a été omis. Pour des données individuelles, $m_i = 1$.
+:::
+
+### Estimation
+
+Contrairement au cas linéaire, l'estimateur ridge n'a pas de forme explicite. L'algorithme IRLS s'adapte toutefois directement.
+
+:::{.env-propriete titre="IRLS pénalisé (ridge)"}
+Soit $\boldsymbol\beta^{(t)}$ l'estimation courante, $\pi_i^{(t)}$ les probabilités correspondantes, $\boldsymbol W^{(t)} = \text{diag}\left\{m_i\pi_i^{(t)}(1-\pi_i^{(t)})\right\}$ et $\boldsymbol z^{(t)} = \boldsymbol X\boldsymbol\beta^{(t)} + (\boldsymbol W^{(t)})^{-1}(\boldsymbol y - \boldsymbol\mu^{(t)})$ la réponse de travail. Une itération de Newton-Raphson appliquée à $l^{(R)}_\lambda$ donne
+
+$$
+\boldsymbol\beta^{(t+1)} = \left(\boldsymbol X^\top\boldsymbol W^{(t)}\boldsymbol X + \lambda\tilde I_p\right)^{-1}\boldsymbol X^\top\boldsymbol W^{(t)}\boldsymbol z^{(t)}.
+$$
+
+C'est la formule de l'estimateur ridge linéaire, appliquée à la réponse de travail $\boldsymbol z^{(t)}$ avec les poids $\boldsymbol W^{(t)}$.
+:::
+
+Pour le lasso, la pénalité n'est pas dérivable en 0 et l'itération de Newton ne s'applique pas telle quelle. La fonction `glmnet` remplace, à chaque itération, $-2\,\ell$ par son approximation quadratique (la même somme de carrés pondérés que dans IRLS), puis minimise le problème lasso pondéré qui en résulte par descente de coordonnées.
+
+:::{.env-propriete titre="Existence sous séparation"}
+Supposons que les réponses ne soient pas toutes égales. Pour tout $\lambda > 0$, le critère ridge $l^{(R)}_\lambda$ possède un unique minimum fini, et le critère lasso $l^{(L)}_\lambda$ possède au moins un minimum fini, même en présence de séparation complète ou quasi-complète.
+:::
+
+L'argument est simple : $-2\,\ell(\boldsymbol\beta) \geq 0$, donc la pénalité empêche $\beta_1,\ldots,\beta_p$ de tendre vers l'infini, et $-2\,\ell$ tend vers l'infini lorsque $|\beta_0|\to\infty$ avec les autres coefficients bornés, puisque les deux valeurs de la réponse sont observées. Pour ridge, la matrice $\boldsymbol X^\top\boldsymbol W\boldsymbol X + \lambda\tilde I_p$ est de plus définie positive, ce qui assure l'unicité.
+
+:::{.env-remarque}
+**Remarque (inférence).**
+
+Les estimateurs régularisés sont biaisés, et la sélection effectuée par le lasso rend invalides les erreurs types, valeur-p et intervalles de confiance usuels calculés sur le modèle retenu. C'est pourquoi `glmnet` ne fournit pas d'erreurs types. La régularisation est d'abord un outil de prédiction et de sélection ; l'inférence après sélection demande des méthodes spécifiques qui dépassent le cadre de ce cours.
+:::
+
+:::{.env-remarque}
+**Remarque (échelle de $\lambda$ dans `glmnet`).**
+
+Pour `family = "binomial"`, `glmnet` minimise $-\frac{1}{n}\ell(\boldsymbol\beta) + \lambda\left\{\frac{1-\alpha}{2}\sum_j\beta_j^2 + \alpha\sum_j|\beta_j|\right\}$. Les valeurs de $\lambda$ rapportées par `glmnet` ne sont donc pas sur la même échelle que celles du critère $l_\lambda$ défini plus haut ; seul l'ordre des valeurs compte pour l'interprétation.
+:::
+
+### Choix de $\lambda$
+
+Comme en régression linéaire, $\lambda$ se choisit par [validation croisée](#sec-cv), mais avec une fonction de perte adaptée à une réponse binaire : la déviance binomiale (`type.measure = "deviance"`, valeur par défaut), le taux de mauvaise classification (`"class"`) ou l'aire sous la courbe ROC (`"auc"`). La fonction `cv.glmnet` retourne deux valeurs :
+
+- `lambda.min`, qui minimise l'erreur de validation croisée ;
+
+- `lambda.1se`, la plus grande valeur de $\lambda$ dont l'erreur est à moins d'une erreur type de ce minimum. Elle donne un modèle plus parcimonieux dont la performance n'est pas significativement moins bonne.
+
+:::{.env-exemple titre="Régularisation sur [`empress`](#data-empress)"}
+
+On ajuste le modèle avec toutes les interactions entre la classe, le sexe et le groupe d'âge. Ce modèle est pratiquement saturé, et deux cellules ne comptent aucun survivant : les garçons de deuxième classe (0 sur 11) et les filles de troisième classe (0 sur 48). Il y a donc séparation quasi-complète, et le maximum de vraisemblance diverge. La cellule « première classe, homme, enfant » est vide, d'où un coefficient non estimable (`NA`).
+
+```{r empress-glm-sature}
+#| warning: true
+niveaux.classe <- c("Première", "Deuxième", "Troisième")
+
+empress <- read.csv("Jeux de données/empress_individus.csv")
+empress$classe <- factor(empress$classe, levels = niveaux.classe)
+
+empress.agr <- read.csv("Jeux de données/empress_agrege.csv")
+empress.agr$classe <- factor(empress.agr$classe, levels = niveaux.classe)
+
+m.sature <- glm(survecu ~ classe * sexe * groupe_age,
+                data = empress, family = binomial)
+round(summary(m.sature)$coefficients, 2)
+```
+
+Les coefficients associés aux cellules sans survivant sont très grands en valeur absolue, avec des erreurs types démesurées. On ajuste maintenant les versions ridge et lasso, en choisissant $\lambda$ par validation croisée à 10 plis sur la déviance.
+
+```{r}
+#| label: fig-empress-cv
+#| fig-cap: "Déviance binomiale estimée par validation croisée en fonction de $\\log\\lambda$ pour ridge (gauche) et le lasso (droite). Les lignes pointillées indiquent `lambda.min` et `lambda.1se`."
+#| fig-width: 9
+#| fig-height: 4.5
+x.emp <- model.matrix(survecu ~ classe * sexe * groupe_age, empress)[, -1]
+y.emp <- empress$survecu
+
+set.seed(4300)
+cv.ridge.emp <- cv.glmnet(x.emp, y.emp, family = "binomial", alpha = 0)
+cv.lasso.emp <- cv.glmnet(x.emp, y.emp, family = "binomial", alpha = 1)
+
+par(mfrow = c(1, 2))
+plot(cv.ridge.emp)
+title("Ridge", line = 2.5)
+plot(cv.lasso.emp)
+title("Lasso", line = 2.5)
+```
+
+Les coefficients régularisés restent finis :
+
+```{r empress-coefficients}
+coefs <- cbind(
+  MV    = coef(m.sature),
+  Ridge = as.vector(coef(cv.ridge.emp, s = "lambda.min")),
+  Lasso = as.vector(coef(cv.lasso.emp, s = "lambda.min"))
+)
+round(coefs, 3)
+```
+
+On compare enfin les probabilités de survie estimées dans chaque cellule avec les proportions observées.
+
+```{r empress-probabilites}
+#| warning: false
+x.agr <- model.matrix(~ classe * sexe * groupe_age, empress.agr)[, -1]
+
+probas <- data.frame(
+  empress.agr[, c("classe", "sexe", "groupe_age")],
+  Observee = empress.agr$survivants / empress.agr$effectif,
+  MV    = predict(m.sature, newdata = empress.agr, type = "response"),
+  Ridge = as.vector(predict(cv.ridge.emp, newx = x.agr,
+                            s = "lambda.min", type = "response")),
+  Lasso = as.vector(predict(cv.lasso.emp, newx = x.agr,
+                            s = "lambda.min", type = "response"))
+)
+knitr::kable(probas, digits = 3, row.names = FALSE)
+```
+
+Le maximum de vraisemblance reproduit exactement les proportions observées, y compris les probabilités nulles des deux cellules sans survivant : il prédit qu'aucun passager de ces cellules ne peut survivre, ce qui est peu plausible compte tenu des effectifs. Les estimateurs régularisés rapprochent les probabilités des cellules peu informatives de celles des cellules voisines et donnent des probabilités petites, mais strictement positives.
+:::

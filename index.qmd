@@ -15,7 +15,7 @@ Pour télécharger la version pdf des notes de cours il suffit de cliquer <a hre
 ## Remerciements {.unnumbered}
 
 Ces notes s'appuient en partie sur du matériel de cours développé respectivement par Lajmi Lakhal Chaieb,
-Thierry Duchesne, Michel Carbon et Khader Khadraoui de l'Université Laval et Eva Cantoni de l'Université de Genève.
+Thierry Duchesne, Michel Carbon et Khader Khadraoui de l'Université Laval et Eva Cantoni de l'Université de Genève. Je remercie également Guillaume Blanc et Benjamin Poilane pour leur révision méticuleuse.
 
 ## Provenance des données {.unnumbered}
 

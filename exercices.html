@@ -36,7 +36,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./08-gam.html" rel="prev">
+<link href="./09-gam.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -183,49 +183,49 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+  <a href="./02-monte-carlo.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+  <a href="./03-regression-logistique.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+  <a href="./04-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
@@ -667,13 +667,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const gifs = {
     "index":                              "index_plot.gif",
     "01-regression-lineaire":             "lineaire_plot.gif",
-    "02-regression-logistique":           "logit_plot.gif",
-    "03-modeles-lineaires-generalises":   "glm_plot.gif",
-    "04-prediction-validation-croisee":   "cv_plot.gif",
-    "05-selection-regularisation":        "regularisation_plot.gif",
-    "06-knn-noyau":                       "knn_noyau_plot.gif",
-    "07-splines":                         "splines_plot.gif",
-    "08-gam":                             "gam_plot.gif"
+    "02-monte-carlo":                     "monte_carlo_plot.gif",
+    "03-regression-logistique":           "logit_plot.gif",
+    "04-modeles-lineaires-generalises":   "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "exercices":                          "index_plot.gif"
   };
 
   let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
@@ -1088,7 +1090,7 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./08-gam.html" class="pagination-link" aria-label="Modèles additifs et modèles additifs généralisés (GAM)">
+      <a href="./09-gam.html" class="pagination-link" aria-label="Modèles additifs et modèles additifs généralisés (GAM)">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span>
       </a>          
   </div>

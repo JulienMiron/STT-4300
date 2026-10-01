@@ -71,8 +71,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./04-prediction-validation-croisee.html" rel="next">
-<link href="./02-regression-logistique.html" rel="prev">
+<link href="./05-prediction-validation-croisee.html" rel="next">
+<link href="./03-regression-logistique.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -173,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-modeles-lineaires-generalises.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-modeles-lineaires-generalises.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -219,49 +219,49 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+  <a href="./02-monte-carlo.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+  <a href="./03-regression-logistique.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link active">
+  <a href="./04-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
@@ -312,7 +312,7 @@ window.Quarto = {
   <li><a href="#graphiques-et-observations-aberrantes" id="toc-graphiques-et-observations-aberrantes" class="nav-link" data-scroll-target="#graphiques-et-observations-aberrantes"><span class="header-section-number">4.6.7</span> Graphiques et observations aberrantes</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/03-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/04-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -611,7 +611,7 @@ W_i = \frac{1}{V(\hat\mu_i)\left[g'(\hat\mu_i)\right]^2},
 </section>
 <section id="déviance-individuelle" class="level3" data-number="4.3.3">
 <h3 data-number="4.3.3" class="anchored" data-anchor-id="déviance-individuelle"><span class="header-section-number">4.3.3</span> Déviance individuelle</h3>
-<p>Comme au chapitre sur la <a href="02-regression-logistique.html#sec-deviance">régression logistique</a>, on veut comparer l’ajustement <span class="math inline">\(\mu\)</span> d’un modèle à l’ajustement parfait <span class="math inline">\(y\)</span>, et ce pour n’importe quelle loi de la famille exponentielle. Posons</p>
+<p>Comme au chapitre sur la <a href="03-regression-logistique.html#sec-deviance">régression logistique</a>, on veut comparer l’ajustement <span class="math inline">\(\mu\)</span> d’un modèle à l’ajustement parfait <span class="math inline">\(y\)</span>, et ce pour n’importe quelle loi de la famille exponentielle. Posons</p>
 <p><span class="math display">\[
 t(y,\mu) = y\theta - b(\theta),
 \]</span></p>
@@ -864,7 +864,7 @@ groupe_ageEnfant
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="03-modeles-lineaires-generalises_files/figure-html/empress-taux-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="04-modeles-lineaires-generalises_files/figure-html/empress-taux-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -898,7 +898,7 @@ groupe_ageEnfant
 <p><span class="math display">\[
 \boldsymbol U(\boldsymbol\beta) = \boldsymbol X^\top(\boldsymbol y - \boldsymbol\mu).
 \]</span></p>
-<p>Cette expression a exactement la même forme que le score de la régression binomiale (<a href="02-regression-logistique.html#eq-score-vecteur" class="quarto-xref">Équation&nbsp;<span>3.2</span></a>) — seule la relation entre <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\eta_i\)</span> diffère d’un lien à l’autre.</p>
+<p>Cette expression a exactement la même forme que le score de la régression binomiale (<a href="03-regression-logistique.html#eq-score-vecteur" class="quarto-xref">Équation&nbsp;<span>3.2</span></a>) — seule la relation entre <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\eta_i\)</span> diffère d’un lien à l’autre.</p>
 </div>
 <p>Comme pour la régression logistique, l’équation <span class="math inline">\(\boldsymbol U(\boldsymbol\beta)=\boldsymbol 0\)</span> n’a pas de solution analytique : on résout numériquement par IRLS (Fisher scoring), implémenté dans <code>glm</code> avec <code>family = poisson</code>.</p>
 </section>
@@ -1067,7 +1067,7 @@ Model 2: survivants ~ offset(log(effectif)) + classe + sexe + groupe_age
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="03-modeles-lineaires-generalises_files/figure-html/empress-residus-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="04-modeles-lineaires-generalises_files/figure-html/empress-residus-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1089,7 +1089,7 @@ Model 2: survivants ~ offset(log(effectif)) + classe + sexe + groupe_age
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="03-modeles-lineaires-generalises_files/figure-html/empress-cook-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="04-modeles-lineaires-generalises_files/figure-html/empress-cook-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1126,13 +1126,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const gifs = {
     "index":                              "index_plot.gif",
     "01-regression-lineaire":             "lineaire_plot.gif",
-    "02-regression-logistique":           "logit_plot.gif",
-    "03-modeles-lineaires-generalises":   "glm_plot.gif",
-    "04-prediction-validation-croisee":   "cv_plot.gif",
-    "05-selection-regularisation":        "regularisation_plot.gif",
-    "06-knn-noyau":                       "knn_noyau_plot.gif",
-    "07-splines":                         "splines_plot.gif",
-    "08-gam":                             "gam_plot.gif"
+    "02-monte-carlo":                     "monte_carlo_plot.gif",
+    "03-regression-logistique":           "logit_plot.gif",
+    "04-modeles-lineaires-generalises":   "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "exercices":                          "index_plot.gif"
   };
 
   let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
@@ -1547,12 +1549,12 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./02-regression-logistique.html" class="pagination-link" aria-label="Modèles de régression pour données binaires">
+      <a href="./03-regression-logistique.html" class="pagination-link" aria-label="Modèles de régression pour données binaires">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04-prediction-validation-croisee.html" class="pagination-link" aria-label="Prédiction, mesures de performance et validation croisée">
+      <a href="./05-prediction-validation-croisee.html" class="pagination-link" aria-label="Prédiction, mesures de performance et validation croisée">
         <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1565,7 +1567,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/03-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/04-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

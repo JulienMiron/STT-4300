@@ -71,8 +71,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./05-selection-regularisation.html" rel="next">
-<link href="./03-modeles-lineaires-generalises.html" rel="prev">
+<link href="./06-selection-regularisation.html" rel="next">
+<link href="./04-modeles-lineaires-generalises.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -173,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-prediction-validation-croisee.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-prediction-validation-croisee.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -219,49 +219,49 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+  <a href="./02-monte-carlo.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+  <a href="./03-regression-logistique.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+  <a href="./04-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link active">
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
@@ -296,7 +296,7 @@ window.Quarto = {
   <li><a href="#exemples-sur-les-données-de-lempress-of-ireland" id="toc-exemples-sur-les-données-de-lempress-of-ireland" class="nav-link" data-scroll-target="#exemples-sur-les-données-de-lempress-of-ireland"><span class="header-section-number">5.3.4</span> Exemples sur les données de l’Empress of Ireland</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/04-prediction-validation-croisee.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/05-prediction-validation-croisee.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -518,13 +518,13 @@ VC_{(K)} = \frac{1}{K}\sum_{k=1}^K \frac{1}{n_k}\sum_{i\in A_k} L\left(y_i, \hmu
 \text{Déviance (log-perte) : } &amp; L(y,\hat\pi) = -2\left[y\log\hat\pi + (1-y)\log(1-\hat\pi)\right].
 \end{aligned}
 \]</span></p>
-<p>La troisième perte est exactement la déviance individuelle <span class="math inline">\(d_i\)</span> d’une observation de Bernoulli (voir la <a href="02-regression-logistique.html#sec-deviance">déviance</a>).</p>
+<p>La troisième perte est exactement la déviance individuelle <span class="math inline">\(d_i\)</span> d’une observation de Bernoulli (voir la <a href="03-regression-logistique.html#sec-deviance">déviance</a>).</p>
 </div>
 <div class="env-remarque" data-titre="Quelle perte choisir?">
 <p><span class="env-titre">Remarque — Quelle perte choisir?</span></p>
 <p>Le taux de mauvaise classification ne retient que le côté du seuil <span class="math inline">\(u\)</span> où tombe <span class="math inline">\(\hat\pi\)</span>. Une prédiction <span class="math inline">\(\hat\pi = 0{,}51\)</span> et une prédiction <span class="math inline">\(\hat\pi = 0{,}99\)</span> sont donc traitées de la même façon. Ce critère est de plus discontinu, il dépend du choix arbitraire de <span class="math inline">\(u\)</span>, et il est très variable lorsque <span class="math inline">\(n\)</span> est petit.</p>
-<p>Le score de Brier et la déviance sont des règles de score propres : leur espérance est minimisée lorsque <span class="math inline">\(\hat\pi\)</span> égale la vraie probabilité <span class="math inline">\(\pi\)</span>. Ils évaluent donc la qualité des probabilités prédites elles-mêmes, et pas seulement la classification qui en découle. La déviance pénalise lourdement les erreurs commises avec assurance. Elle devient infinie si <span class="math inline">\(\hat\pi_{i,(-k)} \in \{0,1\}\)</span> alors que <span class="math inline">\(y_i\)</span> prend l’autre valeur, ce qui peut se produire lorsqu’un jeu d’entraînement présente une <a href="02-regression-logistique.html#sec-separation">séparation</a>. En pratique, on tronque <span class="math inline">\(\hat\pi\)</span> dans <span class="math inline">\([\varepsilon, 1-\varepsilon]\)</span>.</p>
-<p>La sensibilité, la spécificité, la courbe ROC et l’AUC présentées à la <a href="02-regression-logistique.html#sec-roc" class="quarto-xref"><span>Section 3.5</span></a> fournissent d’autres mesures de performance. L’AUC ne dépend d’aucun seuil, et elle est notamment utilisée comme critère de validation croisée en classification (voir <a href="06-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a>). Elle ne mesure toutefois que la capacité du modèle à ordonner les observations, et pas la calibration des probabilités.</p>
+<p>Le score de Brier et la déviance sont des règles de score propres : leur espérance est minimisée lorsque <span class="math inline">\(\hat\pi\)</span> égale la vraie probabilité <span class="math inline">\(\pi\)</span>. Ils évaluent donc la qualité des probabilités prédites elles-mêmes, et pas seulement la classification qui en découle. La déviance pénalise lourdement les erreurs commises avec assurance. Elle devient infinie si <span class="math inline">\(\hat\pi_{i,(-k)} \in \{0,1\}\)</span> alors que <span class="math inline">\(y_i\)</span> prend l’autre valeur, ce qui peut se produire lorsqu’un jeu d’entraînement présente une <a href="03-regression-logistique.html#sec-separation">séparation</a>. En pratique, on tronque <span class="math inline">\(\hat\pi\)</span> dans <span class="math inline">\([\varepsilon, 1-\varepsilon]\)</span>.</p>
+<p>La sensibilité, la spécificité, la courbe ROC et l’AUC présentées à la <a href="03-regression-logistique.html#sec-roc" class="quarto-xref"><span>Section 3.5</span></a> fournissent d’autres mesures de performance. L’AUC ne dépend d’aucun seuil, et elle est notamment utilisée comme critère de validation croisée en classification (voir <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a>). Elle ne mesure toutefois que la capacité du modèle à ordonner les observations, et pas la calibration des probabilités.</p>
 </div>
 <div class="env-remarque" data-titre="Données groupées">
 <p><span class="env-titre">Remarque — Données groupées</span></p>
@@ -548,12 +548,12 @@ VC_{(K)} = \frac{1}{K}\sum_{k=1}^K \frac{1}{n_k}\sum_{i\in A_k} L\left(y_i, \hmu
 <div class="env-remarque" data-titre="Particularités du cas Poisson">
 <p><span class="env-titre">Remarque — Particularités du cas Poisson</span></p>
 <p>Puisque <span class="math inline">\(Var[Y_i] = \mu_i\)</span>, l’erreur quadratique est dominée par les observations dont les dénombrements sont élevés. La perte de Pearson et la déviance standardisent implicitement chaque erreur par sa variance.</p>
-<p>En présence d’une <a href="03-modeles-lineaires-generalises.html#sec-poisson">variable offset</a>, la prédiction d’une observation exclue utilise sa propre exposition :</p>
+<p>En présence d’une <a href="04-modeles-lineaires-generalises.html#sec-poisson">variable offset</a>, la prédiction d’une observation exclue utilise sa propre exposition :</p>
 <p><span class="math display">\[
 \hmu{i,(-k)} = m_i \exp\left(\boldsymbol x_i^\top\hb_{(-k)}\right).
 \]</span></p>
 <p>En R, il est plus sûr d’écrire l’offset dans la formule (<code>offset(log(m))</code>) pour que <code>predict</code> l’applique correctement aux nouvelles données.</p>
-<p>Enfin, les modèles de Poisson et quasi-Poisson produisent les mêmes <span class="math inline">\(\hmu{i}\)</span> : la validation croisée ne peut pas les départager. Le choix du paramètre de dispersion relève de l’inférence (voir la <a href="03-modeles-lineaires-generalises.html#sec-surdispersion">surdispersion</a>). Pour comparer un modèle de Poisson à un modèle binomial négatif, il faut utiliser la même perte pour les deux modèles.</p>
+<p>Enfin, les modèles de Poisson et quasi-Poisson produisent les mêmes <span class="math inline">\(\hmu{i}\)</span> : la validation croisée ne peut pas les départager. Le choix du paramètre de dispersion relève de l’inférence (voir la <a href="04-modeles-lineaires-generalises.html#sec-surdispersion">surdispersion</a>). Pour comparer un modèle de Poisson à un modèle binomial négatif, il faut utiliser la même perte pour les deux modèles.</p>
 </div>
 </section>
 <section id="sec-cv-approx" class="level3" data-number="5.3.3">
@@ -663,7 +663,7 @@ m4 0.2100284 0.1518934 0.9396020</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>temps[<span class="st">"elapsed"</span>]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>elapsed 
-  6.074 </code></pre>
+  6.173 </code></pre>
 </div>
 </div>
 </div>
@@ -712,13 +712,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const gifs = {
     "index":                              "index_plot.gif",
     "01-regression-lineaire":             "lineaire_plot.gif",
-    "02-regression-logistique":           "logit_plot.gif",
-    "03-modeles-lineaires-generalises":   "glm_plot.gif",
-    "04-prediction-validation-croisee":   "cv_plot.gif",
-    "05-selection-regularisation":        "regularisation_plot.gif",
-    "06-knn-noyau":                       "knn_noyau_plot.gif",
-    "07-splines":                         "splines_plot.gif",
-    "08-gam":                             "gam_plot.gif"
+    "02-monte-carlo":                     "monte_carlo_plot.gif",
+    "03-regression-logistique":           "logit_plot.gif",
+    "04-modeles-lineaires-generalises":   "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "exercices":                          "index_plot.gif"
   };
 
   let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
@@ -1133,12 +1135,12 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./03-modeles-lineaires-generalises.html" class="pagination-link" aria-label="Modèles linéaires généralisés (GLM)">
+      <a href="./04-modeles-lineaires-generalises.html" class="pagination-link" aria-label="Modèles linéaires généralisés (GLM)">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05-selection-regularisation.html" class="pagination-link" aria-label="Sélection de variables et régularisation">
+      <a href="./06-selection-regularisation.html" class="pagination-link" aria-label="Sélection de variables et régularisation">
         <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1151,7 +1153,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/04-prediction-validation-croisee.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/05-prediction-validation-croisee.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

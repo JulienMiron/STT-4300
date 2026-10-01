@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Régression non-linéaire : polynômes, fonctions par morceaux et splines – Régression II -- STT-4300</title>
+<title>7&nbsp; Régression non-paramétrique : k plus proches voisins et estimateur de noyau – Régression II -- STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,41 +26,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -71,8 +36,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./08-gam.html" rel="next">
-<link href="./06-knn-noyau.html" rel="prev">
+<link href="./08-splines.html" rel="next">
+<link href="./06-selection-regularisation.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -173,7 +138,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-splines.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-knn-noyau.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -219,49 +184,49 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+  <a href="./02-monte-carlo.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+  <a href="./03-regression-logistique.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+  <a href="./04-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-splines.html" class="sidebar-item-text sidebar-link active">
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
@@ -281,25 +246,27 @@ window.Quarto = {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#régression-polynomiale" id="toc-régression-polynomiale" class="nav-link active" data-scroll-target="#régression-polynomiale"><span class="header-section-number">8.1</span> Régression polynomiale</a></li>
-  <li><a href="#régression-avec-des-fonctions-constantes-par-morceaux" id="toc-régression-avec-des-fonctions-constantes-par-morceaux" class="nav-link" data-scroll-target="#régression-avec-des-fonctions-constantes-par-morceaux"><span class="header-section-number">8.2</span> Régression avec des fonctions constantes par morceaux</a></li>
-  <li><a href="#régression-avec-des-splines" id="toc-régression-avec-des-splines" class="nav-link" data-scroll-target="#régression-avec-des-splines"><span class="header-section-number">8.3</span> Régression avec des splines</a>
+  <li><a href="#estimateur-des-k-plus-proches-voisins" id="toc-estimateur-des-k-plus-proches-voisins" class="nav-link active" data-scroll-target="#estimateur-des-k-plus-proches-voisins"><span class="header-section-number">7.1</span> Estimateur des <span class="math inline">\(k\)</span> plus proches voisins</a>
   <ul class="collapse">
-  <li><a href="#splines-de-régression" id="toc-splines-de-régression" class="nav-link" data-scroll-target="#splines-de-régression"><span class="header-section-number">8.3.1</span> Splines de régression</a></li>
-  <li><a href="#base-des-puissances-tronquées" id="toc-base-des-puissances-tronquées" class="nav-link" data-scroll-target="#base-des-puissances-tronquées"><span class="header-section-number">8.3.2</span> Base des puissances tronquées</a></li>
-  <li><a href="#sec-bsplines" id="toc-sec-bsplines" class="nav-link" data-scroll-target="#sec-bsplines"><span class="header-section-number">8.3.3</span> B-splines</a></li>
-  <li><a href="#splines-naturelles" id="toc-splines-naturelles" class="nav-link" data-scroll-target="#splines-naturelles"><span class="header-section-number">8.3.4</span> Splines naturelles</a></li>
-  <li><a href="#splines-de-lissage-splines-pénalisées" id="toc-splines-de-lissage-splines-pénalisées" class="nav-link" data-scroll-target="#splines-de-lissage-splines-pénalisées"><span class="header-section-number">8.3.5</span> Splines de lissage (splines pénalisées)</a></li>
+  <li><a href="#définition" id="toc-définition" class="nav-link" data-scroll-target="#définition"><span class="header-section-number">7.1.1</span> Définition</a></li>
+  <li><a href="#compromis-biais-variance-et-choix-de-k" id="toc-compromis-biais-variance-et-choix-de-k" class="nav-link" data-scroll-target="#compromis-biais-variance-et-choix-de-k"><span class="header-section-number">7.1.2</span> Compromis biais-variance et choix de <span class="math inline">\(k\)</span></a></li>
+  <li><a href="#plusieurs-variables-explicatives-et-distance-de-mahalanobis" id="toc-plusieurs-variables-explicatives-et-distance-de-mahalanobis" class="nav-link" data-scroll-target="#plusieurs-variables-explicatives-et-distance-de-mahalanobis"><span class="header-section-number">7.1.3</span> Plusieurs variables explicatives et distance de Mahalanobis</a></li>
   </ul></li>
+  <li><a href="#estimateur-de-noyau-nadaraya-watson" id="toc-estimateur-de-noyau-nadaraya-watson" class="nav-link" data-scroll-target="#estimateur-de-noyau-nadaraya-watson"><span class="header-section-number">7.2</span> Estimateur de noyau (Nadaraya-Watson)</a>
+  <ul class="collapse">
+  <li><a href="#des-voisins-aux-noyaux" id="toc-des-voisins-aux-noyaux" class="nav-link" data-scroll-target="#des-voisins-aux-noyaux"><span class="header-section-number">7.2.1</span> Des voisins aux noyaux</a></li>
+  <li><a href="#choix-du-paramètre-de-fenêtre-h" id="toc-choix-du-paramètre-de-fenêtre-h" class="nav-link" data-scroll-target="#choix-du-paramètre-de-fenêtre-h"><span class="header-section-number">7.2.2</span> Choix du paramètre de fenêtre <span class="math inline">\(h\)</span></a></li>
+  </ul></li>
+  <li><a href="#régression-non-paramétrique-et-classification" id="toc-régression-non-paramétrique-et-classification" class="nav-link" data-scroll-target="#régression-non-paramétrique-et-classification"><span class="header-section-number">7.3</span> Régression non-paramétrique et classification</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/07-splines.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/07-knn-noyau.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-splines" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></h1>
+<h1 class="title"><span id="sec-knn" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></h1>
 </div>
 
 
@@ -322,112 +289,48 @@ window.Quarto = {
 </header>
 
 
-<p>Le chapitre précédent a présenté deux estimateurs locaux de <span class="math inline">\(f(x) = E[Y\mid X=x]\)</span> : l’estimateur <span class="math inline">\(k\)</span>NN et l’estimateur de noyau. Ce chapitre présente des approches alternatives fondées sur des <strong>bases de fonctions</strong> : on écrit <span class="math display">\[Y_i = \beta_0\, b_0(X_i) + \beta_1\, b_1(X_i) + \cdots + \beta_q\, b_q(X_i) + \epsilon_i,\]</span> où les <span class="math inline">\(b_k(\cdot)\)</span> sont des transformations connues de la variable explicative. Le modèle reste <strong>linéaire en <span class="math inline">\(\beta\)</span></strong> : toute la machinerie des moindres carrés (estimation, IC, tests) s’applique.</p>
-<section id="régression-polynomiale" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="régression-polynomiale"><span class="header-section-number">8.1</span> Régression polynomiale</h2>
-<p>On approxime <span class="math inline">\(f(x)\)</span> par un polynôme de degré <span class="math inline">\(p\)</span> : <span class="math display">\[f(x) = \beta_0 + \beta_1 x + \cdots + \beta_p x^p,\]</span> ce qui donne le modèle linéaire <span class="math inline">\(Y_i = \beta_0 + \beta_1 X_i + \cdots + \beta_p X_i^p + \epsilon_i\)</span>. On estime <span class="math inline">\(\beta\)</span> par <span class="math display">\[\hat\beta = (X^\top X)^{-1}X^\top Y, \qquad
-X = \begin{pmatrix} 1 &amp; X_1 &amp; \cdots &amp; X_1^p\\ \vdots &amp; \vdots &amp; &amp; \vdots\\ 1 &amp; X_n &amp; \cdots &amp; X_n^p \end{pmatrix}.\]</span> Le vecteur <span class="math inline">\(\beta\)</span> contient <span class="math inline">\(p+1\)</span> éléments : on dit qu’on a <span class="math inline">\(p+1\)</span> <strong>degrés de liberté</strong>.</p>
-<p>Pour sélectionner <span class="math inline">\(p\)</span>, on peut utiliser l’<span class="math inline">\(AIC\)</span>, le <span class="math inline">\(BIC\)</span>, des tests <span class="math inline">\(F\)</span>, ou — dans l’esprit du <a href="04-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 5</span></a> — choisir la valeur qui minimise le taux d’erreur test estimé par validation croisée (la version LOOCV admet une expression explicite).</p>
-<p>Une fois <span class="math inline">\(p\)</span> choisi, <span class="math inline">\(\hat f(x) = x_*\hat\beta\)</span> avec <span class="math inline">\(x_* = (1,\ x,\ x^2,\ \ldots,\ x^p)\)</span>, et <span class="math display">\[Var[\hat f(x)] = x_*\, Var[\hat\beta]\, x_*^\top,\]</span> ce qui permet de construire des bandes de confiance autour de <span class="math inline">\(\hat f(x)\)</span>. En R : <code>lm(mpg \textasciitilde{</code> poly(weight, 2, raw=TRUE))}.</p>
+<p>Considérons le jeu de données <code>Auto</code> : la réponse <span class="math inline">\(Y\)</span> est <code>mpg</code> et la variable explicative <span class="math inline">\(X\)</span> est le poids de la voiture (<code>weight</code>). Le nuage de points montre que la relation entre <span class="math inline">\(X\)</span> et <span class="math inline">\(Y\)</span> n’est clairement pas linéaire. Ce chapitre présente des approches <strong>non-paramétriques</strong> pour étudier une telle relation, sans postuler de forme fonctionnelle.</p>
+<section id="estimateur-des-k-plus-proches-voisins" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="estimateur-des-k-plus-proches-voisins"><span class="header-section-number">7.1</span> Estimateur des <span class="math inline">\(k\)</span> plus proches voisins</h2>
+<section id="définition" class="level3" data-number="7.1.1">
+<h3 data-number="7.1.1" class="anchored" data-anchor-id="définition"><span class="header-section-number">7.1.1</span> Définition</h3>
+<p>On suppose que la relation entre <span class="math inline">\(X\)</span> et <span class="math inline">\(Y\)</span> s’écrit <span class="math display">\[Y_i = f(X_i) + \epsilon_i,\]</span> où <span class="math inline">\(f\)</span> est une fonction inconnue à estimer et <span class="math inline">\(\epsilon_i\)</span> vérifie <span class="math inline">\(E[\epsilon_i\mid X_i] = 0\)</span>. On suppose <span class="math inline">\(f\)</span> assez lisse (deux fois dérivable). Sous ces hypothèses, <span class="math display">\[f(x) = E[Y\mid X = x].\]</span> On suppose de plus <span class="math inline">\(X\)</span> continue, de sorte que <span class="math inline">\(P(X_i = X_{i'}) = 0\)</span> si <span class="math inline">\(i\neq i'\)</span>.</p>
+<p>L’estimateur des <span class="math inline">\(k\)</span> plus proches voisins (<span class="math inline">\(k\)</span>NN) est <span class="math display">\[\hat f(x) = \frac{1}{k}\sum_{i\in N_k(x)} Y_i,\]</span> où <span class="math inline">\(N_k(x)\)</span> est l’ensemble des indices des <span class="math inline">\(k\)</span> plus proches voisins de <span class="math inline">\(x\)</span> : on pose <span class="math inline">\(d_i(x) = (X_i - x)^2\)</span>, on ordonne <span class="math inline">\(d_{(1)}(x) &lt; \cdots &lt; d_{(n)}(x)\)</span>, et <span class="math inline">\(N_k(x)\)</span> contient les indices <span class="math inline">\(i\)</span> tels que <span class="math inline">\(d_i(x) \leq d_{(k)}(x)\)</span>.</p>
+<p>En R : fonction <code>knn.reg</code> de la librairie <code>FNN</code>.</p>
 </section>
-<section id="régression-avec-des-fonctions-constantes-par-morceaux" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="régression-avec-des-fonctions-constantes-par-morceaux"><span class="header-section-number">8.2</span> Régression avec des fonctions constantes par morceaux</h2>
-<p>Posons <span class="math inline">\([A,B]\)</span> le domaine de <span class="math inline">\(X\)</span> (en pratique <span class="math inline">\(A = \min_i X_i - \varepsilon\)</span> et <span class="math inline">\(B = \max_i X_i + \varepsilon\)</span>). Considérons une partition <span class="math inline">\(A = c_0 &lt; c_1 &lt; \cdots &lt; c_K = B\)</span> et définissons, pour <span class="math inline">\(k = 1,\ldots,K\)</span>, <span class="math display">\[b_k(x) = \begin{cases} 1 &amp; \mbox{si } x\in[c_{k-1},c_k],\\ 0 &amp; \mbox{sinon}.\end{cases}\]</span> On approxime <span class="math inline">\(f\)</span> par une fonction en escalier : <span class="math inline">\(f(x) = \beta_1 b_1(x) + \cdots + \beta_K b_K(x)\)</span>. La variable <span class="math inline">\(X\)</span> a été discrétisée et on retrouve un modèle d’ANOVA à un facteur à <span class="math inline">\(K\)</span> modalités. L’estimateur des moindres carrés est <span class="math display">\[\hat\beta_k = \frac{\sum_{i=1}^n b_k(X_i)Y_i}{n_k}, \qquad n_k = \sum_{i=1}^n b_k(X_i),\]</span> c’est-à-dire la moyenne des <span class="math inline">\(Y_i\)</span> dans l’intervalle <span class="math inline">\(k\)</span>, et <span class="math inline">\(Var[\hat\beta_k] = \sigma^2/n_k\)</span>. En R : <code>lm(mpg \textasciitilde{</code> cut(weight, 4))}.</p>
+<section id="compromis-biais-variance-et-choix-de-k" class="level3" data-number="7.1.2">
+<h3 data-number="7.1.2" class="anchored" data-anchor-id="compromis-biais-variance-et-choix-de-k"><span class="header-section-number">7.1.2</span> Compromis biais-variance et choix de <span class="math inline">\(k\)</span></h3>
+<p>Le comportement de <span class="math inline">\(\hat f\)</span> dépend fortement de <span class="math inline">\(k\)</span>. Lorsque <span class="math inline">\(X_i\)</span> est proche de <span class="math inline">\(x\)</span>, un développement de Taylor donne <span class="math display">\[E[\hat f(x)] \approx f(x) + f'(x)\,\frac{1}{k}\sum_{i\in N_k(x)}(E[X_i] - x) + \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2.\]</span> Si les <span class="math inline">\(X_i\)</span> sont symétriquement distribués autour de <span class="math inline">\(x\)</span>, le terme du premier ordre s’annule et <span class="math display">\[\mbox{biais}[\hat f(x)] \approx \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2,\]</span> quantité qui <strong>croît avec <span class="math inline">\(k\)</span></strong> (les voisins sont de plus en plus éloignés). D’autre part, si <span class="math inline">\(Var[\epsilon_i] = \sigma^2\)</span>, alors <span class="math display">\[Var[\hat f(x)] = \frac{\sigma^2}{k},\]</span> qui <strong>décroît avec <span class="math inline">\(k\)</span></strong>. Il faut donc sélectionner le <span class="math inline">\(k\)</span> qui minimise l’erreur quadratique moyenne <span class="math display">\[\mbox{biais}^2[\hat f(x)] + Var[\hat f(x)].\]</span> En pratique, on sélectionne <span class="math inline">\(k\)</span> par <strong>validation croisée</strong> (le critère <code>PRESS</code> de <code>knn.reg</code> correspond au LOOCV). Sur les données <code>Auto</code>, on obtient <span class="math inline">\(k_{\min} = 45\)</span>.</p>
 </section>
-<section id="régression-avec-des-splines" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="régression-avec-des-splines"><span class="header-section-number">8.3</span> Régression avec des splines</h2>
-<section id="splines-de-régression" class="level3" data-number="8.3.1">
-<h3 data-number="8.3.1" class="anchored" data-anchor-id="splines-de-régression"><span class="header-section-number">8.3.1</span> Splines de régression</h3>
-<p>Les <strong>splines</strong> sont des polynômes définis par intervalles, avec des contraintes de régularité aux points de jonction (<strong>nœuds</strong>, <em>knots</em>).</p>
-<p>Cas simple (<span class="math inline">\(K=2\)</span> intervalles, degré <span class="math inline">\(p=3\)</span>) : on divise <span class="math inline">\([A,B]\)</span> en <span class="math inline">\([c_0,c_1)\)</span> et <span class="math inline">\([c_1,c_2)\)</span> et on approxime <span class="math display">\[f(x) = \begin{cases}\beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 &amp; \mbox{si } x\in[c_0,c_1),\\ \gamma_0 + \gamma_1 x + \gamma_2 x^2 + \gamma_3 x^3 &amp; \mbox{si } x\in[c_1,c_2).\end{cases}\]</span> On a <span class="math inline">\(4+4 = 8\)</span> degrés de liberté ; en imposant que <span class="math inline">\(f\)</span> soit continue et deux fois dérivable en <span class="math inline">\(c_1\)</span> (3 contraintes), il reste <span class="math inline">\(8-3 = 5\)</span> degrés de liberté.</p>
-<p><strong>Cas général</strong> : avec <span class="math inline">\(K\)</span> intervalles et un degré <span class="math inline">\(p\)</span>, on a <span class="math inline">\(K(p+1)\)</span> paramètres et <span class="math inline">\(p(K-1)\)</span> contraintes (continuité de <span class="math inline">\(f, f',\ldots,f^{(p-1)}\)</span> aux <span class="math inline">\(K-1\)</span> nœuds intérieurs), d’où <span class="math display">\[K(p+1) - p(K-1) = K + p \ \mbox{ degrés de liberté}.\]</span></p>
+<section id="plusieurs-variables-explicatives-et-distance-de-mahalanobis" class="level3" data-number="7.1.3">
+<h3 data-number="7.1.3" class="anchored" data-anchor-id="plusieurs-variables-explicatives-et-distance-de-mahalanobis"><span class="header-section-number">7.1.3</span> Plusieurs variables explicatives et distance de Mahalanobis</h3>
+<p>Avec deux variables explicatives, le modèle devient <span class="math inline">\(Y_i = f(X_{i1}, X_{i2}) + \epsilon_i\)</span> et l’estimateur <span class="math inline">\(k\)</span>NN est identique, seule la définition de la distance change. La distance euclidienne <span class="math display">\[d_i(x) = (X_{i1} - x_1)^2 + (X_{i2} - x_2)^2\]</span> pose problème si les ordres de grandeur des variables diffèrent (p.&nbsp;ex.&nbsp;poids en kg de 1500 à 5000 et cylindrée en pouces<span class="math inline">\(^3\)</span> de 60 à 500) : la variable de plus grande amplitude domine. On pondère alors par l’inverse de la matrice de variance-covariance empirique : <span class="math display">\[d_i(x) = \begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix}^{\!\top} V^{-1}\begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix},
+\qquad V = \begin{pmatrix} s_1^2 &amp; s_{12} \\ s_{12} &amp; s_2^2\end{pmatrix}.\]</span> C’est la <strong>distance de Mahalanobis</strong>, qui se généralise directement à <span class="math inline">\(p\)</span> variables continues.</p>
 </section>
-<section id="base-des-puissances-tronquées" class="level3" data-number="8.3.2">
-<h3 data-number="8.3.2" class="anchored" data-anchor-id="base-des-puissances-tronquées"><span class="header-section-number">8.3.2</span> Base des puissances tronquées</h3>
-<p>Pour <span class="math inline">\(p\)</span> et <span class="math inline">\(K\)</span> donnés, un choix mathématiquement commode de base de <span class="math inline">\(K+p\)</span> splines est <span class="math display">\[b_1(x) = 1,\quad b_2(x) = x,\ \ldots,\ b_{p+1}(x) = x^p,\quad b_{p+1+k}(x) = h(x, c_k),\ k=1,\ldots,K-1,\]</span> où <span class="math display">\[h(x,c) = (x - c)_+^p = \begin{cases}(x-c)^p &amp; \mbox{si } x\geq c,\\ 0 &amp; \mbox{sinon}.\end{cases}\]</span> Il existe une infinité de bases équivalentes : n’importe quelles <span class="math inline">\(K+p\)</span> combinaisons linéaires indépendantes de cette base forment encore une base de splines.</p>
-<p>Le modèle s’écrit alors <span class="math display">\[Y_i = \beta_1 b_1(X_i) + \cdots + \beta_{K+p}\, b_{K+p}(X_i) + \epsilon_i,\]</span> et l’estimateur des moindres carrés est <span class="math inline">\(\hat\beta = (X^\top X)^{-1}X^\top Y\)</span> avec <span class="math inline">\(X_{ik} = b_k(X_i)\)</span>. On obtient <span class="math inline">\(\hat f(x) = \sum_k\hat\beta_k b_k(x)\)</span>.</p>
 </section>
-<section id="sec-bsplines" class="level3" data-number="8.3.3">
-<h3 data-number="8.3.3" class="anchored" data-anchor-id="sec-bsplines"><span class="header-section-number">8.3.3</span> B-splines</h3>
-<p>La base des puissances tronquées est conceptuellement simple mais numériquement instable (<span class="math inline">\(X^\top X\)</span> mal conditionnée). En pratique, les logiciels utilisent la base des <strong>B-splines</strong>, une base équivalente dont les fonctions sont à <strong>support compact</strong> : chaque <span class="math inline">\(B\)</span>-spline de degré <span class="math inline">\(p\)</span> est non nulle sur au plus <span class="math inline">\(p+1\)</span> intervalles consécutifs.</p>
-<p>Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœuds augmentée <span class="math inline">\(\{t_j\}\)</span>, les B-splines de degré 0 sont <span class="math display">\[B_{j,0}(x) = \mathbf{1}_{\{t_j \leq x &lt; t_{j+1}\}},\]</span> et pour <span class="math inline">\(d = 1,\ldots,p\)</span> : <span class="math display">\[B_{j,d}(x) = \frac{x - t_j}{t_{j+d} - t_j}\,B_{j,d-1}(x) + \frac{t_{j+d+1} - x}{t_{j+d+1} - t_{j+1}}\,B_{j+1,d-1}(x).\]</span> Propriétés : chaque <span class="math inline">\(B_{j,p}(x) \geq 0\)</span>, <span class="math inline">\(\sum_j B_{j,p}(x) = 1\)</span> pour tout <span class="math inline">\(x\)</span> (partition de l’unité), et la matrice de plan est <strong>creuse par bandes</strong>, ce qui rend les calculs stables et rapides.</p>
-<p>En R, la fonction <code>bs</code> de la librairie <code>splines</code> construit la base de B-splines cubiques :</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>modele.splines <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">bs</span>(weight, <span class="at">knots=</span><span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2800</span>,<span class="dv">3600</span>)), <span class="at">data=</span>Auto)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.splines)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = mpg ~ bs(weight, knots = c(2200, 2800, 3600)), data = Auto)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--12.9031  -2.6702  -0.4887   1.9025  15.9416 
-
-Coefficients:
-                                         Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)                                31.414      2.776  11.315  &lt; 2e-16
-bs(weight, knots = c(2200, 2800, 3600))1    5.552      3.849   1.442   0.1500
-bs(weight, knots = c(2200, 2800, 3600))2   -3.249      2.645  -1.228   0.2201
-bs(weight, knots = c(2200, 2800, 3600))3   -7.891      3.153  -2.503   0.0127
-bs(weight, knots = c(2200, 2800, 3600))4  -16.826      3.059  -5.501 6.89e-08
-bs(weight, knots = c(2200, 2800, 3600))5  -17.937      3.581  -5.009 8.36e-07
-bs(weight, knots = c(2200, 2800, 3600))6  -20.172      3.621  -5.571 4.78e-08
-                                            
-(Intercept)                              ***
-bs(weight, knots = c(2200, 2800, 3600))1    
-bs(weight, knots = c(2200, 2800, 3600))2    
-bs(weight, knots = c(2200, 2800, 3600))3 *  
-bs(weight, knots = c(2200, 2800, 3600))4 ***
-bs(weight, knots = c(2200, 2800, 3600))5 ***
-bs(weight, knots = c(2200, 2800, 3600))6 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 4.174 on 385 degrees of freedom
-Multiple R-squared:  0.7185,    Adjusted R-squared:  0.7141 
-F-statistic: 163.7 on 6 and 385 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-</div>
+<section id="estimateur-de-noyau-nadaraya-watson" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="estimateur-de-noyau-nadaraya-watson"><span class="header-section-number">7.2</span> Estimateur de noyau (Nadaraya-Watson)</h2>
+<section id="des-voisins-aux-noyaux" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="des-voisins-aux-noyaux"><span class="header-section-number">7.2.1</span> Des voisins aux noyaux</h3>
+<p>L’estimateur <span class="math inline">\(k\)</span>NN peut s’écrire <span class="math display">\[\hat f(x) = \frac{\sum_{i=1}^n \mathbf{1}_{\{i\in N_k(x)\}}Y_i}{\sum_{i=1}^n \mathbf{1}_{\{i\in N_k(x)\}}}.\]</span> On peut définir le voisinage autrement : <span class="math inline">\(x\)</span> et <span class="math inline">\(X_i\)</span> sont voisins si <span class="math inline">\(|X_i - x| \leq h\)</span>, où <span class="math inline">\(h &gt; 0\)</span> est un <strong>paramètre de fenêtre</strong> jouant le même rôle que <span class="math inline">\(k\)</span>. On obtient <span class="math display">\[\hat f(x) = \frac{\sum_{i=1}^n K\!\left(\frac{X_i - x}{h}\right)Y_i}{\sum_{i=1}^n K\!\left(\frac{X_i - x}{h}\right)} = \sum_{i=1}^n w_i(x)\,Y_i,\]</span> où <span class="math inline">\(K(u) = \mathbf{1}_{\{|u|&lt;1\}}\)</span> est appelé <strong>noyau</strong> et <span class="math display">\[w_i(x) = \frac{K\!\left(\frac{X_i - x}{h}\right)}{\sum_{j=1}^n K\!\left(\frac{X_j - x}{h}\right)}\]</span> sont des poids positifs de somme 1.</p>
+<p>Avec le noyau uniforme, la contribution d’une observation passe brusquement de <span class="math inline">\(1/A\)</span> à 0 lorsque <span class="math inline">\(x\)</span> sort de son voisinage : <span class="math inline">\(\hat f\)</span> est <strong>discontinue</strong>. L’idée de l’<strong>estimateur de Nadaraya-Watson</strong> est d’utiliser des poids qui diminuent de façon continue au fur et à mesure que <span class="math inline">\(x\)</span> s’éloigne de <span class="math inline">\(X_i\)</span> : on prend par exemple le <strong>noyau gaussien</strong> <span class="math inline">\(K(u) = e^{-u^2/2}\)</span>, qui donne des poids continus et un estimateur <span class="math inline">\(\hat f_{NW}\)</span> continu.</p>
+<p>En R : <code>locpoly(x=X, y=Y, degree=0, bandwidth=h)</code> de la librairie <code>KernSmooth</code>.</p>
 </section>
-<section id="splines-naturelles" class="level3" data-number="8.3.4">
-<h3 data-number="8.3.4" class="anchored" data-anchor-id="splines-naturelles"><span class="header-section-number">8.3.4</span> Splines naturelles</h3>
-<p>L’estimateur par splines peut être instable aux extrémités du domaine de <span class="math inline">\(X\)</span> (comportement erratique des polynômes au-delà des nœuds extrêmes). Les <strong>splines naturelles</strong> remédient à ce problème : elles sont définies exactement comme les splines, à l’exception qu’on impose que la fonction soit <strong>linéaire</strong> sur les intervalles extrêmes <span class="math inline">\([c_0,c_1)\)</span> et <span class="math inline">\([c_{K-1},c_K)\)</span>. Ces contraintes supplémentaires libèrent des degrés de liberté qui peuvent être réinvestis en nœuds intérieurs. En R : <code>lm(mpg \textasciitilde{</code> ns(weight, df=4))}.</p>
+<section id="choix-du-paramètre-de-fenêtre-h" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="choix-du-paramètre-de-fenêtre-h"><span class="header-section-number">7.2.2</span> Choix du paramètre de fenêtre <span class="math inline">\(h\)</span></h3>
+<p>Comme pour <span class="math inline">\(k\)</span>NN : un <span class="math inline">\(h\)</span> trop petit produit une courbe très oscillante (variance élevée), un <span class="math inline">\(h\)</span> trop grand écrase la structure (biais élevé). On choisit <span class="math inline">\(h\)</span> par validation croisée. En excluant une observation à la fois, on montre que le critère s’écrit <span class="math display">\[cv.n = \frac{1}{n}\sum_{i=1}^n\left(\frac{Y_i - \hat f(X_i)}{1 - w_i(X_i)}\right)^2.\]</span> Sur les données <code>Auto</code> avec le noyau gaussien, on obtient <span class="math inline">\(h_{\min} = 110\)</span>.</p>
 </section>
-<section id="splines-de-lissage-splines-pénalisées" class="level3" data-number="8.3.5">
-<h3 data-number="8.3.5" class="anchored" data-anchor-id="splines-de-lissage-splines-pénalisées"><span class="header-section-number">8.3.5</span> Splines de lissage (splines pénalisées)</h3>
-<p>Un autre défaut des splines de régression est qu’elles peuvent avoir tendance à « aller chercher » le maximum de points (surajustement). Pour y remédier, on impose une pénalité sur la rugosité de <span class="math inline">\(f\)</span> : on estime <span class="math inline">\(\beta\)</span> en minimisant <span class="math display">\[\sum_{i=1}^n\left\{Y_i - \sum_{k}\beta_k b_k(X_i)\right\}^2 + \lambda\int_A^B f''(t)^2\,dt.\]</span> Comme <span class="math inline">\(f = \sum_k \beta_k b_k\)</span>, la pénalité s’écrit <span class="math inline">\(\lambda\,\beta^\top M\beta\)</span> avec <span class="math inline">\(M_{lq} = \int_A^B b''_l(t)\,b''_q(t)\,dt\)</span>, et l’estimateur qui en résulte est explicite : <span class="math display">\[\boxed{\hat\beta_\lambda = (X^\top X + \lambda M)^{-1}X^\top Y}\]</span> Le paramètre <span class="math inline">\(\lambda\)</span> contrôle la régularité de <span class="math inline">\(\hat f\)</span> :</p>
-<ul>
-<li><p><span class="math inline">\(\lambda = 0\)</span> : aucune pénalité, risque de surajustement ;</p></li>
-<li><p><span class="math inline">\(\lambda\to\infty\)</span> : <span class="math inline">\(f''\equiv 0\)</span>, on retrouve la droite des moindres carrés.</p></li>
-</ul>
-<p>On remarque l’analogie parfaite avec la régression ridge du <a href="05-selection-regularisation.html" class="quarto-xref"><span>Chapitre 6</span></a>. En pratique, <span class="math inline">\(\lambda\)</span> est choisi par validation croisée. En R :</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(Auto<span class="sc">$</span>weight, Auto<span class="sc">$</span>mpg, <span class="at">cv=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in smooth.spline(Auto$weight, Auto$mpg, cv = TRUE): cross-validation
-with non-unique 'x' values seems doubtful</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10.35561</code></pre>
-</div>
-</div>
-<div class="env-remarque">
-<p><span class="env-titre">Remarque</span></p>
-<p><strong>Remarque (Degrés de liberté effectifs).</strong></p>
-<p>Pour un estimateur linéaire <span class="math inline">\(\hat Y = A_\lambda Y\)</span> avec <span class="math inline">\(A_\lambda = X(X^\top X + \lambda M)^{-1}X^\top\)</span>, les <strong>degrés de liberté effectifs</strong> sont <span class="math inline">\(\mathrm{Tr}(A_\lambda)\)</span>. Ils décroissent de <span class="math inline">\(K+p\)</span> (pour <span class="math inline">\(\lambda = 0\)</span>) vers 2 (pour <span class="math inline">\(\lambda\to\infty\)</span>) et fournissent une échelle interprétable pour calibrer le lissage.</p>
-</div>
+</section>
+<section id="régression-non-paramétrique-et-classification" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="régression-non-paramétrique-et-classification"><span class="header-section-number">7.3</span> Régression non-paramétrique et classification</h2>
+<p>Considérons le jeu de données <code>Default</code> (librairie <code>ISLR</code>, <span class="math inline">\(n = 10\,000\)</span>) : la réponse binaire <span class="math inline">\(Y_i\)</span> vaut 1 si le sujet fait défaut sur sa carte de crédit, la variable explicative est le solde à payer. Le modèle est <span class="math inline">\(g(x) = P(Y = 1\mid X = x)\)</span>, qu’on estime par <span class="math inline">\(k\)</span>NN : <span class="math display">\[\hat g(x) = \frac{1}{k}\sum_{i\in N_k(x)}Y_i \in [0,1].\]</span></p>
+<p>Pour choisir <span class="math inline">\(k\)</span>, deux critères de validation croisée :</p>
+<ol type="1">
+<li><p><strong>Taux d’erreur test</strong> : on pose <span class="math inline">\(\hat Y_i = \mathbf{1}_{\{\hat f_{-i}(X_i) &gt; u\}}\)</span> (avec <span class="math inline">\(u = 1/2\)</span> en pratique) et on minimise <span class="math display">\[\frac{1}{n}\sum_{i=1}^n\mathbf{1}_{\{y_i\neq\hat y_i\}}.\]</span> Sur <code>Default</code>, on obtient <span class="math inline">\(k = 190\)</span>. Le résultat dépend toutefois du seuil arbitraire <span class="math inline">\(u\)</span> (avec <span class="math inline">\(u = 1/4\)</span> : <span class="math inline">\(k = 290\)</span> ; avec <span class="math inline">\(u = 3/4\)</span> : <span class="math inline">\(k = 50\)</span>).</p></li>
+<li><p><strong>Aire sous la courbe ROC</strong> : on choisit le <span class="math inline">\(k\)</span> qui <strong>maximise</strong> l’AUC (librairie <code>pROC</code>), critère qui ne dépend d’aucun seuil. Sur <code>Default</code>, on obtient <span class="math inline">\(k = 200\)</span>, proche du résultat précédent avec <span class="math inline">\(u = 1/2\)</span>.</p></li>
+</ol>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -439,13 +342,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const gifs = {
     "index":                              "index_plot.gif",
     "01-regression-lineaire":             "lineaire_plot.gif",
-    "02-regression-logistique":           "logit_plot.gif",
-    "03-modeles-lineaires-generalises":   "glm_plot.gif",
-    "04-prediction-validation-croisee":   "cv_plot.gif",
-    "05-selection-regularisation":        "regularisation_plot.gif",
-    "06-knn-noyau":                       "knn_noyau_plot.gif",
-    "07-splines":                         "splines_plot.gif",
-    "08-gam":                             "gam_plot.gif"
+    "02-monte-carlo":                     "monte_carlo_plot.gif",
+    "03-regression-logistique":           "logit_plot.gif",
+    "04-modeles-lineaires-generalises":   "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "exercices":                          "index_plot.gif"
   };
 
   let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
@@ -860,13 +765,13 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-knn-noyau.html" class="pagination-link" aria-label="Régression non-paramétrique : $k$ plus proches voisins et estimateur de noyau">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span>
+      <a href="./06-selection-regularisation.html" class="pagination-link" aria-label="Sélection de variables et régularisation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./08-gam.html" class="pagination-link" aria-label="Modèles additifs et modèles additifs généralisés (GAM)">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./08-splines.html" class="pagination-link" aria-label="Régression non-linéaire : polynômes, fonctions par morceaux et splines">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -878,7 +783,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/07-splines.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/07-knn-noyau.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

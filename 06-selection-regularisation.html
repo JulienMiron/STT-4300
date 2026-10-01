@@ -71,8 +71,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./06-knn-noyau.html" rel="next">
-<link href="./04-prediction-validation-croisee.html" rel="prev">
+<link href="./07-knn-noyau.html" rel="next">
+<link href="./05-prediction-validation-croisee.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -173,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-selection-regularisation.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./06-selection-regularisation.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -219,49 +219,49 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+  <a href="./02-monte-carlo.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+  <a href="./03-regression-logistique.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+  <a href="./04-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
@@ -297,7 +297,7 @@ window.Quarto = {
   <li><a href="#choix-de-lambda" id="toc-choix-de-lambda" class="nav-link" data-scroll-target="#choix-de-lambda"><span class="header-section-number">6.3.3</span> Choix de <span class="math inline">\(\lambda\)</span></a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/05-selection-regularisation.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/06-selection-regularisation.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -640,7 +640,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <div id="fig-hitters-erreur-test" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-hitters-erreur-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="05-selection-regularisation_files/figure-html/fig-hitters-erreur-test-1.png" class="img-fluid figure-img" width="672">
+<img src="06-selection-regularisation_files/figure-html/fig-hitters-erreur-test-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hitters-erreur-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;6.1: Erreur quadratique moyenne test en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge et le lasso sur les données <code>Hitters</code>. Les lignes verticales indiquent les valeurs de <span class="math inline">\(\lambda\)</span> choisies par validation croisée sur l’échantillon d’entraînement ; les lignes horizontales donnent l’erreur des moindres carrés (tirets) et celle du modèle nul (pointillés).
@@ -673,7 +673,7 @@ Figure&nbsp;6.1: Erreur quadratique moyenne test en fonction de <span class="mat
 <div id="fig-geometrie-ridge-lasso" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-geometrie-ridge-lasso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="05-selection-regularisation_files/figure-html/fig-geometrie-ridge-lasso-1.png" class="img-fluid figure-img" width="768">
+<img src="06-selection-regularisation_files/figure-html/fig-geometrie-ridge-lasso-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-geometrie-ridge-lasso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;6.2: Courbes de niveau de la somme des carrés résiduels (ellipses centrées en <span class="math inline">\(\hat\beta\)</span>) et régions admissibles de ridge (disque) et du lasso (losange). Le point bleu est l’estimateur régularisé : le lasso atteint un coin du losange, où <span class="math inline">\(\hat\beta_1 = 0\)</span>.
@@ -703,7 +703,7 @@ Figure&nbsp;6.2: Courbes de niveau de la somme des carrés résiduels (ellipses 
 <div id="fig-trajectoires-hitters" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-trajectoires-hitters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="05-selection-regularisation_files/figure-html/fig-trajectoires-hitters-1.png" class="img-fluid figure-img" width="864">
+<img src="06-selection-regularisation_files/figure-html/fig-trajectoires-hitters-1.png" class="img-fluid figure-img" width="864">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trajectoires-hitters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;6.3: Trajectoires des coefficients estimés en fonction de <span class="math inline">\(\log\lambda\)</span> pour les données <code>Hitters</code>. Chaque courbe correspond à une variable explicative ; l’axe du haut donne le nombre de coefficients non nuls.
@@ -733,14 +733,14 @@ Figure&nbsp;6.3: Trajectoires des coefficients estimés en fonction de <span cla
 </section>
 <section id="sec-regularisation-logistique" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="sec-regularisation-logistique"><span class="header-section-number">6.3</span> Régularisation en régression logistique</h2>
-<p>Les idées précédentes s’étendent directement aux GLM. En régression logistique, la régularisation est utile pour deux raisons. D’abord, comme en régression linéaire, elle réduit la variance des estimateurs lorsque le nombre de variables explicatives est grand par rapport à l’information disponible (en régression logistique, c’est surtout le nombre d’événements du groupe le plus rare qui compte). Ensuite, elle règle le problème de la <a href="02-regression-logistique.html#sec-separation">séparation</a> : alors que l’estimateur du maximum de vraisemblance n’existe pas en présence de séparation, l’estimateur régularisé existe toujours.</p>
+<p>Les idées précédentes s’étendent directement aux GLM. En régression logistique, la régularisation est utile pour deux raisons. D’abord, comme en régression linéaire, elle réduit la variance des estimateurs lorsque le nombre de variables explicatives est grand par rapport à l’information disponible (en régression logistique, c’est surtout le nombre d’événements du groupe le plus rare qui compte). Ensuite, elle règle le problème de la <a href="03-regression-logistique.html#sec-separation">séparation</a> : alors que l’estimateur du maximum de vraisemblance n’existe pas en présence de séparation, l’estimateur régularisé existe toujours.</p>
 <section id="log-vraisemblance-pénalisée" class="level3" data-number="6.3.1">
 <h3 data-number="6.3.1" class="anchored" data-anchor-id="log-vraisemblance-pénalisée"><span class="header-section-number">6.3.1</span> Log-vraisemblance pénalisée</h3>
 <p>Le critère des moindres carrés est remplacé par moins deux fois la log-vraisemblance. On minimise</p>
 <p><span class="math display">\[
 l_\lambda(\boldsymbol\beta) = -2\,\ell(\boldsymbol\beta;\boldsymbol y) + \lambda\, g(\beta_1,\ldots,\beta_p),
 \]</span></p>
-<p>avec <span class="math inline">\(g(\beta_1,\ldots,\beta_p) = \sum_{j=1}^p\beta_j^2\)</span> pour ridge et <span class="math inline">\(g(\beta_1,\ldots,\beta_p) = \sum_{j=1}^p|\beta_j|\)</span> pour le lasso. Comme la <a href="02-regression-logistique.html#sec-deviance">déviance</a> vaut <span class="math inline">\(D(\boldsymbol\beta) = 2\{\ell_{\text{sat}} - \ell(\boldsymbol\beta)\}\)</span>, où <span class="math inline">\(\ell_{\text{sat}}\)</span> ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>, cela revient à minimiser la déviance pénalisée <span class="math inline">\(D(\boldsymbol\beta) + \lambda\, g(\beta_1,\ldots,\beta_p)\)</span>.</p>
+<p>avec <span class="math inline">\(g(\beta_1,\ldots,\beta_p) = \sum_{j=1}^p\beta_j^2\)</span> pour ridge et <span class="math inline">\(g(\beta_1,\ldots,\beta_p) = \sum_{j=1}^p|\beta_j|\)</span> pour le lasso. Comme la <a href="03-regression-logistique.html#sec-deviance">déviance</a> vaut <span class="math inline">\(D(\boldsymbol\beta) = 2\{\ell_{\text{sat}} - \ell(\boldsymbol\beta)\}\)</span>, où <span class="math inline">\(\ell_{\text{sat}}\)</span> ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>, cela revient à minimiser la déviance pénalisée <span class="math inline">\(D(\boldsymbol\beta) + \lambda\, g(\beta_1,\ldots,\beta_p)\)</span>.</p>
 <div class="env-remarque">
 <p><span class="env-titre">Remarque</span></p>
 <p><strong>Remarque.</strong></p>
@@ -785,7 +785,7 @@ l_\lambda(\boldsymbol\beta) = -2\sum_{i=1}^n\left\{y_i\,\eta_i - m_i\log\left(1 
 </section>
 <section id="choix-de-lambda" class="level3" data-number="6.3.3">
 <h3 data-number="6.3.3" class="anchored" data-anchor-id="choix-de-lambda"><span class="header-section-number">6.3.3</span> Choix de <span class="math inline">\(\lambda\)</span></h3>
-<p>Comme en régression linéaire, <span class="math inline">\(\lambda\)</span> se choisit par <a href="04-prediction-validation-croisee.html">validation croisée</a>, mais avec une fonction de perte adaptée à une réponse binaire : la déviance binomiale (<code>type.measure = "deviance"</code>, valeur par défaut), le taux de mauvaise classification (<code>"class"</code>) ou l’aire sous la courbe ROC (<code>"auc"</code>). La fonction <code>cv.glmnet</code> retourne deux valeurs :</p>
+<p>Comme en régression linéaire, <span class="math inline">\(\lambda\)</span> se choisit par <a href="05-prediction-validation-croisee.html">validation croisée</a>, mais avec une fonction de perte adaptée à une réponse binaire : la déviance binomiale (<code>type.measure = "deviance"</code>, valeur par défaut), le taux de mauvaise classification (<code>"class"</code>) ou l’aire sous la courbe ROC (<code>"auc"</code>). La fonction <code>cv.glmnet</code> retourne deux valeurs :</p>
 <ul>
 <li><p><code>lambda.min</code>, qui minimise l’erreur de validation croisée ;</p></li>
 <li><p><code>lambda.1se</code>, la plus grande valeur de <span class="math inline">\(\lambda\)</span> dont l’erreur est à moins d’une erreur type de ce minimum. Elle donne un modèle plus parcimonieux dont la performance n’est pas significativement moins bonne.</p></li>
@@ -838,7 +838,7 @@ classeDeuxième:sexeHomme:groupe_ageEnfant   -28.86    1322.47   -0.02     0.98<
 <div id="fig-empress-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-empress-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="05-selection-regularisation_files/figure-html/fig-empress-cv-1.png" class="img-fluid figure-img" width="864">
+<img src="06-selection-regularisation_files/figure-html/fig-empress-cv-1.png" class="img-fluid figure-img" width="864">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-empress-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;6.4: Déviance binomiale estimée par validation croisée en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge (gauche) et le lasso (droite). Les lignes pointillées indiquent <code>lambda.min</code> et <code>lambda.1se</code>.
@@ -1018,13 +1018,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const gifs = {
     "index":                              "index_plot.gif",
     "01-regression-lineaire":             "lineaire_plot.gif",
-    "02-regression-logistique":           "logit_plot.gif",
-    "03-modeles-lineaires-generalises":   "glm_plot.gif",
-    "04-prediction-validation-croisee":   "cv_plot.gif",
-    "05-selection-regularisation":        "regularisation_plot.gif",
-    "06-knn-noyau":                       "knn_noyau_plot.gif",
-    "07-splines":                         "splines_plot.gif",
-    "08-gam":                             "gam_plot.gif"
+    "02-monte-carlo":                     "monte_carlo_plot.gif",
+    "03-regression-logistique":           "logit_plot.gif",
+    "04-modeles-lineaires-generalises":   "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "exercices":                          "index_plot.gif"
   };
 
   let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
@@ -1439,12 +1441,12 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./04-prediction-validation-croisee.html" class="pagination-link" aria-label="Prédiction, mesures de performance et validation croisée">
+      <a href="./05-prediction-validation-croisee.html" class="pagination-link" aria-label="Prédiction, mesures de performance et validation croisée">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./06-knn-noyau.html" class="pagination-link" aria-label="Régression non-paramétrique : $k$ plus proches voisins et estimateur de noyau">
+      <a href="./07-knn-noyau.html" class="pagination-link" aria-label="Régression non-paramétrique : $k$ plus proches voisins et estimateur de noyau">
         <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1457,7 +1459,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/05-selection-regularisation.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/06-selection-regularisation.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

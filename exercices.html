@@ -621,7 +621,10 @@ Solution
 <summary>
 Solution
 </summary>
-<p>En substituant <span class="math inline">\(\pi=\mu/m\)</span> : <span class="math display">\[\binom{m}{y}\pi^y(1-\pi)^{m-y} = \frac{m(m-1)\cdots(m-y+1)}{y!}\left(\frac{\mu}{m}\right)^y\left(1-\frac{\mu}{m}\right)^{m-y} = \frac{\mu^y}{y!}\cdot\underbrace{\frac{m(m-1)\cdots(m-y+1)}{m^y}}_{(A)}\cdot\underbrace{\left(1-\frac{\mu}{m}\right)^{m-y}}_{(B)}.\]</span></p>
+<p>En substituant <span class="math inline">\(\pi=\mu/m\)</span> : <span class="math display">\[\begin{align}
+\binom{m}{y}\pi^y(1-\pi)^{m-y} &amp;=\frac{m(m-1)\cdots(m-y+1)}{y!}\left(\frac{\mu}{m}\right)^y\left(1-\frac{\mu}{m}\right)^{m-y}\\
+&amp;= \frac{\mu^y}{y!}\cdot\underbrace{\frac{m(m-1)\cdots(m-y+1)}{m^y}}_{(A)}\cdot\underbrace{\left(1-\frac{\mu}{m}\right)^{m-y}}_{(B)}.
+\end{align}\]</span></p>
 <p><strong>Terme (A).</strong> Pour <span class="math inline">\(y\)</span> fixé, <span class="math display">\[\frac{m(m-1)\cdots(m-y+1)}{m^y} = \prod_{k=0}^{y-1}\left(1-\frac{k}{m}\right) \longrightarrow 1 \quad\text{quand } m\to\infty,\]</span> puisque chaque facteur tend vers <span class="math inline">\(1\)</span> et qu’il y en a un nombre fini (<span class="math inline">\(y\)</span> facteurs).</p>
 <p><strong>Terme (B).</strong> On écrit <span class="math inline">\((1-\mu/m)^{m-y} = (1-\mu/m)^m \cdot (1-\mu/m)^{-y}\)</span>. Le second facteur tend vers <span class="math inline">\(1\)</span> (car <span class="math inline">\(\mu/m\to 0\)</span>), et le premier est la limite classique <span class="math display">\[\left(1-\frac{\mu}{m}\right)^m \longrightarrow e^{-\mu} \quad\text{quand } m\to\infty.\]</span> Donc <span class="math inline">\((B) \to e^{-\mu}\)</span>.</p>
 <p>En combinant (A) et (B), <span class="math display">\[\binom{m}{y}\pi^y(1-\pi)^{m-y} \longrightarrow \frac{\mu^y}{y!}\cdot 1 \cdot e^{-\mu} = \frac{e^{-\mu}\mu^y}{y!},\]</span> ce qui est bien la fonction de masse de la loi <span class="math inline">\(\mathcal{P}(\mu)\)</span>.</p>

@@ -25,6 +25,24 @@ body {
 }
 
 /* ============================================================
+   LISIBILITÉ DU TEXTE (paragraphes mêlant prose et formules)
+   ============================================================ */
+#quarto-document-content p,
+#quarto-document-content li {
+  line-height: 1.8;
+}
+
+#quarto-document-content p {
+  margin-bottom: 1.2em;
+}
+
+/* Un peu d'air autour des formules en ligne (MathJax), pour qu'elles ne
+   collent pas au texte qui les entoure */
+#quarto-document-content mjx-container[jax="CHTML"]:not([display="true"]) {
+  margin: 0 0.1em;
+}
+
+/* ============================================================
    MISE EN PAGE — SIDEBAR ET FOOTER
    ============================================================ */
 footer.footer,
@@ -162,6 +180,51 @@ details.notation[open] summary::after {
 
 /* Espacement du contenu une fois la boîte dépliée */
 details.notation p {
+  margin: 0.5em 0 0 0;
+}
+
+/* ============================================================
+   BOÎTE DE SOLUTION REPLIABLE (élément <details class="solution">)
+   ============================================================ */
+details.solution {
+  background-color: #f0f7f1;
+  border-left: 4px solid #4a9d6e;
+  border-radius: 4px;
+  padding: 0.6em 1em;
+  margin: 1em 0;
+  font-size: 0.95em;
+}
+
+details.solution summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #2c7a4b;
+  list-style: none;   /* retire le marqueur natif (triangle) du navigateur */
+  outline: none;
+}
+
+details.solution summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Icône affichée avant le texte du résumé (qui contient déjà "Solution") */
+details.solution summary::before {
+  content: "✅ ";
+}
+
+/* Flèche personnalisée, alignée à droite, qui pivote à l'ouverture */
+details.solution summary::after {
+  content: " ▸";
+  float: right;
+  transition: transform 0.2s ease;
+}
+
+details.solution[open] summary::after {
+  transform: rotate(90deg);
+}
+
+/* Espacement du contenu une fois la boîte dépliée */
+details.solution p {
   margin: 0.5em 0 0 0;
 }
 

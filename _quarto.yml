@@ -41,6 +41,7 @@ book:
     - 06-knn-noyau.qmd
     - 07-splines.qmd
     - 08-gam.qmd
+    - exercices.qmd
 
 crossref:
   chapters: true                   # numérotation des figures/tableaux tient compte du chapitre

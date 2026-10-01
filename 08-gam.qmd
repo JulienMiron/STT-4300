@@ -47,7 +47,7 @@ où $g$ est une fonction de lien. Cas particuliers : GAM logistique (réponse bi
 
 L'estimation se fait en minimisant la **déviance pénalisée** :
 $$\hat\beta = \arg\min_\beta\left\{D(y,\mu) + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta\right\},$$
-où $D(y,\mu)$ est la déviance du @sec-mlg.
+où $D(y,\mu)$ est la déviance du @sec-GLM.
 
 ### Algorithme d'ajustement (moindres carrés pondérés itératifs pénalisés)
 

@@ -132,4 +132,4 @@ Le modèle linéaire classique repose sur deux hypothèses restrictives :
 
 1. la relation entre $E[Y]$ et les variables explicatives est linéaire.
 
-Dans de nombreuses applications, la réponse est binaire (défaut de paiement, présence d'une maladie), un dénombrement (nombre de cas de cancer), ou la relation est fortement non linéaire. Les chapitres suivants présentent des extensions qui lèvent ces restrictions : les modèles linéaires généralisés (@sec-logistique et @sec-mlg), puis les méthodes non-paramétriques et additives (@sec-knn à @sec-gam).
+Dans de nombreuses applications, la réponse est binaire (défaut de paiement, présence d'une maladie), un dénombrement (nombre de cas de cancer), ou la relation est fortement non linéaire. Les chapitres suivants présentent des extensions qui lèvent ces restrictions : les modèles linéaires généralisés (@sec-logistique et @sec-GLM), puis les méthodes non-paramétriques et additives (@sec-knn à @sec-gam).

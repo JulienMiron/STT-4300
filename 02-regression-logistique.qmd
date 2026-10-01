@@ -611,12 +611,14 @@ $$
 
 ::: {.env-exemple titre="Effet Hauck-Donner"}
 
+On étudie le phénomène par simulation (voir le @sec-monte-carlo) : on génère des données logistiques avec un effet $\beta_1$ de plus en plus grand et on compare les deux statistiques de test sur chaque jeu de données. La fonction `simuler_logistique` est réutilisée dans l'exemple suivant.
+
 ```{r hauck-donner-sim-continu}
 #| warning: false
 simuler_logistique <- function(n, beta0 = 0, beta1 = 1) {
   x <- rnorm(n, mean = 0, sd = 1)
   eta <- beta0 + beta1 * x
-  p <- plogis(eta)
+  p <- plogis(eta) # équivalent à 1 / (1 + exp(-eta))
   y <- rbinom(n, size = 1, prob = p)
   data.frame(x = x, y = y)
 }
@@ -674,14 +676,6 @@ Pour illustrer concrètement l'écart entre les deux tests, comparons un cas "no
 
 ```{r hauck-donner-exemples}
 #| warning: false
-
-simuler_logistique <- function(n, beta0 = 0, beta1 = 1) {
-  x <- rnorm(n, mean = 0, sd = 1)
-  eta <- beta0 + beta1 * x
-  p <- plogis(eta) # équivalent à 1 / (1 + exp(-eta))
-  y <- rbinom(n, size = 1, prob = p)
-  data.frame(x = x, y = y)
-}
 
 # Cas 1 : k = 15, pas de séparation
 dat_normal <- simuler_logistique(n = 50, beta0 = 0, beta1 = 5)

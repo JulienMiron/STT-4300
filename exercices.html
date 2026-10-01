@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>10&nbsp; Exercices – Régression II -- STT-4300</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./08-gam.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-118537708b9c1bdeb3824d6ddaac134b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+ <script>
+          window.MathJax = {
+            chtml: {
+              linebreaks: { inline: false }
+            },
+            tex: {
+              macros: {
+                bb: "\\boldsymbol\\beta",
+                hb: "\\hat{\\boldsymbol\\beta}",
+                hv: ["\\hat{\\text V}(#1)", 1],
+                hvar: ["\\widehat{\\text{Var}}(#1)", 1],
+                hbj: ["\\hat\\beta_{#1}", 1],
+                hpi: ["\\hat\\pi_{#1}", 1],
+                heta: ["\\hat\\eta_{#1}", 1],
+                hmu: ["\\hat\\mu_{#1}", 1]
+              }
+            }
+          };
+          </script>  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./exercices.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exercices</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Régression II – STT-4300</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/JulienMiron/STT-4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-regression-lineaire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Rappels de régression linéaire</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./exercices.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exercices</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#chapitre-1-rappels-de-régression-linéaire" id="toc-chapitre-1-rappels-de-régression-linéaire" class="nav-link active" data-scroll-target="#chapitre-1-rappels-de-régression-linéaire"><span class="header-section-number">10.1</span> Chapitre 1 : Rappels de régression linéaire</a>
+  <ul class="collapse">
+  <li><a href="#niveau-facile" id="toc-niveau-facile" class="nav-link" data-scroll-target="#niveau-facile"><span class="header-section-number">10.1.1</span> Niveau facile</a></li>
+  <li><a href="#niveau-moyen" id="toc-niveau-moyen" class="nav-link" data-scroll-target="#niveau-moyen"><span class="header-section-number">10.1.2</span> Niveau moyen</a></li>
+  <li><a href="#niveau-difficile" id="toc-niveau-difficile" class="nav-link" data-scroll-target="#niveau-difficile"><span class="header-section-number">10.1.3</span> Niveau difficile</a></li>
+  </ul></li>
+  <li><a href="#chapitre-3-modèles-de-régression-pour-données-binaires" id="toc-chapitre-3-modèles-de-régression-pour-données-binaires" class="nav-link" data-scroll-target="#chapitre-3-modèles-de-régression-pour-données-binaires"><span class="header-section-number">10.2</span> Chapitre 3 : Modèles de régression pour données binaires</a>
+  <ul class="collapse">
+  <li><a href="#niveau-facile-1" id="toc-niveau-facile-1" class="nav-link" data-scroll-target="#niveau-facile-1"><span class="header-section-number">10.2.1</span> Niveau facile</a></li>
+  <li><a href="#niveau-moyen-1" id="toc-niveau-moyen-1" class="nav-link" data-scroll-target="#niveau-moyen-1"><span class="header-section-number">10.2.2</span> Niveau moyen</a></li>
+  <li><a href="#niveau-difficile-1" id="toc-niveau-difficile-1" class="nav-link" data-scroll-target="#niveau-difficile-1"><span class="header-section-number">10.2.3</span> Niveau difficile</a></li>
+  </ul></li>
+  <li><a href="#chapitre-4-modèles-linéaires-généralisés-glm" id="toc-chapitre-4-modèles-linéaires-généralisés-glm" class="nav-link" data-scroll-target="#chapitre-4-modèles-linéaires-généralisés-glm"><span class="header-section-number">10.3</span> Chapitre 4 : Modèles linéaires généralisés (GLM)</a>
+  <ul class="collapse">
+  <li><a href="#niveau-facile-2" id="toc-niveau-facile-2" class="nav-link" data-scroll-target="#niveau-facile-2"><span class="header-section-number">10.3.1</span> Niveau facile</a></li>
+  <li><a href="#niveau-moyen-2" id="toc-niveau-moyen-2" class="nav-link" data-scroll-target="#niveau-moyen-2"><span class="header-section-number">10.3.2</span> Niveau moyen</a></li>
+  <li><a href="#niveau-difficile-2" id="toc-niveau-difficile-2" class="nav-link" data-scroll-target="#niveau-difficile-2"><span class="header-section-number">10.3.3</span> Niveau difficile</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/exercices.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exercices</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">1 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Ce chapitre rassemble des exercices théoriques pour chaque chapitre des notes de cours. Les exercices sont classés en trois niveaux de difficulté : facile, moyen et difficile. La solution de chaque exercice est repliée par défaut ; cliquez sur « ✅ Solution » pour l’afficher.</p>
+<p><strong>Accès rapide :</strong></p>
+<ul>
+<li><a href="#chapitre-1-rappels-de-régression-linéaire">Chapitre 1 : Rappels de régression linéaire</a></li>
+<li><a href="#chapitre-3-modèles-de-régression-pour-données-binaires">Chapitre 3 : Modèles de régression pour données binaires</a></li>
+<li><a href="#chapitre-4-modèles-linéaires-généralisés-glm">Chapitre 4 : Modèles linéaires généralisés (GLM)</a></li>
+</ul>
+<section id="chapitre-1-rappels-de-régression-linéaire" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="chapitre-1-rappels-de-régression-linéaire"><span class="header-section-number">10.1</span> Chapitre 1 : Rappels de régression linéaire</h2>
+<section id="niveau-facile" class="level3" data-number="10.1.1">
+<h3 data-number="10.1.1" class="anchored" data-anchor-id="niveau-facile"><span class="header-section-number">10.1.1</span> Niveau facile</h3>
+<p><strong>Exercice 1.</strong> Soit le modèle de régression simple <span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i + \epsilon_i\)</span>, pour <span class="math inline">\(i=1,\ldots,n\)</span>.</p>
+<ol type="a">
+<li><p>Écrivez la matrice de design <span class="math inline">\(\boldsymbol{X}\)</span>, puis calculez explicitement <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{X}\)</span> et <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{Y}\)</span> en fonction de <span class="math inline">\(\bar x\)</span>, <span class="math inline">\(\bar Y\)</span>, <span class="math inline">\(\sum x_i^2\)</span> et <span class="math inline">\(\sum x_i Y_i\)</span>.</p></li>
+<li><p>À partir de <span class="math inline">\(\hat{\boldsymbol{\beta}} = (\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\boldsymbol{Y}\)</span>, retrouvez les formules usuelles <span class="math display">\[\hat\beta_1 = \frac{\sum_i (x_i-\bar x)(Y_i - \bar Y)}{\sum_i (x_i - \bar x)^2} \qquad\text{et}\qquad \hat\beta_0 = \bar Y - \hat\beta_1 \bar x.\]</span></p></li>
+</ol>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>On a <span class="math inline">\(\boldsymbol{X}_i^\top = (1, x_i)\)</span>, donc</p>
+<p><span class="math display">\[\boldsymbol{X}^\top\boldsymbol{X} = \begin{pmatrix} n &amp; \sum x_i \\ \sum x_i &amp; \sum x_i^2 \end{pmatrix}, \qquad \boldsymbol{X}^\top\boldsymbol{Y} = \begin{pmatrix} \sum Y_i \\ \sum x_i Y_i \end{pmatrix}.\]</span></p>
+<p>Le déterminant de <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{X}\)</span> est <span class="math inline">\(n\sum x_i^2 - (\sum x_i)^2 = n\sum_i(x_i-\bar x)^2\)</span>, de sorte que</p>
+<p><span class="math display">\[(\boldsymbol{X}^\top\boldsymbol{X})^{-1} = \frac{1}{n\sum_i(x_i-\bar x)^2}\begin{pmatrix} \sum x_i^2 &amp; -\sum x_i \\ -\sum x_i &amp; n \end{pmatrix}.\]</span></p>
+<p>En multipliant par <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{Y}\)</span>, la seconde composante donne</p>
+<p><span class="math display">\[\hat\beta_1 = \frac{n\sum x_i Y_i - \sum x_i \sum Y_i}{n\sum_i(x_i-\bar x)^2} = \frac{\sum_i(x_i-\bar x)(Y_i-\bar Y)}{\sum_i(x_i-\bar x)^2},\]</span></p>
+<p>en utilisant l’identité <span class="math inline">\(n\sum x_iY_i - \sum x_i\sum Y_i = n\sum_i(x_i-\bar x)(Y_i-\bar Y)\)</span>. La première composante donne, après simplification, <span class="math inline">\(\hat\beta_0 = \bar Y - \hat\beta_1\bar x\)</span>.</p>
+</details>
+<p><strong>Exercice 2.</strong> Lorsque le modèle contient une ordonnée à l’origine, les équations normales s’écrivent <span class="math display">\[\boldsymbol{X}^\top(\boldsymbol{Y}-\boldsymbol{X}\hat{\boldsymbol{\beta}}) = \boldsymbol{0}.\]</span> Montrez qu’elles impliquent que <span class="math inline">\(\sum_{i=1}^n e_i = 0\)</span> et que <span class="math inline">\(\sum_{i=1}^n x_{ij} e_i = 0\)</span> pour chaque variable explicative <span class="math inline">\(j\)</span>, où <span class="math inline">\(e_i = Y_i - \hat Y_i\)</span>. Que peut-on en déduire sur la moyenne des valeurs prédites <span class="math inline">\(\hat Y_i\)</span> ?</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>En notant <span class="math inline">\(\boldsymbol{e}=\boldsymbol{Y}-\boldsymbol{X}\hat{\boldsymbol{\beta}}\)</span>, les équations normales s’écrivent <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{e}=\boldsymbol{0}\)</span>. La première colonne de <span class="math inline">\(\boldsymbol{X}\)</span> ne contenant que des <span class="math inline">\(1\)</span>, la première ligne de ce système est exactement <span class="math inline">\(\sum_{i=1}^n e_i = 0\)</span>. Chaque autre ligne, associée à la colonne des <span class="math inline">\(x_{ij}\)</span>, donne <span class="math inline">\(\sum_{i=1}^n x_{ij} e_i = 0\)</span>.</p>
+<p>Puisque <span class="math inline">\(\sum_i e_i = \sum_i (Y_i - \hat Y_i) = 0\)</span>, on a <span class="math inline">\(\sum_i Y_i = \sum_i \hat Y_i\)</span>, donc la moyenne des valeurs prédites est égale à la moyenne observée : <span class="math inline">\(\bar{\hat Y} = \bar Y\)</span>.</p>
+</details>
+<p><strong>Exercice 3.</strong> On ajoute une variable explicative supplémentaire à un modèle de régression linéaire multiple. Montrez algébriquement (à partir de la définition de <span class="math inline">\(SSE\)</span> comme minimum d’une somme de carrés) que le <span class="math inline">\(R^2\)</span> ne peut pas diminuer. Expliquez ensuite, sans calcul, pourquoi le <span class="math inline">\(R^2\)</span> ajusté peut, lui, diminuer.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Le modèle à <span class="math inline">\(p\)</span> variables est un cas particulier du modèle à <span class="math inline">\(p+1\)</span> variables (il suffit de fixer à <span class="math inline">\(0\)</span> le coefficient de la variable ajoutée). Comme les moindres carrés minimisent <span class="math inline">\(SSE\)</span> sur l’ensemble de tous les coefficients possibles, et que cet ensemble est plus grand pour le modèle à <span class="math inline">\(p+1\)</span> variables (il contient en particulier la solution du modèle à <span class="math inline">\(p\)</span> variables), on a nécessairement <span class="math inline">\(SSE_{p+1} \leq SSE_p\)</span>. Puisque <span class="math inline">\(R^2 = 1-SSE/SST\)</span> et que <span class="math inline">\(SST\)</span> ne dépend que de <span class="math inline">\(Y\)</span> (donc reste inchangé), <span class="math inline">\(R^2\)</span> ne peut qu’augmenter ou rester constant.</p>
+<p>Le <span class="math inline">\(R^2\)</span> ajusté, <span class="math display">\[R^2_{adj} = 1 - \frac{SSE/(n-(p+1))}{SST/(n-1)},\]</span> divise <span class="math inline">\(SSE\)</span> par les degrés de liberté résiduels <span class="math inline">\(n-(p+1)\)</span>, qui diminuent quand on ajoute une variable. Si la diminution de <span class="math inline">\(SSE\)</span> est trop faible pour compenser la diminution des degrés de liberté, le ratio <span class="math inline">\(SSE/(n-(p+1))\)</span> augmente, et <span class="math inline">\(R^2_{adj}\)</span> diminue : ajouter une variable peu informative est donc pénalisé.</p>
+</details>
+</section>
+<section id="niveau-moyen" class="level3" data-number="10.1.2">
+<h3 data-number="10.1.2" class="anchored" data-anchor-id="niveau-moyen"><span class="header-section-number">10.1.2</span> Niveau moyen</h3>
+<p><strong>Exercice 1.</strong> Soit <span class="math inline">\(\boldsymbol{H} = \boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\)</span> la matrice chapeau. Montrez que <span class="math inline">\(\boldsymbol{H}\)</span> est symétrique et idempotente (<span class="math inline">\(\boldsymbol{H}^2=\boldsymbol{H}\)</span>), puis que <span class="math inline">\(\boldsymbol{I}-\boldsymbol{H}\)</span> l’est également. En déduire que <span class="math inline">\(Var(\boldsymbol{e}) = \sigma^2(\boldsymbol{I}-\boldsymbol{H})\)</span>, où <span class="math inline">\(\boldsymbol{e} = \boldsymbol{Y}-\hat{\boldsymbol{Y}}\)</span>, et que <span class="math inline">\(Var(e_i) = \sigma^2(1-h_i)\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Symétrie : <span class="math inline">\(\boldsymbol{H}^\top = \boldsymbol{X}\{(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\}^\top\boldsymbol{X}^\top = \boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top = \boldsymbol{H}\)</span>, car <span class="math inline">\((\boldsymbol{X}^\top\boldsymbol{X})^{-1}\)</span> est symétrique.</p>
+<p>Idempotence : <span class="math inline">\(\boldsymbol{H}^2 = \boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top = \boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top = \boldsymbol{H}\)</span>.</p>
+<p>Pour <span class="math inline">\(\boldsymbol{I}-\boldsymbol{H}\)</span> : la symétrie est immédiate, et <span class="math inline">\((\boldsymbol{I}-\boldsymbol{H})^2 = \boldsymbol{I}-2\boldsymbol{H}+\boldsymbol{H}^2 = \boldsymbol{I}-2\boldsymbol{H}+\boldsymbol{H}=\boldsymbol{I}-\boldsymbol{H}\)</span>.</p>
+<p>Puisque <span class="math inline">\(\boldsymbol{e}=(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{Y}\)</span> et <span class="math inline">\(Var(\boldsymbol{Y})=\sigma^2\boldsymbol{I}\)</span>,</p>
+<p><span class="math display">\[Var(\boldsymbol{e}) = (\boldsymbol{I}-\boldsymbol{H})\,\sigma^2\boldsymbol{I}\,(\boldsymbol{I}-\boldsymbol{H})^\top = \sigma^2(\boldsymbol{I}-\boldsymbol{H})^2 = \sigma^2(\boldsymbol{I}-\boldsymbol{H}).\]</span></p>
+<p>L’élément diagonal <span class="math inline">\(i\)</span> de cette matrice donne <span class="math inline">\(Var(e_i) = \sigma^2(1-h_i)\)</span>.</p>
+</details>
+<p><strong>Exercice 2.</strong> En supposant <span class="math inline">\(\boldsymbol{\epsilon} \sim \mathcal{N}(\boldsymbol{0}, \sigma^2\boldsymbol{I})\)</span>, écrivez la vraisemblance du modèle linéaire et dérivez les estimateurs du maximum de vraisemblance <span class="math inline">\(\hat{\boldsymbol{\beta}}_{MV}\)</span> et <span class="math inline">\(\hat\sigma^2_{MV}\)</span>. Montrez que <span class="math inline">\(\hat{\boldsymbol{\beta}}_{MV}\)</span> coïncide avec l’estimateur des moindres carrés, mais que <span class="math inline">\(\hat\sigma^2_{MV}\)</span> est biaisé, et précisez le lien entre <span class="math inline">\(\hat\sigma^2_{MV}\)</span> et l’estimateur sans biais <span class="math inline">\(\hat\sigma^2\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>La log-vraisemblance est</p>
+<p><span class="math display">\[l(\boldsymbol{\beta},\sigma^2) = -\frac{n}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2}(\boldsymbol{Y}-\boldsymbol{X\beta})^\top(\boldsymbol{Y}-\boldsymbol{X\beta}).\]</span></p>
+<p>Pour <span class="math inline">\(\sigma^2\)</span> fixé, maximiser <span class="math inline">\(l\)</span> en <span class="math inline">\(\boldsymbol{\beta}\)</span> revient à minimiser <span class="math inline">\(SS_E(\boldsymbol{\beta})=(\boldsymbol{Y}-\boldsymbol{X\beta})^\top(\boldsymbol{Y}-\boldsymbol{X\beta})\)</span>, donc <span class="math inline">\(\hat{\boldsymbol{\beta}}_{MV} = \hat{\boldsymbol{\beta}}\)</span>, l’estimateur des moindres carrés.</p>
+<p>En dérivant par rapport à <span class="math inline">\(\sigma^2\)</span> et en annulant :</p>
+<p><span class="math display">\[\frac{\partial l}{\partial\sigma^2} = -\frac{n}{2\sigma^2} + \frac{SS_E}{2\sigma^4} = 0 \quad\Longrightarrow\quad \hat\sigma^2_{MV} = \frac{SS_E}{n}.\]</span></p>
+<p>Comme <span class="math inline">\(\hat\sigma^2 = SS_E/(n-(p+1))\)</span>, on a <span class="math display">\[\hat\sigma^2_{MV} = \frac{n-(p+1)}{n}\,\hat\sigma^2.\]</span> Puisque <span class="math inline">\(E[\hat\sigma^2]=\sigma^2\)</span> (exercice suivant), <span class="math inline">\(E[\hat\sigma^2_{MV}] = \frac{n-(p+1)}{n}\sigma^2 &lt; \sigma^2\)</span> : l’estimateur du maximum de vraisemblance sous-estime systématiquement <span class="math inline">\(\sigma^2\)</span>.</p>
+</details>
+<p><strong>Exercice 3.</strong> Montrez que <span class="math inline">\(E[SS_E] = \sigma^2 (n-(p+1))\)</span>, ce qui justifie que <span class="math inline">\(\hat\sigma^2 = SS_E/(n-(p+1))\)</span> est un estimateur sans biais de <span class="math inline">\(\sigma^2\)</span>. (Indice : utilisez le fait que <span class="math inline">\(SS_E = \boldsymbol{Y}^\top(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{Y}\)</span> et la formule de l’espérance d’une forme quadratique.)</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>On a <span class="math inline">\(SS_E = \boldsymbol{e}^\top\boldsymbol{e} = \boldsymbol{Y}^\top(\boldsymbol{I}-\boldsymbol{H})^\top(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{Y} = \boldsymbol{Y}^\top(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{Y}\)</span>, car <span class="math inline">\(\boldsymbol{I}-\boldsymbol{H}\)</span> est symétrique et idempotente. Pour une forme quadratique <span class="math inline">\(\boldsymbol{Y}^\top\boldsymbol{A}\boldsymbol{Y}\)</span> avec <span class="math inline">\(E[\boldsymbol{Y}]=\boldsymbol{\mu}\)</span> et <span class="math inline">\(Var(\boldsymbol{Y})=\sigma^2\boldsymbol{I}\)</span>, on a <span class="math inline">\(E[\boldsymbol{Y}^\top\boldsymbol{A}\boldsymbol{Y}] = \sigma^2\,\text{tr}(\boldsymbol{A}) + \boldsymbol{\mu}^\top\boldsymbol{A}\boldsymbol{\mu}\)</span>.</p>
+<p>Ici <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{X\beta}\)</span> et <span class="math inline">\((\boldsymbol{I}-\boldsymbol{H})\boldsymbol{X}=\boldsymbol{X}-\boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\boldsymbol{X} = \boldsymbol{X}-\boldsymbol{X}=\boldsymbol{0}\)</span>, donc le second terme s’annule. Il reste</p>
+<p><span class="math display">\[E[SS_E] = \sigma^2\,\text{tr}(\boldsymbol{I}-\boldsymbol{H}) = \sigma^2\{n - \text{tr}(\boldsymbol{H})\}.\]</span></p>
+<p>Or <span class="math inline">\(\text{tr}(\boldsymbol{H}) = \text{tr}\{\boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\} = \text{tr}\{(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\boldsymbol{X}\} = \text{tr}(\boldsymbol{I}_{p+1}) = p+1\)</span> (invariance cyclique de la trace). Donc <span class="math inline">\(E[SS_E] = \sigma^2(n-(p+1))\)</span>, et <span class="math inline">\(\hat\sigma^2\)</span> est sans biais.</p>
+</details>
+</section>
+<section id="niveau-difficile" class="level3" data-number="10.1.3">
+<h3 data-number="10.1.3" class="anchored" data-anchor-id="niveau-difficile"><span class="header-section-number">10.1.3</span> Niveau difficile</h3>
+<p><strong>Exercice 1.</strong> Démontrez le théorème de Gauss-Markov : montrez que, parmi tous les estimateurs linéaires sans biais de <span class="math inline">\(\boldsymbol{\beta}\)</span>, l’estimateur des moindres carrés <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> est celui de variance minimale (BLUE, <em>best linear unbiased estimator</em>). (Indice : considérez un estimateur linéaire quelconque <span class="math inline">\(\tilde{\boldsymbol{\beta}} = \boldsymbol{CY}\)</span> sans biais, écrivez <span class="math inline">\(\boldsymbol{C} = (\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top + \boldsymbol{D}\)</span> et montrez que <span class="math inline">\(\boldsymbol{DX}=\boldsymbol{0}\)</span>.)</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Soit <span class="math inline">\(\tilde{\boldsymbol{\beta}}=\boldsymbol{CY}\)</span> un estimateur linéaire quelconque. Le biais est <span class="math inline">\(E[\tilde{\boldsymbol{\beta}}]-\boldsymbol{\beta} = \boldsymbol{CX\beta}-\boldsymbol{\beta} = (\boldsymbol{CX}-\boldsymbol{I})\boldsymbol{\beta}\)</span> ; pour que <span class="math inline">\(\tilde{\boldsymbol{\beta}}\)</span> soit sans biais quel que soit <span class="math inline">\(\boldsymbol{\beta}\)</span>, il faut <span class="math inline">\(\boldsymbol{CX}=\boldsymbol{I}_{p+1}\)</span>.</p>
+<p>Écrivons <span class="math inline">\(\boldsymbol{C} = (\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top + \boldsymbol{D}\)</span>. Alors <span class="math inline">\(\boldsymbol{CX} = \boldsymbol{I} + \boldsymbol{DX} = \boldsymbol{I}\)</span> implique <span class="math inline">\(\boldsymbol{DX}=\boldsymbol{0}\)</span>.</p>
+<p>La variance de <span class="math inline">\(\tilde{\boldsymbol{\beta}}\)</span> est <span class="math inline">\(Var(\tilde{\boldsymbol{\beta}}) = \sigma^2\boldsymbol{CC}^\top\)</span>. En substituant et en développant :</p>
+<p><span class="math display">\[\boldsymbol{CC}^\top = (\boldsymbol{X}^\top\boldsymbol{X})^{-1} + (\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\boldsymbol{D}^\top + \boldsymbol{DX}(\boldsymbol{X}^\top\boldsymbol{X})^{-1} + \boldsymbol{DD}^\top.\]</span></p>
+<p>Puisque <span class="math inline">\(\boldsymbol{DX}=\boldsymbol{0}\)</span> (et donc <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{D}^\top=\boldsymbol{0}\)</span>), les deux termes croisés s’annulent, et</p>
+<p><span class="math display">\[Var(\tilde{\boldsymbol{\beta}}) = \sigma^2(\boldsymbol{X}^\top\boldsymbol{X})^{-1} + \sigma^2\boldsymbol{DD}^\top = Var(\hat{\boldsymbol{\beta}}) + \sigma^2\boldsymbol{DD}^\top.\]</span></p>
+<p>Comme <span class="math inline">\(\boldsymbol{DD}^\top\)</span> est semi-définie positive, <span class="math inline">\(Var(\tilde{\boldsymbol{\beta}}) \succeq Var(\hat{\boldsymbol{\beta}})\)</span> (au sens des matrices), avec égalité si et seulement si <span class="math inline">\(\boldsymbol{D}=\boldsymbol{0}\)</span>. L’estimateur des moindres carrés est donc BLUE.</p>
+</details>
+<p><strong>Exercice 2.</strong> Montrez que <span class="math inline">\((n-(p+1))\hat\sigma^2/\sigma^2 \sim \chi^2_{n-(p+1)}\)</span> et que cette statistique est indépendante de <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span>. (Indice : utilisez le théorème de Cochran en exploitant le fait que <span class="math inline">\(\boldsymbol{H}\)</span> et <span class="math inline">\(\boldsymbol{I}-\boldsymbol{H}\)</span> sont des projecteurs orthogonaux de rangs <span class="math inline">\(p+1\)</span> et <span class="math inline">\(n-(p+1)\)</span>, et que <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> et <span class="math inline">\(\boldsymbol{e}\)</span> sont des transformations linéaires non corrélées, donc indépendantes, du vecteur gaussien <span class="math inline">\(\boldsymbol{Y}\)</span>.)</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p><em>Loi du khi-carré.</em> Posons <span class="math inline">\(\boldsymbol{z}=\boldsymbol{\epsilon}/\sigma \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{I})\)</span>. Comme <span class="math inline">\((\boldsymbol{I}-\boldsymbol{H})\boldsymbol{X}=\boldsymbol{0}\)</span>, on a <span class="math inline">\(SS_E = \boldsymbol{Y}^\top(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{Y} = \boldsymbol{\epsilon}^\top(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{\epsilon} = \sigma^2\boldsymbol{z}^\top(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{z}\)</span>. Puisque <span class="math inline">\(\boldsymbol{I}-\boldsymbol{H}\)</span> est symétrique et idempotente, c’est la matrice d’un projecteur orthogonal de rang <span class="math inline">\(\text{tr}(\boldsymbol{I}-\boldsymbol{H})=n-(p+1)\)</span>. Par décomposition spectrale, <span class="math inline">\(\boldsymbol{I}-\boldsymbol{H}=\boldsymbol{P}\boldsymbol{\Lambda}\boldsymbol{P}^\top\)</span> avec <span class="math inline">\(n-(p+1)\)</span> valeurs propres égales à <span class="math inline">\(1\)</span> et les autres à <span class="math inline">\(0\)</span>, et <span class="math inline">\(\boldsymbol{P}^\top\boldsymbol{z}\sim\mathcal{N}(\boldsymbol{0},\boldsymbol{I})\)</span>. Donc <span class="math inline">\(\boldsymbol{z}^\top(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{z}\)</span> est une somme de <span class="math inline">\(n-(p+1)\)</span> carrés de variables <span class="math inline">\(\mathcal{N}(0,1)\)</span> indépendantes, soit <span class="math inline">\(\chi^2_{n-(p+1)}\)</span>. Ainsi <span class="math inline">\((n-(p+1))\hat\sigma^2/\sigma^2 = SS_E/\sigma^2 \sim \chi^2_{n-(p+1)}\)</span>.</p>
+<p><em>Indépendance.</em> <span class="math inline">\(\hat{\boldsymbol{\beta}}=(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\boldsymbol{Y}\)</span> et <span class="math inline">\(\boldsymbol{e}=(\boldsymbol{I}-\boldsymbol{H})\boldsymbol{Y}\)</span> sont deux transformations linéaires du même vecteur gaussien <span class="math inline">\(\boldsymbol{Y}\)</span>, donc conjointement gaussiennes ; il suffit de montrer qu’elles sont non corrélées pour conclure à l’indépendance. On calcule</p>
+<p><span class="math display">\[Cov(\hat{\boldsymbol{\beta}},\boldsymbol{e}) = (\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\,\sigma^2\boldsymbol{I}\,(\boldsymbol{I}-\boldsymbol{H})^\top = \sigma^2(\boldsymbol{X}^\top\boldsymbol{X})^{-1}(\boldsymbol{X}^\top - \boldsymbol{X}^\top\boldsymbol{H}).\]</span></p>
+<p>Or <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{H} = \boldsymbol{X}^\top\boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top=\boldsymbol{X}^\top\)</span>, donc <span class="math inline">\(Cov(\hat{\boldsymbol{\beta}},\boldsymbol{e})=\boldsymbol{0}\)</span>. Comme <span class="math inline">\(\hat\sigma^2\)</span> est fonction de <span class="math inline">\(\boldsymbol{e}\)</span> (via <span class="math inline">\(SS_E=\boldsymbol{e}^\top\boldsymbol{e}\)</span>), <span class="math inline">\(\hat\sigma^2\)</span> est indépendant de <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span>.</p>
+</details>
+<p><strong>Exercice 3.</strong> En partant du rapport des vraisemblances maximisées du modèle réduit (à <span class="math inline">\(q+1\)</span> paramètres) et du modèle complet (à <span class="math inline">\(p+1\)</span> paramètres, <span class="math inline">\(q&lt;p\)</span>), dérivez la statistique</p>
+<p><span class="math display">\[F_{obs} = \frac{(SSE_{r\acute{e}duit}-SSE_{complet})/(p-q)}{SSE_{complet}/(n-(p+1))}\]</span></p>
+<p>et montrez qu’elle suit une loi <span class="math inline">\(F_{p-q,\,n-(p+1)}\)</span> sous l’hypothèse nulle que le modèle réduit est adéquat. Précisez quelles hypothèses de normalité et d’indépendance sont nécessaires.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Soit <span class="math inline">\(\boldsymbol{H}_c\)</span> et <span class="math inline">\(\boldsymbol{H}_r\)</span> les matrices chapeaux des modèles complet et réduit, de rangs respectifs <span class="math inline">\(p+1\)</span> et <span class="math inline">\(q+1\)</span>. Comme le modèle réduit est emboîté dans le modèle complet, <span class="math inline">\(\boldsymbol{H}_r\boldsymbol{H}_c = \boldsymbol{H}_c\boldsymbol{H}_r = \boldsymbol{H}_r\)</span>, de sorte que <span class="math inline">\(\boldsymbol{H}_c-\boldsymbol{H}_r\)</span> est elle-même symétrique et idempotente, de rang <span class="math inline">\((p+1)-(q+1)=p-q\)</span>, et orthogonale à <span class="math inline">\(\boldsymbol{I}-\boldsymbol{H}_c\)</span> (c’est-à-dire <span class="math inline">\((\boldsymbol{H}_c-\boldsymbol{H}_r)(\boldsymbol{I}-\boldsymbol{H}_c)=\boldsymbol{0}\)</span>).</p>
+<p>Sous <span class="math inline">\(H_0\)</span> (le modèle réduit est adéquat, c’est-à-dire <span class="math inline">\(E[\boldsymbol{Y}]=\boldsymbol{X}_r\boldsymbol{\beta}_r\)</span>), on montre comme à l’exercice précédent que</p>
+<p><span class="math display">\[\frac{SSE_{r\acute{e}duit}-SSE_{complet}}{\sigma^2} = \frac{\boldsymbol{Y}^\top(\boldsymbol{H}_c-\boldsymbol{H}_r)\boldsymbol{Y}}{\sigma^2} \sim \chi^2_{p-q}, \qquad \frac{SSE_{complet}}{\sigma^2}\sim\chi^2_{n-(p+1)},\]</span></p>
+<p>et que ces deux statistiques sont indépendantes (car <span class="math inline">\(\boldsymbol{H}_c-\boldsymbol{H}_r\)</span> et <span class="math inline">\(\boldsymbol{I}-\boldsymbol{H}_c\)</span> sont des projecteurs orthogonaux l’un à l’autre, appliqués au même vecteur gaussien). Le rapport de deux variables <span class="math inline">\(\chi^2\)</span> indépendantes, chacune divisée par son nombre de degrés de liberté, suit par définition une loi <span class="math inline">\(F\)</span> :</p>
+<p><span class="math display">\[F_{obs} = \frac{\{\boldsymbol{Y}^\top(\boldsymbol{H}_c-\boldsymbol{H}_r)\boldsymbol{Y}/\sigma^2\}/(p-q)}{\{SSE_{complet}/\sigma^2\}/(n-(p+1))} = \frac{(SSE_{r\acute{e}duit}-SSE_{complet})/(p-q)}{SSE_{complet}/(n-(p+1))} \sim F_{p-q,\,n-(p+1)}.\]</span></p>
+<p>Les hypothèses nécessaires sont : erreurs indépendantes, identiquement distribuées selon <span class="math inline">\(\mathcal{N}(0,\sigma^2)\)</span> (même variance dans les deux modèles), et modèles emboîtés (l’espace des moyennes du modèle réduit est inclus dans celui du modèle complet).</p>
+</details>
+<p><strong>Exercice 4.</strong> La distance de Cook est définie par <span class="math display">\[D_i \propto \sum_{k=1}^n (\hat Y_k - \hat Y_{k(-i)})^2,\]</span> où <span class="math inline">\(\hat Y_{k(-i)}\)</span> est la valeur ajustée en <span class="math inline">\(\boldsymbol{X}_k\)</span> obtenue sans l’observation <span class="math inline">\(i\)</span>. À partir de cette définition, retrouvez la formule <span class="math display">\[D_i = \frac{r_i^2}{p+1}\cdot\frac{h_i}{1-h_i}.\]</span></p>
+<p>Indice : utilisez la formule de mise à jour des moindres carrés lorsqu’une observation est retirée, <span class="math display">\[\hat{\boldsymbol{\beta}}_{(-i)} = \hat{\boldsymbol{\beta}} - \frac{(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}_i e_i}{1-h_i}.\]</span></p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Puisque <span class="math inline">\(\hat Y_k-\hat Y_{k(-i)}=\boldsymbol{X}_k^\top(\hat{\boldsymbol{\beta}}-\hat{\boldsymbol{\beta}}_{(-i)})\)</span>, la définition se réécrit <span class="math display">\[D_i = \frac{\sum_{k=1}^n(\hat Y_k-\hat Y_{k(-i)})^2}{(p+1)\hat\sigma^2} = \frac{(\hat{\boldsymbol{\beta}}-\hat{\boldsymbol{\beta}}_{(-i)})^\top\boldsymbol{X}^\top\boldsymbol{X}(\hat{\boldsymbol{\beta}}-\hat{\boldsymbol{\beta}}_{(-i)})}{(p+1)\hat\sigma^2}.\]</span></p>
+<p>En substituant la formule de mise à jour <span class="math inline">\(\hat{\boldsymbol{\beta}}-\hat{\boldsymbol{\beta}}_{(-i)} = \dfrac{(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}_i e_i}{1-h_i}\)</span>, on obtient</p>
+<p><span class="math display">\[(\hat{\boldsymbol{\beta}}-\hat{\boldsymbol{\beta}}_{(-i)})^\top\boldsymbol{X}^\top\boldsymbol{X}(\hat{\boldsymbol{\beta}}-\hat{\boldsymbol{\beta}}_{(-i)}) = \frac{e_i^2}{(1-h_i)^2}\,\boldsymbol{X}_i^\top(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}^\top\boldsymbol{X}(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}_i = \frac{e_i^2}{(1-h_i)^2}\,\boldsymbol{X}_i^\top(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}_i.\]</span></p>
+<p>Or <span class="math inline">\(\boldsymbol{X}_i^\top(\boldsymbol{X}^\top\boldsymbol{X})^{-1}\boldsymbol{X}_i = h_i\)</span> (c’est l’élément diagonal <span class="math inline">\(i\)</span> de <span class="math inline">\(\boldsymbol{H}\)</span>), donc l’expression ci-dessus vaut <span class="math inline">\(\dfrac{e_i^2 h_i}{(1-h_i)^2}\)</span>. On obtient</p>
+<p><span class="math display">\[D_i = \frac{e_i^2 h_i}{(p+1)\hat\sigma^2(1-h_i)^2} = \frac{e_i^2}{\hat\sigma^2(1-h_i)}\cdot\frac{h_i}{(p+1)(1-h_i)} = \frac{r_i^2}{p+1}\cdot\frac{h_i}{1-h_i},\]</span></p>
+<p>en reconnaissant le résidu standardisé <span class="math inline">\(r_i = e_i/\{\hat\sigma\sqrt{1-h_i}\}\)</span>, donc <span class="math inline">\(r_i^2 = e_i^2/\{\hat\sigma^2(1-h_i)\}\)</span>.</p>
+</details>
+</section>
+</section>
+<section id="chapitre-3-modèles-de-régression-pour-données-binaires" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="chapitre-3-modèles-de-régression-pour-données-binaires"><span class="header-section-number">10.2</span> Chapitre 3 : Modèles de régression pour données binaires</h2>
+<section id="niveau-facile-1" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="niveau-facile-1"><span class="header-section-number">10.2.1</span> Niveau facile</h3>
+<p><strong>Exercice 1.</strong> Pour chacune des trois fonctions de lien présentées dans ce chapitre (logit, probit, c-log-log), vérifiez que <span class="math inline">\(g^{-1}\)</span> est bien l’inverse de <span class="math inline">\(g\)</span>, c’est-à-dire que <span class="math inline">\(g\{g^{-1}(\eta)\}=\eta\)</span> pour tout <span class="math inline">\(\eta \in \mathbb{R}\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p><em>Logit.</em> On a <span class="math inline">\(g^{-1}(\eta) = \dfrac{e^\eta}{1+e^\eta} = \pi\)</span>, donc <span class="math inline">\(1-\pi = \dfrac{1}{1+e^\eta}\)</span> et <span class="math display">\[g(\pi) = \log\left(\frac{\pi}{1-\pi}\right) = \log(e^\eta) = \eta.\]</span></p>
+<p><em>Probit.</em> <span class="math inline">\(g^{-1}(\eta)=\Phi(\eta)\)</span> et <span class="math inline">\(g(u)=\Phi^{-1}(u)\)</span> sont par construction des fonctions réciproques l’une de l’autre (<span class="math inline">\(\Phi\)</span> étant une bijection strictement croissante de <span class="math inline">\(\mathbb{R}\)</span> vers <span class="math inline">\((0,1)\)</span>), donc <span class="math inline">\(g\{g^{-1}(\eta)\} = \Phi^{-1}\{\Phi(\eta)\} = \eta\)</span> directement.</p>
+<p><em>C-log-log.</em> Si <span class="math inline">\(g(u)=\log\{-\log(1-u)\}=\eta\)</span>, alors <span class="math inline">\(-\log(1-u)=e^\eta\)</span>, donc <span class="math inline">\(1-u=e^{-e^\eta}\)</span> et <span class="math inline">\(u=g^{-1}(\eta)=1-e^{-e^\eta}=\pi\)</span>. En substituant, <span class="math display">\[g(\pi) = \log\{-\log(1-\pi)\} = \log\{-\log(e^{-e^\eta})\} = \log(e^\eta) = \eta.\]</span></p>
+</details>
+<p><strong>Exercice 2.</strong> Avec le lien logit, la cote s’écrit <span class="math inline">\(o_i = \pi_i/(1-\pi_i) = e^{\eta_i}\)</span>. Calculez <span class="math inline">\(o_i\)</span> et <span class="math inline">\(\pi_i\)</span> pour <span class="math inline">\(\eta_i = 0\)</span>, <span class="math inline">\(\eta_i = \ln 2\)</span> et <span class="math inline">\(\eta_i = -\ln 3\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Puisque <span class="math inline">\(o_i = e^{\eta_i}\)</span> et <span class="math inline">\(\pi_i = o_i/(1+o_i)\)</span> :</p>
+<ul>
+<li><span class="math inline">\(\eta_i = 0\)</span> : <span class="math inline">\(o_i = e^0 = 1\)</span>, donc <span class="math inline">\(\pi_i = 1/2\)</span> (autant de chances de survivre que de ne pas survivre) ;</li>
+<li><span class="math inline">\(\eta_i = \ln 2\)</span> : <span class="math inline">\(o_i = e^{\ln 2} = 2\)</span>, donc <span class="math inline">\(\pi_i = 2/3\)</span> ;</li>
+<li><span class="math inline">\(\eta_i = -\ln 3\)</span> : <span class="math inline">\(o_i = e^{-\ln 3} = 1/3\)</span>, donc <span class="math inline">\(\pi_i = (1/3)/(4/3) = 1/4\)</span>.</li>
+</ul>
+</details>
+<p><strong>Exercice 3.</strong> Soit <span class="math inline">\(Y_i \sim \mathrm{Bin}(m_i,\pi_i)\)</span>, avec <span class="math inline">\(\mu_i = m_i\pi_i\)</span>. Montrez que <span class="math display">\[Var[Y_i] = \frac{\mu_i(m_i-\mu_i)}{m_i}\]</span> est maximale, pour <span class="math inline">\(m_i\)</span> fixé, lorsque <span class="math inline">\(\pi_i = 1/2\)</span>. Quel est le lien avec le poids <span class="math inline">\(w_i = m_i\pi_i(1-\pi_i)\)</span> utilisé dans l’estimation par IRLS ?</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Puisque <span class="math inline">\(\mu_i = m_i\pi_i\)</span>, on a <span class="math inline">\(m_i - \mu_i = m_i(1-\pi_i)\)</span>, donc <span class="math display">\[\frac{\mu_i(m_i-\mu_i)}{m_i} = \frac{m_i\pi_i \cdot m_i(1-\pi_i)}{m_i} = m_i\pi_i(1-\pi_i) = Var[Y_i].\]</span></p>
+<p>En dérivant <span class="math inline">\(\pi_i(1-\pi_i)\)</span> par rapport à <span class="math inline">\(\pi_i\)</span> : <span class="math inline">\(\dfrac{d}{d\pi_i}\{\pi_i(1-\pi_i)\} = 1-2\pi_i\)</span>, qui s’annule en <span class="math inline">\(\pi_i=1/2\)</span>. La dérivée seconde vaut <span class="math inline">\(-2&lt;0\)</span>, donc il s’agit bien d’un maximum, où <span class="math inline">\(Var[Y_i]=m_i/4\)</span>.</p>
+<p>Le poids <span class="math inline">\(w_i = m_i\pi_i(1-\pi_i)\)</span> est exactement <span class="math inline">\(Var[Y_i]\)</span> : les observations dont la probabilité prédite est proche de <span class="math inline">\(1/2\)</span> (les plus incertaines) reçoivent donc le plus grand poids dans l’algorithme IRLS, tandis que les observations dont <span class="math inline">\(\pi_i\)</span> est proche de <span class="math inline">\(0\)</span> ou <span class="math inline">\(1\)</span> (presque certaines) reçoivent un poids proche de <span class="math inline">\(0\)</span> — ce qui explique en partie l’instabilité de l’estimation en présence de séparation, où de nombreux <span class="math inline">\(\pi_i\)</span> s’approchent de <span class="math inline">\(0\)</span> ou <span class="math inline">\(1\)</span>.</p>
+</details>
+</section>
+<section id="niveau-moyen-1" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="niveau-moyen-1"><span class="header-section-number">10.2.2</span> Niveau moyen</h3>
+<p><strong>Exercice 1.</strong> En partant de la log-vraisemblance avec lien logit, <span class="math display">\[\ell(\boldsymbol{\beta}; \boldsymbol{y}) = \sum_{i=1}^n \left\{ \log\binom{m_i}{y_i} + y_i \eta_i - m_i \log\left(1+e^{\eta_i}\right) \right\}, \qquad \eta_i = \beta_0+\beta_1 X_{i1}+\cdots+\beta_p X_{ip},\]</span> dérivez le score <span class="math inline">\(\boldsymbol{U}(\boldsymbol{\beta}) = \partial\ell/\partial\boldsymbol{\beta}\)</span> et montrez qu’il s’écrit, sous forme matricielle, <span class="math inline">\(\boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{X}^\top(\boldsymbol{y}-\boldsymbol{\mu})\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Pour <span class="math inline">\(j=0,1,\ldots,p\)</span>, avec <span class="math inline">\(\partial\eta_i/\partial\beta_j = X_{ij}\)</span> (et <span class="math inline">\(X_{i0}\equiv 1\)</span>) : le terme <span class="math inline">\(\log\binom{m_i}{y_i}\)</span> ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>, donc sa dérivée est nulle. Pour <span class="math inline">\(y_i\eta_i\)</span>, <span class="math inline">\(\partial(y_i\eta_i)/\partial\beta_j = y_iX_{ij}\)</span>. Pour le dernier terme, par dérivation en chaîne, <span class="math display">\[\frac{\partial}{\partial\beta_j}\log(1+e^{\eta_i}) = \frac{e^{\eta_i}}{1+e^{\eta_i}}\cdot X_{ij} = \pi_i X_{ij},\]</span> donc <span class="math inline">\(\partial\{m_i\log(1+e^{\eta_i})\}/\partial\beta_j = m_i\pi_i X_{ij}\)</span>. En combinant, <span class="math display">\[\frac{\partial\ell}{\partial\beta_j} = \sum_{i=1}^n (y_i - m_i\pi_i)X_{ij} = \sum_{i=1}^n (y_i-\mu_i)X_{ij}.\]</span></p>
+<p>En empilant ces <span class="math inline">\(p+1\)</span> dérivées partielles et en reconnaissant que <span class="math inline">\(X_{ij}\)</span> est l’élément <span class="math inline">\((i,j)\)</span> de <span class="math inline">\(\boldsymbol{X}\)</span>, on obtient <span class="math inline">\(\boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{X}^\top(\boldsymbol{y}-\boldsymbol{\mu})\)</span>.</p>
+</details>
+<p><strong>Exercice 2.</strong> En dérivant le résultat de l’exercice précédent une fois de plus par rapport à <span class="math inline">\(\boldsymbol{\beta}\)</span>, montrez que la matrice d’information de Fisher pour le lien logit s’écrit <span class="math inline">\(I(\boldsymbol{\beta}) = \boldsymbol{X}^\top\boldsymbol{W}\boldsymbol{X}\)</span>, où <span class="math inline">\(\boldsymbol{W} = \mathrm{diag}(w_1,\ldots,w_n)\)</span> et <span class="math inline">\(w_i = m_i\pi_i(1-\pi_i)\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>On a <span class="math inline">\(U_j(\boldsymbol\beta) = \sum_i (y_i-\mu_i)X_{ij}\)</span>, où <span class="math inline">\(\mu_i = m_i\pi_i = m_i\, e^{\eta_i}/(1+e^{\eta_i})\)</span>. Puisque <span class="math inline">\(y_i\)</span> ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>, <span class="math display">\[\frac{\partial U_j}{\partial\beta_k} = -\sum_i \frac{\partial\mu_i}{\partial\beta_k}X_{ij} = -\sum_i m_i\frac{\partial\pi_i}{\partial\eta_i}\cdot\frac{\partial\eta_i}{\partial\beta_k}\,X_{ij}.\]</span></p>
+<p>Comme <span class="math inline">\(\pi_i = e^{\eta_i}/(1+e^{\eta_i})\)</span> est la fonction logistique, <span class="math inline">\(\partial\pi_i/\partial\eta_i = \pi_i(1-\pi_i)\)</span> (propriété classique de la fonction logistique), et <span class="math inline">\(\partial\eta_i/\partial\beta_k = X_{ik}\)</span>. Donc <span class="math display">\[\frac{\partial U_j}{\partial\beta_k} = -\sum_i m_i\pi_i(1-\pi_i)\,X_{ij}X_{ik} = -\sum_i w_i X_{ij}X_{ik}.\]</span></p>
+<p>L’élément <span class="math inline">\((j,k)\)</span> de l’information de Fisher est <span class="math inline">\(I_{jk} = -\partial U_j/\partial\beta_k = \sum_i w_i X_{ij}X_{ik}\)</span>, ce qui correspond exactement à l’élément <span class="math inline">\((j,k)\)</span> de <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{W}\boldsymbol{X}\)</span>. Donc <span class="math inline">\(I(\boldsymbol\beta) = \boldsymbol{X}^\top\boldsymbol{W}\boldsymbol{X}\)</span>.</p>
+</details>
+<p><strong>Exercice 3.</strong> Avec un seul prédicteur continu <span class="math inline">\(x\)</span> et le lien logit, <span class="math inline">\(\hat\pi(x) = g^{-1}(\hat\beta_0+\hat\beta_1 x)\)</span>. Montrez que <span class="math display">\[\hat\pi'(x) = \hat\beta_1\,\hat\pi(x)\{1-\hat\pi(x)\}\]</span> et que cette pente est maximale au point d’inflexion <span class="math inline">\(\hat\pi(x)=1/2\)</span>, où elle vaut <span class="math inline">\(\hat\beta_1/4\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Posons <span class="math inline">\(t = \hat\beta_0+\hat\beta_1 x\)</span> et <span class="math inline">\(s(t) = e^t/(1+e^t)\)</span>, de sorte que <span class="math inline">\(\hat\pi(x)=s(t)\)</span>. On vérifie d’abord que <span class="math inline">\(s'(t) = s(t)\{1-s(t)\}\)</span> : <span class="math display">\[s'(t) = \frac{e^t(1+e^t) - e^t\cdot e^t}{(1+e^t)^2} = \frac{e^t}{(1+e^t)^2} = \frac{e^t}{1+e^t}\cdot\frac{1}{1+e^t} = s(t)\{1-s(t)\}.\]</span></p>
+<p>Par dérivation en chaîne, <span class="math inline">\(\hat\pi'(x) = s'(t)\cdot\dfrac{dt}{dx} = \hat\beta_1\, s(t)\{1-s(t)\} = \hat\beta_1\,\hat\pi(x)\{1-\hat\pi(x)\}\)</span>.</p>
+<p>Comme montré à l’exercice 3 du niveau facile, <span class="math inline">\(u(1-u)\)</span> (pour <span class="math inline">\(u=\hat\pi(x)\)</span>) est maximal en <span class="math inline">\(u=1/2\)</span>, où il vaut <span class="math inline">\(1/4\)</span>. Donc <span class="math inline">\(\hat\pi'(x)\)</span> est maximale lorsque <span class="math inline">\(\hat\pi(x)=1/2\)</span>, où elle vaut <span class="math inline">\(\hat\beta_1/4\)</span>.</p>
+</details>
+</section>
+<section id="niveau-difficile-1" class="level3" data-number="10.2.3">
+<h3 data-number="10.2.3" class="anchored" data-anchor-id="niveau-difficile-1"><span class="header-section-number">10.2.3</span> Niveau difficile</h3>
+<p><strong>Exercice 1.</strong> Montrez que, lorsque les <span class="math inline">\(m_i\to\infty\)</span>, la déviance individuelle <span class="math inline">\(d_i\)</span> est asymptotiquement équivalente au carré du résidu de Pearson <span class="math inline">\(r_{P,i}^2\)</span>, c’est-à-dire que <span class="math display">\[d_i = 2\left\{y_i\log\!\left(\frac{y_i}{\hat\mu_i}\right) + (m_i-y_i)\log\!\left(\frac{m_i-y_i}{m_i-\hat\mu_i}\right)\right\} \approx \frac{(y_i-\hat\mu_i)^2\,m_i}{\hat\mu_i(m_i-\hat\mu_i)} = r_{P,i}^2.\]</span> En déduire que <span class="math inline">\(D \approx \chi^2_P\)</span> pour des <span class="math inline">\(m_i\)</span> grands. (Indice : posez <span class="math inline">\(\delta = y_i-\hat\mu_i\)</span> et effectuez un développement de Taylor à l’ordre 2 de <span class="math inline">\(\log(1+\delta/\hat\mu_i)\)</span> et <span class="math inline">\(\log(1-\delta/(m_i-\hat\mu_i))\)</span> autour de <span class="math inline">\(\delta=0\)</span>.)</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Posons <span class="math inline">\(\delta = y_i - \hat\mu_i\)</span>, de sorte que <span class="math inline">\(y_i = \hat\mu_i+\delta\)</span> et <span class="math inline">\(m_i-y_i = (m_i-\hat\mu_i)-\delta\)</span>. En utilisant <span class="math inline">\(\log(1+t) \approx t - t^2/2\)</span> pour <span class="math inline">\(t\)</span> petit :</p>
+<p><span class="math display">\[y_i\log\left(\frac{y_i}{\hat\mu_i}\right) = (\hat\mu_i+\delta)\log\left(1+\frac{\delta}{\hat\mu_i}\right) \approx (\hat\mu_i+\delta)\left(\frac{\delta}{\hat\mu_i}-\frac{\delta^2}{2\hat\mu_i^2}\right) \approx \delta + \frac{\delta^2}{2\hat\mu_i},\]</span></p>
+<p>en ne conservant que les termes jusqu’à l’ordre <span class="math inline">\(\delta^2\)</span>. De même,</p>
+<p><span class="math display">\[(m_i-y_i)\log\left(\frac{m_i-y_i}{m_i-\hat\mu_i}\right) = \{(m_i-\hat\mu_i)-\delta\}\log\left(1-\frac{\delta}{m_i-\hat\mu_i}\right) \approx -\delta + \frac{\delta^2}{2(m_i-\hat\mu_i)}.\]</span></p>
+<p>En additionnant les deux approximations, les termes en <span class="math inline">\(\delta\)</span> s’annulent :</p>
+<p><span class="math display">\[y_i\log\left(\frac{y_i}{\hat\mu_i}\right) + (m_i-y_i)\log\left(\frac{m_i-y_i}{m_i-\hat\mu_i}\right) \approx \frac{\delta^2}{2}\left(\frac{1}{\hat\mu_i}+\frac{1}{m_i-\hat\mu_i}\right) = \frac{\delta^2}{2}\cdot\frac{m_i}{\hat\mu_i(m_i-\hat\mu_i)}.\]</span></p>
+<p>En multipliant par <span class="math inline">\(2\)</span> (définition de <span class="math inline">\(d_i\)</span>), on obtient <span class="math display">\[d_i \approx \frac{\delta^2\, m_i}{\hat\mu_i(m_i-\hat\mu_i)} = \frac{(y_i-\hat\mu_i)^2\,m_i}{\hat\mu_i(m_i-\hat\mu_i)} = r_{P,i}^2.\]</span></p>
+<p>En sommant sur <span class="math inline">\(i=1,\ldots,n\)</span>, <span class="math inline">\(D = \sum_i d_i \approx \sum_i r_{P,i}^2 = \chi^2_P\)</span>. Cette approximation devient exacte lorsque <span class="math inline">\(\delta/\hat\mu_i\)</span> et <span class="math inline">\(\delta/(m_i-\hat\mu_i)\)</span> tendent vers <span class="math inline">\(0\)</span>, ce qui se produit quand <span class="math inline">\(m_i\to\infty\)</span> (à <span class="math inline">\(\pi_i\)</span> fixé).</p>
+</details>
+<p><strong>Exercice 2.</strong> Montrez que, pour deux modèles emboîtés de déviances <span class="math inline">\(D_{r\acute{e}duit}\)</span> et <span class="math inline">\(D_{complet}\)</span>, la statistique <span class="math inline">\(\chi^2 = D_{r\acute{e}duit}-D_{complet}\)</span> est exactement égale à la statistique du test du rapport de vraisemblance <span class="math display">\[G^2 = -2\left\{\ell(\text{modèle r\'eduit}) - \ell(\text{modèle complet})\right\}.\]</span> Expliquez pourquoi le terme associé au modèle saturé n’apparaît pas dans cette différence, alors qu’il intervient dans la définition de chaque déviance prise individuellement.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Par définition, <span class="math inline">\(D_{r\acute{e}duit} = 2\{\ell(\boldsymbol y,\boldsymbol y) - \ell(\hat{\boldsymbol\mu}_r;\boldsymbol y)\}\)</span> et <span class="math inline">\(D_{complet} = 2\{\ell(\boldsymbol y,\boldsymbol y)-\ell(\hat{\boldsymbol\mu}_c;\boldsymbol y)\}\)</span>, où <span class="math inline">\(\ell(\boldsymbol y,\boldsymbol y)\)</span> est la log-vraisemblance du modèle saturé (la même dans les deux expressions, puisqu’elle ne dépend que des données observées <span class="math inline">\(\boldsymbol y\)</span>, pas du modèle ajusté). En soustrayant,</p>
+<p><span class="math display">\[D_{r\acute{e}duit}-D_{complet} = 2\{\ell(\boldsymbol y,\boldsymbol y)-\ell(\hat{\boldsymbol\mu}_r;\boldsymbol y)\} - 2\{\ell(\boldsymbol y,\boldsymbol y)-\ell(\hat{\boldsymbol\mu}_c;\boldsymbol y)\} = 2\{\ell(\hat{\boldsymbol\mu}_c;\boldsymbol y) - \ell(\hat{\boldsymbol\mu}_r;\boldsymbol y)\},\]</span></p>
+<p>ce qui est exactement <span class="math inline">\(-2\{\ell(\text{r\'eduit})-\ell(\text{complet})\} = G^2\)</span>. Le terme <span class="math inline">\(\ell(\boldsymbol y,\boldsymbol y)\)</span> du modèle saturé s’annule dans la différence car il est commun aux deux déviances : il ne dépend que des données, identiques pour les deux modèles ajustés sur le même échantillon. C’est précisément pour cette raison que comparer des déviances revient à comparer des vraisemblances, sans jamais avoir à évaluer explicitement <span class="math inline">\(\ell(\boldsymbol y,\boldsymbol y)\)</span>.</p>
+</details>
+<p><strong>Exercice 3.</strong> Considérez un modèle logistique à un seul prédicteur <span class="math inline">\(x\)</span>, sans ordonnée à l’origine (<span class="math inline">\(\eta_i = \beta x_i\)</span>), et supposez qu’il y a séparation complète au sens où <span class="math inline">\(y_i=1\)</span> si <span class="math inline">\(x_i&gt;0\)</span> et <span class="math inline">\(y_i=0\)</span> si <span class="math inline">\(x_i&lt;0\)</span> (aucun <span class="math inline">\(x_i\)</span> n’est nul). Montrez que le score <span class="math inline">\(U(\beta) = \sum_i (y_i-\pi_i)x_i\)</span> est strictement positif pour toute valeur finie de <span class="math inline">\(\beta\)</span>, et concluez que l’estimateur du maximum de vraisemblance <span class="math inline">\(\hat\beta\)</span> n’existe pas (c’est-à-dire que <span class="math inline">\(\ell(\beta)\)</span> n’atteint son supremum qu’à la limite <span class="math inline">\(\beta\to\infty\)</span>).</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Fixons <span class="math inline">\(\beta\in\mathbb{R}\)</span> et examinons le terme <span class="math inline">\((y_i-\pi_i)x_i\)</span> pour chaque observation <span class="math inline">\(i\)</span>, où <span class="math inline">\(\pi_i = e^{\beta x_i}/(1+e^{\beta x_i}) \in (0,1)\)</span> pour tout <span class="math inline">\(\beta\)</span> fini.</p>
+<ul>
+<li>Si <span class="math inline">\(x_i&gt;0\)</span>, alors <span class="math inline">\(y_i=1\)</span> par hypothèse de séparation, donc <span class="math inline">\((y_i-\pi_i)x_i = (1-\pi_i)x_i\)</span>. Comme <span class="math inline">\(1-\pi_i&gt;0\)</span> et <span class="math inline">\(x_i&gt;0\)</span>, ce terme est strictement positif.</li>
+<li>Si <span class="math inline">\(x_i&lt;0\)</span>, alors <span class="math inline">\(y_i=0\)</span>, donc <span class="math inline">\((y_i-\pi_i)x_i = -\pi_i x_i\)</span>. Comme <span class="math inline">\(\pi_i&gt;0\)</span> et <span class="math inline">\(x_i&lt;0\)</span>, on a <span class="math inline">\(-\pi_i x_i&gt;0\)</span> : ce terme est aussi strictement positif.</li>
+</ul>
+<p>Chaque terme de la somme <span class="math inline">\(U(\beta)=\sum_i(y_i-\pi_i)x_i\)</span> est donc strictement positif, quel que soit <span class="math inline">\(\beta\in\mathbb{R}\)</span> fini, donc <span class="math inline">\(U(\beta)&gt;0\)</span> pour tout <span class="math inline">\(\beta\)</span>.</p>
+<p>Puisque <span class="math inline">\(U(\beta) = \ell'(\beta)\)</span>, la log-vraisemblance <span class="math inline">\(\ell\)</span> est strictement croissante sur tout <span class="math inline">\(\mathbb{R}\)</span> : elle n’a donc aucun point stationnaire (<span class="math inline">\(U(\beta)=0\)</span> n’a pas de solution finie), et <span class="math inline">\(\sup_{\beta\in\mathbb{R}} \ell(\beta) = \lim_{\beta\to\infty}\ell(\beta)\)</span>. Ce supremum n’est donc jamais atteint pour une valeur finie de <span class="math inline">\(\beta\)</span> : l’estimateur du maximum de vraisemblance <span class="math inline">\(\hat\beta\)</span> n’existe pas au sens usuel, ce qui confirme formellement, dans ce cas simple, le phénomène décrit qualitativement dans le chapitre.</p>
+</details>
+<p><strong>Exercice 4.</strong> On considère un modèle logistique à un seul prédicteur <span class="math inline">\(x\)</span> (sans ordonnée à l’origine, données individuelles <span class="math inline">\(m_i=1\)</span>), pour lequel l’information de Fisher est <span class="math inline">\(I(\beta) = \sum_{i=1}^n w_i x_i^2\)</span>, avec <span class="math inline">\(w_i=\pi_i(1-\pi_i)\)</span>. Supposons que les données présentent une séparation complète comme à l’exercice précédent, et que l’algorithme d’estimation s’arrête à une valeur <span class="math inline">\(\hat\beta\)</span> grande mais finie (à cause du critère d’arrêt numérique). Montrez que, pour <span class="math inline">\(x_i\neq 0\)</span> fixés, <span class="math inline">\(w_i\)</span> décroît <strong>exponentiellement</strong> vite vers <span class="math inline">\(0\)</span> quand <span class="math inline">\(\hat\beta\to\infty\)</span>, et expliquez pourquoi cela implique que la statistique de Wald <span class="math inline">\(z_{obs} = \hat\beta\sqrt{I(\hat\beta)}\)</span> tend vers <span class="math inline">\(0\)</span> plutôt que vers l’infini — c’est-à-dire le phénomène de Hauck-Donner.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Pour <span class="math inline">\(x_i&gt;0\)</span> fixé, <span class="math inline">\(\pi_i = \dfrac{1}{1+e^{-\hat\beta x_i}}\)</span>, donc <span class="math inline">\(1-\pi_i = \dfrac{e^{-\hat\beta x_i}}{1+e^{-\hat\beta x_i}} \approx e^{-\hat\beta x_i}\)</span> quand <span class="math inline">\(\hat\beta\to\infty\)</span> (puisque le dénominateur tend vers <span class="math inline">\(1\)</span>). Comme <span class="math inline">\(\pi_i\to 1\)</span>, on a <span class="math display">\[w_i = \pi_i(1-\pi_i) \approx e^{-\hat\beta x_i} \longrightarrow 0\]</span> à un taux <strong>exponentiel</strong> en <span class="math inline">\(\hat\beta\)</span>. Un calcul symétrique pour <span class="math inline">\(x_i&lt;0\)</span> donne <span class="math inline">\(w_i \approx e^{-\hat\beta|x_i|}\)</span>. Dans les deux cas, <span class="math inline">\(w_i\)</span> décroît exponentiellement vite vers <span class="math inline">\(0\)</span> quand <span class="math inline">\(\hat\beta\to\infty\)</span>, beaucoup plus vite que n’importe quelle décroissance polynomiale (en <span class="math inline">\(1/\hat\beta\)</span>, <span class="math inline">\(1/\hat\beta^2\)</span>, etc.).</p>
+<p>Par conséquent, <span class="math display">\[I(\hat\beta) = \sum_{i=1}^n w_i x_i^2 \approx \sum_{i=1}^n x_i^2\, e^{-\hat\beta|x_i|} \longrightarrow 0\]</span> également à un taux exponentiel. La statistique de Wald s’écrit <span class="math display">\[z_{obs} = \frac{\hat\beta}{\sqrt{\hat{\text{V}}(\hat\beta)}} = \hat\beta\sqrt{I(\hat\beta)}.\]</span> Même si <span class="math inline">\(\hat\beta\)</span> croît (de façon au plus polynomiale, voire logarithmique, puisqu’il est borné par le critère d’arrêt numérique), le facteur <span class="math inline">\(\sqrt{I(\hat\beta)}\)</span> décroît exponentiellement vite vers <span class="math inline">\(0\)</span>. Une décroissance exponentielle domine toujours une croissance polynomiale (ou plus lente) : le produit <span class="math inline">\(\hat\beta\sqrt{I(\hat\beta)}\)</span> tend donc vers <span class="math inline">\(0\)</span>, et non vers l’infini, même si l’effet réel <span class="math inline">\(\beta\)</span> est très grand. C’est exactement le phénomène de Hauck-Donner : plus la séparation est marquée (plus <span class="math inline">\(\hat\beta\)</span> est grand), plus la statistique de Wald <span class="math inline">\(z_{obs}\)</span> s’effondre vers <span class="math inline">\(0\)</span>, donnant l’illusion d’un effet non significatif.</p>
+</details>
+</section>
+</section>
+<section id="chapitre-4-modèles-linéaires-généralisés-glm" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="chapitre-4-modèles-linéaires-généralisés-glm"><span class="header-section-number">10.3</span> Chapitre 4 : Modèles linéaires généralisés (GLM)</h2>
+<section id="niveau-facile-2" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="niveau-facile-2"><span class="header-section-number">10.3.1</span> Niveau facile</h3>
+<p><strong>Exercice 1.</strong> Soit <span class="math inline">\(Y\sim\mathrm{Exp}(\lambda)\)</span> (loi exponentielle de taux <span class="math inline">\(\lambda&gt;0\)</span>), de densité <span class="math inline">\(f(y)=\lambda e^{-\lambda y}\)</span>, <span class="math inline">\(y&gt;0\)</span>. Mettez cette densité sous la forme de la famille exponentielle, identifiez <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span>, <span class="math inline">\(a(y,\phi)\)</span> et <span class="math inline">\(b(\theta)\)</span>, puis retrouvez <span class="math inline">\(E[Y]=1/\lambda\)</span> et <span class="math inline">\(Var[Y]=1/\lambda^2\)</span> à l’aide de <span class="math inline">\(b'(\theta)\)</span> et <span class="math inline">\(b''(\theta)\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>On écrit <span class="math inline">\(f(y) = \exp\{-\lambda y + \log\lambda\}\)</span>. En posant <span class="math inline">\(\theta=-\lambda\)</span> (donc <span class="math inline">\(\lambda=-\theta\)</span>), le terme <span class="math inline">\(-\lambda y = y\theta\)</span> et <span class="math inline">\(\log\lambda = \log(-\theta)\)</span>. On a donc <span class="math display">\[f(y) = \exp\{y\theta - b(\theta)\}, \qquad b(\theta) = -\log(-\theta), \qquad \phi=1, \qquad a(y,\phi)=1.\]</span></p>
+<p>On vérifie que <span class="math inline">\(b'(\theta) = -1/\theta\)</span> et <span class="math inline">\(b''(\theta) = 1/\theta^2\)</span>. En substituant <span class="math inline">\(\theta=-\lambda\)</span> : <span class="math display">\[E[Y] = b'(\theta) = -\frac{1}{-\lambda} = \frac{1}{\lambda}, \qquad Var[Y] = \phi\,b''(\theta) = \frac{1}{(-\lambda)^2} = \frac{1}{\lambda^2},\]</span> ce qui correspond bien aux moments usuels de la loi exponentielle. (On notera que <span class="math inline">\(b(\theta)=-\log(-\theta)\)</span> est la même fonction cumulante que pour la loi gamma, puisque la loi exponentielle est le cas particulier <span class="math inline">\(\alpha=1\)</span> de la gamma.)</p>
+</details>
+<p><strong>Exercice 2.</strong> Pour la loi binomiale, on a <span class="math inline">\(b(\theta) = m\log(1+e^\theta)\)</span>, où <span class="math inline">\(\theta=\mathrm{logit}(\pi)\)</span>. En calculant <span class="math inline">\(b'(\theta)\)</span> et <span class="math inline">\(b''(\theta)\)</span>, puis en substituant <span class="math inline">\(\pi=\mu/m\)</span> et <span class="math inline">\(1-\pi=(m-\mu)/m\)</span>, retrouvez la fonction de variance <span class="math inline">\(V(\mu) = \mu(m-\mu)/m\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>On a <span class="math inline">\(b'(\theta) = m\cdot\dfrac{e^\theta}{1+e^\theta} = m\pi = \mu\)</span>, et en dérivant une seconde fois (dérivée de la fonction logistique) : <span class="math display">\[b''(\theta) = m\pi(1-\pi).\]</span></p>
+<p>En substituant <span class="math inline">\(\pi = \mu/m\)</span> et <span class="math inline">\(1-\pi = (m-\mu)/m\)</span> : <span class="math display">\[V(\mu) = b''(\theta) = m\cdot\frac{\mu}{m}\cdot\frac{m-\mu}{m} = \frac{\mu(m-\mu)}{m}.\]</span></p>
+</details>
+<p><strong>Exercice 3.</strong> Pour la loi de Poisson, <span class="math inline">\(b(\theta) = e^\theta\)</span>. Un lien <span class="math inline">\(g\)</span> est dit canonique s’il satisfait <span class="math inline">\(g\{b'(u)\}=u\)</span> pour tout <span class="math inline">\(u\)</span>. Montrez que le lien canonique de la loi de Poisson est bien <span class="math inline">\(g(\mu)=\log(\mu)\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>On a <span class="math inline">\(b'(\theta) = e^\theta\)</span>. En posant <span class="math inline">\(\mu = b'(u) = e^u\)</span>, la condition de lien canonique <span class="math inline">\(g\{b'(u)\}=u\)</span> devient <span class="math inline">\(g(e^u) = u\)</span>. En posant <span class="math inline">\(\mu=e^u\)</span>, c’est-à-dire <span class="math inline">\(u = \log(\mu)\)</span>, on obtient <span class="math inline">\(g(\mu) = \log(\mu)\)</span>, ce qui est bien le lien canonique annoncé pour la loi de Poisson.</p>
+</details>
+</section>
+<section id="niveau-moyen-2" class="level3" data-number="10.3.2">
+<h3 data-number="10.3.2" class="anchored" data-anchor-id="niveau-moyen-2"><span class="header-section-number">10.3.2</span> Niveau moyen</h3>
+<p><strong>Exercice 1.</strong> On admet les deux identités générales de la théorie de la vraisemblance, appliquées ici au paramètre canonique <span class="math inline">\(\theta\)</span> : <span class="math inline">\(E\!\left[\dfrac{\partial\log f}{\partial\theta}\right]=0\)</span> et <span class="math inline">\(Var\!\left[\dfrac{\partial\log f}{\partial\theta}\right] = -E\!\left[\dfrac{\partial^2\log f}{\partial\theta^2}\right]\)</span>. En partant de <span class="math inline">\(\log f(y) = \log a(y,\phi) + (y\theta-b(\theta))/\phi\)</span>, utilisez ces deux identités pour retrouver <span class="math inline">\(E[Y]=b'(\theta)\)</span> et <span class="math inline">\(Var[Y]=\phi\,b''(\theta)\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>On calcule <span class="math inline">\(\dfrac{\partial\log f}{\partial\theta} = \dfrac{y-b'(\theta)}{\phi}\)</span>. La première identité donne <span class="math display">\[E\left[\frac{Y-b'(\theta)}{\phi}\right] = 0 \quad\Longrightarrow\quad E[Y] = b'(\theta).\]</span></p>
+<p>En dérivant une seconde fois, <span class="math inline">\(\dfrac{\partial^2\log f}{\partial\theta^2} = -\dfrac{b''(\theta)}{\phi}\)</span>, donc <span class="math inline">\(-E\!\left[\dfrac{\partial^2\log f}{\partial\theta^2}\right] = \dfrac{b''(\theta)}{\phi}\)</span>. La seconde identité donne <span class="math display">\[Var\left[\frac{Y-b'(\theta)}{\phi}\right] = \frac{Var[Y]}{\phi^2} = \frac{b''(\theta)}{\phi} \quad\Longrightarrow\quad Var[Y] = \phi\, b''(\theta).\]</span></p>
+</details>
+<p><strong>Exercice 2.</strong> En partant de la log-vraisemblance individuelle <span class="math inline">\(\ell_i(\theta_i) = \log a(y_i,\phi) + (y_i\theta_i-b(\theta_i))/\phi\)</span>, où <span class="math inline">\(\theta_i\)</span> dépend de <span class="math inline">\(\boldsymbol\beta\)</span> via <span class="math inline">\(\mu_i=g^{-1}(\eta_i)\)</span> puis <span class="math inline">\(\theta_i=(b')^{-1}(\mu_i)\)</span>, dérivez le score général <span class="math display">\[\frac{\partial\ell}{\partial\beta_j} = \frac{1}{\phi}\sum_{i=1}^n \frac{y_i-\mu_i}{V(\mu_i)\,g'(\mu_i)}\,X_{ij}\]</span> à l’aide de la règle de dérivation en chaîne <span class="math inline">\(\dfrac{\partial\ell_i}{\partial\beta_j} = \dfrac{\partial\ell_i}{\partial\theta_i}\cdot\dfrac{\partial\theta_i}{\partial\mu_i}\cdot\dfrac{\partial\mu_i}{\partial\eta_i}\cdot\dfrac{\partial\eta_i}{\partial\beta_j}\)</span>. Montrez ensuite que, pour le <strong>lien canonique</strong>, cette expression se simplifie en <span class="math inline">\(U(\boldsymbol\beta) = \boldsymbol{X}^\top(\boldsymbol y-\boldsymbol\mu)/\phi\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Chaque facteur de la règle en chaîne se calcule comme suit :</p>
+<ul>
+<li><span class="math inline">\(\dfrac{\partial\ell_i}{\partial\theta_i} = \dfrac{y_i-b'(\theta_i)}{\phi} = \dfrac{y_i-\mu_i}{\phi}\)</span> ;</li>
+<li>puisque <span class="math inline">\(\mu_i = b'(\theta_i)\)</span>, on a <span class="math inline">\(\dfrac{\partial\mu_i}{\partial\theta_i} = b''(\theta_i) = V(\mu_i)\)</span>, donc <span class="math inline">\(\dfrac{\partial\theta_i}{\partial\mu_i} = \dfrac{1}{V(\mu_i)}\)</span> ;</li>
+<li>puisque <span class="math inline">\(g(\mu_i)=\eta_i\)</span>, on a <span class="math inline">\(\dfrac{\partial\eta_i}{\partial\mu_i}=g'(\mu_i)\)</span>, donc <span class="math inline">\(\dfrac{\partial\mu_i}{\partial\eta_i} = \dfrac{1}{g'(\mu_i)}\)</span> ;</li>
+<li><span class="math inline">\(\dfrac{\partial\eta_i}{\partial\beta_j} = X_{ij}\)</span>.</li>
+</ul>
+<p>En multipliant les quatre facteurs, <span class="math display">\[\frac{\partial\ell_i}{\partial\beta_j} = \frac{y_i-\mu_i}{\phi}\cdot\frac{1}{V(\mu_i)}\cdot\frac{1}{g'(\mu_i)}\cdot X_{ij},\]</span> et en sommant sur <span class="math inline">\(i\)</span>, on obtient la formule annoncée.</p>
+<p><strong>Cas du lien canonique.</strong> Le lien canonique satisfait <span class="math inline">\(g=(b')^{-1}\)</span>, c’est-à-dire <span class="math inline">\(\theta = g(\mu)\)</span>. En dérivant <span class="math inline">\(\mu=b'\{g(\mu)\}=\mu\)</span> par rapport à <span class="math inline">\(\mu\)</span> (identité triviale), on obtient <span class="math inline">\(1 = b''\{g(\mu)\}\,g'(\mu) = V(\mu)\,g'(\mu)\)</span>, donc <span class="math inline">\(V(\mu)g'(\mu)=1\)</span>. En substituant dans le score général, le facteur <span class="math inline">\(1/\{V(\mu_i)g'(\mu_i)\}\)</span> vaut <span class="math inline">\(1\)</span> pour chaque <span class="math inline">\(i\)</span>, d’où <span class="math display">\[U(\boldsymbol\beta) = \frac{1}{\phi}\sum_{i=1}^n (y_i-\mu_i)X_{ij} \quad\Longrightarrow\quad \boldsymbol U(\boldsymbol\beta) = \frac{1}{\phi}\boldsymbol X^\top(\boldsymbol y-\boldsymbol\mu).\]</span></p>
+<p>Ceci explique pourquoi le score s’est simplifié de façon identique (à <span class="math inline">\(\phi\)</span> près) pour la régression logistique et la régression de Poisson vues aux chapitres précédents : les liens logit et log sont les liens canoniques de leurs lois respectives.</p>
+</details>
+<p><strong>Exercice 3.</strong> Pour la loi gamma, le lien canonique est <span class="math inline">\(g(\mu) = -1/\mu\)</span> et la fonction de variance est <span class="math inline">\(V(\mu)=\mu^2\)</span>. Vérifiez que <span class="math inline">\(V(\mu)\,g'(\mu) = 1\)</span>, conformément à la propriété générale établie à l’exercice précédent pour tout lien canonique.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>On a <span class="math inline">\(g(\mu) = -1/\mu = -\mu^{-1}\)</span>, donc <span class="math inline">\(g'(\mu) = \mu^{-2} = 1/\mu^2\)</span>. En multipliant par <span class="math inline">\(V(\mu)=\mu^2\)</span> : <span class="math display">\[V(\mu)\,g'(\mu) = \mu^2 \cdot \frac{1}{\mu^2} = 1,\]</span> ce qui confirme que le lien <span class="math inline">\(g(\mu)=-1/\mu\)</span> est bien le lien canonique de la loi gamma, et que le score associé a la forme simplifiée <span class="math inline">\(U(\boldsymbol\beta) = \boldsymbol X^\top(\boldsymbol y-\boldsymbol\mu)/\phi\)</span>.</p>
+</details>
+</section>
+<section id="niveau-difficile-2" class="level3" data-number="10.3.3">
+<h3 data-number="10.3.3" class="anchored" data-anchor-id="niveau-difficile-2"><span class="header-section-number">10.3.3</span> Niveau difficile</h3>
+<p><strong>Exercice 1.</strong> Le chapitre affirme, sans démonstration, que la loi asymptotique de <span class="math inline">\(\hat{\boldsymbol\beta}\)</span> a pour matrice de variance <span class="math inline">\(\phi\,(\boldsymbol X^\top\boldsymbol W\boldsymbol X)^{-1}\)</span>, où <span class="math inline">\(W_i = 1/\{V(\hat\mu_i)[g'(\hat\mu_i)]^2\}\)</span>. En partant du score général <span class="math display">\[U_j(\boldsymbol\beta) = \frac{1}{\phi}\sum_{i=1}^n \frac{y_i-\mu_i}{V(\mu_i)\,g'(\mu_i)}\,X_{ij}\]</span> dérivé à l’exercice moyen 2, et en utilisant le fait que <span class="math inline">\(E[Y_i-\mu_i]=0\)</span> pour annuler les termes où la dérivée tombe sur <span class="math inline">\(\mu_i\)</span> (information de Fisher <em>espérée</em>, plutôt qu’observée), montrez que <span class="math inline">\(I(\boldsymbol\beta) = -E\!\left[\dfrac{\partial\boldsymbol U}{\partial\boldsymbol\beta^\top}\right] = \dfrac{1}{\phi}\boldsymbol X^\top\boldsymbol W\boldsymbol X\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Posons <span class="math inline">\(D_i = 1/\{V(\mu_i)g'(\mu_i)\}\)</span>, de sorte que <span class="math inline">\(U_j(\boldsymbol\beta) = \frac1\phi\sum_i (y_i-\mu_i)D_i X_{ij}\)</span>. En dérivant par rapport à <span class="math inline">\(\beta_k\)</span>, et puisque <span class="math inline">\(\mu_i\)</span> (et donc <span class="math inline">\(D_i\)</span>) dépend de <span class="math inline">\(\boldsymbol\beta\)</span>, la règle du produit donne deux termes : <span class="math display">\[\frac{\partial U_j}{\partial\beta_k} = \frac1\phi\sum_i\left[-\frac{\partial\mu_i}{\partial\beta_k}D_i X_{ij} + (y_i-\mu_i)\frac{\partial D_i}{\partial\beta_k}X_{ij}\right].\]</span></p>
+<p>En prenant l’espérance, le second terme s’annule car <span class="math inline">\(E[y_i-\mu_i]=0\)</span> (et <span class="math inline">\(\partial D_i/\partial\beta_k\)</span> ne dépend pas de <span class="math inline">\(y_i\)</span>) : <span class="math display">\[E\left[\frac{\partial U_j}{\partial\beta_k}\right] = -\frac1\phi\sum_i D_i X_{ij}\,\frac{\partial\mu_i}{\partial\beta_k}.\]</span></p>
+<p>Par la règle en chaîne, <span class="math inline">\(\dfrac{\partial\mu_i}{\partial\beta_k} = \dfrac{\partial\mu_i}{\partial\eta_i}\cdot\dfrac{\partial\eta_i}{\partial\beta_k} = \dfrac{X_{ik}}{g'(\mu_i)}\)</span> (comme à l’exercice moyen 2). En substituant, <span class="math display">\[E\left[\frac{\partial U_j}{\partial\beta_k}\right] = -\frac1\phi\sum_i \frac{1}{V(\mu_i)g'(\mu_i)}\cdot\frac{1}{g'(\mu_i)}\,X_{ij}X_{ik} = -\frac1\phi\sum_i \frac{X_{ij}X_{ik}}{V(\mu_i)[g'(\mu_i)]^2}.\]</span></p>
+<p>En posant <span class="math inline">\(w_i = 1/\{V(\mu_i)[g'(\mu_i)]^2\}\)</span>, l’élément <span class="math inline">\((j,k)\)</span> de l’information de Fisher est <span class="math display">\[I_{jk}(\boldsymbol\beta) = -E\left[\frac{\partial U_j}{\partial\beta_k}\right] = \frac1\phi\sum_i w_i X_{ij}X_{ik},\]</span> ce qui correspond exactement à l’élément <span class="math inline">\((j,k)\)</span> de <span class="math inline">\(\frac1\phi \boldsymbol X^\top\boldsymbol W\boldsymbol X\)</span>, où <span class="math inline">\(\boldsymbol W=\mathrm{diag}(w_1,\ldots,w_n)\)</span>. Donc <span class="math inline">\(I(\boldsymbol\beta) = \frac1\phi\boldsymbol X^\top\boldsymbol W\boldsymbol X\)</span>, et <span class="math inline">\(\widehat{\text{Var}}(\hat{\boldsymbol\beta}) = I(\boldsymbol\beta)^{-1} = \phi\,(\boldsymbol X^\top\boldsymbol W\boldsymbol X)^{-1}\)</span>.</p>
+</details>
+<p><strong>Exercice 2.</strong> Démontrez formellement la convergence de la loi binomiale vers la loi de Poisson : si <span class="math inline">\(m\to\infty\)</span> et <span class="math inline">\(\pi\to 0\)</span> de sorte que <span class="math inline">\(\mu=m\pi\)</span> demeure fixe, montrez que, pour tout <span class="math inline">\(y\)</span> fixé, <span class="math display">\[\binom{m}{y}\pi^y(1-\pi)^{m-y} \longrightarrow \frac{e^{-\mu}\mu^y}{y!}.\]</span></p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>En substituant <span class="math inline">\(\pi=\mu/m\)</span> : <span class="math display">\[\binom{m}{y}\pi^y(1-\pi)^{m-y} = \frac{m(m-1)\cdots(m-y+1)}{y!}\left(\frac{\mu}{m}\right)^y\left(1-\frac{\mu}{m}\right)^{m-y} = \frac{\mu^y}{y!}\cdot\underbrace{\frac{m(m-1)\cdots(m-y+1)}{m^y}}_{(A)}\cdot\underbrace{\left(1-\frac{\mu}{m}\right)^{m-y}}_{(B)}.\]</span></p>
+<p><strong>Terme (A).</strong> Pour <span class="math inline">\(y\)</span> fixé, <span class="math display">\[\frac{m(m-1)\cdots(m-y+1)}{m^y} = \prod_{k=0}^{y-1}\left(1-\frac{k}{m}\right) \longrightarrow 1 \quad\text{quand } m\to\infty,\]</span> puisque chaque facteur tend vers <span class="math inline">\(1\)</span> et qu’il y en a un nombre fini (<span class="math inline">\(y\)</span> facteurs).</p>
+<p><strong>Terme (B).</strong> On écrit <span class="math inline">\((1-\mu/m)^{m-y} = (1-\mu/m)^m \cdot (1-\mu/m)^{-y}\)</span>. Le second facteur tend vers <span class="math inline">\(1\)</span> (car <span class="math inline">\(\mu/m\to 0\)</span>), et le premier est la limite classique <span class="math display">\[\left(1-\frac{\mu}{m}\right)^m \longrightarrow e^{-\mu} \quad\text{quand } m\to\infty.\]</span> Donc <span class="math inline">\((B) \to e^{-\mu}\)</span>.</p>
+<p>En combinant (A) et (B), <span class="math display">\[\binom{m}{y}\pi^y(1-\pi)^{m-y} \longrightarrow \frac{\mu^y}{y!}\cdot 1 \cdot e^{-\mu} = \frac{e^{-\mu}\mu^y}{y!},\]</span> ce qui est bien la fonction de masse de la loi <span class="math inline">\(\mathcal{P}(\mu)\)</span>.</p>
+</details>
+<p><strong>Exercice 3.</strong> Le test de surdispersion de <span class="math inline">\(H_0:\alpha=0\)</span> (Poisson) contre <span class="math inline">\(H_1:\alpha&gt;0\)</span> (binomiale négative) utilise la statistique <span class="math inline">\(Q=D_0-D_1\)</span>, dont la loi asymptotique sous <span class="math inline">\(H_0\)</span> est le mélange <span class="math inline">\(\frac12\chi^2_0+\frac12\chi^2_1\)</span> plutôt qu’une <span class="math inline">\(\chi^2_1\)</span> usuelle. Esquissez un argument justifiant ce résultat, sachant que : (i) l’estimateur du maximum de vraisemblance <em>non contraint</em> de <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\hat\alpha_{MV}\)</span>, serait asymptotiquement <span class="math inline">\(\mathcal N(0,v)\)</span> sous <span class="math inline">\(H_0\)</span> (par la théorie usuelle de la vraisemblance) ; (ii) <span class="math inline">\(\alpha\)</span> est en réalité contraint à <span class="math inline">\([0,\infty)\)</span>, de sorte que l’estimateur contraint est <span class="math inline">\(\hat\alpha^+=\max(\hat\alpha_{MV},0)\)</span> ; (iii) pour un paramètre scalaire non contraint, <span class="math inline">\(2\{\ell(\hat\alpha_{MV})-\ell(0)\} \overset{\cdot}{\sim} \chi^2_1\)</span> sous <span class="math inline">\(H_0\)</span>.</p>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p>Puisque <span class="math inline">\(\hat\alpha_{MV} \overset{\cdot}{\sim} \mathcal N(0,v)\)</span> sous <span class="math inline">\(H_0\)</span>, et que la loi normale est symétrique autour de <span class="math inline">\(0\)</span>, on a <span class="math inline">\(P(\hat\alpha_{MV}&gt;0) = P(\hat\alpha_{MV}&lt;0) = 1/2\)</span> (asymptotiquement).</p>
+<p><strong>Cas <span class="math inline">\(\hat\alpha_{MV} \leq 0\)</span> (probabilité <span class="math inline">\(\to 1/2\)</span>).</strong> L’estimateur contraint est alors <span class="math inline">\(\hat\alpha^+ = 0\)</span>, c’est-à-dire que le maximum de la log-vraisemblance sur <span class="math inline">\([0,\infty)\)</span> est atteint exactement à la frontière. La statistique <span class="math inline">\(Q = 2\{\ell(\hat\alpha^+)-\ell(0)\} = 2\{\ell(0)-\ell(0)\} = 0\)</span> dans ce cas : <span class="math inline">\(Q\)</span> prend la valeur <span class="math inline">\(0\)</span> avec probabilité <span class="math inline">\(\to 1/2\)</span>, ce qui correspond à la composante <span class="math inline">\(\chi^2_0\)</span> (loi dégénérée en <span class="math inline">\(0\)</span>) du mélange.</p>
+<p><strong>Cas <span class="math inline">\(\hat\alpha_{MV} &gt; 0\)</span> (probabilité <span class="math inline">\(\to 1/2\)</span>).</strong> La contrainte <span class="math inline">\(\alpha\geq 0\)</span> n’est alors pas active : <span class="math inline">\(\hat\alpha^+ = \hat\alpha_{MV}\)</span>, et <span class="math inline">\(Q = 2\{\ell(\hat\alpha_{MV})-\ell(0)\}\)</span> coïncide avec la statistique non contrainte, qui suit (conditionnellement à <span class="math inline">\(\hat\alpha_{MV}&gt;0\)</span>, mais la loi <span class="math inline">\(\chi^2_1\)</span> émerge aussi de cette moitié de la distribution normale) une loi <span class="math inline">\(\chi^2_1\)</span> par le résultat (iii).</p>
+<p>En combinant les deux cas, chacun de probabilité asymptotique <span class="math inline">\(1/2\)</span>, la loi de <span class="math inline">\(Q\)</span> sous <span class="math inline">\(H_0\)</span> est bien le mélange <span class="math display">\[Q \ \overset{\cdot}{\sim}\ \tfrac12\chi^2_0 + \tfrac12\chi^2_1,\]</span> c’est-à-dire une masse ponctuelle de poids <span class="math inline">\(1/2\)</span> en <span class="math inline">\(0\)</span>, et pour le reste, une loi <span class="math inline">\(\chi^2_1\)</span> de poids <span class="math inline">\(1/2\)</span>. Ceci explique pourquoi le seuil observé se calcule par <span class="math inline">\(\alpha^* = P(\chi^2_1&gt;Q_{obs})/2\)</span> plutôt que <span class="math inline">\(P(\chi^2_1&gt;Q_{obs})\)</span> : on ne retient que la moitié de la probabilité, celle associée au cas où la contrainte n’est pas active.</p>
+</details>
+<p><strong>Exercice 4.</strong> Avec le lien logit, on considère une observation future dont le prédicteur linéaire estimé est <span class="math inline">\(\hat\eta^*=3\)</span> avec <span class="math inline">\(\widehat{\text V}(\hat\eta^*)=4\)</span>. On utilise <span class="math inline">\(z_{0{,}025}=1{,}96\)</span>.</p>
+<ol type="a">
+<li><p>Construisez l’intervalle de confiance à 95% pour <span class="math inline">\(\eta^*\)</span>, puis transformez ses bornes par <span class="math inline">\(g^{-1}(\eta)=e^\eta/(1+e^\eta)\)</span> pour obtenir un intervalle pour <span class="math inline">\(\mu^*\)</span>. Vérifiez qu’il est contenu dans <span class="math inline">\([0,1]\)</span>.</p></li>
+<li><p>À l’aide de la méthode delta, montrez que <span class="math inline">\(\widehat{\text V}(\hat\mu^*) \approx [g^{-1\prime}(\hat\eta^*)]^2\,\widehat{\text V}(\hat\eta^*)\)</span>, calculez cette variance, puis construisez l’intervalle de Wald <em>directement</em> sur <span class="math inline">\(\hat\mu^*\)</span>. Que remarquez-vous ?</p></li>
+</ol>
+<details class="solution">
+<summary>
+Solution
+</summary>
+<p><strong>a)</strong> L’intervalle pour <span class="math inline">\(\eta^*\)</span> est <span class="math inline">\([3-1{,}96\times 2;\ 3+1{,}96\times 2] = [-0{,}92;\ 6{,}92]\)</span>. En appliquant <span class="math inline">\(g^{-1}(\eta)=e^\eta/(1+e^\eta)\)</span> aux deux bornes : <span class="math display">\[g^{-1}(-0{,}92) \approx 0{,}285, \qquad g^{-1}(6{,}92) \approx 0{,}999.\]</span> L’intervalle obtenu pour <span class="math inline">\(\mu^*\)</span>, <span class="math inline">\([0{,}285;\ 0{,}999]\)</span>, est bien contenu dans <span class="math inline">\([0,1]\)</span> — et ce sera toujours le cas, puisque <span class="math inline">\(g^{-1}\)</span> prend ses valeurs dans <span class="math inline">\((0,1)\)</span> par construction, quelles que soient les bornes de l’intervalle sur <span class="math inline">\(\eta^*\)</span>.</p>
+<p><strong>b)</strong> La méthode delta donne, pour une transformation <span class="math inline">\(h\)</span> dérivable, <span class="math inline">\(Var[h(\hat\eta^*)] \approx [h'(\hat\eta^*)]^2\,Var[\hat\eta^*]\)</span> ; avec <span class="math inline">\(h=g^{-1}\)</span>, on obtient <span class="math inline">\(\widehat{\text V}(\hat\mu^*) \approx [g^{-1\prime}(\hat\eta^*)]^2\,\widehat{\text V}(\hat\eta^*)\)</span>. Puisque <span class="math inline">\(g^{-1\prime}(\eta) = \pi(1-\pi)\)</span> avec <span class="math inline">\(\pi=g^{-1}(\eta)\)</span> (propriété de la fonction logistique, voir chapitre 3), et <span class="math inline">\(\hat\mu^*=g^{-1}(3)\approx 0{,}953\)</span> : <span class="math display">\[g^{-1\prime}(3) = 0{,}953\times(1-0{,}953) \approx 0{,}0448.\]</span> D’où <span class="math inline">\(\widehat{\text V}(\hat\mu^*) \approx (0{,}0448)^2\times 4 \approx 0{,}00803\)</span>, et <span class="math inline">\(\sqrt{\widehat{\text V}(\hat\mu^*)}\approx 0{,}0896\)</span>.</p>
+<p>L’intervalle de Wald direct sur <span class="math inline">\(\hat\mu^*\)</span> est alors <span class="math display">\[[0{,}953 - 1{,}96\times 0{,}0896;\ 0{,}953+1{,}96\times 0{,}0896] \approx [0{,}777;\ 1{,}129].\]</span></p>
+<p>La borne supérieure, <span class="math inline">\(1{,}129\)</span>, <strong>dépasse <span class="math inline">\(1\)</span></strong> : cet intervalle n’est pas valide pour une probabilité. Ceci illustre concrètement pourquoi on préfère toujours construire l’intervalle sur l’échelle du prédicteur linéaire <span class="math inline">\(\eta^*\)</span> (sans borne) avant de transformer ses bornes par <span class="math inline">\(g^{-1}\)</span>, plutôt que d’appliquer la méthode delta directement sur <span class="math inline">\(\hat\mu^*\)</span> : la première approche respecte automatiquement le domaine <span class="math inline">\((0,1)\)</span> de <span class="math inline">\(\mu^*\)</span>, contrairement à la seconde.</p>
+</details>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const gifs = {
+    "index":                              "index_plot.gif",
+    "01-regression-lineaire":             "lineaire_plot.gif",
+    "02-regression-logistique":           "logit_plot.gif",
+    "03-modeles-lineaires-generalises":   "glm_plot.gif",
+    "04-prediction-validation-croisee":   "cv_plot.gif",
+    "05-selection-regularisation":        "regularisation_plot.gif",
+    "06-knn-noyau":                       "knn_noyau_plot.gif",
+    "07-splines":                         "splines_plot.gif",
+    "08-gam":                             "gam_plot.gif"
+  };
+
+  let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
+  if (page === "") page = "index";
+
+  const gif = gifs[page];
+  if (gif) {
+    // Date.now() change à chaque chargement de page → force le rechargement du gif
+    logo.src = logo.src.replace(/[^/]+$/, gif) + "?v=" + Date.now();
+  }
+});
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./08-gam.html" class="pagination-link" aria-label="Modèles additifs et modèles additifs généralisés (GAM)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Notes de cours STT-4300</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/exercices.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

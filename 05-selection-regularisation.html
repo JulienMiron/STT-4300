@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>5&nbsp; Sélection de variables et régularisation – Régression II -- STT-4300</title>
+<title>6&nbsp; Sélection de variables et régularisation – Régression II -- STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -173,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-selection-regularisation.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-selection-regularisation.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -219,44 +219,50 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
     </ul>
@@ -269,20 +275,20 @@ window.Quarto = {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#sélection-de-variables-rappel" id="toc-sélection-de-variables-rappel" class="nav-link active" data-scroll-target="#sélection-de-variables-rappel"><span class="header-section-number">5.1</span> Sélection de variables : rappel</a></li>
-  <li><a href="#régression-régularisée" id="toc-régression-régularisée" class="nav-link" data-scroll-target="#régression-régularisée"><span class="header-section-number">5.2</span> Régression régularisée</a>
+  <li><a href="#sélection-de-variables-rappel" id="toc-sélection-de-variables-rappel" class="nav-link active" data-scroll-target="#sélection-de-variables-rappel"><span class="header-section-number">6.1</span> Sélection de variables : rappel</a></li>
+  <li><a href="#régression-régularisée" id="toc-régression-régularisée" class="nav-link" data-scroll-target="#régression-régularisée"><span class="header-section-number">6.2</span> Régression régularisée</a>
   <ul class="collapse">
-  <li><a href="#régression-ridge" id="toc-régression-ridge" class="nav-link" data-scroll-target="#régression-ridge"><span class="header-section-number">5.2.1</span> Régression ridge</a></li>
-  <li><a href="#régression-lasso" id="toc-régression-lasso" class="nav-link" data-scroll-target="#régression-lasso"><span class="header-section-number">5.2.2</span> Régression lasso</a></li>
-  <li><a href="#interprétation-géométrique" id="toc-interprétation-géométrique" class="nav-link" data-scroll-target="#interprétation-géométrique"><span class="header-section-number">5.2.3</span> Interprétation géométrique</a></li>
-  <li><a href="#trajectoires-des-coefficients" id="toc-trajectoires-des-coefficients" class="nav-link" data-scroll-target="#trajectoires-des-coefficients"><span class="header-section-number">5.2.4</span> Trajectoires des coefficients</a></li>
-  <li><a href="#sec-choix-lambda" id="toc-sec-choix-lambda" class="nav-link" data-scroll-target="#sec-choix-lambda"><span class="header-section-number">5.2.5</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></a></li>
+  <li><a href="#régression-ridge" id="toc-régression-ridge" class="nav-link" data-scroll-target="#régression-ridge"><span class="header-section-number">6.2.1</span> Régression ridge</a></li>
+  <li><a href="#régression-lasso" id="toc-régression-lasso" class="nav-link" data-scroll-target="#régression-lasso"><span class="header-section-number">6.2.2</span> Régression lasso</a></li>
+  <li><a href="#interprétation-géométrique" id="toc-interprétation-géométrique" class="nav-link" data-scroll-target="#interprétation-géométrique"><span class="header-section-number">6.2.3</span> Interprétation géométrique</a></li>
+  <li><a href="#trajectoires-des-coefficients" id="toc-trajectoires-des-coefficients" class="nav-link" data-scroll-target="#trajectoires-des-coefficients"><span class="header-section-number">6.2.4</span> Trajectoires des coefficients</a></li>
+  <li><a href="#sec-choix-lambda" id="toc-sec-choix-lambda" class="nav-link" data-scroll-target="#sec-choix-lambda"><span class="header-section-number">6.2.5</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></a></li>
   </ul></li>
-  <li><a href="#sec-regularisation-logistique" id="toc-sec-regularisation-logistique" class="nav-link" data-scroll-target="#sec-regularisation-logistique"><span class="header-section-number">5.3</span> Régularisation en régression logistique</a>
+  <li><a href="#sec-regularisation-logistique" id="toc-sec-regularisation-logistique" class="nav-link" data-scroll-target="#sec-regularisation-logistique"><span class="header-section-number">6.3</span> Régularisation en régression logistique</a>
   <ul class="collapse">
-  <li><a href="#log-vraisemblance-pénalisée" id="toc-log-vraisemblance-pénalisée" class="nav-link" data-scroll-target="#log-vraisemblance-pénalisée"><span class="header-section-number">5.3.1</span> Log-vraisemblance pénalisée</a></li>
-  <li><a href="#estimation" id="toc-estimation" class="nav-link" data-scroll-target="#estimation"><span class="header-section-number">5.3.2</span> Estimation</a></li>
-  <li><a href="#choix-de-lambda" id="toc-choix-de-lambda" class="nav-link" data-scroll-target="#choix-de-lambda"><span class="header-section-number">5.3.3</span> Choix de <span class="math inline">\(\lambda\)</span></a></li>
+  <li><a href="#log-vraisemblance-pénalisée" id="toc-log-vraisemblance-pénalisée" class="nav-link" data-scroll-target="#log-vraisemblance-pénalisée"><span class="header-section-number">6.3.1</span> Log-vraisemblance pénalisée</a></li>
+  <li><a href="#estimation" id="toc-estimation" class="nav-link" data-scroll-target="#estimation"><span class="header-section-number">6.3.2</span> Estimation</a></li>
+  <li><a href="#choix-de-lambda" id="toc-choix-de-lambda" class="nav-link" data-scroll-target="#choix-de-lambda"><span class="header-section-number">6.3.3</span> Choix de <span class="math inline">\(\lambda\)</span></a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/05-selection-regularisation.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
@@ -292,7 +298,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-regularisation" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></h1>
+<h1 class="title"><span id="sec-regularisation" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></h1>
 </div>
 
 
@@ -304,7 +310,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">30 septembre 2026</p>
+      <p class="date-modified">1 octobre 2026</p>
     </div>
   </div>
     
@@ -315,8 +321,8 @@ window.Quarto = {
 </header>
 
 
-<section id="sélection-de-variables-rappel" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="sélection-de-variables-rappel"><span class="header-section-number">5.1</span> Sélection de variables : rappel</h2>
+<section id="sélection-de-variables-rappel" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="sélection-de-variables-rappel"><span class="header-section-number">6.1</span> Sélection de variables : rappel</h2>
 <p>Les chapitres précédents ont présenté deux familles d’outils de sélection de variables :</p>
 <ul>
 <li><p>les <strong>tests pour modèles emboîtés</strong> (test <span class="math inline">\(F\)</span> en régression linéaire, différence de déviances pour les GLM) ;</p></li>
@@ -324,8 +330,8 @@ window.Quarto = {
 </ul>
 <p>La régression régularisée, présentée ci-dessous, offre une troisième approche qui effectue simultanément l’estimation et (pour le lasso) la sélection de variables.</p>
 </section>
-<section id="régression-régularisée" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="régression-régularisée"><span class="header-section-number">5.2</span> Régression régularisée</h2>
+<section id="régression-régularisée" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="régression-régularisée"><span class="header-section-number">6.2</span> Régression régularisée</h2>
 <p>Considérons le modèle de régression <span class="math display">\[Y_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip} + \epsilon_i, \qquad \epsilon_i \sim \mathcal{N}(0,\sigma^2).\]</span> L’estimateur des moindres carrés <span class="math inline">\(\hat\beta\)</span> est sans biais et de variance minimale parmi les estimateurs sans biais. Cependant, rien ne garantit qu’il possède la plus petite <strong>erreur quadratique moyenne</strong> : <span class="math display">\[E\left[(\beta_j - \hat\beta_j)^2\right] = \mbox{biais}(\hat\beta_j)^2 + Var(\hat\beta_j).\]</span></p>
 <p>La régression régularisée impose une pénalité au critère des moindres carrés : on minimise <span class="math display">\[l_\lambda(\beta) = l(\beta) + \lambda\, g(\beta_1,\ldots,\beta_p),\]</span> où <span class="math inline">\(g\)</span> est une fonction de pénalité connue et <span class="math inline">\(\lambda \geq 0\)</span> est le <strong>coefficient de pénalité</strong>. La pénalité <strong>réduit la variance</strong> des estimateurs au prix d’un <strong>biais</strong> ; avec un choix judicieux de <span class="math inline">\(g\)</span> et de <span class="math inline">\(\lambda\)</span>, on diminue l’erreur quadratique moyenne et on obtient des prédictions plus précises. C’est le <strong>compromis biais-variance</strong>.</p>
 <div class="env-remarque">
@@ -384,8 +390,8 @@ CRBI    0.86   0.95  0.95  0.95 1.00</code></pre>
 <p>À cause de cette asymétrie, on modélise souvent <span class="math inline">\(\log(\texttt{Salary})\)</span> plutôt que <code>Salary</code>. On conserve ici le salaire sur son échelle d’origine, comme dans <span class="citation" data-cites="james2021">(<a href="#ref-james2021" role="doc-biblioref"><strong>james2021?</strong></a>)</span>, pour que les erreurs test rapportées dans les exemples soient comparables à celles de cet ouvrage.</p>
 </div>
 </div>
-<section id="régression-ridge" class="level3" data-number="5.2.1">
-<h3 data-number="5.2.1" class="anchored" data-anchor-id="régression-ridge"><span class="header-section-number">5.2.1</span> Régression ridge</h3>
+<section id="régression-ridge" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="régression-ridge"><span class="header-section-number">6.2.1</span> Régression ridge</h3>
 <p>La régression ridge minimise <span class="math display">\[l^{(R)}_\lambda(\beta) = \sum_{i=1}^n\left\{Y_i - (\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip})\right\}^2 + \lambda\sum_{j=1}^p\beta_j^2.\]</span> En écriture matricielle, <span class="math inline">\(l^{(R)}_\lambda(\beta) = (Y - X\beta)^\top(Y-X\beta) + \lambda\,\beta^\top\tilde I_p\,\beta\)</span>, où <span class="math inline">\(\tilde I_p\)</span> est diagonale de taille <span class="math inline">\(p+1\)</span> avec un 0 en première position (pas de pénalité sur <span class="math inline">\(\beta_0\)</span>) et des 1 ailleurs. La solution est explicite : <span class="math display">\[\boxed{\hat\beta^{(R)}_\lambda = (X^\top X + \lambda\tilde I_p)^{-1}X^\top Y}\]</span> et on en déduit</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -403,7 +409,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>grille.lambda <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">10</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">100</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>reg.ridge <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">0</span>, <span class="at">lambda =</span> grille.lambda)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>On retient <span class="math inline">\(\lambda = e^{5{,}44}\)</span>, valeur choisie par validation croisée ; cette méthode est présentée plus bas, à la <a href="#sec-choix-lambda" class="quarto-xref"><span>Section 5.2.5</span></a>. Cette valeur s’entend au sens de <code>glmnet</code> (voir la remarque qui suit l’exemple).</p>
+<p>On retient <span class="math inline">\(\lambda = e^{5{,}44}\)</span>, valeur choisie par validation croisée ; cette méthode est présentée plus bas, à la <a href="#sec-choix-lambda" class="quarto-xref"><span>Section 6.2.5</span></a>. Cette valeur s’entend au sens de <code>glmnet</code> (voir la remarque qui suit l’exemple).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>reg.mc <span class="ot">&lt;-</span> <span class="fu">lm</span>(Salary <span class="sc">~</span> ., <span class="at">data =</span> Hitters)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>coef.mc <span class="ot">&lt;-</span> <span class="fu">coef</span>(reg.mc)[<span class="sc">-</span><span class="dv">1</span>]</span>
@@ -559,13 +565,13 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <p>Sur l’échantillon d’entraînement, la validation croisée retient <span class="math inline">\(\lambda = e^{5{,}72}\)</span>. L’erreur quadratique moyenne test vaut alors 168 593 pour les moindres carrés et 140 082 pour ridge, soit une diminution de 16,9 %. À titre de référence, le modèle nul, qui ignore toutes les variables explicatives, donne 224 670.</p>
 </div>
 </section>
-<section id="régression-lasso" class="level3" data-number="5.2.2">
-<h3 data-number="5.2.2" class="anchored" data-anchor-id="régression-lasso"><span class="header-section-number">5.2.2</span> Régression lasso</h3>
+<section id="régression-lasso" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="régression-lasso"><span class="header-section-number">6.2.2</span> Régression lasso</h3>
 <p>La régression lasso minimise <span class="math display">\[l^{(L)}_\lambda(\beta) = \sum_{i=1}^n\left\{Y_i - (\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip})\right\}^2 + \lambda\sum_{j=1}^p|\beta_j|.\]</span> Il n’existe pas d’expression explicite pour <span class="math inline">\(\hat\beta^{(L)}_\lambda\)</span>, mais des algorithmes d’optimisation efficaces existent (en R : <code>glmnet(x, y, alpha=1)</code>).</p>
 <p>La caractéristique clé du lasso : pour les grandes valeurs de <span class="math inline">\(\lambda\)</span>, certains coefficients <span class="math inline">\(\hat\beta^{(L)}_{j,\lambda}\)</span> deviennent <strong>identiquement égaux à 0</strong>. Le lasso effectue donc une <strong>sélection de variables</strong> automatique, intuitive et naturelle. Comme pour ridge : quand <span class="math inline">\(\lambda\)</span> croît, le biais croît et la variance diminue.</p>
 <div class="env-exemple" data-titre="Lasso sur [`Hitters`](#data-hitters)">
 <p><span class="env-titre">Exemple — Lasso sur <a href="#data-hitters"><code>Hitters</code></a></span></p>
-<p>On ajuste le lasso avec <code>glmnet(x, y, alpha = 1)</code> sur la même grille, avec <span class="math inline">\(\lambda = e^{0{,}98}\)</span>, là aussi choisi par validation croisée (<a href="#sec-choix-lambda" class="quarto-xref"><span>Section 5.2.5</span></a>).</p>
+<p>On ajuste le lasso avec <code>glmnet(x, y, alpha = 1)</code> sur la même grille, avec <span class="math inline">\(\lambda = e^{0{,}98}\)</span>, là aussi choisi par validation croisée (<a href="#sec-choix-lambda" class="quarto-xref"><span>Section 6.2.5</span></a>).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>reg.lasso <span class="ot">&lt;-</span> <span class="fu">glmnet</span>(x, y, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">lambda =</span> grille.lambda)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -597,7 +603,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 </div>
 </div>
 <p>L’erreur test du lasso vaut 144 218, contre 140 082 pour ridge et 168 593 pour les moindres carrés.</p>
-<p>La <a href="#fig-hitters-erreur-test" class="quarto-xref">Figure&nbsp;<span>5.1</span></a> montre l’erreur test en fonction de <span class="math inline">\(\log\lambda\)</span> pour les deux méthodes. Lorsque <span class="math inline">\(\lambda\)</span> est petit, les deux estimateurs sont proches des moindres carrés : la variance domine. Lorsque <span class="math inline">\(\lambda\)</span> est grand, tous les coefficients sont nuls ou presque, et l’erreur rejoint celle du modèle nul : le biais domine. Entre les deux, la courbe en U illustre le compromis biais-variance. Le lasso rejoint le modèle nul pour une valeur finie de <span class="math inline">\(\lambda\)</span>, où tous ses coefficients s’annulent, alors que ridge ne s’en approche qu’asymptotiquement.</p>
+<p>La <a href="#fig-hitters-erreur-test" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> montre l’erreur test en fonction de <span class="math inline">\(\log\lambda\)</span> pour les deux méthodes. Lorsque <span class="math inline">\(\lambda\)</span> est petit, les deux estimateurs sont proches des moindres carrés : la variance domine. Lorsque <span class="math inline">\(\lambda\)</span> est grand, tous les coefficients sont nuls ou presque, et l’erreur rejoint celle du modèle nul : le biais domine. Entre les deux, la courbe en U illustre le compromis biais-variance. Le lasso rejoint le modèle nul pour une valeur finie de <span class="math inline">\(\lambda\)</span>, où tous ses coefficients s’annulent, alors que ridge ne s’en approche qu’asymptotiquement.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -631,7 +637,7 @@ Var[\hat\beta^{(R)}_\lambda] &amp;= \sigma^2(X^\top X + \lambda\tilde I_p)^{-1}X
 <img src="05-selection-regularisation_files/figure-html/fig-hitters-erreur-test-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hitters-erreur-test-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.1: Erreur quadratique moyenne test en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge et le lasso sur les données <code>Hitters</code>. Les lignes verticales indiquent les valeurs de <span class="math inline">\(\lambda\)</span> choisies par validation croisée sur l’échantillon d’entraînement ; les lignes horizontales donnent l’erreur des moindres carrés (tirets) et celle du modèle nul (pointillés).
+Figure&nbsp;6.1: Erreur quadratique moyenne test en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge et le lasso sur les données <code>Hitters</code>. Les lignes verticales indiquent les valeurs de <span class="math inline">\(\lambda\)</span> choisies par validation croisée sur l’échantillon d’entraînement ; les lignes horizontales donnent l’erreur des moindres carrés (tirets) et celle du modèle nul (pointillés).
 </figcaption>
 </figure>
 </div>
@@ -639,8 +645,8 @@ Figure&nbsp;5.1: Erreur quadratique moyenne test en fonction de <span class="mat
 </div>
 </div>
 </section>
-<section id="interprétation-géométrique" class="level3" data-number="5.2.3">
-<h3 data-number="5.2.3" class="anchored" data-anchor-id="interprétation-géométrique"><span class="header-section-number">5.2.3</span> Interprétation géométrique</h3>
+<section id="interprétation-géométrique" class="level3" data-number="6.2.3">
+<h3 data-number="6.2.3" class="anchored" data-anchor-id="interprétation-géométrique"><span class="header-section-number">6.2.3</span> Interprétation géométrique</h3>
 <div class="env-propriete" data-titre="Formulation sous contrainte">
 <p><span class="env-titre">Propriété — Formulation sous contrainte</span></p>
 <p>Pour chaque <span class="math inline">\(\lambda \geq 0\)</span>, il existe une valeur <span class="math inline">\(s \geq 0\)</span> (qui dépend des données) telle que l’estimateur ridge est solution de</p>
@@ -654,7 +660,7 @@ Figure&nbsp;5.1: Erreur quadratique moyenne test en fonction de <span class="mat
 \]</span></p>
 <p>Une grande valeur de <span class="math inline">\(\lambda\)</span> correspond à une petite valeur de <span class="math inline">\(s\)</span>.</p>
 </div>
-<p>Lorsque les variables explicatives sont centrées, la somme des carrés résiduels s’écrit, à une constante près, <span class="math inline">\((\beta - \hat\beta)^\top X^\top X(\beta - \hat\beta)\)</span> : ses courbes de niveau sont des ellipses centrées en l’estimateur des moindres carrés <span class="math inline">\(\hat\beta\)</span>. Avec <span class="math inline">\(p = 2\)</span>, on peut donc représenter le problème dans le plan <span class="math inline">\((\beta_1, \beta_2)\)</span> (<a href="#fig-geometrie-ridge-lasso" class="quarto-xref">Figure&nbsp;<span>5.2</span></a>). La région admissible est un disque pour ridge et un losange pour le lasso, et la solution est le point où l’ellipse de plus petit niveau touche la région admissible.</p>
+<p>Lorsque les variables explicatives sont centrées, la somme des carrés résiduels s’écrit, à une constante près, <span class="math inline">\((\beta - \hat\beta)^\top X^\top X(\beta - \hat\beta)\)</span> : ses courbes de niveau sont des ellipses centrées en l’estimateur des moindres carrés <span class="math inline">\(\hat\beta\)</span>. Avec <span class="math inline">\(p = 2\)</span>, on peut donc représenter le problème dans le plan <span class="math inline">\((\beta_1, \beta_2)\)</span> (<a href="#fig-geometrie-ridge-lasso" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>). La région admissible est un disque pour ridge et un losange pour le lasso, et la solution est le point où l’ellipse de plus petit niveau touche la région admissible.</p>
 <p>Le losange possède des coins situés sur les axes. Lorsque le contact se fait en un coin, l’un des coefficients est exactement nul. Le disque n’a pas de coin : le contact se fait presque toujours hors des axes, si bien que ridge rétrécit les coefficients sans jamais les annuler. En dimension <span class="math inline">\(p\)</span>, la région du lasso est un polyèdre dont les sommets et les arêtes se trouvent sur des sous-espaces de coordonnées, ce qui explique que plusieurs coefficients puissent être annulés simultanément.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -664,16 +670,16 @@ Figure&nbsp;5.1: Erreur quadratique moyenne test en fonction de <span class="mat
 <img src="05-selection-regularisation_files/figure-html/fig-geometrie-ridge-lasso-1.png" class="img-fluid figure-img" width="768">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-geometrie-ridge-lasso-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.2: Courbes de niveau de la somme des carrés résiduels (ellipses centrées en <span class="math inline">\(\hat\beta\)</span>) et régions admissibles de ridge (disque) et du lasso (losange). Le point bleu est l’estimateur régularisé : le lasso atteint un coin du losange, où <span class="math inline">\(\hat\beta_1 = 0\)</span>.
+Figure&nbsp;6.2: Courbes de niveau de la somme des carrés résiduels (ellipses centrées en <span class="math inline">\(\hat\beta\)</span>) et régions admissibles de ridge (disque) et du lasso (losange). Le point bleu est l’estimateur régularisé : le lasso atteint un coin du losange, où <span class="math inline">\(\hat\beta_1 = 0\)</span>.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="trajectoires-des-coefficients" class="level3" data-number="5.2.4">
-<h3 data-number="5.2.4" class="anchored" data-anchor-id="trajectoires-des-coefficients"><span class="header-section-number">5.2.4</span> Trajectoires des coefficients</h3>
-<p>Une autre représentation classique consiste à tracer les estimations <span class="math inline">\(\hat\beta_{j,\lambda}\)</span> en fonction de <span class="math inline">\(\log\lambda\)</span> (<a href="#fig-trajectoires-hitters" class="quarto-xref">Figure&nbsp;<span>5.3</span></a>). Pour ridge, toutes les trajectoires tendent doucement vers 0 sans jamais l’atteindre : l’axe du haut, qui indique le nombre de coefficients non nuls, reste à 19. Pour le lasso, les trajectoires atteignent 0 l’une après l’autre à mesure que <span class="math inline">\(\lambda\)</span> augmente, et le nombre de variables retenues diminue.</p>
+<section id="trajectoires-des-coefficients" class="level3" data-number="6.2.4">
+<h3 data-number="6.2.4" class="anchored" data-anchor-id="trajectoires-des-coefficients"><span class="header-section-number">6.2.4</span> Trajectoires des coefficients</h3>
+<p>Une autre représentation classique consiste à tracer les estimations <span class="math inline">\(\hat\beta_{j,\lambda}\)</span> en fonction de <span class="math inline">\(\log\lambda\)</span> (<a href="#fig-trajectoires-hitters" class="quarto-xref">Figure&nbsp;<span>6.3</span></a>). Pour ridge, toutes les trajectoires tendent doucement vers 0 sans jamais l’atteindre : l’axe du haut, qui indique le nombre de coefficients non nuls, reste à 19. Pour le lasso, les trajectoires atteignent 0 l’une après l’autre à mesure que <span class="math inline">\(\lambda\)</span> augmente, et le nombre de variables retenues diminue.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -694,15 +700,15 @@ Figure&nbsp;5.2: Courbes de niveau de la somme des carrés résiduels (ellipses 
 <img src="05-selection-regularisation_files/figure-html/fig-trajectoires-hitters-1.png" class="img-fluid figure-img" width="864">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-trajectoires-hitters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.3: Trajectoires des coefficients estimés en fonction de <span class="math inline">\(\log\lambda\)</span> pour les données <code>Hitters</code>. Chaque courbe correspond à une variable explicative ; l’axe du haut donne le nombre de coefficients non nuls.
+Figure&nbsp;6.3: Trajectoires des coefficients estimés en fonction de <span class="math inline">\(\log\lambda\)</span> pour les données <code>Hitters</code>. Chaque courbe correspond à une variable explicative ; l’axe du haut donne le nombre de coefficients non nuls.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="sec-choix-lambda" class="level3" data-number="5.2.5">
-<h3 data-number="5.2.5" class="anchored" data-anchor-id="sec-choix-lambda"><span class="header-section-number">5.2.5</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></h3>
+<section id="sec-choix-lambda" class="level3" data-number="6.2.5">
+<h3 data-number="6.2.5" class="anchored" data-anchor-id="sec-choix-lambda"><span class="header-section-number">6.2.5</span> Sélection du paramètre <span class="math inline">\(\lambda\)</span></h3>
 <p>La méthode la plus intuitive est basée sur le taux d’erreur test, estimé par validation croisée pour une grille de valeurs de <span class="math inline">\(\lambda\)</span> ; on choisit la valeur qui minimise le taux d’erreur test. C’est ainsi qu’ont été choisies les valeurs de <span class="math inline">\(\lambda\)</span> utilisées dans les exemples précédents. En R, avec les objets <code>x</code>, <code>y</code> et <code>grille.lambda</code> définis plus haut :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
@@ -719,11 +725,11 @@ Figure&nbsp;5.3: Trajectoires des coefficients estimés en fonction de <span cla
 <p>Sur les données <code>Hitters</code>, on obtient <span class="math inline">\(\lambda = e^{5{,}44}\)</span> pour ridge et <span class="math inline">\(\lambda = e^{0{,}98}\)</span> pour le lasso.</p>
 </section>
 </section>
-<section id="sec-regularisation-logistique" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="sec-regularisation-logistique"><span class="header-section-number">5.3</span> Régularisation en régression logistique</h2>
+<section id="sec-regularisation-logistique" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="sec-regularisation-logistique"><span class="header-section-number">6.3</span> Régularisation en régression logistique</h2>
 <p>Les idées précédentes s’étendent directement aux GLM. En régression logistique, la régularisation est utile pour deux raisons. D’abord, comme en régression linéaire, elle réduit la variance des estimateurs lorsque le nombre de variables explicatives est grand par rapport à l’information disponible (en régression logistique, c’est surtout le nombre d’événements du groupe le plus rare qui compte). Ensuite, elle règle le problème de la <a href="02-regression-logistique.html#sec-separation">séparation</a> : alors que l’estimateur du maximum de vraisemblance n’existe pas en présence de séparation, l’estimateur régularisé existe toujours.</p>
-<section id="log-vraisemblance-pénalisée" class="level3" data-number="5.3.1">
-<h3 data-number="5.3.1" class="anchored" data-anchor-id="log-vraisemblance-pénalisée"><span class="header-section-number">5.3.1</span> Log-vraisemblance pénalisée</h3>
+<section id="log-vraisemblance-pénalisée" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="log-vraisemblance-pénalisée"><span class="header-section-number">6.3.1</span> Log-vraisemblance pénalisée</h3>
 <p>Le critère des moindres carrés est remplacé par moins deux fois la log-vraisemblance. On minimise</p>
 <p><span class="math display">\[
 l_\lambda(\boldsymbol\beta) = -2\,\ell(\boldsymbol\beta;\boldsymbol y) + \lambda\, g(\beta_1,\ldots,\beta_p),
@@ -743,8 +749,8 @@ l_\lambda(\boldsymbol\beta) = -2\sum_{i=1}^n\left\{y_i\,\eta_i - m_i\log\left(1 
 <p>où le terme <span class="math inline">\(\log\binom{m_i}{y_i}\)</span>, qui ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>, a été omis. Pour des données individuelles, <span class="math inline">\(m_i = 1\)</span>.</p>
 </div>
 </section>
-<section id="estimation" class="level3" data-number="5.3.2">
-<h3 data-number="5.3.2" class="anchored" data-anchor-id="estimation"><span class="header-section-number">5.3.2</span> Estimation</h3>
+<section id="estimation" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="estimation"><span class="header-section-number">6.3.2</span> Estimation</h3>
 <p>Contrairement au cas linéaire, l’estimateur ridge n’a pas de forme explicite. L’algorithme IRLS s’adapte toutefois directement.</p>
 <div class="env-propriete" data-titre="IRLS pénalisé (ridge)">
 <p><span class="env-titre">Propriété — IRLS pénalisé (ridge)</span></p>
@@ -771,8 +777,8 @@ l_\lambda(\boldsymbol\beta) = -2\sum_{i=1}^n\left\{y_i\,\eta_i - m_i\log\left(1 
 <p>Pour <code>family = "binomial"</code>, <code>glmnet</code> minimise <span class="math inline">\(-\frac{1}{n}\ell(\boldsymbol\beta) + \lambda\left\{\frac{1-\alpha}{2}\sum_j\beta_j^2 + \alpha\sum_j|\beta_j|\right\}\)</span>. Les valeurs de <span class="math inline">\(\lambda\)</span> rapportées par <code>glmnet</code> ne sont donc pas sur la même échelle que celles du critère <span class="math inline">\(l_\lambda\)</span> défini plus haut ; seul l’ordre des valeurs compte pour l’interprétation.</p>
 </div>
 </section>
-<section id="choix-de-lambda" class="level3" data-number="5.3.3">
-<h3 data-number="5.3.3" class="anchored" data-anchor-id="choix-de-lambda"><span class="header-section-number">5.3.3</span> Choix de <span class="math inline">\(\lambda\)</span></h3>
+<section id="choix-de-lambda" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="choix-de-lambda"><span class="header-section-number">6.3.3</span> Choix de <span class="math inline">\(\lambda\)</span></h3>
 <p>Comme en régression linéaire, <span class="math inline">\(\lambda\)</span> se choisit par <a href="04-prediction-validation-croisee.html">validation croisée</a>, mais avec une fonction de perte adaptée à une réponse binaire : la déviance binomiale (<code>type.measure = "deviance"</code>, valeur par défaut), le taux de mauvaise classification (<code>"class"</code>) ou l’aire sous la courbe ROC (<code>"auc"</code>). La fonction <code>cv.glmnet</code> retourne deux valeurs :</p>
 <ul>
 <li><p><code>lambda.min</code>, qui minimise l’erreur de validation croisée ;</p></li>
@@ -829,7 +835,7 @@ classeDeuxième:sexeHomme:groupe_ageEnfant   -28.86    1322.47   -0.02     0.98<
 <img src="05-selection-regularisation_files/figure-html/fig-empress-cv-1.png" class="img-fluid figure-img" width="864">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-empress-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.4: Déviance binomiale estimée par validation croisée en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge (gauche) et le lasso (droite). Les lignes pointillées indiquent <code>lambda.min</code> et <code>lambda.1se</code>.
+Figure&nbsp;6.4: Déviance binomiale estimée par validation croisée en fonction de <span class="math inline">\(\log\lambda\)</span> pour ridge (gauche) et le lasso (droite). Les lignes pointillées indiquent <code>lambda.min</code> et <code>lambda.1se</code>.
 </figcaption>
 </figure>
 </div>
@@ -1428,12 +1434,12 @@ document.addEventListener("DOMContentLoaded", function () {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./04-prediction-validation-croisee.html" class="pagination-link" aria-label="Prédiction, mesures de performance et validation croisée">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./06-knn-noyau.html" class="pagination-link" aria-label="Régression non-paramétrique : $k$ plus proches voisins et estimateur de noyau">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

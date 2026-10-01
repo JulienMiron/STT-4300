@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Modèles additifs et modèles additifs généralisés (GAM) – Régression II -- STT-4300</title>
+<title>9&nbsp; Modèles additifs et modèles additifs généralisés (GAM) – Régression II -- STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -1725,7 +1725,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-gam.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-gam.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -1771,44 +1771,50 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-gam.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
     </ul>
@@ -1821,20 +1827,20 @@ window.Quarto = {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation"><span class="header-section-number">8.1</span> Motivation</a></li>
-  <li><a href="#estimation-par-moindres-carrés-pénalisés" id="toc-estimation-par-moindres-carrés-pénalisés" class="nav-link" data-scroll-target="#estimation-par-moindres-carrés-pénalisés"><span class="header-section-number">8.2</span> Estimation par moindres carrés pénalisés</a>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation"><span class="header-section-number">9.1</span> Motivation</a></li>
+  <li><a href="#estimation-par-moindres-carrés-pénalisés" id="toc-estimation-par-moindres-carrés-pénalisés" class="nav-link" data-scroll-target="#estimation-par-moindres-carrés-pénalisés"><span class="header-section-number">9.2</span> Estimation par moindres carrés pénalisés</a>
   <ul class="collapse">
-  <li><a href="#matrice-dinfluence-et-degrés-de-liberté-effectifs" id="toc-matrice-dinfluence-et-degrés-de-liberté-effectifs" class="nav-link" data-scroll-target="#matrice-dinfluence-et-degrés-de-liberté-effectifs"><span class="header-section-number">8.2.1</span> Matrice d’influence et degrés de liberté effectifs</a></li>
-  <li><a href="#choix-des-paramètres-de-lissage" id="toc-choix-des-paramètres-de-lissage" class="nav-link" data-scroll-target="#choix-des-paramètres-de-lissage"><span class="header-section-number">8.2.2</span> Choix des paramètres de lissage</a></li>
-  <li><a href="#inférence" id="toc-inférence" class="nav-link" data-scroll-target="#inférence"><span class="header-section-number">8.2.3</span> Inférence</a></li>
+  <li><a href="#matrice-dinfluence-et-degrés-de-liberté-effectifs" id="toc-matrice-dinfluence-et-degrés-de-liberté-effectifs" class="nav-link" data-scroll-target="#matrice-dinfluence-et-degrés-de-liberté-effectifs"><span class="header-section-number">9.2.1</span> Matrice d’influence et degrés de liberté effectifs</a></li>
+  <li><a href="#choix-des-paramètres-de-lissage" id="toc-choix-des-paramètres-de-lissage" class="nav-link" data-scroll-target="#choix-des-paramètres-de-lissage"><span class="header-section-number">9.2.2</span> Choix des paramètres de lissage</a></li>
+  <li><a href="#inférence" id="toc-inférence" class="nav-link" data-scroll-target="#inférence"><span class="header-section-number">9.2.3</span> Inférence</a></li>
   </ul></li>
-  <li><a href="#modèles-additifs-généralisés" id="toc-modèles-additifs-généralisés" class="nav-link" data-scroll-target="#modèles-additifs-généralisés"><span class="header-section-number">8.3</span> Modèles additifs généralisés</a>
+  <li><a href="#modèles-additifs-généralisés" id="toc-modèles-additifs-généralisés" class="nav-link" data-scroll-target="#modèles-additifs-généralisés"><span class="header-section-number">9.3</span> Modèles additifs généralisés</a>
   <ul class="collapse">
-  <li><a href="#algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" id="toc-algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" class="nav-link" data-scroll-target="#algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés"><span class="header-section-number">8.3.1</span> Algorithme d’ajustement (moindres carrés pondérés itératifs pénalisés)</a></li>
-  <li><a href="#choix-des-paramètres-de-lissage-et-comparaison-de-modèles" id="toc-choix-des-paramètres-de-lissage-et-comparaison-de-modèles" class="nav-link" data-scroll-target="#choix-des-paramètres-de-lissage-et-comparaison-de-modèles"><span class="header-section-number">8.3.2</span> Choix des paramètres de lissage et comparaison de modèles</a></li>
-  <li><a href="#en-pratique-avec-r" id="toc-en-pratique-avec-r" class="nav-link" data-scroll-target="#en-pratique-avec-r"><span class="header-section-number">8.3.3</span> En pratique avec R</a></li>
+  <li><a href="#algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" id="toc-algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" class="nav-link" data-scroll-target="#algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés"><span class="header-section-number">9.3.1</span> Algorithme d’ajustement (moindres carrés pondérés itératifs pénalisés)</a></li>
+  <li><a href="#choix-des-paramètres-de-lissage-et-comparaison-de-modèles" id="toc-choix-des-paramètres-de-lissage-et-comparaison-de-modèles" class="nav-link" data-scroll-target="#choix-des-paramètres-de-lissage-et-comparaison-de-modèles"><span class="header-section-number">9.3.2</span> Choix des paramètres de lissage et comparaison de modèles</a></li>
+  <li><a href="#en-pratique-avec-r" id="toc-en-pratique-avec-r" class="nav-link" data-scroll-target="#en-pratique-avec-r"><span class="header-section-number">9.3.3</span> En pratique avec R</a></li>
   </ul></li>
-  <li><a href="#synthèse-du-cours" id="toc-synthèse-du-cours" class="nav-link" data-scroll-target="#synthèse-du-cours"><span class="header-section-number">8.4</span> Synthèse du cours</a></li>
+  <li><a href="#synthèse-du-cours" id="toc-synthèse-du-cours" class="nav-link" data-scroll-target="#synthèse-du-cours"><span class="header-section-number">9.4</span> Synthèse du cours</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/08-gam.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
@@ -2127,7 +2133,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-gam" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></h1>
+<h1 class="title"><span id="sec-gam" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></h1>
 </div>
 
 
@@ -2139,7 +2145,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">30 septembre 2026</p>
+      <p class="date-modified">1 octobre 2026</p>
     </div>
   </div>
     
@@ -2150,38 +2156,38 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </header>
 
 
-<section id="motivation" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">8.1</span> Motivation</h2>
-<p>Les méthodes non-paramétriques des <a href="06-knn-noyau.html" class="quarto-xref"><span>Chapitre 6</span></a> et <a href="07-splines.html" class="quarto-xref"><span>Chapitre 7</span></a> fonctionnent bien avec une ou deux variables explicatives, mais se heurtent au <strong>fléau de la dimension</strong> lorsque <span class="math inline">\(p\)</span> est grand : les voisinages deviennent vides et le nombre de fonctions de base explose. Les <strong>modèles additifs</strong> offrent un compromis entre la flexibilité des méthodes non-paramétriques et l’interprétabilité des modèles linéaires : on remplace la partie linéaire par une somme de fonctions univariées, <span class="math display">\[Y_i = \alpha + f_1(X_{i1}) + f_2(X_{i2}) + \cdots + f_p(X_{ip}) + \epsilon_i,\]</span> où chaque <span class="math inline">\(f_j\)</span> est une fonction lisse inconnue.</p>
+<section id="motivation" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">9.1</span> Motivation</h2>
+<p>Les méthodes non-paramétriques des <a href="06-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a> et <a href="07-splines.html" class="quarto-xref"><span>Chapitre 8</span></a> fonctionnent bien avec une ou deux variables explicatives, mais se heurtent au <strong>fléau de la dimension</strong> lorsque <span class="math inline">\(p\)</span> est grand : les voisinages deviennent vides et le nombre de fonctions de base explose. Les <strong>modèles additifs</strong> offrent un compromis entre la flexibilité des méthodes non-paramétriques et l’interprétabilité des modèles linéaires : on remplace la partie linéaire par une somme de fonctions univariées, <span class="math display">\[Y_i = \alpha + f_1(X_{i1}) + f_2(X_{i2}) + \cdots + f_p(X_{ip}) + \epsilon_i,\]</span> où chaque <span class="math inline">\(f_j\)</span> est une fonction lisse inconnue.</p>
 <p><em>Laissons les données nous montrer la forme fonctionnelle appropriée.</em></p>
-<p>Chaque <span class="math inline">\(f_j\)</span> est représentée par une base de splines (<a href="07-splines.html" class="quarto-xref"><span>Chapitre 7</span></a>) : <span class="math inline">\(f_j(x) = \sum_{k=1}^{K_j} b_{jk}(x)\,\beta_{jk}\)</span>. Pour assurer l’<strong>identifiabilité</strong> (une constante peut être transférée entre <span class="math inline">\(\alpha\)</span> et les <span class="math inline">\(f_j\)</span>), on impose la contrainte de centrage <span class="math display">\[\sum_{i=1}^n f_j(X_{ij}) = 0, \qquad j = 1,\ldots,p.\]</span></p>
+<p>Chaque <span class="math inline">\(f_j\)</span> est représentée par une base de splines (<a href="07-splines.html" class="quarto-xref"><span>Chapitre 8</span></a>) : <span class="math inline">\(f_j(x) = \sum_{k=1}^{K_j} b_{jk}(x)\,\beta_{jk}\)</span>. Pour assurer l’<strong>identifiabilité</strong> (une constante peut être transférée entre <span class="math inline">\(\alpha\)</span> et les <span class="math inline">\(f_j\)</span>), on impose la contrainte de centrage <span class="math display">\[\sum_{i=1}^n f_j(X_{ij}) = 0, \qquad j = 1,\ldots,p.\]</span></p>
 </section>
-<section id="estimation-par-moindres-carrés-pénalisés" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="estimation-par-moindres-carrés-pénalisés"><span class="header-section-number">8.2</span> Estimation par moindres carrés pénalisés</h2>
+<section id="estimation-par-moindres-carrés-pénalisés" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="estimation-par-moindres-carrés-pénalisés"><span class="header-section-number">9.2</span> Estimation par moindres carrés pénalisés</h2>
 <p>Plutôt que de choisir soigneusement le nombre de nœuds de chaque base, on prend des bases « suffisamment riches » et on pénalise la rugosité de chaque fonction : on minimise <span class="math display">\[\left\|Y - X\beta\right\|^2 + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta,\]</span> où <span class="math inline">\(X\)</span> regroupe toutes les fonctions de base évaluées aux observations, et <span class="math inline">\(S_j\)</span> est la matrice de pénalité de la <span class="math inline">\(j^{\text{ème}}\)</span> fonction (<span class="math inline">\(\beta^\top S_j\beta = \int f_j''(t)^2dt\)</span>). La solution est explicite : <span class="math display">\[\hat\beta = \Bigl(X^\top X + \sum_{j=1}^p\lambda_j S_j\Bigr)^{-1}X^\top Y.\]</span> Chaque paramètre de lissage <span class="math inline">\(\lambda_j\)</span> contrôle le compromis régularité/fidélité de la fonction <span class="math inline">\(f_j\)</span> : <span class="math inline">\(\lambda_j\to\infty\)</span> force <span class="math inline">\(f_j\)</span> à être linéaire, <span class="math inline">\(\lambda_j = 0\)</span> laisse <span class="math inline">\(f_j\)</span> libre (risque de surajustement).</p>
-<section id="matrice-dinfluence-et-degrés-de-liberté-effectifs" class="level3" data-number="8.2.1">
-<h3 data-number="8.2.1" class="anchored" data-anchor-id="matrice-dinfluence-et-degrés-de-liberté-effectifs"><span class="header-section-number">8.2.1</span> Matrice d’influence et degrés de liberté effectifs</h3>
+<section id="matrice-dinfluence-et-degrés-de-liberté-effectifs" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="matrice-dinfluence-et-degrés-de-liberté-effectifs"><span class="header-section-number">9.2.1</span> Matrice d’influence et degrés de liberté effectifs</h3>
 <p>Les valeurs ajustées s’écrivent <span class="math inline">\(\hat Y = AY\)</span> avec <span class="math inline">\(A = X(X^\top X + \sum_j\lambda_j S_j)^{-1}X^\top\)</span>. Les <strong>degrés de liberté effectifs</strong> du modèle sont <span class="math inline">\(\mathrm{Tr}(A)\)</span> ; on peut les décomposer par fonction <span class="math inline">\(f_j\)</span>, ce qui donne une mesure interprétable de la complexité de chaque effet. La pénalisation induit un biais : <span class="math inline">\(E(\hat\beta)\neq\beta\)</span>, exactement comme pour ridge.</p>
 </section>
-<section id="choix-des-paramètres-de-lissage" class="level3" data-number="8.2.2">
-<h3 data-number="8.2.2" class="anchored" data-anchor-id="choix-des-paramètres-de-lissage"><span class="header-section-number">8.2.2</span> Choix des paramètres de lissage</h3>
+<section id="choix-des-paramètres-de-lissage" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="choix-des-paramètres-de-lissage"><span class="header-section-number">9.2.2</span> Choix des paramètres de lissage</h3>
 <p>Les <span class="math inline">\(\lambda_j\)</span> sont choisis en minimisant un estimateur de l’erreur de prédiction :</p>
 <ul>
 <li><p><strong>Validation croisée ordinaire (OCV)</strong> : <span class="math display">\[OCV(\lambda) = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat f_\lambda(x_i)}{1 - A_{ii}}\right)^2\,;\]</span></p></li>
 <li><p><strong>Validation croisée généralisée (GCV)</strong>, qui remplace les <span class="math inline">\(A_{ii}\)</span> par leur moyenne : <span class="math display">\[GCV(\lambda) = \frac{n\sum_i(y_i - \hat f_\lambda(x_i))^2}{\left(n - \mathrm{Tr}(A)\right)^2}.\]</span></p></li>
 </ul>
 </section>
-<section id="inférence" class="level3" data-number="8.2.3">
-<h3 data-number="8.2.3" class="anchored" data-anchor-id="inférence"><span class="header-section-number">8.2.3</span> Inférence</h3>
+<section id="inférence" class="level3" data-number="9.2.3">
+<h3 data-number="9.2.3" class="anchored" data-anchor-id="inférence"><span class="header-section-number">9.2.3</span> Inférence</h3>
 <p>De la forme ridge de l’estimateur, on tire <span class="math inline">\(\hat\beta\sim\mathcal{N}(E(\hat\beta),\, V_\beta)\)</span> avec <span class="math inline">\(V_\beta = \sigma^2(X^\top X + \sum_j\lambda_j S_j)^{-1}X^\top X(X^\top X + \sum_j\lambda_j S_j)^{-1}\)</span> ; l’approche bayésienne (pénalité = loi a priori gaussienne sur <span class="math inline">\(\beta\)</span>) donne la forme plus simple <span class="math inline">\(V_\beta = \sigma^2(X^\top X + \sum_j\lambda_j S_j)^{-1}\)</span>, dont les intervalles de crédibilité <span class="math display">\[\hat f_j(x) \pm z_{\alpha/2}\sqrt{\widehat{Var}[\hat f_j(x)]}\]</span> possèdent de bonnes propriétés de couverture fréquentistes. Pour tester <span class="math inline">\(H_0: f_j = 0\)</span>, on utilise des statistiques de type Wald basées sur <span class="math inline">\(\hat\beta_j^\top V_{\beta_j}^{-1}\hat\beta_j\)</span>, référées à une <span class="math inline">\(\chi^2\)</span> (<span class="math inline">\(\phi\)</span> connu) ou une <span class="math inline">\(F\)</span> (<span class="math inline">\(\phi\)</span> inconnu).</p>
 </section>
 </section>
-<section id="modèles-additifs-généralisés" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="modèles-additifs-généralisés"><span class="header-section-number">8.3</span> Modèles additifs généralisés</h2>
+<section id="modèles-additifs-généralisés" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="modèles-additifs-généralisés"><span class="header-section-number">9.3</span> Modèles additifs généralisés</h2>
 <p>Comme pour les MLG, on combine la structure additive avec les distributions de la famille exponentielle : <span class="math inline">\(Y_i\)</span> suit une loi de la famille exponentielle avec <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math display">\[g(\mu_i) = \alpha + f_1(X_{i1}) + \cdots + f_p(X_{ip}),\]</span> où <span class="math inline">\(g\)</span> est une fonction de lien. Cas particuliers : GAM logistique (réponse binaire), GAM Poisson (dénombrements, avec offset au besoin).</p>
 <p>L’estimation se fait en minimisant la <strong>déviance pénalisée</strong> : <span class="math display">\[\hat\beta = \arg\min_\beta\left\{D(y,\mu) + \sum_{j=1}^p\lambda_j\,\beta^\top S_j\,\beta\right\},\]</span> où <span class="math inline">\(D(y,\mu)\)</span> est la déviance du <span class="quarto-unresolved-ref">?sec-mlg</span>.</p>
-<section id="algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" class="level3" data-number="8.3.1">
-<h3 data-number="8.3.1" class="anchored" data-anchor-id="algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés"><span class="header-section-number">8.3.1</span> Algorithme d’ajustement (moindres carrés pondérés itératifs pénalisés)</h3>
+<section id="algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés"><span class="header-section-number">9.3.1</span> Algorithme d’ajustement (moindres carrés pondérés itératifs pénalisés)</h3>
 <p>L’ajustement combine l’algorithme des moindres carrés pondérés itératifs des MLG et le lissage pénalisé. À l’itération <span class="math inline">\(m\)</span> :</p>
 <ol type="1">
 <li><p>construire la variable dépendante ajustée <span class="math display">\[z_i^{(m)} = \eta_i^{(m)} + (y_i - \mu_i^{(m)})\left(\frac{\partial\eta_i}{\partial\mu_i}\right)^{(m)}\,;\]</span></p></li>
@@ -2190,16 +2196,16 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 <li><p>répéter jusqu’à convergence.</p></li>
 </ol>
 </section>
-<section id="choix-des-paramètres-de-lissage-et-comparaison-de-modèles" class="level3" data-number="8.3.2">
-<h3 data-number="8.3.2" class="anchored" data-anchor-id="choix-des-paramètres-de-lissage-et-comparaison-de-modèles"><span class="header-section-number">8.3.2</span> Choix des paramètres de lissage et comparaison de modèles</h3>
+<section id="choix-des-paramètres-de-lissage-et-comparaison-de-modèles" class="level3" data-number="9.3.2">
+<h3 data-number="9.3.2" class="anchored" data-anchor-id="choix-des-paramètres-de-lissage-et-comparaison-de-modèles"><span class="header-section-number">9.3.2</span> Choix des paramètres de lissage et comparaison de modèles</h3>
 <ul>
 <li><p>Si <span class="math inline">\(\phi\)</span> est connu (logistique, Poisson) : critère <strong>UBRE</strong> (équivalent au <span class="math inline">\(C_p\)</span> de Mallows) <span class="math display">\[UBRE(\lambda) = \frac{D(y,\hat\mu)}{n} + \frac{2\phi\,\mathrm{Tr}(A)}{n}\,;\]</span></p></li>
 <li><p>si <span class="math inline">\(\phi\)</span> est inconnu : <strong>GCV</strong> <span class="math display">\[GCV(\lambda) = \frac{n\,D(y,\hat\mu)}{\left(n - \mathrm{Tr}(A)\right)^2}.\]</span></p></li>
 </ul>
 <p>Pour comparer des modèles : <span class="math inline">\(AIC = -2\,l(\hat\beta;y) + 2\,\mathrm{Tr}(A)\)</span> (les degrés de liberté effectifs remplacent le nombre de paramètres), GCV, ou proportion de déviance expliquée <span class="math inline">\((D_{null} - D)/D_{null}\)</span>. Plus petit <span class="math inline">\(AIC\)</span> ou <span class="math inline">\(GCV\)</span> = meilleur modèle.</p>
 </section>
-<section id="en-pratique-avec-r" class="level3" data-number="8.3.3">
-<h3 data-number="8.3.3" class="anchored" data-anchor-id="en-pratique-avec-r"><span class="header-section-number">8.3.3</span> En pratique avec R</h3>
+<section id="en-pratique-avec-r" class="level3" data-number="9.3.3">
+<h3 data-number="9.3.3" class="anchored" data-anchor-id="en-pratique-avec-r"><span class="header-section-number">9.3.3</span> En pratique avec R</h3>
 <p>La librairie <code>mgcv</code> ajuste les GAM avec sélection automatique des paramètres de lissage :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
@@ -2283,8 +2289,8 @@ UBRE = 0.17501  Scale est. = 1         n = 68</code></pre>
 <p>La fonction <code>summary</code> rapporte, pour chaque fonction lisse, ses degrés de liberté effectifs et un test approximatif de nullité ; <code>plot</code> trace chaque <span class="math inline">\(\hat f_j\)</span> avec ses bandes de confiance. Une fonction dont les degrés de liberté effectifs sont proches de 1 peut être remplacée par un terme linéaire : le GAM sert ainsi aussi d’outil diagnostique pour guider la spécification d’un MLG paramétrique.</p>
 </section>
 </section>
-<section id="synthèse-du-cours" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="synthèse-du-cours"><span class="header-section-number">8.4</span> Synthèse du cours</h2>
+<section id="synthèse-du-cours" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="synthèse-du-cours"><span class="header-section-number">9.4</span> Synthèse du cours</h2>
 <p>Le tableau suivant situe les principales méthodes du cours selon la nature de la réponse et la forme de la relation avec les variables explicatives :</p>
 <table class="caption-top table">
 <colgroup>
@@ -2758,7 +2764,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./07-splines.html" class="pagination-link" aria-label="Régression non-linéaire : polynômes, fonctions par morceaux et splines">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Modèles de régression pour données binaires – Régression II -- STT-4300</title>
+<title>3&nbsp; Modèles de régression pour données binaires – Régression II -- STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -91,7 +91,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./03-modeles-lineaires-generalises.html" rel="next">
-<link href="./01-regression-lineaire.html" rel="prev">
+<link href="./monte-carlo.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -194,7 +194,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-regression-logistique.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-regression-logistique.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -240,44 +240,50 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
     </ul>
@@ -290,43 +296,43 @@ window.Quarto = {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#données-et-modèle" id="toc-données-et-modèle" class="nav-link active" data-scroll-target="#données-et-modèle"><span class="header-section-number">2.1</span> Données et modèle</a>
+  <li><a href="#données-et-modèle" id="toc-données-et-modèle" class="nav-link active" data-scroll-target="#données-et-modèle"><span class="header-section-number">3.1</span> Données et modèle</a>
   <ul class="collapse">
-  <li><a href="#données-individuelles-bernoulli" id="toc-données-individuelles-bernoulli" class="nav-link" data-scroll-target="#données-individuelles-bernoulli"><span class="header-section-number">2.1.1</span> Données individuelles (Bernoulli)</a></li>
-  <li><a href="#données-groupées-binomiale" id="toc-données-groupées-binomiale" class="nav-link" data-scroll-target="#données-groupées-binomiale"><span class="header-section-number">2.1.2</span> Données groupées (binomiale)</a></li>
-  <li><a href="#fonctions-de-lien" id="toc-fonctions-de-lien" class="nav-link" data-scroll-target="#fonctions-de-lien"><span class="header-section-number">2.1.3</span> Fonctions de lien</a></li>
+  <li><a href="#données-individuelles-bernoulli" id="toc-données-individuelles-bernoulli" class="nav-link" data-scroll-target="#données-individuelles-bernoulli"><span class="header-section-number">3.1.1</span> Données individuelles (Bernoulli)</a></li>
+  <li><a href="#données-groupées-binomiale" id="toc-données-groupées-binomiale" class="nav-link" data-scroll-target="#données-groupées-binomiale"><span class="header-section-number">3.1.2</span> Données groupées (binomiale)</a></li>
+  <li><a href="#fonctions-de-lien" id="toc-fonctions-de-lien" class="nav-link" data-scroll-target="#fonctions-de-lien"><span class="header-section-number">3.1.3</span> Fonctions de lien</a></li>
   </ul></li>
-  <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">2.2</span> Inférence statistique</a>
+  <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">3.2</span> Inférence statistique</a>
   <ul class="collapse">
-  <li><a href="#estimation-des-paramètres-boldsymbolbeta" id="toc-estimation-des-paramètres-boldsymbolbeta" class="nav-link" data-scroll-target="#estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">2.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></a></li>
-  <li><a href="#sec-separation" id="toc-sec-separation" class="nav-link" data-scroll-target="#sec-separation"><span class="header-section-number">2.2.2</span> Séparation des données</a></li>
-  <li><a href="#information-de-fisher-et-variance-des-estimateurs" id="toc-information-de-fisher-et-variance-des-estimateurs" class="nav-link" data-scroll-target="#information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">2.2.3</span> Information de Fisher et variance des estimateurs</a></li>
-  <li><a href="#intervalles-de-confiance-pour-les-beta_j" id="toc-intervalles-de-confiance-pour-les-beta_j" class="nav-link" data-scroll-target="#intervalles-de-confiance-pour-les-beta_j"><span class="header-section-number">2.2.4</span> Intervalles de confiance pour les <span class="math inline">\(\beta_j\)</span></a></li>
-  <li><a href="#intervalle-de-confiance-pour-une-probabilité-prédite" id="toc-intervalle-de-confiance-pour-une-probabilité-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.6</span> Intervalle de confiance pour une probabilité prédite</a></li>
+  <li><a href="#estimation-des-paramètres-boldsymbolbeta" id="toc-estimation-des-paramètres-boldsymbolbeta" class="nav-link" data-scroll-target="#estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">3.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></a></li>
+  <li><a href="#sec-separation" id="toc-sec-separation" class="nav-link" data-scroll-target="#sec-separation"><span class="header-section-number">3.2.2</span> Séparation des données</a></li>
+  <li><a href="#information-de-fisher-et-variance-des-estimateurs" id="toc-information-de-fisher-et-variance-des-estimateurs" class="nav-link" data-scroll-target="#information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">3.2.3</span> Information de Fisher et variance des estimateurs</a></li>
+  <li><a href="#intervalles-de-confiance-pour-les-beta_j" id="toc-intervalles-de-confiance-pour-les-beta_j" class="nav-link" data-scroll-target="#intervalles-de-confiance-pour-les-beta_j"><span class="header-section-number">3.2.4</span> Intervalles de confiance pour les <span class="math inline">\(\beta_j\)</span></a></li>
+  <li><a href="#intervalle-de-confiance-pour-une-probabilité-prédite" id="toc-intervalle-de-confiance-pour-une-probabilité-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">3.2.6</span> Intervalle de confiance pour une probabilité prédite</a></li>
   </ul></li>
-  <li><a href="#sélection-de-modèles" id="toc-sélection-de-modèles" class="nav-link" data-scroll-target="#sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</a>
+  <li><a href="#sélection-de-modèles" id="toc-sélection-de-modèles" class="nav-link" data-scroll-target="#sélection-de-modèles"><span class="header-section-number">3.3</span> Sélection de modèles</a>
   <ul class="collapse">
-  <li><a href="#sec-deviance" id="toc-sec-deviance" class="nav-link" data-scroll-target="#sec-deviance"><span class="header-section-number">2.3.1</span> Déviance</a></li>
-  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</a></li>
-  <li><a href="#comparaison-de-modèles-non-emboîtés-aic-et-bic" id="toc-comparaison-de-modèles-non-emboîtés-aic-et-bic" class="nav-link" data-scroll-target="#comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</a></li>
-  <li><a href="#sélection-automatique" id="toc-sélection-automatique" class="nav-link" data-scroll-target="#sélection-automatique"><span class="header-section-number">2.3.4</span> Sélection automatique</a></li>
+  <li><a href="#sec-deviance" id="toc-sec-deviance" class="nav-link" data-scroll-target="#sec-deviance"><span class="header-section-number">3.3.1</span> Déviance</a></li>
+  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">3.3.2</span> Comparaison de modèles emboîtés</a></li>
+  <li><a href="#comparaison-de-modèles-non-emboîtés-aic-et-bic" id="toc-comparaison-de-modèles-non-emboîtés-aic-et-bic" class="nav-link" data-scroll-target="#comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">3.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</a></li>
+  <li><a href="#sélection-automatique" id="toc-sélection-automatique" class="nav-link" data-scroll-target="#sélection-automatique"><span class="header-section-number">3.3.4</span> Sélection automatique</a></li>
   </ul></li>
-  <li><a href="#validation-et-diagnostic-de-modèles" id="toc-validation-et-diagnostic-de-modèles" class="nav-link" data-scroll-target="#validation-et-diagnostic-de-modèles"><span class="header-section-number">2.4</span> Validation et diagnostic de modèles</a>
+  <li><a href="#validation-et-diagnostic-de-modèles" id="toc-validation-et-diagnostic-de-modèles" class="nav-link" data-scroll-target="#validation-et-diagnostic-de-modèles"><span class="header-section-number">3.4</span> Validation et diagnostic de modèles</a>
   <ul class="collapse">
-  <li><a href="#résidus" id="toc-résidus" class="nav-link" data-scroll-target="#résidus"><span class="header-section-number">2.4.1</span> Résidus</a></li>
-  <li><a href="#sec-adequation" id="toc-sec-adequation" class="nav-link" data-scroll-target="#sec-adequation"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</a></li>
-  <li><a href="#graphiques-et-extra-variabilité" id="toc-graphiques-et-extra-variabilité" class="nav-link" data-scroll-target="#graphiques-et-extra-variabilité"><span class="header-section-number">2.4.3</span> Graphiques et extra-variabilité</a></li>
-  <li><a href="#observations-aberrantes-et-valeurs-influentes" id="toc-observations-aberrantes-et-valeurs-influentes" class="nav-link" data-scroll-target="#observations-aberrantes-et-valeurs-influentes"><span class="header-section-number">2.4.4</span> Observations aberrantes et valeurs influentes</a></li>
+  <li><a href="#résidus" id="toc-résidus" class="nav-link" data-scroll-target="#résidus"><span class="header-section-number">3.4.1</span> Résidus</a></li>
+  <li><a href="#sec-adequation" id="toc-sec-adequation" class="nav-link" data-scroll-target="#sec-adequation"><span class="header-section-number">3.4.2</span> Tests d’adéquation globale</a></li>
+  <li><a href="#graphiques-et-extra-variabilité" id="toc-graphiques-et-extra-variabilité" class="nav-link" data-scroll-target="#graphiques-et-extra-variabilité"><span class="header-section-number">3.4.3</span> Graphiques et extra-variabilité</a></li>
+  <li><a href="#observations-aberrantes-et-valeurs-influentes" id="toc-observations-aberrantes-et-valeurs-influentes" class="nav-link" data-scroll-target="#observations-aberrantes-et-valeurs-influentes"><span class="header-section-number">3.4.4</span> Observations aberrantes et valeurs influentes</a></li>
   </ul></li>
-  <li><a href="#sec-roc" id="toc-sec-roc" class="nav-link" data-scroll-target="#sec-roc"><span class="header-section-number">2.5</span> Spécificité, sensibilité et courbe ROC</a></li>
-  <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin"><span class="header-section-number">2.6</span> Pour aller plus loin</a>
+  <li><a href="#sec-roc" id="toc-sec-roc" class="nav-link" data-scroll-target="#sec-roc"><span class="header-section-number">3.5</span> Spécificité, sensibilité et courbe ROC</a></li>
+  <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin"><span class="header-section-number">3.6</span> Pour aller plus loin</a>
   <ul class="collapse">
-  <li><a href="#comparaison-des-liens-avec-turbines" id="toc-comparaison-des-liens-avec-turbines" class="nav-link" data-scroll-target="#comparaison-des-liens-avec-turbines"><span class="header-section-number">2.6.1</span> Comparaison des liens avec <code>turbines</code></a></li>
-  <li><a href="#test-emboîté-avec-turbines" id="toc-test-emboîté-avec-turbines" class="nav-link" data-scroll-target="#test-emboîté-avec-turbines"><span class="header-section-number">2.6.2</span> Test emboîté avec <code>turbines</code></a></li>
-  <li><a href="#aic-et-sélection-automatique-avec-nminer" id="toc-aic-et-sélection-automatique-avec-nminer" class="nav-link" data-scroll-target="#aic-et-sélection-automatique-avec-nminer"><span class="header-section-number">2.6.3</span> AIC et sélection automatique avec <code>nminer</code></a></li>
-  <li><a href="#test-dadéquation-avec-turbines" id="toc-test-dadéquation-avec-turbines" class="nav-link" data-scroll-target="#test-dadéquation-avec-turbines"><span class="header-section-number">2.6.4</span> Test d’adéquation avec <code>turbines</code></a></li>
-  <li><a href="#diagnostics-de-surdispersion-avec-troutegg" id="toc-diagnostics-de-surdispersion-avec-troutegg" class="nav-link" data-scroll-target="#diagnostics-de-surdispersion-avec-troutegg"><span class="header-section-number">2.6.5</span> Diagnostics de surdispersion avec <code>troutegg</code></a></li>
-  <li><a href="#courbe-roc-avec-quilpie" id="toc-courbe-roc-avec-quilpie" class="nav-link" data-scroll-target="#courbe-roc-avec-quilpie"><span class="header-section-number">2.6.6</span> Courbe ROC avec <code>quilpie</code></a></li>
+  <li><a href="#comparaison-des-liens-avec-turbines" id="toc-comparaison-des-liens-avec-turbines" class="nav-link" data-scroll-target="#comparaison-des-liens-avec-turbines"><span class="header-section-number">3.6.1</span> Comparaison des liens avec <code>turbines</code></a></li>
+  <li><a href="#test-emboîté-avec-turbines" id="toc-test-emboîté-avec-turbines" class="nav-link" data-scroll-target="#test-emboîté-avec-turbines"><span class="header-section-number">3.6.2</span> Test emboîté avec <code>turbines</code></a></li>
+  <li><a href="#aic-et-sélection-automatique-avec-nminer" id="toc-aic-et-sélection-automatique-avec-nminer" class="nav-link" data-scroll-target="#aic-et-sélection-automatique-avec-nminer"><span class="header-section-number">3.6.3</span> AIC et sélection automatique avec <code>nminer</code></a></li>
+  <li><a href="#test-dadéquation-avec-turbines" id="toc-test-dadéquation-avec-turbines" class="nav-link" data-scroll-target="#test-dadéquation-avec-turbines"><span class="header-section-number">3.6.4</span> Test d’adéquation avec <code>turbines</code></a></li>
+  <li><a href="#diagnostics-de-surdispersion-avec-troutegg" id="toc-diagnostics-de-surdispersion-avec-troutegg" class="nav-link" data-scroll-target="#diagnostics-de-surdispersion-avec-troutegg"><span class="header-section-number">3.6.5</span> Diagnostics de surdispersion avec <code>troutegg</code></a></li>
+  <li><a href="#courbe-roc-avec-quilpie" id="toc-courbe-roc-avec-quilpie" class="nav-link" data-scroll-target="#courbe-roc-avec-quilpie"><span class="header-section-number">3.6.6</span> Courbe ROC avec <code>quilpie</code></a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/02-regression-logistique.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
@@ -336,7 +342,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-logistique" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></h1>
+<h1 class="title"><span id="sec-logistique" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></h1>
 </div>
 
 
@@ -348,7 +354,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">30 septembre 2026</p>
+      <p class="date-modified">1 octobre 2026</p>
     </div>
   </div>
     
@@ -413,10 +419,10 @@ window.Quarto = {
 </div>
 <p>Aucun garçon de première classe n’était à bord : la combinaison (première, homme, enfant) est donc structurellement absente des données.</p>
 </div>
-<section id="données-et-modèle" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="données-et-modèle"><span class="header-section-number">2.1</span> Données et modèle</h2>
-<section id="données-individuelles-bernoulli" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="données-individuelles-bernoulli"><span class="header-section-number">2.1.1</span> Données individuelles (Bernoulli)</h3>
+<section id="données-et-modèle" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="données-et-modèle"><span class="header-section-number">3.1</span> Données et modèle</h2>
+<section id="données-individuelles-bernoulli" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="données-individuelles-bernoulli"><span class="header-section-number">3.1.1</span> Données individuelles (Bernoulli)</h3>
 <p>Dans la version individuelle <code>empress_individus</code>, la variable réponse <span class="math inline">\(Y_i \in \{0,1\}\)</span> (le passager <span class="math inline">\(i\)</span> a survécu ou non). Les données sont sous la forme <span class="math inline">\(\{(Y_i,\boldsymbol{X}_i),\, i=1,\ldots,n\}\)</span>. On dit que <span class="math inline">\(Y_i\)</span> suit une loi de Bernoulli de paramètre <span class="math inline">\(\pi_i \in [0,1]\)</span> :</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -430,8 +436,8 @@ Var[Y_i] &amp;= \pi_i(1-\pi_i).
 <p>On pose <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span> (le <strong>prédicteur linéaire</strong>) et on relie <span class="math inline">\(\pi_i\)</span> à <span class="math inline">\(\eta_i\)</span> par une <strong>fonction de lien</strong> <span class="math inline">\(g\)</span> supposée connue : <span class="math inline">\(\eta_i=g(\pi_i)\)</span>, c’est-à-dire <span class="math display">\[\pi_i = P(Y_i = 1) = g^{-1}(\beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}).\]</span></p>
 </div>
 </section>
-<section id="données-groupées-binomiale" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="données-groupées-binomiale"><span class="header-section-number">2.1.2</span> Données groupées (binomiale)</h3>
+<section id="données-groupées-binomiale" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="données-groupées-binomiale"><span class="header-section-number">3.1.2</span> Données groupées (binomiale)</h3>
 <p>Dans la version agrégée <code>empress_agrege</code>, <span class="math inline">\(Y_i \in \{0,1,\ldots,m_i\}\)</span>, où <span class="math inline">\(m_i\)</span> est l’effectif (<code>effectif</code>) du <span class="math inline">\(i\)</span>-ème groupe classe-sexe-groupe d’âge ; <span class="math inline">\(Y_i\)</span> est le nombre de survivants (<code>survivants</code>) dans ce groupe. On écrit <span class="math inline">\(Y_i \sim \mathrm{Bin}(m_i,\pi_i)\)</span> :</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -442,8 +448,8 @@ Var[Y_i] &amp;= m_i\pi_i(1-\pi_i) = \frac{\mu_i(m_i - \mu_i)}{m_i}.
 \]</span></p>
 <p>On pose de nouveau <span class="math inline">\(\eta_i = g(\pi_i)\)</span>, qui peut s’écrire <span class="math inline">\(\eta_i=g(\mu_i/m_i)\)</span>. À noter, on voit souvent <span class="math inline">\(g(\mu_i)\)</span>, par abus de notation. Si <span class="math inline">\(m_1 = \cdots = m_n = 1\)</span>, on retrouve la loi de Bernoulli : celle-ci est un cas particulier de la loi binomiale, et les développements qui suivent couvrent les deux situations.</p>
 </section>
-<section id="fonctions-de-lien" class="level3" data-number="2.1.3">
-<h3 data-number="2.1.3" class="anchored" data-anchor-id="fonctions-de-lien"><span class="header-section-number">2.1.3</span> Fonctions de lien</h3>
+<section id="fonctions-de-lien" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="fonctions-de-lien"><span class="header-section-number">3.1.3</span> Fonctions de lien</h3>
 <p>La fonction de lien doit assurer que <span class="math inline">\(\pi_i = g^{-1}(\eta_i) \in [0,1]\)</span>. Trois choix sont courants :</p>
 <ul>
 <li><strong>Logit :</strong> <span class="math inline">\(g(u) = \mathrm{logit}(u) = \log\!\left(\dfrac{u}{1-u}\right)\)</span>, d’où <span class="math inline">\(\pi_i = \dfrac{e^{\eta_i}}{1+e^{\eta_i}}\)</span>. En R : <code>link="logit"</code> dans <code>glm</code>. Il s’agit du lien le plus utilisé en régression binaire. Ceci est en partie expliqué par son interprétabilité, voir la remarque <a href="#sec-cotes">ci-dessous</a>.</li>
@@ -508,10 +514,10 @@ o_i^{\text{nouveau}} = e^{\eta_i + \beta_j} = e^{\eta_i} \cdot e^{\beta_j} = o_i
 </div>
 </section>
 </section>
-<section id="inférence-statistique" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">2.2</span> Inférence statistique</h2>
-<section id="estimation-des-paramètres-boldsymbolbeta" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">2.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></h3>
+<section id="inférence-statistique" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">3.2</span> Inférence statistique</h2>
+<section id="estimation-des-paramètres-boldsymbolbeta" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="estimation-des-paramètres-boldsymbolbeta"><span class="header-section-number">3.2.1</span> Estimation des paramètres <span class="math inline">\(\boldsymbol{\beta}\)</span></h3>
 <p><strong>Point de départ : la vraisemblance.</strong> On observe <span class="math inline">\(n\)</span> variables <span class="math inline">\(Y_i \sim \text{Binomiale}(m_i, \pi_i)\)</span>. La fonction de log-vraisemblance s’écrit</p>
 <p><span class="math display">\[
 \ell(\boldsymbol{\pi}; \boldsymbol{y}) = \sum_{i=1}^n \log\left[P(Y_i = y_i)\right]
@@ -575,16 +581,16 @@ y_i \log(\pi_i) + (m_i - y_i)\log(1-\pi_i) = y_i \eta_i - m_i \log(1+e^{\eta_i})
 <p>En combinant les trois morceaux, la dérivée partielle de la log-vraisemblance est</p>
 <p><span id="eq-score-logit"><span class="math display">\[
 \frac{\partial \ell(\boldsymbol{\beta}; \boldsymbol{y})}{\partial \beta_j} = \sum_{i=1}^n \left( y_i - m_i \pi_i \right) X_{ij}.
-\tag{2.1}\]</span></span></p>
+\tag{3.1}\]</span></span></p>
 <p><strong>Forme matricielle (lien logit)</strong></p>
 <p>En posant <span class="math inline">\(\boldsymbol{X}\)</span> la matrice de design (<span class="math inline">\(n \times (p+1)\)</span>), <span class="math inline">\(\boldsymbol{y} = (y_1, \dots, y_n)^\top\)</span> et <span class="math inline">\(\boldsymbol{\mu} = (m_1\pi_1, \dots, m_n\pi_n)^\top\)</span>, on obtient le score sous forme matricielle :</p>
 <p><span id="eq-score-vecteur"><span class="math display">\[
 \boldsymbol{U}(\boldsymbol{\beta}) = \boldsymbol{X}^\top (\boldsymbol{y} - \boldsymbol{\mu}).
-\tag{2.2}\]</span></span></p>
+\tag{3.2}\]</span></span></p>
 </div>
 </section>
-<section id="sec-separation" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="sec-separation"><span class="header-section-number">2.2.2</span> Séparation des données</h3>
+<section id="sec-separation" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="sec-separation"><span class="header-section-number">3.2.2</span> Séparation des données</h3>
 <div class="env-definition" data-titre="Séparation complète et quasi-complète">
 <p><span class="env-titre">Définition — Séparation complète et quasi-complète</span></p>
 <p>On dit qu’il y a <strong>séparation complète</strong> si un hyperplan permet de classer parfaitement les <span class="math inline">\(Y_i\)</span> à partir des covariables : il existe <span class="math inline">\(\boldsymbol\beta\)</span> tel que <span class="math inline">\(\boldsymbol{X}_i^\top\boldsymbol\beta &gt; 0\)</span> chaque fois que <span class="math inline">\(Y_i=1\)</span> et <span class="math inline">\(\boldsymbol{X}_i^\top\boldsymbol\beta &lt; 0\)</span> chaque fois que <span class="math inline">\(Y_i=0\)</span> (ou l’inverse).</p>
@@ -651,8 +657,8 @@ x           60.320086   50086.41 0.0012043204 0.9990391</code></pre>
 <p>Ce phénomène a aussi une conséquence directe sur l’inférence : les tests de Wald deviennent peu fiables en présence de séparation, même partielle — voir le <a href="#sec-hauckdonner">phénomène de Hauck-Donner</a> plus loin.</p>
 </div>
 </section>
-<section id="information-de-fisher-et-variance-des-estimateurs" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">2.2.3</span> Information de Fisher et variance des estimateurs</h3>
+<section id="information-de-fisher-et-variance-des-estimateurs" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">3.2.3</span> Information de Fisher et variance des estimateurs</h3>
 <p><strong>Matrice d’information de Fisher.</strong> On calcule ensuite la matrice d’information de Fisher <span class="math inline">\(I\)</span>, dont l’élément <span class="math inline">\((j,k)\)</span> est</p>
 <p><span class="math display">\[
 I_{jk} = -\left.\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k}\right|_{\hat{\boldsymbol{\beta}}}.
@@ -810,8 +816,8 @@ classe_num  -0.3798464 0.09480604 -4.006563 6.160872e-05</code></pre>
 <p>Les trois liens mènent à des coefficients significatifs (plus la classe est élevée, moins la probabilité de survie est grande) et à des courbes prédites <span class="math inline">\(\hat\pi^*\)</span> très similaires : à <code>classe_num</code> fixé, les probabilités prédites diffèrent de moins de 1 point de pourcentage d’un lien à l’autre.</p>
 </div>
 </section>
-<section id="intervalles-de-confiance-pour-les-beta_j" class="level3" data-number="2.2.4">
-<h3 data-number="2.2.4" class="anchored" data-anchor-id="intervalles-de-confiance-pour-les-beta_j"><span class="header-section-number">2.2.4</span> Intervalles de confiance pour les <span class="math inline">\(\beta_j\)</span></h3>
+<section id="intervalles-de-confiance-pour-les-beta_j" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="intervalles-de-confiance-pour-les-beta_j"><span class="header-section-number">3.2.4</span> Intervalles de confiance pour les <span class="math inline">\(\beta_j\)</span></h3>
 <p>Les intervalles de confiance et tests concernant les <span class="math inline">\(\beta_j\)</span> sont obtenus par la méthode de <strong>Wald</strong>. Un intervalle de confiance de niveau <span class="math inline">\((1-\alpha)\)</span> pour <span class="math inline">\(\beta_j\)</span> est <span class="math display">\[\left[\hat\beta_j - z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\,;\ \hat\beta_j + z_{\alpha/2}\sqrt{\hat{\text V}(\hat\beta_j)}\right],\]</span> où <span class="math inline">\(z_\gamma\)</span> est le quantile de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> défini par <span class="math inline">\(P(Z &gt; z_\gamma) = \gamma\)</span>.</p>
 <p>Pour tester <span class="math inline">\(H_0: \beta_j = 0\)</span> contre <span class="math inline">\(H_1: \beta_j\neq 0\)</span>, on rejette <span class="math inline">\(H_0\)</span> au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(|z_{obs}| &gt; z_{\alpha/2}\)</span>, avec <span class="math inline">\(z_{obs} = \hat\beta_j/\sqrt{\hat{\text V}(\hat\beta_j)}\)</span>. Le seuil observé (<span class="math inline">\(p\)</span>-valeur) est <span class="math inline">\(\alpha^* = 2P(Z &gt; |z_{obs}|)\)</span>.</p>
 <div class="env-exemple" data-titre="Intervalle de confiance pour $\beta_1$ dans l'exemple `empress_agrege`">
@@ -944,8 +950,8 @@ G^2 = -2\left[\ell(\text{modèle réduit}) - \ell(\text{modèle complet})\right]
 </div>
 </div>
 </div>
-<section id="comparaison-directe-des-sorties" class="level3" data-number="2.2.5">
-<h3 data-number="2.2.5" class="anchored" data-anchor-id="comparaison-directe-des-sorties"><span class="header-section-number">2.2.5</span> Comparaison directe des sorties</h3>
+<section id="comparaison-directe-des-sorties" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="comparaison-directe-des-sorties"><span class="header-section-number">3.2.5</span> Comparaison directe des sorties</h3>
 <p>Pour illustrer concrètement l’écart entre les deux tests, comparons un cas “normal” (<span class="math inline">\(k = 15\)</span>, pas de séparation) à un cas de séparation quasi-complète (<span class="math inline">\(k = 19\)</span>, un seul échec sur 20 dans le groupe <span class="math inline">\(x = 1\)</span>) :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>simuler_logistique <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">beta0 =</span> <span class="dv">0</span>, <span class="at">beta1 =</span> <span class="dv">1</span>) {</span>
@@ -1028,8 +1034,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </section>
 </div>
 </section>
-<section id="intervalle-de-confiance-pour-une-probabilité-prédite" class="level3" data-number="2.2.6">
-<h3 data-number="2.2.6" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">2.2.6</span> Intervalle de confiance pour une probabilité prédite</h3>
+<section id="intervalle-de-confiance-pour-une-probabilité-prédite" class="level3" data-number="3.2.6">
+<h3 data-number="3.2.6" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-probabilité-prédite"><span class="header-section-number">3.2.6</span> Intervalle de confiance pour une probabilité prédite</h3>
 <p>Pour <span class="math inline">\(\boldsymbol{X}^* = (1, X_1^*,\ldots,X_p^*)^\top\)</span>, on estime <span class="math inline">\(\pi^*\)</span> par <span class="math inline">\(\hat\pi^* = g^{-1}({\boldsymbol{X}^*}^\top\hat\beta)\)</span>. Deux approches :</p>
 <ol type="1">
 <li><p><strong>Transformation de l’intervalle sur <span class="math inline">\(\eta^*\)</span></strong> : un IC pour <span class="math inline">\({X^*}^\top\beta\)</span> est <span class="math display">\[\left[{\boldsymbol{X}^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta)}\right], \qquad \hat{\text V}({\boldsymbol{X}^*}^\top\hat\beta) = {\boldsymbol{X}^*}^\top \hat{\text V}(\hat\beta)\, \boldsymbol{X}^*,\]</span> et on applique <span class="math inline">\(g^{-1}\)</span> aux deux bornes. Cet intervalle respecte toujours <span class="math inline">\([0,1]\)</span>.</p></li>
@@ -1133,10 +1139,10 @@ g^{-1}(\hat\theta) \approx g^{-1}(\theta) + \left.\frac{\partial g^{-1}(u)}{\par
 </div>
 </section>
 </section>
-<section id="sélection-de-modèles" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="sélection-de-modèles"><span class="header-section-number">2.3</span> Sélection de modèles</h2>
-<section id="sec-deviance" class="level3" data-number="2.3.1">
-<h3 data-number="2.3.1" class="anchored" data-anchor-id="sec-deviance"><span class="header-section-number">2.3.1</span> Déviance</h3>
+<section id="sélection-de-modèles" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="sélection-de-modèles"><span class="header-section-number">3.3</span> Sélection de modèles</h2>
+<section id="sec-deviance" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="sec-deviance"><span class="header-section-number">3.3.1</span> Déviance</h3>
 <p>Pour juger si un modèle avec <span class="math inline">\(p+1\)</span> paramètres <span class="math inline">\(\boldsymbol\beta\)</span> s’ajuste bien aux données, il est utile de le comparer au modèle le plus flexible possible : celui qui accorde à chaque observation son propre paramètre, sans aucune structure imposée par des variables explicatives.</p>
 <div class="env-definition" data-titre="Modèle saturé">
 <p><span class="env-titre">Définition — Modèle saturé</span></p>
@@ -1175,8 +1181,8 @@ La flèche <span class="math inline">\(\xrightarrow{d}\)</span> indique une <str
 </div>
 <p>La déviance joue le même rôle que la somme des carrés des résidus en régression linéaire : elle sert à évaluer l’<a href="#sec-adequation">adéquation du modèle</a> et à comparer des modèles.</p>
 </section>
-<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="2.3.2">
-<h3 data-number="2.3.2" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">2.3.2</span> Comparaison de modèles emboîtés</h3>
+<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">3.3.2</span> Comparaison de modèles emboîtés</h3>
 <p>Pour comparer deux modèles emboîtés de déviances <span class="math inline">\(D_1\)</span> (complet) et <span class="math inline">\(D_2\)</span> (réduit), la statistique de test est <span class="math inline">\(\chi^2 = D_2 - D_1\)</span>.</p>
 <div class="env-propriete" data-titre="Distribution asymptotique de $\chi^2 = D_2-D_1$">
 <p><span class="env-titre">Propriété — Distribution asymptotique de <span class="math inline">\(\chi^2 = D_2-D_1\)</span></span></p>
@@ -1208,8 +1214,8 @@ La flèche <span class="math inline">\(\xrightarrow{d}\)</span> indique une <str
 <p>On rejette clairement <span class="math inline">\(H_0\)</span>, puisque <span class="math inline">\(p \approx 3\times 10^{-16}\)</span> est largement inférieur au seuil de 5% : le sexe et le groupe d’âge ajoutent une information importante que la classe seule ne capture pas. On verra plus loin, en examinant les coefficients du modèle complet, que l’effet du sexe va dans le sens contraire de l’idée reçue « les femmes et les enfants d’abord » — cohérent avec le fait que le navire a coulé en moins de 15 minutes, laissant peu de place à une évacuation ordonnée.</p>
 </div>
 </section>
-<section id="comparaison-de-modèles-non-emboîtés-aic-et-bic" class="level3" data-number="2.3.3">
-<h3 data-number="2.3.3" class="anchored" data-anchor-id="comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">2.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</h3>
+<section id="comparaison-de-modèles-non-emboîtés-aic-et-bic" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="comparaison-de-modèles-non-emboîtés-aic-et-bic"><span class="header-section-number">3.3.3</span> Comparaison de modèles non emboîtés : AIC et BIC</h3>
 <p>Comme pour les modèles linéaires, on utilise <span class="math display">\[AIC = -2\,l(\hat\mu;y) + 2(p+1), \qquad BIC = -2\,l(\hat\mu;y) + \log(n)(p+1).\]</span> Le modèle ayant le plus petit <span class="math inline">\(AIC\)</span> (ou <span class="math inline">\(BIC\)</span>) est préférable. En R : <code>AIC(modele)</code> et <code>AIC(modele, k=log(n))</code>.</p>
 <div class="env-exemple" data-titre="Modèles non emboîtés avec `empress_individus`">
 <p><span class="env-titre">Exemple — Modèles non emboîtés avec <code>empress_individus</code></span></p>
@@ -1230,8 +1236,8 @@ La flèche <span class="math inline">\(\xrightarrow{d}\)</span> indique une <str
 <p>Le modèle 2 (<code>classe + groupe_age</code>) a un AIC légèrement plus faible que le modèle 1 (<code>classe + sexe</code>) et lui est donc préférable — mais l’écart est mince (moins d’un point), signe qu’aucun des deux modèles n’est pleinement satisfaisant : chacun omet une variable importante, comme le confirme la sélection automatique ci-dessous.</p>
 </div>
 </section>
-<section id="sélection-automatique" class="level3" data-number="2.3.4">
-<h3 data-number="2.3.4" class="anchored" data-anchor-id="sélection-automatique"><span class="header-section-number">2.3.4</span> Sélection automatique</h3>
+<section id="sélection-automatique" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="sélection-automatique"><span class="header-section-number">3.3.4</span> Sélection automatique</h3>
 <p>Les méthodes pas à pas <em>forward</em>, <em>backward</em> et <em>stepwise</em> fonctionnent exactement comme pour les modèles linéaires (fonction <code>step</code> avec l’argument <code>direction</code>).</p>
 <div class="env-exemple" data-titre="Sélection automatique sur le jeu de données [`empress_individus`](#data-empress-individus)">
 <p><span class="env-titre">Exemple — Sélection automatique sur le jeu de données <a href="#data-empress-individus"><code>empress_individus</code></a></span></p>
@@ -1377,10 +1383,10 @@ Number of Fisher Scoring iterations: 6</code></pre>
 </div>
 </section>
 </section>
-<section id="validation-et-diagnostic-de-modèles" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="validation-et-diagnostic-de-modèles"><span class="header-section-number">2.4</span> Validation et diagnostic de modèles</h2>
-<section id="résidus" class="level3" data-number="2.4.1">
-<h3 data-number="2.4.1" class="anchored" data-anchor-id="résidus"><span class="header-section-number">2.4.1</span> Résidus</h3>
+<section id="validation-et-diagnostic-de-modèles" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="validation-et-diagnostic-de-modèles"><span class="header-section-number">3.4</span> Validation et diagnostic de modèles</h2>
+<section id="résidus" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="résidus"><span class="header-section-number">3.4.1</span> Résidus</h3>
 <div class="env-definition" data-titre="Résidus de déviance et résidus de Pearson">
 <p><span class="env-titre">Définition — Résidus de déviance et résidus de Pearson</span></p>
 <ul>
@@ -1389,8 +1395,8 @@ Number of Fisher Scoring iterations: 6</code></pre>
 </ul>
 </div>
 </section>
-<section id="sec-adequation" class="level3" data-number="2.4.2">
-<h3 data-number="2.4.2" class="anchored" data-anchor-id="sec-adequation"><span class="header-section-number">2.4.2</span> Tests d’adéquation globale</h3>
+<section id="sec-adequation" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="sec-adequation"><span class="header-section-number">3.4.2</span> Tests d’adéquation globale</h3>
 <p>Deux statistiques permettent de tester l’adéquation globale : la <a href="#sec-deviance">déviance</a> <span class="math inline">\(D\)</span> et la statistique du khi-deux de Pearson <span class="math display">\[\chi^2_P = \sum_{i=1}^n r_{P,i}^2 = \sum_{i=1}^n \frac{m_i(y_i - \hmu{i})^2}{\hmu{i}(m_i - \hmu{i})}.\]</span></p>
 <div class="env-propriete" data-titre="Convergence de $D$ et $\chi^2_P$">
 <p><span class="env-titre">Propriété — Convergence de <span class="math inline">\(D\)</span> et <span class="math inline">\(\chi^2_P\)</span></span></p>
@@ -1440,8 +1446,8 @@ D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
 <p>Cette distinction ne s’applique toutefois qu’au test d’adéquation globale d’un seul modèle. Pour comparer des modèles emboîtés, la déviance conserve un avantage clair : les différences de déviances suivent exactement une loi <span class="math inline">\(\chi^2\)</span>, ce qui n’est pas le cas des différences de statistiques de Pearson.</p>
 </div>
 </section>
-<section id="graphiques-et-extra-variabilité" class="level3" data-number="2.4.3">
-<h3 data-number="2.4.3" class="anchored" data-anchor-id="graphiques-et-extra-variabilité"><span class="header-section-number">2.4.3</span> Graphiques et extra-variabilité</h3>
+<section id="graphiques-et-extra-variabilité" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="graphiques-et-extra-variabilité"><span class="header-section-number">3.4.3</span> Graphiques et extra-variabilité</h3>
 <p>Les graphiques des résidus en fonction des numéros d’observations ne doivent montrer aucune tendance. Si plusieurs résidus de dépassent 3 en valeur absolue, cela peut suggérer une extra-variabilité.</p>
 <div class="env-definition" data-titre="Extra-variabilité (overdispersion)">
 <p><span class="env-titre">Définition — Extra-variabilité (overdispersion)</span></p>
@@ -1450,8 +1456,8 @@ D = \sum_{i=1}^n d_i = -2\,\ell(\hat{\boldsymbol\mu};\boldsymbol y),
 <p>En cas d’extra-variabilité, on spécifie <code>family=quasibinomial()</code> au lieu de <code>family=binomial()</code> dans <code>glm</code>.</p>
 <p>Pour vérifier la linéarité du prédicteur, on trace le nuage de points <span class="math inline">\(\{(\hpi{i}, \tilde\pi_i)\}\)</span>, où <span class="math inline">\(\hpi{i} = g^{-1}(\heta{i})\)</span> et <span class="math inline">\(\tilde\pi_i = y_i/m_i\)</span> : si le modèle est bien spécifié, les points doivent être autour de la droite <span class="math inline">\(y=x\)</span>.</p>
 </section>
-<section id="observations-aberrantes-et-valeurs-influentes" class="level3" data-number="2.4.4">
-<h3 data-number="2.4.4" class="anchored" data-anchor-id="observations-aberrantes-et-valeurs-influentes"><span class="header-section-number">2.4.4</span> Observations aberrantes et valeurs influentes</h3>
+<section id="observations-aberrantes-et-valeurs-influentes" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="observations-aberrantes-et-valeurs-influentes"><span class="header-section-number">3.4.4</span> Observations aberrantes et valeurs influentes</h3>
 <p>Le principe est identique à la régression linéaire. Les définitions des leviers, résidus standardisés et studentisés diffèrent, mais ces quantités ont la même interprétation. Il en va de même pour la distance de Cook, les DFBETAS et les DFFITS.</p>
 <div class="env-exemple" data-titre="Diagnostics de surdispersion — données `empress_agrege`">
 <p><span class="env-titre">Exemple — Diagnostics de surdispersion — données <code>empress_agrege</code></span></p>
@@ -1621,8 +1627,8 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 </section>
 </section>
-<section id="sec-roc" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="sec-roc"><span class="header-section-number">2.5</span> Spécificité, sensibilité et courbe ROC</h2>
+<section id="sec-roc" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="sec-roc"><span class="header-section-number">3.5</span> Spécificité, sensibilité et courbe ROC</h2>
 <p>Pour des données individuelles, l’adéquation est difficile à évaluer, mais on peut mesurer la <strong>capacité prédictive</strong> du modèle. On ajuste le modèle et on calcule les probabilités prédites <span class="math inline">\(\hpi{i} = g^{-1}(\heta{i})\)</span>.</p>
 <p>Fixons un seuil <span class="math inline">\(u \in [0,1]\)</span> (souvent <span class="math inline">\(u=1/2\)</span>). On classe <span class="math inline">\(\hat y_i = 1\)</span> si <span class="math inline">\(\hpi{i} &gt; u\)</span> et <span class="math inline">\(\hat y_i = 0\)</span> sinon.</p>
 <div class="env-definition" data-titre="Spécificité et sensibilité">
@@ -1685,8 +1691,8 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <p>L’aire sous la courbe est d’environ 0.68 : le modèle est mauvais selon l’échelle donnée plus haut. La classe, le sexe et le groupe d’âge influencent bien la survie (comme le confirment les tests précédents), mais ils sont loin de suffire à prédire, au niveau individuel, qui a survécu ou non — beaucoup d’autres facteurs (emplacement exact au moment de l’impact, capacité physique, chance) ont joué un rôle.</p>
 </div>
 </section>
-<section id="pour-aller-plus-loin" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="pour-aller-plus-loin"><span class="header-section-number">2.6</span> Pour aller plus loin</h2>
+<section id="pour-aller-plus-loin" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="pour-aller-plus-loin"><span class="header-section-number">3.6</span> Pour aller plus loin</h2>
 <p>Les exemples ci-dessus s’appuient tous sur le jeu de données <code>empress</code>. Les librairies R <code>GLMsData</code> <span class="citation" data-cites="dunn2018glm">(<a href="#ref-dunn2018glm" role="doc-biblioref">Dunn et Smyth 2018</a>)</span> et <code>faraway</code> <span class="citation" data-cites="faraway">(<a href="#ref-faraway" role="doc-biblioref">Faraway 2025</a>)</span> offrent d’autres jeux de données classiques pour la régression binaire, repris ici avec les mêmes analyses que dans les sections précédentes.</p>
 <div class="env-exemple">
 <p><span class="env-titre">Exemple</span></p>
@@ -1699,8 +1705,8 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <li><p><span id="data-troutegg"><code>troutegg</code></span> : 20 observations issues d’une expérience où des boîtes d’œufs de truite ont été enfouies à cinq emplacements différents d’un cours d’eau (<code>location</code>) et retirées après quatre durées différentes (<code>period</code>, en semaines) ; la réponse <span class="math inline">\(Y_i\)</span> est le nombre d’œufs survivants parmi les <span class="math inline">\(m_i\)</span> œufs de la boîte.</p></li>
 </ol>
 </div>
-<section id="comparaison-des-liens-avec-turbines" class="level3" data-number="2.6.1">
-<h3 data-number="2.6.1" class="anchored" data-anchor-id="comparaison-des-liens-avec-turbines"><span class="header-section-number">2.6.1</span> Comparaison des liens avec <code>turbines</code></h3>
+<section id="comparaison-des-liens-avec-turbines" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="comparaison-des-liens-avec-turbines"><span class="header-section-number">3.6.1</span> Comparaison des liens avec <code>turbines</code></h3>
 <div class="env-exemple" data-titre="Jeu de données [`turbines`](#data-turbines)">
 <p><span class="env-titre">Exemple — Jeu de données <a href="#data-turbines"><code>turbines</code></a></span></p>
 <p>On ajuste le modèle avec les trois fonctions de lien :</p>
@@ -1847,8 +1853,8 @@ Hours        0.000783381  0.001231879</code></pre>
 <p>On constate que les deux intervalles ne sont pas identiques.</p>
 </div>
 </section>
-<section id="test-emboîté-avec-turbines" class="level3" data-number="2.6.2">
-<h3 data-number="2.6.2" class="anchored" data-anchor-id="test-emboîté-avec-turbines"><span class="header-section-number">2.6.2</span> Test emboîté avec <code>turbines</code></h3>
+<section id="test-emboîté-avec-turbines" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="test-emboîté-avec-turbines"><span class="header-section-number">3.6.2</span> Test emboîté avec <code>turbines</code></h3>
 <div class="env-exemple" data-titre="Introduction des termes quadratiques et cubiques dans l'exemple [`turbines`](#data-turbines)">
 <p><span class="env-titre">Exemple — Introduction des termes quadratiques et cubiques dans l’exemple <a href="#data-turbines"><code>turbines</code></a></span></p>
 <p>On teste <span class="math inline">\(H_0: \beta_2 = \beta_3 = 0\)</span> (modèle avec <code>Hours</code> seulement contre modèle avec termes en <code>Hours</code><span class="math inline">\(^2\)</span> et <code>Hours</code><span class="math inline">\(^3\)</span>) :</p>
@@ -1876,8 +1882,8 @@ Hours        0.000783381  0.001231879</code></pre>
 <p>Puisque la valeur-p affichée ci-dessus est supérieure au seuil de 5%, on ne rejette pas <span class="math inline">\(H_0\)</span> : le modèle réduit est adéquat.</p>
 </div>
 </section>
-<section id="aic-et-sélection-automatique-avec-nminer" class="level3" data-number="2.6.3">
-<h3 data-number="2.6.3" class="anchored" data-anchor-id="aic-et-sélection-automatique-avec-nminer"><span class="header-section-number">2.6.3</span> AIC et sélection automatique avec <code>nminer</code></h3>
+<section id="aic-et-sélection-automatique-avec-nminer" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="aic-et-sélection-automatique-avec-nminer"><span class="header-section-number">3.6.3</span> AIC et sélection automatique avec <code>nminer</code></h3>
 <div class="env-exemple" data-titre="Modèles non emboîtés avec `nminer`">
 <p><span class="env-titre">Exemple — Modèles non emboîtés avec <code>nminer</code></span></p>
 <div class="cell">
@@ -2186,8 +2192,8 @@ Number of Fisher Scoring iterations: 9</code></pre>
 <p>Dans cet exemple, les trois méthodes convergent vers le même modèle final, ce qui n’est pas toujours le cas : comme chacune n’explore qu’un chemin restreint parmi tous les sous-modèles possibles (ajoutant ou retirant une variable à la fois), rien ne garantit qu’elles aboutissent au même optimum local (et encore moins à l’optimum global). Comme toujours, on compare chaque valeur-p des tableaux <code>summary()</code> ci-dessus au seuil de 5% pour juger de la significativité individuelle de chaque coefficient du modèle retenu.</p>
 </div>
 </section>
-<section id="test-dadéquation-avec-turbines" class="level3" data-number="2.6.4">
-<h3 data-number="2.6.4" class="anchored" data-anchor-id="test-dadéquation-avec-turbines"><span class="header-section-number">2.6.4</span> Test d’adéquation avec <code>turbines</code></h3>
+<section id="test-dadéquation-avec-turbines" class="level3" data-number="3.6.4">
+<h3 data-number="3.6.4" class="anchored" data-anchor-id="test-dadéquation-avec-turbines"><span class="header-section-number">3.6.4</span> Test d’adéquation avec <code>turbines</code></h3>
 <div class="env-exemple" data-titre="Test d'adéquation avec l'exemple [`turbines`](#data-turbines)">
 <p><span class="env-titre">Exemple — Test d’adéquation avec l’exemple <a href="#data-turbines"><code>turbines</code></a></span></p>
 <div class="cell">
@@ -2220,8 +2226,8 @@ Number of Fisher Scoring iterations: 9</code></pre>
 <p>On compare chacune des deux valeurs de <code>p.valeur</code> ci-dessus au seuil de 5% : si elle lui est supérieure, on ne rejette pas l’adéquation du modèle ; si elle lui est inférieure, on la rejette à ce seuil.</p>
 </div>
 </section>
-<section id="diagnostics-de-surdispersion-avec-troutegg" class="level3" data-number="2.6.5">
-<h3 data-number="2.6.5" class="anchored" data-anchor-id="diagnostics-de-surdispersion-avec-troutegg"><span class="header-section-number">2.6.5</span> Diagnostics de surdispersion avec <code>troutegg</code></h3>
+<section id="diagnostics-de-surdispersion-avec-troutegg" class="level3" data-number="3.6.5">
+<h3 data-number="3.6.5" class="anchored" data-anchor-id="diagnostics-de-surdispersion-avec-troutegg"><span class="header-section-number">3.6.5</span> Diagnostics de surdispersion avec <code>troutegg</code></h3>
 <div class="env-exemple" data-titre="Diagnostics de surdispersion — données `troutegg`">
 <p><span class="env-titre">Exemple — Diagnostics de surdispersion — données <code>troutegg</code></span></p>
 <p>On ajuste un modèle binomial sur les données <code>troutegg</code>, qui recensent la survie d’œufs de truite selon l’emplacement dans le cours d’eau et la période de retrait.</p>
@@ -2403,8 +2409,8 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <p>Le seuil usuel pour un levier élevé est <span class="math inline">\(2(p+1)/n\)</span> ; pour la distance de Cook, on examine plutôt les valeurs qui se détachent nettement des autres.</p>
 </div>
 </section>
-<section id="courbe-roc-avec-quilpie" class="level3" data-number="2.6.6">
-<h3 data-number="2.6.6" class="anchored" data-anchor-id="courbe-roc-avec-quilpie"><span class="header-section-number">2.6.6</span> Courbe ROC avec <code>quilpie</code></h3>
+<section id="courbe-roc-avec-quilpie" class="level3" data-number="3.6.6">
+<h3 data-number="3.6.6" class="anchored" data-anchor-id="courbe-roc-avec-quilpie"><span class="header-section-number">3.6.6</span> Courbe ROC avec <code>quilpie</code></h3>
 <div class="env-exemple" data-titre="Courbe ROC avec l'exemple [`quilpie`](#data-quilpie)">
 <p><span class="env-titre">Exemple — Courbe ROC avec l’exemple <a href="#data-quilpie"><code>quilpie</code></a></span></p>
 <p>On ajuste ici un modèle logistique avec la variable explicative SOI et le lien logit :</p>
@@ -2879,13 +2885,13 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./01-regression-lineaire.html" class="pagination-link" aria-label="Rappels de régression linéaire">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Rappels de régression linéaire</span></span>
+      <a href="./monte-carlo.html" class="pagination-link" aria-label="Simulations de Monte Carlo">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./03-modeles-lineaires-generalises.html" class="pagination-link" aria-label="Modèles linéaires généralisés (GLM)">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

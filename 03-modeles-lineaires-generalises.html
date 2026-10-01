@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Modèles linéaires généralisés (GLM) – Régression II -- STT-4300</title>
+<title>4&nbsp; Modèles linéaires généralisés (GLM) – Régression II -- STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -173,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-modeles-lineaires-generalises.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-modeles-lineaires-generalises.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -219,44 +219,50 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
     </ul>
@@ -269,35 +275,35 @@ window.Quarto = {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#famille-exponentielle" id="toc-famille-exponentielle" class="nav-link active" data-scroll-target="#famille-exponentielle"><span class="header-section-number">3.1</span> Famille exponentielle</a>
+  <li><a href="#famille-exponentielle" id="toc-famille-exponentielle" class="nav-link active" data-scroll-target="#famille-exponentielle"><span class="header-section-number">4.1</span> Famille exponentielle</a>
   <ul class="collapse">
-  <li><a href="#définition" id="toc-définition" class="nav-link" data-scroll-target="#définition"><span class="header-section-number">3.1.1</span> Définition</a></li>
-  <li><a href="#mise-en-forme-des-lois-usuelles" id="toc-mise-en-forme-des-lois-usuelles" class="nav-link" data-scroll-target="#mise-en-forme-des-lois-usuelles"><span class="header-section-number">3.1.2</span> Mise en forme des lois usuelles</a></li>
+  <li><a href="#définition" id="toc-définition" class="nav-link" data-scroll-target="#définition"><span class="header-section-number">4.1.1</span> Définition</a></li>
+  <li><a href="#mise-en-forme-des-lois-usuelles" id="toc-mise-en-forme-des-lois-usuelles" class="nav-link" data-scroll-target="#mise-en-forme-des-lois-usuelles"><span class="header-section-number">4.1.2</span> Mise en forme des lois usuelles</a></li>
   </ul></li>
-  <li><a href="#définition-dun-modèle-linéaire-généralisé" id="toc-définition-dun-modèle-linéaire-généralisé" class="nav-link" data-scroll-target="#définition-dun-modèle-linéaire-généralisé"><span class="header-section-number">3.2</span> Définition d’un modèle linéaire généralisé</a></li>
-  <li><a href="#estimation-des-paramètres" id="toc-estimation-des-paramètres" class="nav-link" data-scroll-target="#estimation-des-paramètres"><span class="header-section-number">3.3</span> Estimation des paramètres</a>
+  <li><a href="#définition-dun-modèle-linéaire-généralisé" id="toc-définition-dun-modèle-linéaire-généralisé" class="nav-link" data-scroll-target="#définition-dun-modèle-linéaire-généralisé"><span class="header-section-number">4.2</span> Définition d’un modèle linéaire généralisé</a></li>
+  <li><a href="#estimation-des-paramètres" id="toc-estimation-des-paramètres" class="nav-link" data-scroll-target="#estimation-des-paramètres"><span class="header-section-number">4.3</span> Estimation des paramètres</a>
   <ul class="collapse">
-  <li><a href="#vraisemblance-et-score" id="toc-vraisemblance-et-score" class="nav-link" data-scroll-target="#vraisemblance-et-score"><span class="header-section-number">3.3.1</span> Vraisemblance et score</a></li>
-  <li><a href="#loi-asymptotique-de-hb" id="toc-loi-asymptotique-de-hb" class="nav-link" data-scroll-target="#loi-asymptotique-de-hb"><span class="header-section-number">3.3.2</span> loi asymptotique de <span class="math inline">\(\hb\)</span></a></li>
-  <li><a href="#déviance-individuelle" id="toc-déviance-individuelle" class="nav-link" data-scroll-target="#déviance-individuelle"><span class="header-section-number">3.3.3</span> Déviance individuelle</a></li>
-  <li><a href="#estimation-de-phi" id="toc-estimation-de-phi" class="nav-link" data-scroll-target="#estimation-de-phi"><span class="header-section-number">3.3.4</span> Estimation de <span class="math inline">\(\phi\)</span></a></li>
+  <li><a href="#vraisemblance-et-score" id="toc-vraisemblance-et-score" class="nav-link" data-scroll-target="#vraisemblance-et-score"><span class="header-section-number">4.3.1</span> Vraisemblance et score</a></li>
+  <li><a href="#loi-asymptotique-de-hb" id="toc-loi-asymptotique-de-hb" class="nav-link" data-scroll-target="#loi-asymptotique-de-hb"><span class="header-section-number">4.3.2</span> loi asymptotique de <span class="math inline">\(\hb\)</span></a></li>
+  <li><a href="#déviance-individuelle" id="toc-déviance-individuelle" class="nav-link" data-scroll-target="#déviance-individuelle"><span class="header-section-number">4.3.3</span> Déviance individuelle</a></li>
+  <li><a href="#estimation-de-phi" id="toc-estimation-de-phi" class="nav-link" data-scroll-target="#estimation-de-phi"><span class="header-section-number">4.3.4</span> Estimation de <span class="math inline">\(\phi\)</span></a></li>
   </ul></li>
-  <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">3.4</span> Inférence statistique</a>
+  <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">4.4</span> Inférence statistique</a>
   <ul class="collapse">
-  <li><a href="#intervalles-de-confiance-et-tests-pour-beta_j" id="toc-intervalles-de-confiance-et-tests-pour-beta_j" class="nav-link" data-scroll-target="#intervalles-de-confiance-et-tests-pour-beta_j"><span class="header-section-number">3.4.1</span> Intervalles de confiance et tests pour <span class="math inline">\(\beta_j\)</span></a></li>
-  <li><a href="#intervalle-de-confiance-pour-une-valeur-prédite" id="toc-intervalle-de-confiance-pour-une-valeur-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-valeur-prédite"><span class="header-section-number">3.4.2</span> Intervalle de confiance pour une valeur prédite</a></li>
-  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">3.4.3</span> Comparaison de modèles emboîtés</a></li>
+  <li><a href="#intervalles-de-confiance-et-tests-pour-beta_j" id="toc-intervalles-de-confiance-et-tests-pour-beta_j" class="nav-link" data-scroll-target="#intervalles-de-confiance-et-tests-pour-beta_j"><span class="header-section-number">4.4.1</span> Intervalles de confiance et tests pour <span class="math inline">\(\beta_j\)</span></a></li>
+  <li><a href="#intervalle-de-confiance-pour-une-valeur-prédite" id="toc-intervalle-de-confiance-pour-une-valeur-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-valeur-prédite"><span class="header-section-number">4.4.2</span> Intervalle de confiance pour une valeur prédite</a></li>
+  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">4.4.3</span> Comparaison de modèles emboîtés</a></li>
   </ul></li>
-  <li><a href="#sélection-et-validation-de-modèles" id="toc-sélection-et-validation-de-modèles" class="nav-link" data-scroll-target="#sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</a></li>
-  <li><a href="#sec-poisson" id="toc-sec-poisson" class="nav-link" data-scroll-target="#sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression de Poisson</a>
+  <li><a href="#sélection-et-validation-de-modèles" id="toc-sélection-et-validation-de-modèles" class="nav-link" data-scroll-target="#sélection-et-validation-de-modèles"><span class="header-section-number">4.5</span> Sélection et validation de modèles</a></li>
+  <li><a href="#sec-poisson" id="toc-sec-poisson" class="nav-link" data-scroll-target="#sec-poisson"><span class="header-section-number">4.6</span> Exemple détaillé : la régression de Poisson</a>
   <ul class="collapse">
-  <li><a href="#variables-explicatives-offset" id="toc-variables-explicatives-offset" class="nav-link" data-scroll-target="#variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></a></li>
-  <li><a href="#vraisemblance-et-score-1" id="toc-vraisemblance-et-score-1" class="nav-link" data-scroll-target="#vraisemblance-et-score-1"><span class="header-section-number">3.6.2</span> Vraisemblance et score</a></li>
-  <li><a href="#information-de-fisher-et-variance-des-estimateurs" id="toc-information-de-fisher-et-variance-des-estimateurs" class="nav-link" data-scroll-target="#information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">3.6.3</span> Information de Fisher et variance des estimateurs</a></li>
-  <li><a href="#déviance-et-adéquation" id="toc-déviance-et-adéquation" class="nav-link" data-scroll-target="#déviance-et-adéquation"><span class="header-section-number">3.6.4</span> Déviance et adéquation</a></li>
-  <li><a href="#sec-surdispersion" id="toc-sec-surdispersion" class="nav-link" data-scroll-target="#sec-surdispersion"><span class="header-section-number">3.6.5</span> Variabilité extra-Poissonienne</a></li>
-  <li><a href="#comparaison-de-modèles-emboîtés-1" id="toc-comparaison-de-modèles-emboîtés-1" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés-1"><span class="header-section-number">3.6.6</span> Comparaison de modèles emboîtés</a></li>
-  <li><a href="#graphiques-et-observations-aberrantes" id="toc-graphiques-et-observations-aberrantes" class="nav-link" data-scroll-target="#graphiques-et-observations-aberrantes"><span class="header-section-number">3.6.7</span> Graphiques et observations aberrantes</a></li>
+  <li><a href="#variables-explicatives-offset" id="toc-variables-explicatives-offset" class="nav-link" data-scroll-target="#variables-explicatives-offset"><span class="header-section-number">4.6.1</span> Variables explicatives <em>offset</em></a></li>
+  <li><a href="#vraisemblance-et-score-1" id="toc-vraisemblance-et-score-1" class="nav-link" data-scroll-target="#vraisemblance-et-score-1"><span class="header-section-number">4.6.2</span> Vraisemblance et score</a></li>
+  <li><a href="#information-de-fisher-et-variance-des-estimateurs" id="toc-information-de-fisher-et-variance-des-estimateurs" class="nav-link" data-scroll-target="#information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">4.6.3</span> Information de Fisher et variance des estimateurs</a></li>
+  <li><a href="#déviance-et-adéquation" id="toc-déviance-et-adéquation" class="nav-link" data-scroll-target="#déviance-et-adéquation"><span class="header-section-number">4.6.4</span> Déviance et adéquation</a></li>
+  <li><a href="#sec-surdispersion" id="toc-sec-surdispersion" class="nav-link" data-scroll-target="#sec-surdispersion"><span class="header-section-number">4.6.5</span> Variabilité extra-Poissonienne</a></li>
+  <li><a href="#comparaison-de-modèles-emboîtés-1" id="toc-comparaison-de-modèles-emboîtés-1" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés-1"><span class="header-section-number">4.6.6</span> Comparaison de modèles emboîtés</a></li>
+  <li><a href="#graphiques-et-observations-aberrantes" id="toc-graphiques-et-observations-aberrantes" class="nav-link" data-scroll-target="#graphiques-et-observations-aberrantes"><span class="header-section-number">4.6.7</span> Graphiques et observations aberrantes</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/03-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
@@ -307,7 +313,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-GLM" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></h1>
+<h1 class="title"><span id="sec-GLM" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></h1>
 </div>
 
 
@@ -319,7 +325,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">30 septembre 2026</p>
+      <p class="date-modified">1 octobre 2026</p>
     </div>
   </div>
     
@@ -331,10 +337,10 @@ window.Quarto = {
 
 
 <p>La régression linéaire et la régression logistique partagent plusieurs concepts : inférence sur les coefficients <span class="math inline">\(\beta\)</span>, sélection de modèles, diagnostics. Ce chapitre en donne une présentation unifiée : on suppose que la loi de la variable réponse appartient à la famille exponentielle, qui inclut notamment les lois normale, de Bernoulli, binomiale, de Poisson et gamma. Les régressions linéaire et logistique, vues aux chapitres précédents, en sont donc des cas particuliers.</p>
-<section id="famille-exponentielle" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="famille-exponentielle"><span class="header-section-number">3.1</span> Famille exponentielle</h2>
-<section id="définition" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="définition"><span class="header-section-number">3.1.1</span> Définition</h3>
+<section id="famille-exponentielle" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="famille-exponentielle"><span class="header-section-number">4.1</span> Famille exponentielle</h2>
+<section id="définition" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="définition"><span class="header-section-number">4.1.1</span> Définition</h3>
 <div class="env-definition" data-titre="Famille exponentielle">
 <p><span class="env-titre">Définition — Famille exponentielle</span></p>
 <p>La loi de la variable aléatoire <span class="math inline">\(Y\)</span> appartient à la famille exponentielle si sa fonction de probabilité (densité si <span class="math inline">\(Y\)</span> est continue, fonction de masse si <span class="math inline">\(Y\)</span> est discrète) s’écrit</p>
@@ -396,8 +402,8 @@ K^{(n)}(t) = \phi^{\,n-1}\, b^{(n)}(\theta+t\phi) \qquad\Longrightarrow\qquad \k
 </div>
 <p>Le paramètre canonique <span class="math inline">\(\theta\)</span> est donc directement lié à l’espérance de <span class="math inline">\(Y\)</span> (via <span class="math inline">\(\mu = b'(\theta)\)</span>), tandis que le paramètre de dispersion <span class="math inline">\(\phi\)</span> module l’amplitude de la variance autour de la fonction de variance <span class="math inline">\(V(\mu)\)</span>, qui elle dépend de la loi choisie. Pour certaines lois (Bernoulli, binomiale, Poisson), <span class="math inline">\(\phi\)</span> est fixé à 1 : la variance ne dépend alors que de la moyenne, une contrainte qu’il faudra garder à l’œil lors des diagnostics (voir la <a href="#sec-surdispersion">surdispersion</a>).</p>
 </section>
-<section id="mise-en-forme-des-lois-usuelles" class="level3" data-number="3.1.2">
-<h3 data-number="3.1.2" class="anchored" data-anchor-id="mise-en-forme-des-lois-usuelles"><span class="header-section-number">3.1.2</span> Mise en forme des lois usuelles</h3>
+<section id="mise-en-forme-des-lois-usuelles" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="mise-en-forme-des-lois-usuelles"><span class="header-section-number">4.1.2</span> Mise en forme des lois usuelles</h3>
 <p>Pour identifier <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span>, <span class="math inline">\(a(y,\phi)\)</span> et <span class="math inline">\(b(\theta)\)</span> pour une loi donnée, la démarche est toujours la même : on part de la fonction de probabilité, on prend son logarithme, et on réarrange les termes pour faire apparaître la forme <span class="math inline">\(\{y\theta - b(\theta)\}/\phi\)</span>, tout ce qui reste (ne dépendant pas de <span class="math inline">\(\theta\)</span>) formant <span class="math inline">\(\log a(y,\phi)\)</span>.</p>
 <div class="env-exemple" data-titre="Loi normale">
 <p><span class="env-titre">Exemple — Loi normale</span></p>
@@ -553,8 +559,8 @@ Var[Y] = \phi\mu^2, \qquad V(\mu) = \mu^2.
 </table>
 </section>
 </section>
-<section id="définition-dun-modèle-linéaire-généralisé" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="définition-dun-modèle-linéaire-généralisé"><span class="header-section-number">3.2</span> Définition d’un modèle linéaire généralisé</h2>
+<section id="définition-dun-modèle-linéaire-généralisé" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="définition-dun-modèle-linéaire-généralisé"><span class="header-section-number">4.2</span> Définition d’un modèle linéaire généralisé</h2>
 <div class="env-definition" data-titre="Modèle linéaire généralisé">
 <p><span class="env-titre">Définition — Modèle linéaire généralisé</span></p>
 <p>Un modèle linéaire généralisé (GLM) est composé de trois éléments :</p>
@@ -570,10 +576,10 @@ Var[Y] = \phi\mu^2, \qquad V(\mu) = \mu^2.
 </div>
 <p>Les paramètres du modèle sont donc <span class="math inline">\(\boldsymbol\beta = (\beta_0,\ldots,\beta_p)^\top\)</span> et <span class="math inline">\(\phi\)</span>. On retrouve comme cas particuliers la régression linéaire (loi normale, lien identité), la régression logistique (loi binomiale, lien logit) et la régression de Poisson (loi de Poisson, lien log). Rien n’empêche cependant d’utiliser un lien non canonique ; le lien canonique n’a pas de statut privilégié sur le plan de l’interprétation, mais il simplifie certains calculs, comme on le verra à la section suivante.</p>
 </section>
-<section id="estimation-des-paramètres" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="estimation-des-paramètres"><span class="header-section-number">3.3</span> Estimation des paramètres</h2>
-<section id="vraisemblance-et-score" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="vraisemblance-et-score"><span class="header-section-number">3.3.1</span> Vraisemblance et score</h3>
+<section id="estimation-des-paramètres" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="estimation-des-paramètres"><span class="header-section-number">4.3</span> Estimation des paramètres</h2>
+<section id="vraisemblance-et-score" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="vraisemblance-et-score"><span class="header-section-number">4.3.1</span> Vraisemblance et score</h3>
 <p>La log-vraisemblance des données <span class="math inline">\(\Delta = \{(Y_i,X_i)\}\)</span> s’écrit, en sommant les contributions individuelles données par la forme exponentielle,</p>
 <p><span class="math display">\[
 \ell(\boldsymbol\beta,\phi\mid\Delta) = \sum_{i=1}^n\log[a(y_i,\phi)] + \frac{1}{\phi}\sum_{i=1}^n[y_i\theta_i - b(\theta_i)] = \ell_1(\phi) + \frac{1}{\phi}\, \ell_2(\boldsymbol\beta).
@@ -581,8 +587,8 @@ Var[Y] = \phi\mu^2, \qquad V(\mu) = \mu^2.
 <p>Le point important est que <span class="math inline">\(\theta_i\)</span> dépend de <span class="math inline">\(\boldsymbol\beta\)</span> (indirectement, via <span class="math inline">\(\mu_i = g^{-1}(\eta_i)\)</span> puis <span class="math inline">\(\theta_i = (b')^{-1}(\mu_i)\)</span>), mais que <span class="math inline">\(\phi\)</span> n’apparaît que comme facteur multiplicatif devant <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> et dans le terme <span class="math inline">\(\ell_1(\phi)\)</span>, qui ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>. Il s’ensuit que l’estimateur du maximum de vraisemblance <span class="math inline">\(\hb\)</span> maximise <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> seul, peu importe la valeur de <span class="math inline">\(\phi\)</span> : l’estimation de <span class="math inline">\(\boldsymbol\beta\)</span> et celle de <span class="math inline">\(\phi\)</span> se font donc de façon séparée.</p>
 <p>Comme pour la régression logistique, il n’existe généralement pas de solution analytique à ce problème de maximisation, à cause de la fonction de lien <span class="math inline">\(g\)</span>, qui introduit une relation non linéaire entre <span class="math inline">\(\boldsymbol\beta\)</span> et l’espérance <span class="math inline">\(\mu_i\)</span>. On résout donc numériquement l’équation du score par l’algorithme IRLS (<em>Iteratively Reweighted Least Squares</em>), une application de la méthode de Fisher scoring à ce problème : à chaque itération, on ajuste une régression linéaire pondérée dont les poids et la variable réponse transformée sont mis à jour à partir des valeurs ajustées courantes, jusqu’à convergence.</p>
 </section>
-<section id="loi-asymptotique-de-hb" class="level3" data-number="3.3.2">
-<h3 data-number="3.3.2" class="anchored" data-anchor-id="loi-asymptotique-de-hb"><span class="header-section-number">3.3.2</span> loi asymptotique de <span class="math inline">\(\hb\)</span></h3>
+<section id="loi-asymptotique-de-hb" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="loi-asymptotique-de-hb"><span class="header-section-number">4.3.2</span> loi asymptotique de <span class="math inline">\(\hb\)</span></h3>
 <div class="env-propriete" data-titre="loi asymptotique de l'estimateur du maximum de vraisemblance">
 <p><span class="env-titre">Propriété — loi asymptotique de l’estimateur du maximum de vraisemblance</span></p>
 <p>L’estimateur <span class="math inline">\(\hb\)</span> obtenu par maximisation de <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> a pour loi asymptotique</p>
@@ -597,8 +603,8 @@ W_i = \frac{1}{V(\hat\mu_i)\left[g'(\hat\mu_i)\right]^2},
 </div>
 <p>Cette forme englobe les résultats vus aux chapitres précédents : en régression linéaire (<span class="math inline">\(V(\mu)=1\)</span>, <span class="math inline">\(g'(\mu)=1\)</span>), <span class="math inline">\(W_i = 1\)</span> pour tout <span class="math inline">\(i\)</span> et on retrouve la variance usuelle des moindres carrés ; en régression logistique (<span class="math inline">\(m_i=1\)</span>), on retrouve <span class="math inline">\(w_i = \hat\mu_i(1-\hat\mu_i)\)</span> après simplification.</p>
 </section>
-<section id="déviance-individuelle" class="level3" data-number="3.3.3">
-<h3 data-number="3.3.3" class="anchored" data-anchor-id="déviance-individuelle"><span class="header-section-number">3.3.3</span> Déviance individuelle</h3>
+<section id="déviance-individuelle" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="déviance-individuelle"><span class="header-section-number">4.3.3</span> Déviance individuelle</h3>
 <p>Comme au chapitre sur la <a href="02-regression-logistique.html#sec-deviance">régression logistique</a>, on veut comparer l’ajustement <span class="math inline">\(\mu\)</span> d’un modèle à l’ajustement parfait <span class="math inline">\(y\)</span>, et ce pour n’importe quelle loi de la famille exponentielle. Posons</p>
 <p><span class="math display">\[
 t(y,\mu) = y\theta - b(\theta),
@@ -632,8 +638,8 @@ D^*(y,\mu) = \frac{D(y,\mu)}{\phi} = \frac{\sum_{i=1}^n (y_i-\mu_i)^2}{\sigma^2}
 <p>qui n’est pas une approximation, mais bien la loi exacte de la déviance standardisée.</p>
 </div>
 </section>
-<section id="estimation-de-phi" class="level3" data-number="3.3.4">
-<h3 data-number="3.3.4" class="anchored" data-anchor-id="estimation-de-phi"><span class="header-section-number">3.3.4</span> Estimation de <span class="math inline">\(\phi\)</span></h3>
+<section id="estimation-de-phi" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="estimation-de-phi"><span class="header-section-number">4.3.4</span> Estimation de <span class="math inline">\(\phi\)</span></h3>
 <p>Si <span class="math inline">\(\phi\)</span> est fixé par la loi (Bernoulli, binomiale, Poisson), la procédure d’estimation s’arrête à <span class="math inline">\(\hb\)</span>. Autrement (loi normale, gamma), <span class="math inline">\(\phi\)</span> doit lui aussi être estimé. L’estimateur du maximum de vraisemblance de <span class="math inline">\(\phi\)</span> est biaisé en petits échantillons, ce qui motive l’usage d’estimateurs par la <a href="#theo-estim-phi">méthode des moments</a> plutôt que de rechercher directement le maximum de <span class="math inline">\(\ell_1(\phi)\)</span>.</p>
 <p>On calcule pour cela deux statistiques, qui généralisent la statistique du khi-deux de Pearson et la déviance vues en régression logistique :</p>
 <p><span class="math display">\[
@@ -677,10 +683,10 @@ E\!\left[\frac{X^2}{\phi}\right] \approx n-(p+1), \qquad E\!\left[\frac{D(y,\hat
 </div>
 </section>
 </section>
-<section id="inférence-statistique" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">3.4</span> Inférence statistique</h2>
-<section id="intervalles-de-confiance-et-tests-pour-beta_j" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="intervalles-de-confiance-et-tests-pour-beta_j"><span class="header-section-number">3.4.1</span> Intervalles de confiance et tests pour <span class="math inline">\(\beta_j\)</span></h3>
+<section id="inférence-statistique" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">4.4</span> Inférence statistique</h2>
+<section id="intervalles-de-confiance-et-tests-pour-beta_j" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="intervalles-de-confiance-et-tests-pour-beta_j"><span class="header-section-number">4.4.1</span> Intervalles de confiance et tests pour <span class="math inline">\(\beta_j\)</span></h3>
 <p><strong>Cas où <span class="math inline">\(\phi\)</span> est fixé.</strong> Comme en régression logistique, les intervalles de confiance et les tests concernant <span class="math inline">\(\boldsymbol\beta\)</span> reposent sur la normalité asymptotique de <span class="math inline">\(\hb\)</span>. Un intervalle de confiance de niveau <span class="math inline">\((1-\alpha)\)</span> pour <span class="math inline">\(\beta_j\)</span> est</p>
 <p><span class="math display">\[
 \left[\hbj{j} - z_{\alpha/2}\sqrt{\phi\, v_j}\,;\ \hbj{j} + z_{\alpha/2}\sqrt{\phi\, v_j}\right],
@@ -701,8 +707,8 @@ E\!\left[\frac{X^2}{\phi}\right] \approx n-(p+1), \qquad E\!\left[\frac{D(y,\hat
 <p>mais sa justification repose sur une approximation asymptotique via la quasi-vraisemblance plutôt que sur la théorie exacte de la vraisemblance. Le résultat pratique est identique, mais la garantie théorique est un peu plus faible que dans le cas d’une vraie famille exponentielle à dispersion libre.</p>
 </div>
 </section>
-<section id="intervalle-de-confiance-pour-une-valeur-prédite" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-valeur-prédite"><span class="header-section-number">3.4.2</span> Intervalle de confiance pour une valeur prédite</h3>
+<section id="intervalle-de-confiance-pour-une-valeur-prédite" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-valeur-prédite"><span class="header-section-number">4.4.2</span> Intervalle de confiance pour une valeur prédite</h3>
 <p>Pour une observation future <span class="math inline">\(X^* = (1,X_1^*,\ldots,X_p^*)^\top\)</span>, on pose <span class="math inline">\(\eta^* = {X^*}^\top\boldsymbol\beta\)</span> et <span class="math inline">\(\mu^* = g^{-1}(\eta^*)\)</span>. Comme <span class="math inline">\(\hat\eta^*\)</span> est une combinaison linéaire de <span class="math inline">\(\hat\beta\)</span>, sa variance s’obtient directement :</p>
 <p><span class="math display">\[
 \hat{\text V}(\hat\eta^*) = {X^*}^\top \hat{\text V}(\hat\beta)\, X^*,
@@ -713,8 +719,8 @@ E\!\left[\frac{X^2}{\phi}\right] \approx n-(p+1), \qquad E\!\left[\frac{D(y,\hat
 \]</span></p>
 <p>et, en appliquant <span class="math inline">\(g^{-1}\)</span> aux deux bornes, un intervalle de confiance pour <span class="math inline">\(\mu^*\)</span>. Comme pour la régression logistique, cette façon de procéder (transformer les bornes de l’intervalle construit sur l’échelle du prédicteur linéaire) garantit que l’intervalle final respecte le domaine de <span class="math inline">\(\mu^*\)</span> (par exemple <span class="math inline">\([0,1]\)</span> pour une proportion), contrairement à une application directe de la méthode du delta sur <span class="math inline">\(\hat\mu^*\)</span>.</p>
 </section>
-<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="3.4.3">
-<h3 data-number="3.4.3" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">3.4.3</span> Comparaison de modèles emboîtés</h3>
+<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">4.4.3</span> Comparaison de modèles emboîtés</h3>
 <p>Pour comparer un modèle réduit <span class="math inline">\(A\)</span> à un modèle complet <span class="math inline">\(B\)</span> (avec <span class="math inline">\(A\)</span> emboîté dans <span class="math inline">\(B\)</span>), on procède par différence de déviances, comme en régression logistique.</p>
 <div class="env-propriete" data-titre="Cas $\phi$ fixé">
 <p><span class="env-titre">Propriété — Cas <span class="math inline">\(\phi\)</span> fixé</span></p>
@@ -732,16 +738,16 @@ X_{obs} = \frac{\{D_A(y,\hat\mu) - D_B(y,\hat\mu)\}/d}{\tilde\phi_P}\ \sim\ F_{d
 </div>
 </section>
 </section>
-<section id="sélection-et-validation-de-modèles" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</h2>
+<section id="sélection-et-validation-de-modèles" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="sélection-et-validation-de-modèles"><span class="header-section-number">4.5</span> Sélection et validation de modèles</h2>
 <p>Les procédures pas à pas <em>backward</em>, <em>forward</em> et <em>stepwise</em>, telles que décrites au chapitre précédent, restent valides pour tout GLM, sur la base des critères</p>
 <p><span class="math display">\[
 AIC = -2\,\ell(\hb,\tilde\phi_P\mid\Delta) + 2(p+1), \qquad BIC = -2\,\ell(\hb,\tilde\phi_P\mid\Delta) + \log(n)(p+1).
 \]</span></p>
 <p>De même, les outils de validation vus aux chapitres sur les régressions linéaire et logistique — résidus de Pearson et de déviance, effet levier, DFBETAS, DFFITS, distance de Cook — se généralisent directement à l’ensemble des GLM, en substituant la déviance individuelle <span class="math inline">\(d_i\)</span> à la somme des carrés des résidus lorsque requis.</p>
 </section>
-<section id="sec-poisson" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression de Poisson</h2>
+<section id="sec-poisson" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="sec-poisson"><span class="header-section-number">4.6</span> Exemple détaillé : la régression de Poisson</h2>
 <p>La variable réponse <span class="math inline">\(Y_i \in \mathbb{N}\)</span> dénote ici un dénombrement (nombre de survivants dans un groupe, nombre de nouveaux cas d’une maladie, nombre de sinistres, etc.). La régression de Poisson suppose <span class="math inline">\(Y_i \sim \mathcal{P}(\mu_i)\)</span> :</p>
 <p><span class="math display">\[
 P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.
@@ -791,8 +797,8 @@ P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \m
 <p><span class="env-titre">Remarque — Interprétation des coefficients</span></p>
 <p>Si <span class="math inline">\(X_{ij}\)</span> augmente d’une unité, toutes les autres variables étant fixées, <span class="math inline">\(\mu_i\)</span> est multiplié par <span class="math inline">\(e^{\beta_j}\)</span> : l’effet est multiplicatif sur l’échelle de la réponse, exactement comme le rapport de cotes <span class="math inline">\(e^{\beta_j}\)</span> l’était sur la cote en régression logistique. Si <span class="math inline">\(\beta_j &gt; 0\)</span>, alors <span class="math inline">\(e^{\beta_j}&gt;1\)</span> et <span class="math inline">\(\mu_i\)</span> croît avec <span class="math inline">\(X_{ij}\)</span> ; si <span class="math inline">\(\beta_j&lt;0\)</span>, <span class="math inline">\(\mu_i\)</span> décroît.</p>
 </div>
-<section id="variables-explicatives-offset" class="level3" data-number="3.6.1">
-<h3 data-number="3.6.1" class="anchored" data-anchor-id="variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></h3>
+<section id="variables-explicatives-offset" class="level3" data-number="4.6.1">
+<h3 data-number="4.6.1" class="anchored" data-anchor-id="variables-explicatives-offset"><span class="header-section-number">4.6.1</span> Variables explicatives <em>offset</em></h3>
 <div class="env-theo" data-titre="Approximation de la loi binomiale par la loi de Poisson">
 <p><span class="env-titre">Pour aller plus loin avec la théorie — Approximation de la loi binomiale par la loi de Poisson</span></p>
 <p>Soit <span class="math inline">\(Y_i \sim \text{Bin}(m_i, \pi_i)\)</span>. Si <span class="math inline">\(m_i \to \infty\)</span> et <span class="math inline">\(\pi_i \to 0\)</span> de sorte que <span class="math inline">\(\mu_i = m_i\pi_i\)</span> reste fixe (ou converge vers une constante), alors la loi de <span class="math inline">\(Y_i\)</span> converge vers une loi de Poisson de moyenne <span class="math inline">\(\mu_i\)</span> :</p>
@@ -860,8 +866,8 @@ groupe_ageEnfant
 <p>Les taux prédits suivent d’assez près les taux observés chez les adultes. Les écarts sont plus marqués chez les enfants, où les effectifs sont petits (4 filles seulement en première classe).</p>
 </div>
 </section>
-<section id="vraisemblance-et-score-1" class="level3" data-number="3.6.2">
-<h3 data-number="3.6.2" class="anchored" data-anchor-id="vraisemblance-et-score-1"><span class="header-section-number">3.6.2</span> Vraisemblance et score</h3>
+<section id="vraisemblance-et-score-1" class="level3" data-number="4.6.2">
+<h3 data-number="4.6.2" class="anchored" data-anchor-id="vraisemblance-et-score-1"><span class="header-section-number">4.6.2</span> Vraisemblance et score</h3>
 <p>La log-vraisemblance générale, avant de substituer le lien log, s’écrit</p>
 <p><span class="math display">\[
 \ell(\boldsymbol\mu;\boldsymbol y) = \sum_{i=1}^n \left\{y_i\log(\mu_i) - \mu_i\right\} - \sum_{i=1}^n \log(y_i!),
@@ -886,12 +892,12 @@ groupe_ageEnfant
 <p><span class="math display">\[
 \boldsymbol U(\boldsymbol\beta) = \boldsymbol X^\top(\boldsymbol y - \boldsymbol\mu).
 \]</span></p>
-<p>Cette expression a exactement la même forme que le score de la régression binomiale (<a href="02-regression-logistique.html#eq-score-vecteur" class="quarto-xref">Équation&nbsp;<span>2.2</span></a>) — seule la relation entre <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\eta_i\)</span> diffère d’un lien à l’autre.</p>
+<p>Cette expression a exactement la même forme que le score de la régression binomiale (<a href="02-regression-logistique.html#eq-score-vecteur" class="quarto-xref">Équation&nbsp;<span>3.2</span></a>) — seule la relation entre <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\eta_i\)</span> diffère d’un lien à l’autre.</p>
 </div>
 <p>Comme pour la régression logistique, l’équation <span class="math inline">\(\boldsymbol U(\boldsymbol\beta)=\boldsymbol 0\)</span> n’a pas de solution analytique : on résout numériquement par IRLS (Fisher scoring), implémenté dans <code>glm</code> avec <code>family = poisson</code>.</p>
 </section>
-<section id="information-de-fisher-et-variance-des-estimateurs" class="level3" data-number="3.6.3">
-<h3 data-number="3.6.3" class="anchored" data-anchor-id="information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">3.6.3</span> Information de Fisher et variance des estimateurs</h3>
+<section id="information-de-fisher-et-variance-des-estimateurs" class="level3" data-number="4.6.3">
+<h3 data-number="4.6.3" class="anchored" data-anchor-id="information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">4.6.3</span> Information de Fisher et variance des estimateurs</h3>
 <p>La loi asymptotique de <span class="math inline">\(\hb\)</span> est</p>
 <p><span class="math display">\[
 \hb \;\dot\sim\; \mathcal{N}\{\boldsymbol\beta,\, (X^\top W X)^{-1}\},
@@ -906,8 +912,8 @@ w_i = \frac{(d\mu_i/d\eta_i)^2}{Var[Y_i]} = \frac{\mu_i^2}{\mu_i} = \mu_i,
 <p>évalué en <span class="math inline">\(\hat\mu_i = e^{\hat\eta_i}\)</span>. Comme pour la binomiale, <span class="math inline">\(\phi=1\)</span> ici : aucun paramètre de dispersion additionnel n’est estimé dans le modèle de Poisson usuel.</p>
 </div>
 </section>
-<section id="déviance-et-adéquation" class="level3" data-number="3.6.4">
-<h3 data-number="3.6.4" class="anchored" data-anchor-id="déviance-et-adéquation"><span class="header-section-number">3.6.4</span> Déviance et adéquation</h3>
+<section id="déviance-et-adéquation" class="level3" data-number="4.6.4">
+<h3 data-number="4.6.4" class="anchored" data-anchor-id="déviance-et-adéquation"><span class="header-section-number">4.6.4</span> Déviance et adéquation</h3>
 <p>La déviance individuelle, obtenue en appliquant la définition générale <span class="math inline">\(d(y,\mu)=2\{\ell(y,y)-\ell(y,\mu)\}\)</span> à la loi de Poisson, se dérive comme suit.</p>
 <div class="env-log" data-titre="Dérivation de la déviance">
 <p><span class="env-titre">Le cas du lien log — Dérivation de la déviance</span></p>
@@ -960,8 +966,8 @@ X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D 
 </div>
 </div>
 </section>
-<section id="sec-surdispersion" class="level3" data-number="3.6.5">
-<h3 data-number="3.6.5" class="anchored" data-anchor-id="sec-surdispersion"><span class="header-section-number">3.6.5</span> Variabilité extra-Poissonienne</h3>
+<section id="sec-surdispersion" class="level3" data-number="4.6.5">
+<h3 data-number="4.6.5" class="anchored" data-anchor-id="sec-surdispersion"><span class="header-section-number">4.6.5</span> Variabilité extra-Poissonienne</h3>
 <p>En pratique, il arrive fréquemment que <span class="math inline">\(Var[Y_i] &gt; E[Y_i]\)</span>, c’est-à-dire que la variance observée dans les données dépasse ce que prévoit la loi de Poisson (qui impose <span class="math inline">\(\phi = 1\)</span>). Ce phénomène est appelé surdispersion. Deux stratégies courantes permettent d’en tenir compte.</p>
 <div class="env-remarque" data-titre="Approche quasi-Poisson">
 <p><span class="env-titre">Remarque — Approche quasi-Poisson</span></p>
@@ -1004,8 +1010,8 @@ Q \sim \tfrac{1}{2}\chi^2_0 + \tfrac{1}{2}\chi^2_1 \quad\text{sous } H_0,
 <p>L’estimation de <span class="math inline">\(\theta\)</span> est très grande, donc <span class="math inline">\(\hat\alpha = 1/\hat\theta\)</span> est pratiquement nul : le maximum de vraisemblance se trouve à la frontière <span class="math inline">\(\alpha = 0\)</span>, et <code>glm.nb</code> peut signaler que l’algorithme a atteint sa limite d’itérations. On a alors <span class="math inline">\(Q_{obs} \approx 0\)</span> et <span class="math inline">\(\alpha^* \approx 0{,}5\)</span> : on ne détecte pas de variabilité extra-Poissonienne, et le modèle de Poisson usuel demeure approprié.</p>
 </div>
 </section>
-<section id="comparaison-de-modèles-emboîtés-1" class="level3" data-number="3.6.6">
-<h3 data-number="3.6.6" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés-1"><span class="header-section-number">3.6.6</span> Comparaison de modèles emboîtés</h3>
+<section id="comparaison-de-modèles-emboîtés-1" class="level3" data-number="4.6.6">
+<h3 data-number="4.6.6" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés-1"><span class="header-section-number">4.6.6</span> Comparaison de modèles emboîtés</h3>
 <p>Comme en régression logistique, on peut comparer deux modèles emboîtés par différence de déviances plutôt que d’examiner l’adéquation d’un seul modèle.</p>
 <div class="env-exemple" data-titre="Effet de la classe sur [`empress`](#data-empress)">
 <p><span class="env-titre">Exemple — Effet de la classe sur <a href="#data-empress"><code>empress</code></a></span></p>
@@ -1039,8 +1045,8 @@ Model 2: survivants ~ offset(log(effectif)) + classe + sexe + groupe_age
 <p>Le premier test rejette nettement l’hypothèse d’absence d’effet de la classe (différence de déviances d’environ 15,4 à 2 degrés de liberté, valeur-p <span class="math inline">\(\approx 0{,}0005\)</span>). Le second ne rejette pas le modèle avec tendance log-linéaire (différence d’environ 2,2 à 1 degré de liberté, valeur-p <span class="math inline">\(\approx 0{,}14\)</span>) : chaque classe inférieure multiplierait alors le taux de survie par un même facteur. Les coefficients du modèle additif (<span class="math inline">\(-0{,}65\)</span> pour la deuxième classe, <span class="math inline">\(-0{,}80\)</span> pour la troisième) suggèrent plutôt un écart concentré entre la première classe et les deux autres, mais 11 strates ne suffisent pas à trancher.</p>
 </div>
 </section>
-<section id="graphiques-et-observations-aberrantes" class="level3" data-number="3.6.7">
-<h3 data-number="3.6.7" class="anchored" data-anchor-id="graphiques-et-observations-aberrantes"><span class="header-section-number">3.6.7</span> Graphiques et observations aberrantes</h3>
+<section id="graphiques-et-observations-aberrantes" class="level3" data-number="4.6.7">
+<h3 data-number="4.6.7" class="anchored" data-anchor-id="graphiques-et-observations-aberrantes"><span class="header-section-number">4.6.7</span> Graphiques et observations aberrantes</h3>
 <p>Comme en régression logistique, on trace les résidus de déviance en fonction du numéro d’observation pour repérer une extra-variabilité, et on examine leviers, distance de Cook et DFBETAS pour repérer les observations influentes.</p>
 <div class="env-exemple" data-titre="Diagnostics sur [`empress`](#data-empress)">
 <p><span class="env-titre">Exemple — Diagnostics sur <a href="#data-empress"><code>empress</code></a></span></p>
@@ -1536,12 +1542,12 @@ document.addEventListener("DOMContentLoaded", function () {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./02-regression-logistique.html" class="pagination-link" aria-label="Modèles de régression pour données binaires">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./04-prediction-validation-croisee.html" class="pagination-link" aria-label="Prédiction, mesures de performance et validation croisée">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

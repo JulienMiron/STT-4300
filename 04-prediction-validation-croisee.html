@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Prédiction, mesures de performance et validation croisée – Régression II -- STT-4300</title>
+<title>5&nbsp; Prédiction, mesures de performance et validation croisée – Régression II -- STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -173,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-prediction-validation-croisee.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-prediction-validation-croisee.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -219,44 +219,50 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05-selection-regularisation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-knn-noyau.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-splines.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08-gam.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
   </div>
 </li>
     </ul>
@@ -269,19 +275,19 @@ window.Quarto = {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#adéquation-versus-précision-de-prédiction" id="toc-adéquation-versus-précision-de-prédiction" class="nav-link active" data-scroll-target="#adéquation-versus-précision-de-prédiction"><span class="header-section-number">4.1</span> Adéquation versus précision de prédiction</a></li>
-  <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link" data-scroll-target="#validation-croisée"><span class="header-section-number">4.2</span> Validation croisée</a>
+  <li><a href="#adéquation-versus-précision-de-prédiction" id="toc-adéquation-versus-précision-de-prédiction" class="nav-link active" data-scroll-target="#adéquation-versus-précision-de-prédiction"><span class="header-section-number">5.1</span> Adéquation versus précision de prédiction</a></li>
+  <li><a href="#validation-croisée" id="toc-validation-croisée" class="nav-link" data-scroll-target="#validation-croisée"><span class="header-section-number">5.2</span> Validation croisée</a>
   <ul class="collapse">
-  <li><a href="#approche-par-ensemble-de-validation" id="toc-approche-par-ensemble-de-validation" class="nav-link" data-scroll-target="#approche-par-ensemble-de-validation"><span class="header-section-number">4.2.1</span> Approche par ensemble de validation</a></li>
-  <li><a href="#validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" id="toc-validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" class="nav-link" data-scroll-target="#validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation"><span class="header-section-number">4.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV de <em>leave one out cross validation</em>)</a></li>
-  <li><a href="#validation-croisée-à-k-blocs" id="toc-validation-croisée-à-k-blocs" class="nav-link" data-scroll-target="#validation-croisée-à-k-blocs"><span class="header-section-number">4.2.3</span> Validation croisée à <span class="math inline">\(K\)</span> blocs</a></li>
+  <li><a href="#approche-par-ensemble-de-validation" id="toc-approche-par-ensemble-de-validation" class="nav-link" data-scroll-target="#approche-par-ensemble-de-validation"><span class="header-section-number">5.2.1</span> Approche par ensemble de validation</a></li>
+  <li><a href="#validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" id="toc-validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" class="nav-link" data-scroll-target="#validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation"><span class="header-section-number">5.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV de <em>leave one out cross validation</em>)</a></li>
+  <li><a href="#validation-croisée-à-k-blocs" id="toc-validation-croisée-à-k-blocs" class="nav-link" data-scroll-target="#validation-croisée-à-k-blocs"><span class="header-section-number">5.2.3</span> Validation croisée à <span class="math inline">\(K\)</span> blocs</a></li>
   </ul></li>
-  <li><a href="#sec-cv-GLM" id="toc-sec-cv-GLM" class="nav-link" data-scroll-target="#sec-cv-GLM"><span class="header-section-number">4.3</span> Validation croisée pour les GLM</a>
+  <li><a href="#sec-cv-GLM" id="toc-sec-cv-GLM" class="nav-link" data-scroll-target="#sec-cv-GLM"><span class="header-section-number">5.3</span> Validation croisée pour les GLM</a>
   <ul class="collapse">
-  <li><a href="#régression-logistique-et-classification" id="toc-régression-logistique-et-classification" class="nav-link" data-scroll-target="#régression-logistique-et-classification"><span class="header-section-number">4.3.1</span> Régression logistique et classification</a></li>
-  <li><a href="#régression-de-poisson" id="toc-régression-de-poisson" class="nav-link" data-scroll-target="#régression-de-poisson"><span class="header-section-number">4.3.2</span> Régression de Poisson</a></li>
-  <li><a href="#sec-cv-approx" id="toc-sec-cv-approx" class="nav-link" data-scroll-target="#sec-cv-approx"><span class="header-section-number">4.3.3</span> Approximation de <span class="math inline">\(VC_{(n)}\)</span> sans réajustement</a></li>
-  <li><a href="#exemples-sur-les-données-de-lempress-of-ireland" id="toc-exemples-sur-les-données-de-lempress-of-ireland" class="nav-link" data-scroll-target="#exemples-sur-les-données-de-lempress-of-ireland"><span class="header-section-number">4.3.4</span> Exemples sur les données de l’Empress of Ireland</a></li>
+  <li><a href="#régression-logistique-et-classification" id="toc-régression-logistique-et-classification" class="nav-link" data-scroll-target="#régression-logistique-et-classification"><span class="header-section-number">5.3.1</span> Régression logistique et classification</a></li>
+  <li><a href="#régression-de-poisson" id="toc-régression-de-poisson" class="nav-link" data-scroll-target="#régression-de-poisson"><span class="header-section-number">5.3.2</span> Régression de Poisson</a></li>
+  <li><a href="#sec-cv-approx" id="toc-sec-cv-approx" class="nav-link" data-scroll-target="#sec-cv-approx"><span class="header-section-number">5.3.3</span> Approximation de <span class="math inline">\(VC_{(n)}\)</span> sans réajustement</a></li>
+  <li><a href="#exemples-sur-les-données-de-lempress-of-ireland" id="toc-exemples-sur-les-données-de-lempress-of-ireland" class="nav-link" data-scroll-target="#exemples-sur-les-données-de-lempress-of-ireland"><span class="header-section-number">5.3.4</span> Exemples sur les données de l’Empress of Ireland</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/04-prediction-validation-croisee.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
@@ -291,7 +297,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-cv" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></h1>
+<h1 class="title"><span id="sec-cv" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></h1>
 </div>
 
 
@@ -303,7 +309,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">30 septembre 2026</p>
+      <p class="date-modified">1 octobre 2026</p>
     </div>
   </div>
     
@@ -314,8 +320,8 @@ window.Quarto = {
 </header>
 
 
-<section id="adéquation-versus-précision-de-prédiction" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="adéquation-versus-précision-de-prédiction"><span class="header-section-number">4.1</span> Adéquation versus précision de prédiction</h2>
+<section id="adéquation-versus-précision-de-prédiction" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="adéquation-versus-précision-de-prédiction"><span class="header-section-number">5.1</span> Adéquation versus précision de prédiction</h2>
 <div class="env-exemple" data-titre="Jeu de données arbres">
 <p><span class="env-titre">Exemple — Jeu de données arbres</span></p>
 <p>Le jeu de données <span id="data-arbres"><code>arbres</code></span> est un extrait de 200 arbres des placettes-échantillons permanentes de l’inventaire forestier du Québec, relevés entre 2015 et 2025 dans une trentaine de régions écologiques. L’extrait retient les quatre espèces les plus fréquentes (bouleau à papier, épinette noire, érable rouge et sapin baumier), à raison de 50 arbres par espèce et d’un seul arbre par placette. On y trouve notamment le diamètre à hauteur de poitrine (<code>diameter_cm</code>), la hauteur (<code>height_m</code>), l’espèce (<code>species_fr</code>) et la position de l’arbre dans le couvert forestier (<code>canopy_stratum</code>).</p>
@@ -375,10 +381,10 @@ H_i = e^{\beta_0} D_i^{\beta_1} e^{\epsilon_i},
 </ul>
 <p>Le taux d’erreur test n’est pas observable directement. Les méthodes de validation croisée présentées ci-dessous l’estiment à partir des seules données disponibles.</p>
 </section>
-<section id="validation-croisée" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="validation-croisée"><span class="header-section-number">4.2</span> Validation croisée</h2>
-<section id="approche-par-ensemble-de-validation" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="approche-par-ensemble-de-validation"><span class="header-section-number">4.2.1</span> Approche par ensemble de validation</h3>
+<section id="validation-croisée" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="validation-croisée"><span class="header-section-number">5.2</span> Validation croisée</h2>
+<section id="approche-par-ensemble-de-validation" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="approche-par-ensemble-de-validation"><span class="header-section-number">5.2.1</span> Approche par ensemble de validation</h3>
 <p>On partage le jeu de données en deux parties : un jeu d’entraînement pour estimer les paramètres et un jeu test pour estimer le taux d’erreur test. Avec <span class="math inline">\(n_1\)</span> observations d’entraînement et <span class="math inline">\(n_2 = n - n_1\)</span> observations test,</p>
 <p><span class="math display">\[
 \widehat{Err}_{test} = \frac{1}{n_2}\sum_{i = n_1+1}^{n}\left(y_i - \hat y_{i,\text{ent}}\right)^2,
@@ -408,8 +414,8 @@ H_i = e^{\beta_0} D_i^{\beta_1} e^{\epsilon_i},
 <p>Le modèle 4 est choisi le plus souvent, mais pas toujours : selon la partition tirée, chacun des autres modèles peut l’emporter. Une seule partition, comme on le fait en pratique avec cette approche, aurait donc pu mener à un autre choix. C’est le défaut (i).</p>
 </div>
 </section>
-<section id="validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation"><span class="header-section-number">4.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV de <em>leave one out cross validation</em>)</h3>
+<section id="validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="validation-croisée-avec-exclusion-dune-observation-loocv-de-leave-one-out-cross-validation"><span class="header-section-number">5.2.2</span> Validation croisée avec exclusion d’une observation (LOOCV de <em>leave one out cross validation</em>)</h3>
 <p>Pour remédier au deuxième défaut, on procède ainsi : pour <span class="math inline">\(i = 1,\ldots,n\)</span>, on estime <span class="math inline">\(\beta\)</span> avec toutes les observations sauf la <span class="math inline">\(i^{\text{ème}}\)</span>, puis on calcule <span class="math inline">\(\hat y_{i,(-i)}\)</span>. Le critère est</p>
 <p><span class="math display">\[
 VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(y_i - \hat y_{i,(-i)}\right)^2.
@@ -447,9 +453,9 @@ VC_{(n)} = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat y_i}{1 - h_i}\right)^2,
 <p><span class="math inline">\(VC_{(n)}\)</span> est minimal pour le modèle 4 (<span class="math inline">\(VC_{(n)} \approx 0.0318\)</span>). Contrairement à l’erreur d’entraînement, <span class="math inline">\(VC_{(n)}\)</span> augmente du modèle 4 au modèle 5 : les huit paramètres supplémentaires du modèle 5 améliorent l’ajustement, mais ils détériorent la prédiction. C’est du surajustement.</p>
 </div>
 </section>
-<section id="validation-croisée-à-k-blocs" class="level3" data-number="4.2.3">
-<h3 data-number="4.2.3" class="anchored" data-anchor-id="validation-croisée-à-k-blocs"><span class="header-section-number">4.2.3</span> Validation croisée à <span class="math inline">\(K\)</span> blocs</h3>
-<p>Pour d’autres modèles, notamment les GLM, le calcul exact de <span class="math inline">\(VC_{(n)}\)</span> requiert l’ajustement de <span class="math inline">\(n\)</span> modèles, ce qui peut être coûteux (voir toutefois l’approximation de la <a href="#sec-cv-approx" class="quarto-xref"><span>Section 4.3.3</span></a>). On considère alors la validation croisée à <span class="math inline">\(K\)</span> blocs, en pratique avec <span class="math inline">\(K = 5\)</span> ou <span class="math inline">\(K = 10\)</span>. On partage le jeu de données en <span class="math inline">\(K\)</span> parties de tailles quasiment égales <span class="math inline">\(A_1,\ldots,A_K\)</span>. Pour <span class="math inline">\(k = 1,\ldots,K\)</span>, on estime <span class="math inline">\(\beta\)</span> à partir de toutes les données sauf <span class="math inline">\(A_k\)</span>, et on calcule</p>
+<section id="validation-croisée-à-k-blocs" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="validation-croisée-à-k-blocs"><span class="header-section-number">5.2.3</span> Validation croisée à <span class="math inline">\(K\)</span> blocs</h3>
+<p>Pour d’autres modèles, notamment les GLM, le calcul exact de <span class="math inline">\(VC_{(n)}\)</span> requiert l’ajustement de <span class="math inline">\(n\)</span> modèles, ce qui peut être coûteux (voir toutefois l’approximation de la <a href="#sec-cv-approx" class="quarto-xref"><span>Section 5.3.3</span></a>). On considère alors la validation croisée à <span class="math inline">\(K\)</span> blocs, en pratique avec <span class="math inline">\(K = 5\)</span> ou <span class="math inline">\(K = 10\)</span>. On partage le jeu de données en <span class="math inline">\(K\)</span> parties de tailles quasiment égales <span class="math inline">\(A_1,\ldots,A_K\)</span>. Pour <span class="math inline">\(k = 1,\ldots,K\)</span>, on estime <span class="math inline">\(\beta\)</span> à partir de toutes les données sauf <span class="math inline">\(A_k\)</span>, et on calcule</p>
 <p><span class="math display">\[
 MSE_k = \frac{1}{n_k}\sum_{i\in A_k}\left\{y_i - \hat y_{i,(-k)}\right\}^2,
 \]</span></p>
@@ -486,15 +492,15 @@ M5 0.03303419 0.03345063 0.03320921</code></pre>
 </div>
 </section>
 </section>
-<section id="sec-cv-GLM" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="sec-cv-GLM"><span class="header-section-number">4.3</span> Validation croisée pour les GLM</h2>
+<section id="sec-cv-GLM" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="sec-cv-GLM"><span class="header-section-number">5.3</span> Validation croisée pour les GLM</h2>
 <p>Les critères <span class="math inline">\(VC_{(n)}\)</span> et <span class="math inline">\(VC_{(K)}\)</span> ont été présentés avec l’erreur quadratique, qui est naturelle pour une réponse normale. Pour un GLM, la réponse est binaire, binomiale ou un dénombrement, et sa variance dépend de sa moyenne. L’erreur quadratique demeure utilisable, mais d’autres fonctions de perte sont souvent mieux adaptées. Pour une fonction de perte <span class="math inline">\(L(y,\mu)\)</span>, le critère de validation croisée à <span class="math inline">\(K\)</span> blocs devient</p>
 <p><span class="math display">\[
 VC_{(K)} = \frac{1}{K}\sum_{k=1}^K \frac{1}{n_k}\sum_{i\in A_k} L\left(y_i, \hmu{i,(-k)}\right),
 \]</span></p>
 <p>où <span class="math inline">\(\hmu{i,(-k)} = g^{-1}\left(\boldsymbol x_i^\top\hb_{(-k)}\right)\)</span> est la moyenne prédite pour l’observation <span class="math inline">\(i\)</span> par le modèle ajusté sans le bloc <span class="math inline">\(A_k\)</span>. On retrouve <span class="math inline">\(VC_{(n)}\)</span> avec <span class="math inline">\(K = n\)</span>.</p>
-<section id="régression-logistique-et-classification" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="régression-logistique-et-classification"><span class="header-section-number">4.3.1</span> Régression logistique et classification</h3>
+<section id="régression-logistique-et-classification" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="régression-logistique-et-classification"><span class="header-section-number">5.3.1</span> Régression logistique et classification</h3>
 <p>Pour une réponse binaire, on prédit la classe de l’observation <span class="math inline">\(i\)</span> par <span class="math inline">\(\hat c_i = \mathbf{1}_{\{\hpi{i} &gt; u\}}\)</span>, pour un seuil <span class="math inline">\(u\)</span> (souvent <span class="math inline">\(1/2\)</span>). Le taux d’erreur test devient alors le taux de mauvaise classification. Cette perte n’est toutefois pas la seule possible.</p>
 <div class="env-definition" data-titre="Fonctions de perte pour une réponse binaire">
 <p><span class="env-titre">Définition — Fonctions de perte pour une réponse binaire</span></p>
@@ -512,15 +518,15 @@ VC_{(K)} = \frac{1}{K}\sum_{k=1}^K \frac{1}{n_k}\sum_{i\in A_k} L\left(y_i, \hmu
 <p><span class="env-titre">Remarque — Quelle perte choisir?</span></p>
 <p>Le taux de mauvaise classification ne retient que le côté du seuil <span class="math inline">\(u\)</span> où tombe <span class="math inline">\(\hat\pi\)</span>. Une prédiction <span class="math inline">\(\hat\pi = 0{,}51\)</span> et une prédiction <span class="math inline">\(\hat\pi = 0{,}99\)</span> sont donc traitées de la même façon. Ce critère est de plus discontinu, il dépend du choix arbitraire de <span class="math inline">\(u\)</span>, et il est très variable lorsque <span class="math inline">\(n\)</span> est petit.</p>
 <p>Le score de Brier et la déviance sont des règles de score propres : leur espérance est minimisée lorsque <span class="math inline">\(\hat\pi\)</span> égale la vraie probabilité <span class="math inline">\(\pi\)</span>. Ils évaluent donc la qualité des probabilités prédites elles-mêmes, et pas seulement la classification qui en découle. La déviance pénalise lourdement les erreurs commises avec assurance. Elle devient infinie si <span class="math inline">\(\hat\pi_{i,(-k)} \in \{0,1\}\)</span> alors que <span class="math inline">\(y_i\)</span> prend l’autre valeur, ce qui peut se produire lorsqu’un jeu d’entraînement présente une <a href="02-regression-logistique.html#sec-separation">séparation</a>. En pratique, on tronque <span class="math inline">\(\hat\pi\)</span> dans <span class="math inline">\([\varepsilon, 1-\varepsilon]\)</span>.</p>
-<p>La sensibilité, la spécificité, la courbe ROC et l’AUC présentées à la <a href="02-regression-logistique.html#sec-roc" class="quarto-xref"><span>Section 2.5</span></a> fournissent d’autres mesures de performance. L’AUC ne dépend d’aucun seuil, et elle est notamment utilisée comme critère de validation croisée en classification (voir <a href="06-knn-noyau.html" class="quarto-xref"><span>Chapitre 6</span></a>). Elle ne mesure toutefois que la capacité du modèle à ordonner les observations, et pas la calibration des probabilités.</p>
+<p>La sensibilité, la spécificité, la courbe ROC et l’AUC présentées à la <a href="02-regression-logistique.html#sec-roc" class="quarto-xref"><span>Section 3.5</span></a> fournissent d’autres mesures de performance. L’AUC ne dépend d’aucun seuil, et elle est notamment utilisée comme critère de validation croisée en classification (voir <a href="06-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a>). Elle ne mesure toutefois que la capacité du modèle à ordonner les observations, et pas la calibration des probabilités.</p>
 </div>
 <div class="env-remarque" data-titre="Données groupées">
 <p><span class="env-titre">Remarque — Données groupées</span></p>
 <p>Avec des données binomiales groupées, chaque ligne regroupe <span class="math inline">\(m_i\)</span> essais. Exclure une ligne revient à exclure tout un groupe : on évalue alors la prédiction pour une nouvelle combinaison des variables explicatives, et non pour un nouvel individu. Les deux versions du jeu de données <a href="#data-empress"><code>empress</code></a>, individuelle et agrégée, illustrent cette différence dans les exemples plus bas. De plus, la fonction <code>cv.glm</code> passe à la fonction de coût les proportions <span class="math inline">\(y_i/m_i\)</span>, sans pondération par <span class="math inline">\(m_i\)</span> ; il faut en tenir compte si l’on veut une perte pondérée.</p>
 </div>
 </section>
-<section id="régression-de-poisson" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="régression-de-poisson"><span class="header-section-number">4.3.2</span> Régression de Poisson</h3>
+<section id="régression-de-poisson" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="régression-de-poisson"><span class="header-section-number">5.3.2</span> Régression de Poisson</h3>
 <div class="env-definition" data-titre="Fonctions de perte pour un dénombrement">
 <p><span class="env-titre">Définition — Fonctions de perte pour un dénombrement</span></p>
 <p>Pour <span class="math inline">\(y\in\mathbb{N}\)</span> et une moyenne prédite <span class="math inline">\(\hat\mu &gt; 0\)</span> :</p>
@@ -544,8 +550,8 @@ VC_{(K)} = \frac{1}{K}\sum_{k=1}^K \frac{1}{n_k}\sum_{i\in A_k} L\left(y_i, \hmu
 <p>Enfin, les modèles de Poisson et quasi-Poisson produisent les mêmes <span class="math inline">\(\hmu{i}\)</span> : la validation croisée ne peut pas les départager. Le choix du paramètre de dispersion relève de l’inférence (voir la <a href="03-modeles-lineaires-generalises.html#sec-surdispersion">surdispersion</a>). Pour comparer un modèle de Poisson à un modèle binomial négatif, il faut utiliser la même perte pour les deux modèles.</p>
 </div>
 </section>
-<section id="sec-cv-approx" class="level3" data-number="4.3.3">
-<h3 data-number="4.3.3" class="anchored" data-anchor-id="sec-cv-approx"><span class="header-section-number">4.3.3</span> Approximation de <span class="math inline">\(VC_{(n)}\)</span> sans réajustement</h3>
+<section id="sec-cv-approx" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="sec-cv-approx"><span class="header-section-number">5.3.3</span> Approximation de <span class="math inline">\(VC_{(n)}\)</span> sans réajustement</h3>
 <p>Contrairement à la régression linéaire, il n’existe pas de formule exacte de <span class="math inline">\(VC_{(n)}\)</span> pour un GLM. Une approximation fondée sur un seul ajustement est toutefois disponible.</p>
 <div class="env-propriete" data-titre="Approximation de l'erreur de validation croisée">
 <p><span class="env-titre">Propriété — Approximation de l’erreur de validation croisée</span></p>
@@ -588,8 +594,8 @@ U_{(-i)}(\hb) = -\boldsymbol x_i(y_i - \hmu{i}).
 <p>ce qui donne le résultat. Les deux approximations (un seul pas de Newton et la linéarisation de <span class="math inline">\(g^{-1}\)</span>) deviennent exactes dans le modèle linéaire normal, où l’on retrouve la formule explicite de la LOOCV.</p>
 </div>
 </section>
-<section id="exemples-sur-les-données-de-lempress-of-ireland" class="level3" data-number="4.3.4">
-<h3 data-number="4.3.4" class="anchored" data-anchor-id="exemples-sur-les-données-de-lempress-of-ireland"><span class="header-section-number">4.3.4</span> Exemples sur les données de l’Empress of Ireland</h3>
+<section id="exemples-sur-les-données-de-lempress-of-ireland" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="exemples-sur-les-données-de-lempress-of-ireland"><span class="header-section-number">5.3.4</span> Exemples sur les données de l’Empress of Ireland</h3>
 <p>La fonction <code>cv.glm</code> accepte un argument <code>cost</code>, une fonction <code>cost(y, yhat)</code> où <code>yhat</code> est la moyenne prédite (échelle de la réponse). Par défaut, <code>cost</code> est l’erreur quadratique, c’est-à-dire le score de Brier pour une réponse binaire.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>niveaux.classe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Première"</span>, <span class="st">"Deuxième"</span>, <span class="st">"Troisième"</span>)</span>
@@ -636,7 +642,7 @@ m4 0.2100284 0.1518934 0.9396020</code></pre>
 </div>
 </div>
 <p>La colonne du taux de mauvaise classification illustre bien ses limites. Seuls 217 des 1057 passagers ont survécu, et aucune strate n’atteint une proportion de survie de 50 %. Avec le seuil <span class="math inline">\(u = 1/2\)</span>, les modèles prédisent donc à peu près toujours le décès, et le taux de mauvaise classification est à peu près le même pour tous, proche de la proportion de survivants. Le score de Brier et la déviance, qui évaluent les probabilités prédites elles-mêmes, permettent au contraire de départager les modèles.</p>
-<p>Avec <span class="math inline">\(n = 1057\)</span>, le calcul exact de <span class="math inline">\(VC_{(n)}\)</span> demande autant d’ajustements. On le compare à l’approximation de la <a href="#sec-cv-approx" class="quarto-xref"><span>Section 4.3.3</span></a>, qui n’en demande qu’un seul :</p>
+<p>Avec <span class="math inline">\(n = 1057\)</span>, le calcul exact de <span class="math inline">\(VC_{(n)}\)</span> demande autant d’ajustements. On le compare à l’approximation de la <a href="#sec-cv-approx" class="quarto-xref"><span>Section 5.3.3</span></a>, qui n’en demande qu’un seul :</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(m2)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>approx <span class="ot">&lt;-</span> <span class="fu">mean</span>(((empress<span class="sc">$</span>survecu <span class="sc">-</span> <span class="fu">fitted</span>(m2)) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> h))<span class="sc">^</span><span class="dv">2</span>)</span>
@@ -651,7 +657,7 @@ m4 0.2100284 0.1518934 0.9396020</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>temps[<span class="st">"elapsed"</span>]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>elapsed 
-  6.141 </code></pre>
+  5.003 </code></pre>
 </div>
 </div>
 </div>
@@ -1122,12 +1128,12 @@ document.addEventListener("DOMContentLoaded", function () {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./03-modeles-lineaires-generalises.html" class="pagination-link" aria-label="Modèles linéaires généralisés (GLM)">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./05-selection-regularisation.html" class="pagination-link" aria-label="Sélection de variables et régularisation">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

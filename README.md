@@ -24,13 +24,15 @@ Le site est publié automatiquement sur GitHub Pages via GitHub Actions à chaqu
 ├── _quarto.yml               # configuration du livre
 ├── index.qmd                 # préface
 ├── 01-regression-lineaire.qmd
-├── 02-regression-logistique.qmd
-├── 03-modeles-lineaires-generalises.qmd
-├── 04-prediction-validation-croisee.qmd
-├── 05-selection-regularisation.qmd
-├── 06-knn-noyau.qmd
-├── 07-splines.qmd
-├── 08-gam.qmd
+├── 02-monte-carlo.qmd
+├── 03-regression-logistique.qmd
+├── 04-modeles-lineaires-generalises.qmd
+├── 05-prediction-validation-croisee.qmd
+├── 06-selection-regularisation.qmd
+├── 07-knn-noyau.qmd
+├── 08-splines.qmd
+├── 09-gam.qmd
+├── exercices.qmd               # exercices (sans numéro, hors ordre des chapitres)
 ├── styles.css                 # style des blocs Définition/Propriété/Remarque/Exemple
 └── .github/workflows/publish.yml
 ```

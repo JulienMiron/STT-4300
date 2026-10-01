@@ -5,7 +5,7 @@ library(ggplot2)
 library(gifski)
 library(mgcv)   # requis seulement pour le chapitre GAM
 
-base_dir    <- "/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/Quarto/STT-4300/images"
+base_dir    <- "/Users/jmiron/Documents/GitHub/STT-4300/images"
 n_frames    <- 150
 largeur_img <- 8
 hauteur_img <- 5.5
@@ -17,17 +17,21 @@ n_pts       <- 75
 n_groupes   <- 75 # pour la régression linéaire logistique
 n_coef      <- 5 # pour le nombre de paramètres de LASSO
 
-changer <- c(5)
+changer <- c(2)
 
 
 
-couleur_pts   <- "#9467bd"
-couleur_ligne <- "#0E9E6C"
-couleur_accent <- "tomato"   # 3e couleur, utilisée uniquement pour l'état final de l'index (3 classes)
+couleur_pts    <- "#9467bd"
+couleur_ligne  <- "#0E9E6C"
+# 3e couleur, utilisée seulement pour l'état final de l'index (3 classes)
+couleur_accent <- "tomato"
 
-alpha_pts       <- 1   # transparence des points (hors logit pondéré, voir plus bas)
-taille_pts      <- 4   # taille des points (hors logit, dont la taille encode le poids)
-epaisseur_ligne <- 1.2     # épaisseur des courbes/lignes ajustées
+# transparence des points (hors logit pondéré, voir plus bas)
+alpha_pts <- 1
+# taille des points (hors logit, dont la taille encode le poids)
+taille_pts <- 4
+# épaisseur des courbes/lignes ajustées
+epaisseur_ligne <- 1.2
 
 theme_gif <- theme_void() + theme(legend.position = "none")
 
@@ -54,9 +58,12 @@ sauvegarder_frame <- function(plot, dir_out, i) {
   )
 }
 
-# Assemble les n_frames_gif frames d'un dossier en gif, sauvegardé dans base_dir
+# Assemble les n_frames_gif frames d'un dossier en gif, sauvegardé
+# dans base_dir
 creer_gif <- function(dir_out, nom_gif, n_frames_gif = n_frames) {
-  png_files <- sprintf(file.path(dir_out, "frame_%03d.png"), seq_len(n_frames_gif))
+  png_files <- sprintf(
+    file.path(dir_out, "frame_%03d.png"), seq_len(n_frames_gif)
+  )
   gifski(
     png_files, gif_file = file.path(base_dir, nom_gif),
     width = largeur_gif, height = hauteur_gif,
@@ -65,46 +72,6 @@ creer_gif <- function(dir_out, nom_gif, n_frames_gif = n_frames) {
 }
 
 
-# ================================================================
-# 02 — Régression logistique
-# ================================================================
-if (2 %in% changer){
-  set.seed(42)
-  dir_out <- preparer_dossier("frames")
-
-  X     <- seq(0, 7, length.out = n_groupes)
-  Poids <- sample(5:10, n_groupes, replace = TRUE)
-  X_mid <- mean(X)
-  beta1_amp <- 1.2
-
-  phases       <- runif(n_groupes, 0, 2 * pi)
-  amplitude    <- runif(n_groupes, 0.08, 0.15)
-  offset_indiv <- rnorm(n_groupes, 0, 0.10)
-
-  for (i in seq_len(n_frames)) {
-    t <- (i - 1) / n_frames * 2 * pi
-    beta1_t <- beta1_amp * cos(t)
-    eta_t   <- beta1_t * (X - X_mid)
-    p_t     <- plogis(eta_t)
-    jitter  <- amplitude * sin(t + phases)
-    Y_t     <- pmin(pmax(p_t + jitter + offset_indiv, 0.01), 0.99)
-
-    df <- data.frame(X = X, Y = Y_t, Poids = Poids)
-    modele <- glm(Y ~ X, data = df, family = binomial(link = "logit"), weights = Poids)
-    grille <- data.frame(X = seq(min(X), max(X), length.out = 200))
-    grille$Y_hat <- predict(modele, newdata = grille, type = "response")
-
-    p <- ggplot() +
-      geom_point(data = df, aes(X, Y, size = Poids), color = couleur_pts, alpha = alpha_pts) +
-      geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
-      coord_cartesian(xlim = range(X), ylim = c(0, 1)) +
-      theme_gif
-
-    sauvegarder_frame(p, dir_out, i)
-  }
-
-  creer_gif(dir_out, "logit_plot.gif")
-}
 
 
 
@@ -127,7 +94,8 @@ for (i in seq_len(n_frames)) {
   t <- (i - 1) / n_frames * 2 * pi
   beta1_t <- beta1_amp * cos(t)
 
-  # bruit perpendiculaire constant, converti en bruit vertical pour compenser la pente
+  # bruit perpendiculaire constant, converti en bruit vertical pour
+  # compenser la pente
   bruit_perp <- amplitude * sin(t + phases) + bruit_fixe
   facteur    <- sqrt(1 + beta1_t^2)
   Y_t        <- beta1_t * (X - X_mid) + bruit_perp * facteur
@@ -138,8 +106,10 @@ for (i in seq_len(n_frames)) {
   grille$Y_hat <- predict(modele, newdata = grille)
 
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
+    geom_point(data = df, aes(X, Y), color = couleur_pts,
+               alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = grille, aes(X, Y_hat),
+              color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -149,9 +119,112 @@ creer_gif(dir_out, "lineaire_plot.gif")
 }
 
 # ================================================================
-# 03 — Modèles linéaires généralisés (Poisson)
+# 02 — Simulations de Monte Carlo (SUGGESTION, à adapter)
+# ================================================================
+# Idée : illustrer la loi des grands nombres et le rétrécissement de
+# l'erreur de Monte Carlo à mesure que B augmente, sur l'exemple de
+# couverture du chapitre (theta = p = 0.95). B balaie une seule fois
+# B_min → B_max (ease-in-out) sur toute la durée du gif ; en boucle,
+# ça donne une succession de balayages B_min → B_max, avec un retour
+# net (pas de ping-pong) au redémarrage de chaque boucle.
+if (2 %in% changer){
+set.seed(8)
+dir_out <- preparer_dossier("frames_monte_carlo")
+
+p_vrai <- 0.95
+B_min  <- 10
+B_max  <- 1000
+
+# 1 = l'intervalle contient la vraie valeur
+indicatrices <- rbinom(B_max, 1, p_vrai)
+theta_hat    <- cumsum(indicatrices) / seq_len(B_max)
+erreur_type  <- sqrt(p_vrai * (1 - p_vrai) / seq_len(B_max))
+
+for (i in seq_len(n_frames)) {
+  # t de 0 à pi sur tout le gif : balayage à sens unique B_min → B_max
+  t   <- (i - 1) / (n_frames - 1) * pi
+  B_t <- round(B_min + (B_max - B_min) * (1 - cos(t)) / 2)
+
+  df     <- data.frame(B = seq_len(B_t), theta = theta_hat[seq_len(B_t)])
+  bande  <- data.frame(
+    B    = seq_len(B_t),
+    bas  = p_vrai - 1.96 * erreur_type[seq_len(B_t)],
+    haut = p_vrai + 1.96 * erreur_type[seq_len(B_t)]
+  )
+
+  p <- ggplot() +
+    geom_line(data = bande, aes(B, bas), color = couleur_pts,
+              linewidth = epaisseur_ligne, linetype = "dashed") +
+    geom_line(data = bande, aes(B, haut), color = couleur_pts,
+              linewidth = epaisseur_ligne, linetype = "dashed") +
+    # geom_ribbon(data = bande, aes(B, ymin = bas, ymax = haut),
+    #             fill = couleur_pts, alpha = 0.2) +
+    geom_hline(yintercept = p_vrai, color = couleur_accent,
+               linewidth = epaisseur_ligne) +
+    geom_line(data = df, aes(B, theta),
+              color = couleur_ligne, linewidth = epaisseur_ligne) +
+    coord_cartesian(xlim = c(1, B_max),
+                    ylim = c(p_vrai - 0.15, p_vrai + 0.15)) +
+    theme_gif
+
+  sauvegarder_frame(p, dir_out, i)
+}
+
+creer_gif(dir_out, "monte_carlo_plot.gif")
+}
+
+
+# ================================================================
+# 03 — Régression logistique
 # ================================================================
 if (3 %in% changer){
+  set.seed(42)
+  dir_out <- preparer_dossier("frames")
+
+  X     <- seq(0, 7, length.out = n_groupes)
+  Poids <- sample(5:10, n_groupes, replace = TRUE)
+  X_mid <- mean(X)
+  beta1_amp <- 1.2
+
+  phases       <- runif(n_groupes, 0, 2 * pi)
+  amplitude    <- runif(n_groupes, 0.08, 0.15)
+  offset_indiv <- rnorm(n_groupes, 0, 0.10)
+
+  for (i in seq_len(n_frames)) {
+    t <- (i - 1) / n_frames * 2 * pi
+    beta1_t <- beta1_amp * cos(t)
+    eta_t   <- beta1_t * (X - X_mid)
+    p_t     <- plogis(eta_t)
+    jitter  <- amplitude * sin(t + phases)
+    Y_t     <- pmin(pmax(p_t + jitter + offset_indiv, 0.01), 0.99)
+
+    df <- data.frame(X = X, Y = Y_t, Poids = Poids)
+    modele <- glm(
+      Y ~ X, data = df, family = binomial(link = "logit"), weights = Poids
+    )
+    grille <- data.frame(X = seq(min(X), max(X), length.out = 200))
+    grille$Y_hat <- predict(modele, newdata = grille, type = "response")
+
+    p <- ggplot() +
+      geom_point(data = df, aes(X, Y, size = Poids),
+                 color = couleur_pts, alpha = alpha_pts) +
+      geom_line(data = grille, aes(X, Y_hat),
+                color = couleur_ligne, linewidth = epaisseur_ligne) +
+      coord_cartesian(xlim = range(X), ylim = c(0, 1)) +
+      theme_gif
+
+    sauvegarder_frame(p, dir_out, i)
+  }
+
+  creer_gif(dir_out, "logit_plot.gif")
+}
+
+
+
+# ================================================================
+# 04 — Modèles linéaires généralisés (Poisson)
+# ================================================================
+if (4 %in% changer){
 set.seed(2)
 dir_out <- preparer_dossier("frames_poisson")
 
@@ -171,7 +244,8 @@ for (i in seq_len(n_frames)) {
   eta_t    <- 1.5 + beta1_t * (X - X_mid) + amplitude * sin(t + phases_eta)
   lambda_t <- exp(eta_t)
 
-  # signal individuel lisse (variance ~1), converti en bruit d'échelle sqrt(lambda_t)
+  # signal individuel lisse (variance ~1), converti en bruit d'échelle
+  # sqrt(lambda_t)
   z_t <- (sin(t + phases_z1) + 0.5 * sin(freq_z2 * t + phases_z2)) / sqrt(1.25)
   Y_t <- pmax(lambda_t + sqrt(lambda_t) * z_t, 0)
 
@@ -181,8 +255,10 @@ for (i in seq_len(n_frames)) {
   grille$Y_hat <- predict(modele, newdata = grille, type = "response")
 
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
+    geom_point(data = df, aes(X, Y), color = couleur_pts,
+               alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = grille, aes(X, Y_hat),
+              color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -192,9 +268,9 @@ creer_gif(dir_out, "glm_plot.gif")
 }
 
 # ================================================================
-# 04 — Prédiction et validation croisée
+# 05 — Prédiction et validation croisée
 # ================================================================
-if (4 %in% changer){
+if (5 %in% changer){
 set.seed(3)
 dir_out <- preparer_dossier("frames_vc")
  
@@ -216,8 +292,10 @@ for (i in seq_len(n_frames_vc)) {
   grille$Y_hat <- predict(modele, newdata = grille)
  
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y, color = role), alpha = alpha_pts, size = taille_pts) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
+    geom_point(data = df, aes(X, Y, color = role),
+               alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = grille, aes(X, Y_hat),
+              color = couleur_ligne, linewidth = epaisseur_ligne) +
     scale_color_manual(values = c(train = couleur_pts, test = couleur_accent)) +
     theme_gif
  
@@ -227,15 +305,17 @@ for (i in seq_len(n_frames_vc)) {
 creer_gif(dir_out, "cv_plot.gif", n_frames_gif = n_frames_vc)
 }
 # ================================================================
-# 05 — Sélection et régularisation (LASSO)
+# 06 — Sélection et régularisation (LASSO)
 # ================================================================
-if (5 %in% changer){
+if (6 %in% changer){
 set.seed(4)
 dir_out <- preparer_dossier("frames_lasso")
 
-coef_base <- runif(n_coef, -2, 2)
-noms      <- factor(c("lambda", paste0("b", 1:n_coef)), levels = c("lambda", paste0("b", 1:n_coef)))
-labels_coef <- c("lambda", paste0("abs(hat(beta)[", 1:n_coef, "])"))   # |beta_j chapeau|, syntaxe plotmath
+coef_base  <- runif(n_coef, -2, 2)
+noms_coef  <- c("lambda", paste0("b", 1:n_coef))
+noms       <- factor(noms_coef, levels = noms_coef)
+# |beta_j chapeau|, syntaxe plotmath
+labels_coef <- c("lambda", paste0("abs(hat(beta)[", 1:n_coef, "])"))
 
 for (i in seq_len(n_frames)) {
   t <- (i - 1) / n_frames * 2 * pi
@@ -249,7 +329,8 @@ for (i in seq_len(n_frames)) {
     geom_col(fill = c(couleur_accent, rep(couleur_pts, n_coef)), alpha = 0.75) +
     geom_text(aes(label = label), parse = TRUE, vjust = -0.4,
               color = couleur_ligne, size = 16, fontface = "bold") +
-    geom_hline(yintercept = 0, color = couleur_ligne, linewidth = epaisseur_ligne) +
+    geom_hline(yintercept = 0, color = couleur_ligne,
+               linewidth = epaisseur_ligne) +
     coord_cartesian(ylim = c(0, 2.4)) +
     theme_gif
 
@@ -260,9 +341,9 @@ creer_gif(dir_out, "regularisation_plot.gif")
 }
 
 # ================================================================
-# 06 — KNN et noyau
+# 07 — KNN et noyau
 # ================================================================
-if (6 %in% changer){
+if (7 %in% changer){
 set.seed(5)
 dir_out <- preparer_dossier("frames_knn")
 
@@ -280,8 +361,10 @@ for (i in seq_len(n_frames)) {
   df_l   <- data.frame(X = lissage$x, Y = lissage$y)
 
   p <- ggplot() +
-    geom_point(data = df_pts, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
-    geom_line(data = df_l, aes(X, Y), color = couleur_ligne, linewidth = epaisseur_ligne) +
+    geom_point(data = df_pts, aes(X, Y), color = couleur_pts,
+               alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = df_l, aes(X, Y),
+              color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -291,9 +374,9 @@ creer_gif(dir_out, "knn_noyau_plot.gif")
 }
 
 # ================================================================
-# 07 — Splines
+# 08 — Splines
 # ================================================================
-if (7 %in% changer){
+if (8 %in% changer){
 set.seed(6)
 dir_out <- preparer_dossier("frames_splines")
 
@@ -302,7 +385,8 @@ Y <- sin(X) + rnorm(n_pts, 0, 0.25)
 
 for (i in seq_len(n_frames)) {
   t <- (i - 1) / n_frames * 2 * pi
-  df_t <- max(8.5 + 6.5 * cos(t), 2)   # pas de round() : évite les sauts entre frames
+  # pas de round() : évite les sauts entre frames
+  df_t <- max(8.5 + 6.5 * cos(t), 2)
 
   modele <- smooth.spline(X, Y, df = df_t)
   grille <- seq(min(X), max(X), length.out = 200)
@@ -312,8 +396,10 @@ for (i in seq_len(n_frames)) {
   df_l   <- data.frame(X = grille, Y = Y_hat)
 
   p <- ggplot() +
-    geom_point(data = df_pts, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
-    geom_line(data = df_l, aes(X, Y), color = couleur_ligne, linewidth = epaisseur_ligne) +
+    geom_point(data = df_pts, aes(X, Y), color = couleur_pts,
+               alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = df_l, aes(X, Y),
+              color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -323,11 +409,12 @@ creer_gif(dir_out, "splines_plot.gif")
 }
 
 # ================================================================
-# 08 — GAM
+# 09 — GAM
 # ================================================================
-if (8 %in% changer){
+if (9 %in% changer){
 set.seed(7)
-dir_out <- preparer_dossier("frames_gam")   # corrigé : était "frames_splines" par erreur
+# corrigé : était "frames_splines" par erreur
+dir_out <- preparer_dossier("frames_gam")
 
 X <- sort(runif(n_pts, 0, 10))
 bruit_fixe <- rnorm(n_pts, 0, 0.3)   # fixé une fois, hors boucle
@@ -339,13 +426,16 @@ for (i in seq_len(n_frames)) {
   Y <- amp_t * sin(X) + 0.3 * X + bruit_fixe
 
   df <- data.frame(X = X, Y = Y)
-  modele <- gam(Y ~ s(X, k = 10, fx = TRUE), data = df)   # fx = TRUE : degrés de liberté fixes
+  # fx = TRUE : degrés de liberté fixes
+  modele <- gam(Y ~ s(X, k = 10, fx = TRUE), data = df)
   grille <- data.frame(X = seq(min(X), max(X), length.out = 200))
   grille$Y_hat <- predict(modele, newdata = grille)
 
   p <- ggplot() +
-    geom_point(data = df, aes(X, Y), color = couleur_pts, alpha = alpha_pts, size = taille_pts) +
-    geom_line(data = grille, aes(X, Y_hat), color = couleur_ligne, linewidth = epaisseur_ligne) +
+    geom_point(data = df, aes(X, Y), color = couleur_pts,
+               alpha = alpha_pts, size = taille_pts) +
+    geom_line(data = grille, aes(X, Y_hat),
+              color = couleur_ligne, linewidth = epaisseur_ligne) +
     theme_gif
 
   sauvegarder_frame(p, dir_out, i)
@@ -364,9 +454,9 @@ dir_out <- preparer_dossier("frames_index")
  
 X <- sort(runif(n_pts, 0, 10))
  
-# chaque état est un triplet (x, y, couleur) par point, dans le même ordre pour
-# tous les états : c'est ce qui permet d'interpoler à la fois la position et la
-# couleur de façon continue d'un état à l'autre.
+# chaque état est un triplet (x, y, couleur) par point, dans le même
+# ordre pour tous les états : c'est ce qui permet d'interpoler à la fois
+# la position et la couleur de façon continue d'un état à l'autre.
 bruit_indiv <- rnorm(n_pts, 0, 1)
 
 x_final <- runif(n_pts, 0, 10)
@@ -379,29 +469,35 @@ etat_lineaire  <- list(x = X, y = 0.9 * (X - mean(X)) + bruit_indiv * 0.4,
 etat_sinus     <- list(x = X, y = 3 * sin(0.8 * X) + bruit_indiv * 0.35,
                         col = rep(couleur_pts, n_pts))
  
-# état final : points aléatoires sur le rectangle, répartis en 3 secteurs angulaires
-# (3 vecteurs partant du centre, séparés de 120°, délimitent les classes)
+# état final : points aléatoires sur le rectangle, répartis en 3
+# secteurs angulaires (3 vecteurs partant du centre, séparés de 120°,
+# délimitent les classes)
 
- 
+
 centre_x <- 5   # centre du rectangle (domaine x : 0 à 10)
 centre_y <- 0   # centre du rectangle (domaine y : -5 à 5)
- 
-angle          <- atan2(y_final - centre_y, x_final - centre_x)   # entre -pi et pi
-angle_positif  <- ifelse(angle < 0, angle + 2 * pi, angle)         # entre 0 et 2*pi
-classe_finale  <- floor(angle_positif / (2 * pi / 3)) + 1          # 3 secteurs de 120°
- 
+
+angle         <- atan2(y_final - centre_y, x_final - centre_x)   # -pi à pi
+angle_positif <- ifelse(angle < 0, angle + 2 * pi, angle)        # 0 à 2*pi
+# 3 secteurs de 120°
+classe_finale <- floor(angle_positif / (2 * pi / 3)) + 1
+
 couleurs_classes <- c(couleur_pts, couleur_ligne, couleur_accent)
- 
-etat_grille <- list(x = x_final, y = y_final, col = couleurs_classes[classe_finale])
- 
+
+etat_grille <- list(
+  x = x_final, y = y_final, col = couleurs_classes[classe_finale]
+)
+
 etats   <- list(etat_aleatoire, etat_lineaire, etat_sinus, etat_grille)
 n_etats <- length(etats)
- 
-# angles des 3 vecteurs de séparation (mêmes bornes que celles utilisées pour classe_finale)
+
+# angles des 3 vecteurs de séparation (mêmes bornes que classe_finale)
 angles_separation <- c(0, 2 * pi / 3, 4 * pi / 3)
-rayon_separation   <- 6   # longueur des vecteurs une fois complètement affichés
- 
-ease <- function(frac) (1 - cos(pi * frac)) / 2   # lissage ease-in-out entre deux états
+# longueur des vecteurs une fois complètement affichés
+rayon_separation <- 6
+
+# lissage ease-in-out entre deux états
+ease <- function(frac) (1 - cos(pi * frac)) / 2
  
 # interpolation linéaire de couleurs point par point, dans l'espace RGB
 interp_couleur <- function(col_a, col_b, frac) {
@@ -422,8 +518,9 @@ for (i in seq_len(n_frames)) {
   Y_t   <- (1 - frac) * etats[[idx_a]]$y   + frac * etats[[idx_b]]$y
   Col_t <- interp_couleur(etats[[idx_a]]$col, etats[[idx_b]]$col, frac)
  
-  # les vecteurs n'apparaissent qu'en entrant dans l'état "grille" (croissance, poids 0→1)
-  # ou en le quittant (rétraction, poids 1→0) ; nuls lors des autres transitions
+  # les vecteurs n'apparaissent qu'en entrant dans l'état "grille"
+  # (croissance, poids 0→1) ou en le quittant (rétraction, poids 1→0) ;
+  # nuls lors des autres transitions
   if (idx_b == n_etats) {
     poids_separation <- frac
   } else if (idx_a == n_etats) {
@@ -437,8 +534,10 @@ for (i in seq_len(n_frames)) {
   df_separation <- data.frame(
     x    = centre_x,
     y    = centre_y,
-    xend = centre_x + poids_separation * rayon_separation * cos(angles_separation),
-    yend = centre_y + poids_separation * rayon_separation * sin(angles_separation)
+    xend = centre_x +
+      poids_separation * rayon_separation * cos(angles_separation),
+    yend = centre_y +
+      poids_separation * rayon_separation * sin(angles_separation)
   )
  
     # couleur de la flèche : blanche (invisible) quand poids_separation = 0,
@@ -449,7 +548,8 @@ for (i in seq_len(n_frames)) {
     geom_segment(data = df_separation, aes(x, y, xend = xend, yend = yend),
                  color = couleur_separation, linewidth = epaisseur_ligne * 0.6,
                  arrow = arrow(length = unit(0.25, "cm"), type = "closed")) +
-    geom_point(data = df, aes(X, Y, color = Couleur), alpha = alpha_pts, size = taille_pts) +
+    geom_point(data = df, aes(X, Y, color = Couleur),
+               alpha = alpha_pts, size = taille_pts) +
     scale_color_identity() +
     coord_cartesian(xlim = c(0, 10), ylim = c(-5, 5)) +
     theme_gif

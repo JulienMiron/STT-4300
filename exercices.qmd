@@ -503,7 +503,11 @@ $$\binom{m}{y}\pi^y(1-\pi)^{m-y} \longrightarrow \frac{e^{-\mu}\mu^y}{y!}.$$
 <summary>Solution</summary>
 
 En substituant $\pi=\mu/m$ :
-$$\binom{m}{y}\pi^y(1-\pi)^{m-y} = \frac{m(m-1)\cdots(m-y+1)}{y!}\left(\frac{\mu}{m}\right)^y\left(1-\frac{\mu}{m}\right)^{m-y} = \frac{\mu^y}{y!}\cdot\underbrace{\frac{m(m-1)\cdots(m-y+1)}{m^y}}_{(A)}\cdot\underbrace{\left(1-\frac{\mu}{m}\right)^{m-y}}_{(B)}.$$
+\begin{align}
+\binom{m}{y}\pi^y(1-\pi)^{m-y} &=\frac{m(m-1)\cdots(m-y+1)}{y!}\left(\frac{\mu}{m}\right)^y\left(1-\frac{\mu}{m}\right)^{m-y}\\
+&= \frac{\mu^y}{y!}\cdot\underbrace{\frac{m(m-1)\cdots(m-y+1)}{m^y}}_{(A)}\cdot\underbrace{\left(1-\frac{\mu}{m}\right)^{m-y}}_{(B)}.
+\end{align}
+
 
 **Terme (A).** Pour $y$ fixé,
 $$\frac{m(m-1)\cdots(m-y+1)}{m^y} = \prod_{k=0}^{y-1}\left(1-\frac{k}{m}\right) \longrightarrow 1 \quad\text{quand } m\to\infty,$$

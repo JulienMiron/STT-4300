@@ -33,6 +33,7 @@ book:
   chapters:
     - index.qmd
     - 01-regression-lineaire.qmd
+    - monte-carlo.qmd
     - 02-regression-logistique.qmd
     - 03-modeles-lineaires-generalises.qmd
     - 04-prediction-validation-croisee.qmd

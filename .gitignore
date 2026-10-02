@@ -11,3 +11,10 @@
 # dossiers de frames PNG intermédiaires produits par créerGIF.R
 images/frames/
 images/frames_*/
+
+# rendus locaux des notebooks de cours (notebooks-classe/) : pas publiés, pas versionnés
+notebooks-classe/*.html
+notebooks-classe/*.nb.html
+notebooks-classe/*_files/
+notebooks-classe/*.knit.md
+/site_libs/

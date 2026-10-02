@@ -1,0 +1,105 @@
+---
+title: "Exemples en classe — Régression logistique"
+format:
+  html:
+    toc: true
+    embed-resources: true
+engine: knitr
+filters:
+  - webr
+webr:
+  packages: ['ISLR', 'ggplot2']
+---
+
+Notebook interactif (code exécuté dans le navigateur via webR) à présenter et modifier en direct pendant le cours. Il ne fait pas partie des notes publiées.
+
+Jeu de données : `Default` (package `ISLR`) — défaut de paiement sur carte de crédit, en fonction du solde (`balance`), du revenu (`income`) et du statut étudiant (`student`).
+
+```{webr-r}
+library(ISLR)
+library(ggplot2)
+
+data(Default)
+head(Default)
+summary(Default)
+```
+
+## 1. Exploration visuelle
+
+Avant d'ajuster quoi que ce soit : à l'œil, la probabilité de défaut semble-t-elle augmenter avec le solde ? De façon linéaire ou pas ? Y a-t-il une différence visible entre étudiants et non-étudiants ?
+
+```{webr-r}
+ggplot(Default, aes(x = balance, y = as.numeric(default) - 1, color = student)) +
+  geom_jitter(width = 0, height = 0.03, alpha = 0.3) +
+  labs(x = "Solde de carte de crédit", y = "Défaut (0/1)", color = "Étudiant")
+```
+
+**Discussion.** Pourquoi une droite de régression linéaire simple serait-elle mal adaptée ici ? Que remplace-t-on par quoi dans un modèle logistique ?
+
+## 2. Ajustement du modèle
+
+```{webr-r}
+modele <- glm(default ~ balance + income + student, data = Default, family = binomial)
+summary(modele)
+```
+
+**À essayer en direct** (modifier la cellule ci-dessous et réexécuter) :
+
+- Retirer `income` du modèle — est-ce que `balance` et `student` changent beaucoup ?
+- Remplacer `family = binomial` par `family = binomial(link = "probit")` — les conclusions changent-elles ?
+
+```{webr-r}
+modele <- glm(default ~ balance + income + student, data = Default, family = binomial)
+summary(modele)
+```
+
+## 3. Interprétation des coefficients
+
+```{webr-r}
+exp(coef(modele))
+exp(confint(modele))
+```
+
+**Discussion — le piège de `student`.** Comparez le signe du coefficient de `studentYes` ci-dessus avec ce qu'on obtient en ignorant `balance` :
+
+```{webr-r}
+modele_marginal <- glm(default ~ student, data = Default, family = binomial)
+exp(coef(modele_marginal))
+```
+
+Le signe change-t-il ? Comment l'expliquer à partir du graphique de la section 1 (indice : les étudiants ont-ils tendance à avoir des soldes plus élevés ou plus faibles) ?
+
+## 4. Prédiction
+
+```{webr-r}
+nouvelles_donnees <- expand.grid(
+  balance = seq(0, 3000, by = 50),
+  income  = mean(Default$income),
+  student = c("Yes", "No")
+)
+nouvelles_donnees$prob <- predict(modele, newdata = nouvelles_donnees, type = "response")
+
+ggplot(nouvelles_donnees, aes(x = balance, y = prob, color = student)) +
+  geom_line(linewidth = 1) +
+  labs(x = "Solde de carte de crédit", y = "Probabilité prédite de défaut", color = "Étudiant")
+```
+
+**Discussion.** À solde égal, qui a la probabilité de défaut prédite la plus élevée ? Est-ce cohérent avec l'interprétation des coefficients de la section 3 ?
+
+## 5. Classification et seuil
+
+```{webr-r}
+seuil <- 0.5
+pred_classe <- ifelse(fitted(modele) > seuil, "Yes", "No")
+table(Predite = pred_classe, Observee = Default$default)
+```
+
+**Discussion.** Très peu de défauts sont correctement classés avec un seuil de 0.5 — pourquoi ? Quel compromis cela illustre-t-il (lien avec la section « Spécificité, sensibilité et courbe ROC » du chapitre) ?
+
+**À essayer en direct** — changer le seuil ci-dessous et réexécuter :
+
+```{webr-r}
+seuil <- 0.2
+pred_classe <- ifelse(fitted(modele) > seuil, "Yes", "No")
+table(Predite = pred_classe, Observee = Default$default)
+```

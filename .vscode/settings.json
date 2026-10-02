@@ -1,3 +1,4 @@
 {
-  "quarto.render.renderOnSave": true
+  "quarto.render.renderOnSave": true,
+  "quarto.render.previewType": "external"
 }

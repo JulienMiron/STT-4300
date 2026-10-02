@@ -2526,3 +2526,12 @@ blockquote { border-left: 4px solid var(--ulaval-yellow); padding-left: 1rem; co
     display: block !important;
   }
 }
+
+/* Bloc « Dernière modification » déplacé en bas de page (date-modification-bas-page.html) */
+#quarto-document-content > .quarto-title-meta {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .85rem;
+}

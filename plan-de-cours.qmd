@@ -1,7 +1,3 @@
----
-title: "Plan de cours"
----
-
 <div class="portal-hero">
 
 <p class="eyebrow">STT-4300 — Régression II</p>
@@ -12,11 +8,16 @@ title: "Plan de cours"
 
 </div>
 
+::: {.callout-warning}
+## La version Brio fait foi
+
+Ce plan de cours est fourni à titre indicatif. La version officielle est celle déposée sur **Brio** : en cas de doute ou de différence entre les deux, c'est l'information sur **Brio** qui prévaut.
+:::
+
 <!-- TODO: remplacer les valeurs ci-dessous -->
-<div class="module-quick-facts three-facts">
-<div class="module-fact"><p><span class="resource-icon">🎓</span><span><span class="fact-label">Crédits</span><span class="fact-value">À compléter</span></span></p></div>
-<div class="module-fact"><p><span class="resource-icon">📋</span><span><span class="fact-label">Préalables</span><span class="fact-value">À compléter</span></span></p></div>
-<div class="module-fact"><p><span class="resource-icon">🗓️</span><span><span class="fact-label">Horaire</span><span class="fact-value">À compléter</span></span></p></div>
+<div class="module-quick-facts two-facts">
+<div class="module-fact"><p><span class="resource-icon">🗓️</span><span><span class="fact-label">Horaire</span><span class="fact-value">Jeudi de 8 h 30 à 11 h 20</span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">🏫</span><span><span class="fact-label">Local</span><span class="fact-value">VCH-XYZW</span></span></p></div>
 </div>
 
 ## Description du cours

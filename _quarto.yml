@@ -6,7 +6,7 @@ project:
   render:
     - index.qmd
     - plan-de-cours.qmd
-    - echeancier.qmd
+    - calendrier.qmd
   resources:
     - notebooks-classe/*.html   # notebooks d'exemples en classe, liés depuis notes/exercices-en-classe.qmd
 
@@ -28,8 +28,8 @@ website:
         text: Accueil
       - href: plan-de-cours.qmd
         text: Plan de cours
-      - href: echeancier.qmd
-        text: Échéancier
+      - href: calendrier.qmd
+        text: Calendrier
       - href: notes/index.html
         text: Notes de cours
 
@@ -43,6 +43,9 @@ date-format: "D MMMM YYYY"
 format:
   html:
     favicon: notes/images/logit_courbe_annotee.png
+    include-after-body:
+      - logo-couleur-du-jour.html
+      - date-modification-bas-page.html
     theme: lumen
     css: styles.css
     toc: false

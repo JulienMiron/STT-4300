@@ -1,0 +1,21 @@
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
+# Calendrier
+
+
+</div>
+
+::: {.callout-warning}
+## La version Brio fait foi
+
+Ce calendrier est fourni à titre indicatif. La version officielle est celle déposée sur **Brio** : en cas de doute ou de différence entre les deux, c'est l'information sur **Brio** qui prévaut.
+:::
+
+
+| Semaine | Date | Sujet | Notes |
+|---|---|---|---|
+| 1 | 23 janvier | Labo 1 | Test |
+| 2 | 30 janvier | Labo 2 | À réaliser sur R |
+| 3 | 7 février | Labo 3 | Encore un test |

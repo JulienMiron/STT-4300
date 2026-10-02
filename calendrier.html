@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Échéancier – STT-4300 Régression II</title>
+<title>calendrier – STT-4300 Régression II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -104,8 +104,8 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Plan de cours</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./echeancier.html" aria-current="page"> 
-<span class="menu-text">Échéancier</span></a>
+    <a class="nav-link active" href="./calendrier.html" aria-current="page"> 
+<span class="menu-text">Calendrier</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./notes/index.html"> 
@@ -128,7 +128,6 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Échéancier</h1>
 </div>
 
 
@@ -155,12 +154,22 @@ ul.task-list li input[type="checkbox"] {
 <p class="eyebrow">
 STT-4300 — Régression II
 </p>
-<section id="échéancier" class="level1">
-<h1>Échéancier</h1>
-<p class="hero-lead">
-Page à compléter — squelette fourni à titre indicatif.
-</p>
+<section id="calendrier" class="level1">
+<h1>Calendrier</h1>
 </section>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avertissement</span>La version Brio fait foi
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ce calendrier est fourni à titre indicatif. La version officielle est celle déposée sur <strong>Brio</strong> : en cas de doute ou de différence entre les deux, c’est l’information sur <strong>Brio</strong> qui prévaut.</p>
+</div>
 </div>
 <table class="caption-top table">
 <thead>
@@ -173,22 +182,22 @@ Page à compléter — squelette fourni à titre indicatif.
 </thead>
 <tbody>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>1</td>
+<td>23 janvier</td>
+<td>Labo 1</td>
+<td>Test</td>
 </tr>
 <tr class="even">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>2</td>
+<td>30 janvier</td>
+<td>Labo 2</td>
+<td>À réaliser sur R</td>
 </tr>
 <tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>3</td>
+<td>7 février</td>
+<td>Labo 3</td>
+<td>Encore un test</td>
 </tr>
 </tbody>
 </table>
@@ -196,6 +205,34 @@ Page à compléter — squelette fourni à titre indicatif.
 
 
 </main> <!-- /main -->
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script>
+// Déplace le bloc « Dernière modification » (généré par Quarto en haut de page)
+// vers le bas du contenu. N'a aucun effet sur la page d'accueil, dont le
+// bloc de titre est déjà masqué.
+(function () {
+  if (document.body.classList.contains('page-home')) return;
+  var meta = document.querySelector('.quarto-title-meta');
+  var content = document.getElementById('quarto-document-content');
+  if (meta && content) {
+    content.appendChild(meta);
+  }
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -604,7 +641,7 @@ Page à compléter — squelette fourni à titre indicatif.
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/echeancier.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/calendrier.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

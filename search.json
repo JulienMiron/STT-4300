@@ -1,17 +1,17 @@
 [
   {
-    "objectID": "echeancier.html",
-    "href": "echeancier.html",
-    "title": "Échéancier",
+    "objectID": "calendrier.html",
+    "href": "calendrier.html",
+    "title": "Calendrier",
     "section": "",
-    "text": "STT-4300 — Régression II\n\n\nÉchéancier\n\nPage à compléter — squelette fourni à titre indicatif.\n\n\n\n\n\n\nSemaine\nDate\nSujet\nNotes"
+    "text": "STT-4300 — Régression II\n\n\nCalendrier\n\n\n\n\n\n\n\n\nAvertissementLa version Brio fait foi\n\n\n\nCe calendrier est fourni à titre indicatif. La version officielle est celle déposée sur Brio : en cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut.\n\n\n\n\n\nSemaine\nDate\nSujet\nNotes\n\n\n\n\n1\n23 janvier\nLabo 1\nTest\n\n\n2\n30 janvier\nLabo 2\nÀ réaliser sur R\n\n\n3\n7 février\nLabo 3\nEncore un test"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "STT-4300",
     "section": "",
-    "text": "STT-4300\n\n\nRégression II\n\n\nNotes de cours, plan de cours et échéancier : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques et modèles additifs généralisés.\n\n\nNotes de cours Plan de cours Échéancier"
+    "text": "STT-4300\n\n\nRégression II\n\n\nNotes de cours, plan de cours et calendrier : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques et modèles additifs généralisés.\n\n\nNotes de cours Plan de cours Calendrier"
   },
   {
     "objectID": "plan-de-cours.html",

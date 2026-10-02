@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Plan de cours – STT-4300 Régression II</title>
+<title>plan-de-cours – STT-4300 Régression II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -104,8 +104,8 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Plan de cours</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./echeancier.html"> 
-<span class="menu-text">Échéancier</span></a>
+    <a class="nav-link" href="./calendrier.html"> 
+<span class="menu-text">Calendrier</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./notes/index.html"> 
@@ -128,7 +128,6 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Plan de cours</h1>
 </div>
 
 
@@ -162,21 +161,29 @@ Page à compléter — squelette fourni à titre indicatif.
 </p>
 </section>
 </div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avertissement</span>La version Brio fait foi
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ce plan de cours est fourni à titre indicatif. La version officielle est celle déposée sur <strong>Brio</strong> : en cas de doute ou de différence entre les deux, c’est l’information sur <strong>Brio</strong> qui prévaut.</p>
+</div>
+</div>
 <!-- TODO: remplacer les valeurs ci-dessous -->
-<div class="module-quick-facts three-facts">
+<div class="module-quick-facts two-facts">
 <div class="module-fact">
 <p>
-<span class="resource-icon">🎓</span><span><span class="fact-label">Crédits</span><span class="fact-value">À compléter</span></span>
+<span class="resource-icon">🗓️</span><span><span class="fact-label">Horaire</span><span class="fact-value">Jeudi de 8 h 30 à 11 h 20</span></span>
 </p>
 </div>
 <div class="module-fact">
 <p>
-<span class="resource-icon">📋</span><span><span class="fact-label">Préalables</span><span class="fact-value">À compléter</span></span>
-</p>
-</div>
-<div class="module-fact">
-<p>
-<span class="resource-icon">🗓️</span><span><span class="fact-label">Horaire</span><span class="fact-value">À compléter</span></span>
+<span class="resource-icon">🏫</span><span><span class="fact-label">Local</span><span class="fact-value">VCH-XYZW</span></span>
 </p>
 </div>
 </div>
@@ -223,6 +230,34 @@ Page à compléter — squelette fourni à titre indicatif.
 </section>
 
 </main> <!-- /main -->
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script>
+// Déplace le bloc « Dernière modification » (généré par Quarto en haut de page)
+// vers le bas du contenu. N'a aucun effet sur la page d'accueil, dont le
+// bloc de titre est déjà masqué.
+(function () {
+  if (document.body.classList.contains('page-home')) return;
+  var meta = document.querySelector('.quarto-title-meta');
+  var content = document.getElementById('quarto-document-content');
+  if (meta && content) {
+    content.appendChild(meta);
+  }
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

@@ -104,8 +104,8 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Plan de cours</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./echeancier.html"> 
-<span class="menu-text">Échéancier</span></a>
+    <a class="nav-link" href="./calendrier.html"> 
+<span class="menu-text">Calendrier</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./notes/index.html"> 
@@ -163,22 +163,50 @@ STT-4300
 Régression II
 </p>
 <p class="home-lead">
-Notes de cours, plan de cours et échéancier : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques et modèles additifs généralisés.
+Notes de cours, plan de cours et calendrier : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques et modèles additifs généralisés.
 </p>
 <div class="home-actions">
-<p><a class="home-action home-action--primary" href="notes/index.html"><span>Notes de cours</span></a> <a class="home-action home-action--secondary" href="plan-de-cours.html"><span>Plan de cours</span></a> <a class="home-action home-action--secondary" href="echeancier.html"><span>Échéancier</span></a></p>
+<p><a class="home-action home-action--primary" href="notes/index.html"><span>Notes de cours</span></a> <a class="home-action home-action--secondary" href="plan-de-cours.html"><span>Plan de cours</span></a> <a class="home-action home-action--secondary" href="calendrier.html"><span>Calendrier</span></a></p>
 </div>
 </div>
 <div class="home-visual">
 <p><img src="notes/images/logit_courbe_annotee.png" alt=""></p>
 </div>
 </div>
-
-
 </div>
 </div>
+
+
 
 </main> <!-- /main -->
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script>
+// Déplace le bloc « Dernière modification » (généré par Quarto en haut de page)
+// vers le bas du contenu. N'a aucun effet sur la page d'accueil, dont le
+// bloc de titre est déjà masqué.
+(function () {
+  if (document.body.classList.contains('page-home')) return;
+  var meta = document.querySelector('.quarto-title-meta');
+  var content = document.getElementById('quarto-document-content');
+  if (meta && content) {
+    content.appendChild(meta);
+  }
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

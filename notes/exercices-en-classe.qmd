@@ -6,7 +6,7 @@ Cette page rassemble les notebooks d'exemples explorés en classe, au fur et à 
 #| echo: false
 #| results: asis
 
-fichiers <- sort(list.files("notebooks-classe", pattern = "-exemples\\.qmd$", full.names = TRUE))
+fichiers <- sort(list.files("../notebooks-classe", pattern = "-exemples\\.qmd$", full.names = TRUE))
 
 liens <- unlist(lapply(fichiers, function(f) {
   meta <- rmarkdown::yaml_front_matter(f)

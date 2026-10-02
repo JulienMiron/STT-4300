@@ -1,0 +1,31 @@
+# Plan de cours
+
+<!-- Page à compléter. Squelette fourni à titre indicatif. -->
+
+## Description du cours
+
+<!-- TODO -->
+
+## Objectifs d'apprentissage
+
+<!-- TODO -->
+
+## Préalables
+
+<!-- TODO -->
+
+## Évaluation
+
+<!-- TODO : pondération des évaluations -->
+
+| Évaluation | Pondération | Date |
+|---|---|---|
+|  |  |  |
+
+## Matériel
+
+<!-- TODO : manuel, [notes de cours](notes/index.html), logiciels requis -->
+
+## Politiques du cours
+
+<!-- TODO : présence, retards, plagiat, accommodements -->

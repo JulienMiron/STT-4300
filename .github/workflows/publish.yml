@@ -58,14 +58,24 @@ jobs:
           quarto check knitr
           Rscript -e 'print(R.version.string); print(.libPaths()); print(packageVersion("MASS"))'
 
-      - name: Render book
+      - name: Render site
         run: quarto render --to html
 
-      - name: Render book
-        run: quarto render --to html
+      # Rendu en second : notes/_quarto.yml écrit directement dans
+      # ../_site/notes, donc son rendu doit être la dernière écriture dans
+      # _site/ au cas où le rendu du site nettoierait son propre output-dir.
+      - name: Render book (notes/)
+        run: quarto render notes --to html
+
+      # Effet de bord connu de Quarto lors de la résolution d'un glob de
+      # ressources pointant vers un sous-projet (notebooks-classe/) : un
+      # rendu fantôme atterrit dans _site/_book, en plus de la copie
+      # correcte dans _site/notebooks-classe/. On le retire avant déploiement.
+      - name: Nettoyer l'artefact _book résiduel
+        run: rm -rf _site/_book
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_book
+          publish_dir: ./_site

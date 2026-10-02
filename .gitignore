@@ -1,3 +1,4 @@
+/_site/
 /_book/
 /.quarto/
 .posit/
@@ -9,8 +10,8 @@
 
 /.luarc.json
 # dossiers de frames PNG intermédiaires produits par créerGIF.R
-images/frames/
-images/frames_*/
+notes/images/frames/
+notes/images/frames_*/
 
 # notebooks de cours (notebooks-classe/) : le .html rendu est versionné
 # (pour l'ouvrir directement sans Quarto), seuls les fichiers intermédiaires

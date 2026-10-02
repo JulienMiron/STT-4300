@@ -1,95 +1,48 @@
 project:
-  type: book
-  output-dir: _book
+  type: website
+  output-dir: _site
+  # liste explicite : sans ça, Quarto essaie aussi de rendre les fichiers de
+  # notes/ et notebooks-classe/, qui sont des sous-projets Quarto indépendants
+  render:
+    - index.qmd
+    - plan-de-cours.qmd
+    - echeancier.qmd
   resources:
-    - images/logit_plot.gif
-    - images/lineaire_plot.gif
-    - images/monte_carlo_plot.gif
-    - images/glm_plot.gif
-    - images/cv_plot.gif
-    - images/regularisation_plot.gif
-    - images/knn_noyau_plot.gif
-    - images/splines_plot.gif
-    - images/gam_plot.gif
-    - images/index_plot.gif
-    - images/exercices_plot.gif
-    - notebooks-classe/*.html   # notebooks d'exemples en classe affichés sur exercices-en-classe.qmd
+    - notebooks-classe/*.html   # notebooks d'exemples en classe, liés depuis notes/exercices-en-classe.qmd
 
-book:
-  title: "Régression II -- STT-4300"
-  #subtitle: "Rappels de régression linéaire, modèles linéaires généralisés, régression non-linéaire et non-paramétrique, modèles additifs généralisés"
-  author: "Julien Miron"
-
+website:
+  title: "STT-4300"
+  site-url: https://julienmiron.github.io/STT-4300/
   repo-url: https://github.com/JulienMiron/STT-4300
-  repo-actions: [edit, issue]      # pas "source" : le dépôt contient aussi des brouillons
+  repo-actions: [edit, issue]
 
   page-footer:
-    left: "Notes de cours STT-4300"
+    left: "Site de cours STT-4300"
     right: "Généré avec Quarto"
 
-  sidebar:
-    style: floating
-    collapse-level: 1              # replie tout sauf les titres de chapitre
-    logo: images/logit_plot.png    # affichée au-dessus du titre dans la sidebar
+  navbar:
+    logo: notes/images/logit_plot.png
+    left:
+      - href: index.qmd
+        text: Accueil
+      - href: plan-de-cours.qmd
+        text: Plan de cours
+      - href: echeancier.qmd
+        text: Échéancier
+      - href: notes/index.html
+        text: Notes de cours
 
-
-  chapters:
-    - index.qmd
-    - 01-regression-lineaire.qmd
-    - 02-monte-carlo.qmd
-    - 03-regression-logistique.qmd
-    - 04-modeles-lineaires-generalises.qmd
-    - 05-prediction-validation-croisee.qmd
-    - 06-selection-regularisation.qmd
-    - 07-knn-noyau.qmd
-    - 08-splines.qmd
-    - 09-gam.qmd
-    - exercices-theoriques.qmd
-    - exercices-en-classe.qmd
-
-crossref:
-  chapters: true                   # numérotation des figures/tableaux tient compte du chapitre
-
-bibliography: references.bib
-
-# Réglages de langue et de dates (affichage en français)
 lang: fr
 language:
   title-block-author-single: "Auteur"
   title-block-modified: "Dernière modification"
-date-modified: last-modified       # date mise à jour automatiquement au rendu
+date-modified: last-modified
 date-format: "D MMMM YYYY"
 
 format:
   html:
-    favicon: images/logit_plot.png
-    include-after-body: sidebar-gif.html   # gif/animation ajoutée après le corps de page
-    include-in-header:
-      - mathjax-macros.html                # macros LaTeX custom pour MathJax (bb, hb, hv, etc.)
-    grid:
-      sidebar-width: 300px   # sidebar de gauche (chapitres) — défaut 250px
-      margin-width: 250px    # TdM de droite — défaut ~200-250px selon thème
-      gutter-width: 1rem     # espace entre les colonnes
-
+    favicon: notes/images/logit_plot.png
     theme: cosmo
-    css: styles.css
-    toc: true
-    toc-expand: true
-    toc-depth: 3
-    number-sections: true
-    code-fold: false
-    smooth-scroll: true
-
-  pdf:
-    include-in-header: macros.tex
-    documentclass: scrreprt
-    toc: true
-    number-sections: true
-    keep-tex: false          # mettre à true pour inspecter le .tex généré en cas d'erreur
+    toc: false
 
 editor: source
-
-filters:
-  - webr                              # exécution de code R dans le navigateur
-  - filtres/titre-environnements.lua  # filtre custom pour les environnements (théorème, exemple, etc.)
-  - fontawesome

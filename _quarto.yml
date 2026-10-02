@@ -12,6 +12,7 @@ project:
     - images/splines_plot.gif
     - images/gam_plot.gif
     - images/index_plot.gif
+    - images/exercices_plot.gif
 
 book:
   title: "Régression II -- STT-4300"

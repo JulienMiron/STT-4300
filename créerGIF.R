@@ -17,7 +17,19 @@ n_pts       <- 75
 n_groupes   <- 75 # pour la régression linéaire logistique
 n_coef      <- 5 # pour le nombre de paramètres de LASSO
 
-changer <- c(2)
+changer <- c(10) 
+                #  chapitres à générer 
+                #  0 = index, 
+                #  1 = régression linéaire, 
+                #  2 = Monte Carlo, 
+                #  3 = régression logistique, 
+                #  4 = GLM Poisson, 
+                #  5 = validation croisée, 
+                #  6 = LASSO, 
+                #  7 = KNN/noyau, 
+                #  8 = splines, 
+                #  9 = GAM, 
+                #  10 = exercices)
 
 
 
@@ -38,6 +50,17 @@ theme_gif <- theme_void() + theme(legend.position = "none")
 # ================================================================
 # Fonctions utilitaires
 # ================================================================
+
+# lissage ease-in-out entre deux états (gifs à états : index, exercices)
+ease <- function(frac) (1 - cos(pi * frac)) / 2
+
+# interpolation linéaire de couleurs point par point, dans l'espace RGB
+interp_couleur <- function(col_a, col_b, frac) {
+  rgb_a <- col2rgb(col_a)
+  rgb_b <- col2rgb(col_b)
+  rgb_t <- (1 - frac) * rgb_a + frac * rgb_b
+  rgb(rgb_t[1, ], rgb_t[2, ], rgb_t[3, ], maxColorValue = 255)
+}
 
 # Crée (si besoin) le dossier de frames d'un chapitre et retourne son chemin
 preparer_dossier <- function(nom_dossier) {
@@ -445,6 +468,111 @@ creer_gif(dir_out, "gam_plot.gif")
 }
 
 # ================================================================
+# Exercices — méta-gif, synthèse animée des 8 chapitres (SUGGESTION)
+# ================================================================
+# Même mécanique que l'index (interpolation d'un nuage de points
+# entre états), mais les états rejouent ici la forme caractéristique
+# de chaque chapitre (hors Monte Carlo), dans l'ordre du cours : un
+# clin d'œil général à "tout ce qu'on pratique dans les exercices".
+if (10 %in% changer){
+set.seed(11)
+dir_out <- preparer_dossier("frames_exercices")
+
+X     <- sort(runif(n_pts, 0, 10))
+X_mid <- mean(X)
+bruit_indiv <- rnorm(n_pts, 0, 1)
+
+# 01 — régression linéaire : nuage autour d'une droite
+etat_lineaire <- list(
+  x = X, y = 0.9 * (X - X_mid) + bruit_indiv * 0.4,
+  col = rep(couleur_pts, n_pts)
+)
+
+# 03 — régression logistique : courbe en S
+etat_logistique <- list(
+  x = X,
+  y = 8 * (plogis(1.3 * (X - X_mid)) - 0.5) + bruit_indiv * 0.25,
+  col = rep(couleur_pts, n_pts)
+)
+
+# 04 — GLM (Poisson) : croissance exponentielle de comptages
+lambda_X <- exp(0.3 * (X - X_mid))
+etat_glm <- list(
+  x = X,
+  y = 4 * (lambda_X - mean(lambda_X)) / diff(range(lambda_X)) +
+    bruit_indiv * 0.3,
+  col = rep(couleur_pts, n_pts)
+)
+
+# 05 — validation croisée : même droite, coloration train/test
+role_cv <- sample(c("train", "test"), n_pts, replace = TRUE, prob = c(2, 1))
+etat_cv <- list(
+  x = X, y = etat_lineaire$y,
+  col = ifelse(role_cv == "train", couleur_pts, couleur_accent)
+)
+
+# # 06 — sélection/régularisation (LASSO) : coefficients décroissants,
+# # plusieurs ramenés à zéro (X sert d'indice de coefficient)
+# y_lasso <- rev(sort(abs(rnorm(n_pts, 0, 1.3))))
+# y_lasso[round(n_pts * 0.55):n_pts] <- 0
+# etat_lasso <- list(
+#   x = X, y = y_lasso - 1.5,
+#   col = ifelse(y_lasso == 0, couleur_accent, couleur_pts)
+# )
+
+# 07 — KNN et noyau : lissage local d'une sinusoïde
+etat_knn <- list(
+  x = X, y = 3 * sin(0.8 * X) + bruit_indiv * 0.3,
+  col = rep(couleur_pts, n_pts)
+)
+
+# 08 — splines : sinusoïde déphasée (forme non-linéaire distincte du KNN)
+etat_splines <- list(
+  x = X, y = 3 * sin(1.3 * X - 1) + bruit_indiv * 0.3,
+  col = rep(couleur_pts, n_pts)
+)
+
+# 09 — GAM : somme d'une tendance lisse et d'une tendance linéaire
+etat_gam <- list(
+  x = X,
+  y = 2 * sin(0.8 * X) + 0.4 * (X - X_mid) + bruit_indiv * 0.25,
+  col = rep(couleur_pts, n_pts)
+)
+
+etats <- list(
+  etat_lineaire, etat_logistique, etat_glm, etat_cv,
+  #etat_lasso, 
+  etat_knn, etat_splines, etat_gam
+)
+n_etats <- length(etats)
+
+for (i in seq_len(n_frames)) {
+  pos <- (i - 1) / n_frames * n_etats
+
+  idx_a <- (floor(pos) %% n_etats) + 1
+  idx_b <- (floor(pos) + 1) %% n_etats + 1
+  frac  <- ease(pos - floor(pos))
+
+  X_t   <- (1 - frac) * etats[[idx_a]]$x   + frac * etats[[idx_b]]$x
+  Y_t   <- (1 - frac) * etats[[idx_a]]$y   + frac * etats[[idx_b]]$y
+  Col_t <- interp_couleur(etats[[idx_a]]$col, etats[[idx_b]]$col, frac)
+
+  df <- data.frame(X = X_t, Y = Y_t, Couleur = Col_t)
+
+  p <- ggplot() +
+    geom_point(data = df, aes(X, Y, color = Couleur),
+               alpha = alpha_pts, size = taille_pts) +
+    scale_color_identity() +
+    coord_cartesian(xlim = c(0, 10), ylim = c(-5, 5)) +
+    theme_gif
+
+  sauvegarder_frame(p, dir_out, i)
+}
+
+creer_gif(dir_out, "exercices_plot.gif")
+}
+
+# ================================================================
 # Index — nuage de points qui se réorganise (sans ajustement)
 # ================================================================
 if (0 %in% changer){
@@ -496,24 +624,13 @@ angles_separation <- c(0, 2 * pi / 3, 4 * pi / 3)
 # longueur des vecteurs une fois complètement affichés
 rayon_separation <- 6
 
-# lissage ease-in-out entre deux états
-ease <- function(frac) (1 - cos(pi * frac)) / 2
- 
-# interpolation linéaire de couleurs point par point, dans l'espace RGB
-interp_couleur <- function(col_a, col_b, frac) {
-  rgb_a <- col2rgb(col_a)
-  rgb_b <- col2rgb(col_b)
-  rgb_t <- (1 - frac) * rgb_a + frac * rgb_b
-  rgb(rgb_t[1, ], rgb_t[2, ], rgb_t[3, ], maxColorValue = 255)
-}
- 
 for (i in seq_len(n_frames)) {
   pos <- (i - 1) / n_frames * n_etats
- 
+
   idx_a <- (floor(pos) %% n_etats) + 1
   idx_b <- (floor(pos) + 1) %% n_etats + 1
   frac  <- ease(pos - floor(pos))
- 
+
   X_t   <- (1 - frac) * etats[[idx_a]]$x   + frac * etats[[idx_b]]$x
   Y_t   <- (1 - frac) * etats[[idx_a]]$y   + frac * etats[[idx_b]]$y
   Col_t <- interp_couleur(etats[[idx_a]]$col, etats[[idx_b]]$col, frac)

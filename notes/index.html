@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Julien Miron">
 
-<title>7&nbsp; Régression non-paramétrique : k plus proches voisins et estimateur de noyau – Régression II -- STT-4300</title>
+<title>Régression II – STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -36,8 +37,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./08-splines.html" rel="next">
-<link href="./06-selection-regularisation.html" rel="prev">
+<link href="./01-regression-lineaire.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -138,7 +138,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-knn-noyau.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Préface</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -159,7 +159,7 @@ window.Quarto = {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Régression II – STT-4300</a> 
         <div class="sidebar-tools-main">
-    <a href="https://github.com/JulienMiron/STT-4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/JulienMiron/STT-4300/tree/main/notes/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
 </div>
     </div>
       </div>
@@ -172,7 +172,7 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Préface</span></a>
   </div>
 </li>
@@ -214,7 +214,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link active">
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
   </div>
 </li>
@@ -252,33 +252,32 @@ window.Quarto = {
     <h2 id="toc-title">Table des matières</h2>
    
   <ul>
-  <li><a href="#estimateur-des-k-plus-proches-voisins" id="toc-estimateur-des-k-plus-proches-voisins" class="nav-link active" data-scroll-target="#estimateur-des-k-plus-proches-voisins"><span class="header-section-number">7.1</span> Estimateur des <span class="math inline">\(k\)</span> plus proches voisins</a>
-  <ul class="collapse">
-  <li><a href="#définition" id="toc-définition" class="nav-link" data-scroll-target="#définition"><span class="header-section-number">7.1.1</span> Définition</a></li>
-  <li><a href="#compromis-biais-variance-et-choix-de-k" id="toc-compromis-biais-variance-et-choix-de-k" class="nav-link" data-scroll-target="#compromis-biais-variance-et-choix-de-k"><span class="header-section-number">7.1.2</span> Compromis biais-variance et choix de <span class="math inline">\(k\)</span></a></li>
-  <li><a href="#plusieurs-variables-explicatives-et-distance-de-mahalanobis" id="toc-plusieurs-variables-explicatives-et-distance-de-mahalanobis" class="nav-link" data-scroll-target="#plusieurs-variables-explicatives-et-distance-de-mahalanobis"><span class="header-section-number">7.1.3</span> Plusieurs variables explicatives et distance de Mahalanobis</a></li>
-  </ul></li>
-  <li><a href="#estimateur-de-noyau-nadaraya-watson" id="toc-estimateur-de-noyau-nadaraya-watson" class="nav-link" data-scroll-target="#estimateur-de-noyau-nadaraya-watson"><span class="header-section-number">7.2</span> Estimateur de noyau (Nadaraya-Watson)</a>
-  <ul class="collapse">
-  <li><a href="#des-voisins-aux-noyaux" id="toc-des-voisins-aux-noyaux" class="nav-link" data-scroll-target="#des-voisins-aux-noyaux"><span class="header-section-number">7.2.1</span> Des voisins aux noyaux</a></li>
-  <li><a href="#choix-du-paramètre-de-fenêtre-h" id="toc-choix-du-paramètre-de-fenêtre-h" class="nav-link" data-scroll-target="#choix-du-paramètre-de-fenêtre-h"><span class="header-section-number">7.2.2</span> Choix du paramètre de fenêtre <span class="math inline">\(h\)</span></a></li>
-  </ul></li>
-  <li><a href="#régression-non-paramétrique-et-classification" id="toc-régression-non-paramétrique-et-classification" class="nav-link" data-scroll-target="#régression-non-paramétrique-et-classification"><span class="header-section-number">7.3</span> Régression non-paramétrique et classification</a></li>
+  <li><a href="#préface" id="toc-préface" class="nav-link active" data-scroll-target="#préface">Préface</a></li>
+  <li><a href="#version-pdf-des-notes-de-cours" id="toc-version-pdf-des-notes-de-cours" class="nav-link" data-scroll-target="#version-pdf-des-notes-de-cours">Version pdf des notes de cours</a></li>
+  <li><a href="#remerciements" id="toc-remerciements" class="nav-link" data-scroll-target="#remerciements">Remerciements</a></li>
+  <li><a href="#provenance-des-données" id="toc-provenance-des-données" class="nav-link" data-scroll-target="#provenance-des-données">Provenance des données</a></li>
+  <li><a href="#utilisation-de-lia" id="toc-utilisation-de-lia" class="nav-link" data-scroll-target="#utilisation-de-lia">Utilisation de l’IA</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/07-knn-noyau.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/notes/index.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-knn" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></h1>
+<h1 class="title">Régression II – STT-4300</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Auteur</div>
+    <div class="quarto-title-meta-contents">
+             <p>Julien Miron </p>
+          </div>
+  </div>
     
   
     <div>
@@ -295,46 +294,28 @@ window.Quarto = {
 </header>
 
 
-<p>Considérons le jeu de données <code>Auto</code> : la réponse <span class="math inline">\(Y\)</span> est <code>mpg</code> et la variable explicative <span class="math inline">\(X\)</span> est le poids de la voiture (<code>weight</code>). Le nuage de points montre que la relation entre <span class="math inline">\(X\)</span> et <span class="math inline">\(Y\)</span> n’est clairement pas linéaire. Ce chapitre présente des approches <strong>non-paramétriques</strong> pour étudier une telle relation, sans postuler de forme fonctionnelle.</p>
-<section id="estimateur-des-k-plus-proches-voisins" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="estimateur-des-k-plus-proches-voisins"><span class="header-section-number">7.1</span> Estimateur des <span class="math inline">\(k\)</span> plus proches voisins</h2>
-<section id="définition" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="définition"><span class="header-section-number">7.1.1</span> Définition</h3>
-<p>On suppose que la relation entre <span class="math inline">\(X\)</span> et <span class="math inline">\(Y\)</span> s’écrit <span class="math display">\[Y_i = f(X_i) + \epsilon_i,\]</span> où <span class="math inline">\(f\)</span> est une fonction inconnue à estimer et <span class="math inline">\(\epsilon_i\)</span> vérifie <span class="math inline">\(E[\epsilon_i\mid X_i] = 0\)</span>. On suppose <span class="math inline">\(f\)</span> assez lisse (deux fois dérivable). Sous ces hypothèses, <span class="math display">\[f(x) = E[Y\mid X = x].\]</span> On suppose de plus <span class="math inline">\(X\)</span> continue, de sorte que <span class="math inline">\(P(X_i = X_{i'}) = 0\)</span> si <span class="math inline">\(i\neq i'\)</span>.</p>
-<p>L’estimateur des <span class="math inline">\(k\)</span> plus proches voisins (<span class="math inline">\(k\)</span>NN) est <span class="math display">\[\hat f(x) = \frac{1}{k}\sum_{i\in N_k(x)} Y_i,\]</span> où <span class="math inline">\(N_k(x)\)</span> est l’ensemble des indices des <span class="math inline">\(k\)</span> plus proches voisins de <span class="math inline">\(x\)</span> : on pose <span class="math inline">\(d_i(x) = (X_i - x)^2\)</span>, on ordonne <span class="math inline">\(d_{(1)}(x) &lt; \cdots &lt; d_{(n)}(x)\)</span>, et <span class="math inline">\(N_k(x)\)</span> contient les indices <span class="math inline">\(i\)</span> tels que <span class="math inline">\(d_i(x) \leq d_{(k)}(x)\)</span>.</p>
-<p>En R : fonction <code>knn.reg</code> de la librairie <code>FNN</code>.</p>
+<section id="préface" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="préface">Préface</h2>
+<p>Ces notes de cours couvrent la régression linéaire, les modèles linéaires généralisés (régression logistique, régression de Poisson), les méthodes de validation et de sélection de modèles, la régularisation (ridge, lasso), les méthodes de régression non-paramétrique (<span class="math inline">\(k\)</span> plus proches voisins, estimateur de noyau, splines) et les modèles additifs généralisés (GAM).</p>
+<p>Si vous constatez des coquilles ou des erreurs, merci de m’envoyer <a href="mailto:julien.miron@mat.ulaval.ca">un courriel</a>.</p>
+<p>Pour en savoir plus sur moi et sur mes autres projets, vous pouvez consulter <a href="https://julienmiron.github.io/SitePerso/" target="_blank">mon site personnel</a>.</p>
 </section>
-<section id="compromis-biais-variance-et-choix-de-k" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="compromis-biais-variance-et-choix-de-k"><span class="header-section-number">7.1.2</span> Compromis biais-variance et choix de <span class="math inline">\(k\)</span></h3>
-<p>Le comportement de <span class="math inline">\(\hat f\)</span> dépend fortement de <span class="math inline">\(k\)</span>. Lorsque <span class="math inline">\(X_i\)</span> est proche de <span class="math inline">\(x\)</span>, un développement de Taylor donne <span class="math display">\[E[\hat f(x)] \approx f(x) + f'(x)\,\frac{1}{k}\sum_{i\in N_k(x)}(E[X_i] - x) + \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2.\]</span> Si les <span class="math inline">\(X_i\)</span> sont symétriquement distribués autour de <span class="math inline">\(x\)</span>, le terme du premier ordre s’annule et <span class="math display">\[\mbox{biais}[\hat f(x)] \approx \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2,\]</span> quantité qui <strong>croît avec <span class="math inline">\(k\)</span></strong> (les voisins sont de plus en plus éloignés). D’autre part, si <span class="math inline">\(Var[\epsilon_i] = \sigma^2\)</span>, alors <span class="math display">\[Var[\hat f(x)] = \frac{\sigma^2}{k},\]</span> qui <strong>décroît avec <span class="math inline">\(k\)</span></strong>. Il faut donc sélectionner le <span class="math inline">\(k\)</span> qui minimise l’erreur quadratique moyenne <span class="math display">\[\mbox{biais}^2[\hat f(x)] + Var[\hat f(x)].\]</span> En pratique, on sélectionne <span class="math inline">\(k\)</span> par <strong>validation croisée</strong> (le critère <code>PRESS</code> de <code>knn.reg</code> correspond au LOOCV). Sur les données <code>Auto</code>, on obtient <span class="math inline">\(k_{\min} = 45\)</span>.</p>
+<section id="version-pdf-des-notes-de-cours" class="level2">
+<h2 class="anchored" data-anchor-id="version-pdf-des-notes-de-cours">Version pdf des notes de cours</h2>
+<p>Pour télécharger la version pdf des notes de cours il suffit de cliquer <a href="_book/Régression-II----STT-4300.pdf" target="_blank"> ici</a> ou <a href="_book/Régression-II----STT-4300.pdf" target="_blank"> là</a>.</p>
+<p>Ça fonctionne <a href="_book/Régression-II----STT-4300.pdf" target="_blank"> ici</a> aussi.</p>
 </section>
-<section id="plusieurs-variables-explicatives-et-distance-de-mahalanobis" class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="plusieurs-variables-explicatives-et-distance-de-mahalanobis"><span class="header-section-number">7.1.3</span> Plusieurs variables explicatives et distance de Mahalanobis</h3>
-<p>Avec deux variables explicatives, le modèle devient <span class="math inline">\(Y_i = f(X_{i1}, X_{i2}) + \epsilon_i\)</span> et l’estimateur <span class="math inline">\(k\)</span>NN est identique, seule la définition de la distance change. La distance euclidienne <span class="math display">\[d_i(x) = (X_{i1} - x_1)^2 + (X_{i2} - x_2)^2\]</span> pose problème si les ordres de grandeur des variables diffèrent (p.&nbsp;ex.&nbsp;poids en kg de 1500 à 5000 et cylindrée en pouces<span class="math inline">\(^3\)</span> de 60 à 500) : la variable de plus grande amplitude domine. On pondère alors par l’inverse de la matrice de variance-covariance empirique : <span class="math display">\[d_i(x) = \begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix}^{\!\top} V^{-1}\begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix},
-\qquad V = \begin{pmatrix} s_1^2 &amp; s_{12} \\ s_{12} &amp; s_2^2\end{pmatrix}.\]</span> C’est la <strong>distance de Mahalanobis</strong>, qui se généralise directement à <span class="math inline">\(p\)</span> variables continues.</p>
+<section id="remerciements" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="remerciements">Remerciements</h2>
+<p>Ces notes s’appuient en partie sur du matériel de cours développé respectivement par Lajmi Lakhal Chaieb, Thierry Duchesne, Michel Carbon et Khader Khadraoui de l’Université Laval et Eva Cantoni de l’Université de Genève. Je remercie également Guillaume Blanc et Benjamin Poilane pour leur révision méticuleuse.</p>
 </section>
+<section id="provenance-des-données" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="provenance-des-données">Provenance des données</h2>
+<p>Certains des jeux de données utilisés dans ces notes proviennent en partie de <a href="https://donneesbleues.ca/">donneesbleues.ca</a>.</p>
 </section>
-<section id="estimateur-de-noyau-nadaraya-watson" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="estimateur-de-noyau-nadaraya-watson"><span class="header-section-number">7.2</span> Estimateur de noyau (Nadaraya-Watson)</h2>
-<section id="des-voisins-aux-noyaux" class="level3" data-number="7.2.1">
-<h3 data-number="7.2.1" class="anchored" data-anchor-id="des-voisins-aux-noyaux"><span class="header-section-number">7.2.1</span> Des voisins aux noyaux</h3>
-<p>L’estimateur <span class="math inline">\(k\)</span>NN peut s’écrire <span class="math display">\[\hat f(x) = \frac{\sum_{i=1}^n \mathbf{1}_{\{i\in N_k(x)\}}Y_i}{\sum_{i=1}^n \mathbf{1}_{\{i\in N_k(x)\}}}.\]</span> On peut définir le voisinage autrement : <span class="math inline">\(x\)</span> et <span class="math inline">\(X_i\)</span> sont voisins si <span class="math inline">\(|X_i - x| \leq h\)</span>, où <span class="math inline">\(h &gt; 0\)</span> est un <strong>paramètre de fenêtre</strong> jouant le même rôle que <span class="math inline">\(k\)</span>. On obtient <span class="math display">\[\hat f(x) = \frac{\sum_{i=1}^n K\!\left(\frac{X_i - x}{h}\right)Y_i}{\sum_{i=1}^n K\!\left(\frac{X_i - x}{h}\right)} = \sum_{i=1}^n w_i(x)\,Y_i,\]</span> où <span class="math inline">\(K(u) = \mathbf{1}_{\{|u|&lt;1\}}\)</span> est appelé <strong>noyau</strong> et <span class="math display">\[w_i(x) = \frac{K\!\left(\frac{X_i - x}{h}\right)}{\sum_{j=1}^n K\!\left(\frac{X_j - x}{h}\right)}\]</span> sont des poids positifs de somme 1.</p>
-<p>Avec le noyau uniforme, la contribution d’une observation passe brusquement de <span class="math inline">\(1/A\)</span> à 0 lorsque <span class="math inline">\(x\)</span> sort de son voisinage : <span class="math inline">\(\hat f\)</span> est <strong>discontinue</strong>. L’idée de l’<strong>estimateur de Nadaraya-Watson</strong> est d’utiliser des poids qui diminuent de façon continue au fur et à mesure que <span class="math inline">\(x\)</span> s’éloigne de <span class="math inline">\(X_i\)</span> : on prend par exemple le <strong>noyau gaussien</strong> <span class="math inline">\(K(u) = e^{-u^2/2}\)</span>, qui donne des poids continus et un estimateur <span class="math inline">\(\hat f_{NW}\)</span> continu.</p>
-<p>En R : <code>locpoly(x=X, y=Y, degree=0, bandwidth=h)</code> de la librairie <code>KernSmooth</code>.</p>
-</section>
-<section id="choix-du-paramètre-de-fenêtre-h" class="level3" data-number="7.2.2">
-<h3 data-number="7.2.2" class="anchored" data-anchor-id="choix-du-paramètre-de-fenêtre-h"><span class="header-section-number">7.2.2</span> Choix du paramètre de fenêtre <span class="math inline">\(h\)</span></h3>
-<p>Comme pour <span class="math inline">\(k\)</span>NN : un <span class="math inline">\(h\)</span> trop petit produit une courbe très oscillante (variance élevée), un <span class="math inline">\(h\)</span> trop grand écrase la structure (biais élevé). On choisit <span class="math inline">\(h\)</span> par validation croisée. En excluant une observation à la fois, on montre que le critère s’écrit <span class="math display">\[cv.n = \frac{1}{n}\sum_{i=1}^n\left(\frac{Y_i - \hat f(X_i)}{1 - w_i(X_i)}\right)^2.\]</span> Sur les données <code>Auto</code> avec le noyau gaussien, on obtient <span class="math inline">\(h_{\min} = 110\)</span>.</p>
-</section>
-</section>
-<section id="régression-non-paramétrique-et-classification" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="régression-non-paramétrique-et-classification"><span class="header-section-number">7.3</span> Régression non-paramétrique et classification</h2>
-<p>Considérons le jeu de données <code>Default</code> (librairie <code>ISLR</code>, <span class="math inline">\(n = 10\,000\)</span>) : la réponse binaire <span class="math inline">\(Y_i\)</span> vaut 1 si le sujet fait défaut sur sa carte de crédit, la variable explicative est le solde à payer. Le modèle est <span class="math inline">\(g(x) = P(Y = 1\mid X = x)\)</span>, qu’on estime par <span class="math inline">\(k\)</span>NN : <span class="math display">\[\hat g(x) = \frac{1}{k}\sum_{i\in N_k(x)}Y_i \in [0,1].\]</span></p>
-<p>Pour choisir <span class="math inline">\(k\)</span>, deux critères de validation croisée :</p>
-<ol type="1">
-<li><p><strong>Taux d’erreur test</strong> : on pose <span class="math inline">\(\hat Y_i = \mathbf{1}_{\{\hat f_{-i}(X_i) &gt; u\}}\)</span> (avec <span class="math inline">\(u = 1/2\)</span> en pratique) et on minimise <span class="math display">\[\frac{1}{n}\sum_{i=1}^n\mathbf{1}_{\{y_i\neq\hat y_i\}}.\]</span> Sur <code>Default</code>, on obtient <span class="math inline">\(k = 190\)</span>. Le résultat dépend toutefois du seuil arbitraire <span class="math inline">\(u\)</span> (avec <span class="math inline">\(u = 1/4\)</span> : <span class="math inline">\(k = 290\)</span> ; avec <span class="math inline">\(u = 3/4\)</span> : <span class="math inline">\(k = 50\)</span>).</p></li>
-<li><p><strong>Aire sous la courbe ROC</strong> : on choisit le <span class="math inline">\(k\)</span> qui <strong>maximise</strong> l’AUC (librairie <code>pROC</code>), critère qui ne dépend d’aucun seuil. Sur <code>Default</code>, on obtient <span class="math inline">\(k = 200\)</span>, proche du résultat précédent avec <span class="math inline">\(u = 1/2\)</span>.</p></li>
-</ol>
+<section id="utilisation-de-lia" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="utilisation-de-lia">Utilisation de l’IA</h2>
+<p>La rédaction de certains passages, ainsi que le développement de certains exemples en R, ont bénéficié de l’assistance de Claude Sonnet 5, un modèle de langage développé par Anthropic. Mais surtout, Claude a été très utile dans la réalisation des animations des chapitres.</p>
 
 
 </section>
@@ -771,13 +752,10 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-selection-regularisation.html" class="pagination-link" aria-label="Sélection de variables et régularisation">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span>
-      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./08-splines.html" class="pagination-link" aria-label="Régression non-linéaire : polynômes, fonctions par morceaux et splines">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./01-regression-lineaire.html" class="pagination-link" aria-label="Rappels de régression linéaire">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Rappels de régression linéaire</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -789,7 +767,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/07-knn-noyau.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/notes/index.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

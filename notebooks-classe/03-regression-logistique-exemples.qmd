@@ -1,5 +1,6 @@
 ---
 title: "Exemples en classe — Régression logistique"
+afficher: true # passer à true une fois présenté en classe, pour l'ajouter à la page « Exercices en classe » du livre
 format:
   html:
     toc: true

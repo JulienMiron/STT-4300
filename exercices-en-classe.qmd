@@ -1,0 +1,24 @@
+# Exercices en classe
+
+Cette page rassemble les notebooks d'exemples explorés en classe, au fur et à mesure qu'ils deviennent disponibles. Contrairement aux [exercices théoriques](exercices-theoriques.qmd), ce sont des explorations pratiques avec du code R exécutable directement dans la page.
+
+```{r}
+#| echo: false
+#| results: asis
+
+fichiers <- sort(list.files("notebooks-classe", pattern = "-exemples\\.qmd$", full.names = TRUE))
+
+liens <- unlist(lapply(fichiers, function(f) {
+  meta <- rmarkdown::yaml_front_matter(f)
+  if (!isTRUE(meta$afficher)) return(NULL)
+  titre <- if (!is.null(meta$title)) meta$title else tools::file_path_sans_ext(basename(f))
+  html <- sub("\\.qmd$", ".html", f)
+  sprintf("- [%s](%s)", titre, html)
+}))
+
+if (length(liens) == 0) {
+  cat("_Aucun exemple disponible pour le moment._\n")
+} else {
+  cat(liens, sep = "\n")
+}
+```

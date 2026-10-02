@@ -1,4 +1,4 @@
-# Exercices
+# Exercices théoriques
 
 Ce chapitre rassemble des exercices théoriques pour chaque chapitre des notes de cours. Les exercices sont classés en trois niveaux de difficulté : facile, moyen et difficile. La solution de chaque exercice est repliée par défaut ; cliquez sur « ✅ Solution » pour l'afficher.
 

@@ -13,6 +13,7 @@ project:
     - images/gam_plot.gif
     - images/index_plot.gif
     - images/exercices_plot.gif
+    - notebooks-classe/*.html   # notebooks d'exemples en classe affichés sur exercices-en-classe.qmd
 
 book:
   title: "Régression II -- STT-4300"
@@ -43,7 +44,8 @@ book:
     - 07-knn-noyau.qmd
     - 08-splines.qmd
     - 09-gam.qmd
-    - exercices.qmd
+    - exercices-theoriques.qmd
+    - exercices-en-classe.qmd
 
 crossref:
   chapters: true                   # numérotation des figures/tableaux tient compte du chapitre

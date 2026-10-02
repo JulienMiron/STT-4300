@@ -1,6 +1,6 @@
 ---
 title: "Exemples en classe — Régression logistique"
-afficher: true # passer à true une fois présenté en classe, pour l'ajouter à la page « Exercices en classe » du livre
+afficher: false # passer à true une fois présenté en classe, pour l'ajouter à la page « Exercices en classe » du livre
 format:
   html:
     toc: true
@@ -11,8 +11,6 @@ filters:
 webr:
   packages: ['ISLR', 'ggplot2']
 ---
-
-Notebook interactif (code exécuté dans le navigateur via webR) à présenter et modifier en direct pendant le cours. Il ne fait pas partie des notes publiées.
 
 Jeu de données : `Default` (package `ISLR`) — défaut de paiement sur carte de crédit, en fonction du solde (`balance`), du revenu (`income`) et du statut étudiant (`student`).
 
@@ -27,8 +25,13 @@ summary(Default)
 
 ## 1. Exploration visuelle
 
-Avant d'ajuster quoi que ce soit : à l'œil, la probabilité de défaut semble-t-elle augmenter avec le solde ? De façon linéaire ou pas ? Y a-t-il une différence visible entre étudiants et non-étudiants ?
+Avant d'ajuster quoi que ce soit, on aimerait visualiser les données pour se faire une idée de la relation entre le défaut et les variables explicatives. On peut représenter le défaut (0/1) en fonction du solde de carte de crédit, en coloriant selon le statut étudiant.
 
+<!-- 
+ggplot(Default, aes(x = balance, y = as.numeric(default) - 1, color = student)) +
+  geom_jitter(width = 0, height = 0.03, alpha = 0.3) +
+  labs(x = "Solde de carte de crédit", y = "Défaut (0/1)", color = "Étudiant") -->
+  
 ```{webr-r}
 ggplot(Default, aes(x = balance, y = as.numeric(default) - 1, color = student)) +
   geom_jitter(width = 0, height = 0.03, alpha = 0.3) +

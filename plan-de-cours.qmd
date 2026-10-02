@@ -1,16 +1,29 @@
+---
+title: "Plan de cours"
+---
+
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
 # Plan de cours
 
-<!-- Page à compléter. Squelette fourni à titre indicatif. -->
+<p class="hero-lead">Page à compléter — squelette fourni à titre indicatif.</p>
+
+</div>
+
+<!-- TODO: remplacer les valeurs ci-dessous -->
+<div class="module-quick-facts three-facts">
+<div class="module-fact"><p><span class="resource-icon">🎓</span><span><span class="fact-label">Crédits</span><span class="fact-value">À compléter</span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">📋</span><span><span class="fact-label">Préalables</span><span class="fact-value">À compléter</span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">🗓️</span><span><span class="fact-label">Horaire</span><span class="fact-value">À compléter</span></span></p></div>
+</div>
 
 ## Description du cours
 
 <!-- TODO -->
 
 ## Objectifs d'apprentissage
-
-<!-- TODO -->
-
-## Préalables
 
 <!-- TODO -->
 
@@ -24,7 +37,9 @@
 
 ## Matériel
 
-<!-- TODO : manuel, [notes de cours](notes/index.html), logiciels requis -->
+<!-- TODO : manuel, logiciels requis -->
+
+- [Notes de cours](notes/index.html)
 
 ## Politiques du cours
 

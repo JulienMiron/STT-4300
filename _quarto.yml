@@ -11,7 +11,7 @@ project:
     - notebooks-classe/*.html   # notebooks d'exemples en classe, liés depuis notes/exercices-en-classe.qmd
 
 website:
-  title: "STT-4300"
+  title: "STT-4300 Régression II"
   site-url: https://julienmiron.github.io/STT-4300/
   repo-url: https://github.com/JulienMiron/STT-4300
   repo-actions: [edit, issue]
@@ -21,7 +21,8 @@ website:
     right: "Généré avec Quarto"
 
   navbar:
-    logo: notes/images/logit_plot.png
+    background: "#0E9E6C"
+    foreground: "#ffffff"
     left:
       - href: index.qmd
         text: Accueil
@@ -41,8 +42,9 @@ date-format: "D MMMM YYYY"
 
 format:
   html:
-    favicon: notes/images/logit_plot.png
-    theme: cosmo
+    favicon: notes/images/logit_courbe_annotee.png
+    theme: lumen
+    css: styles.css
     toc: false
 
 editor: source

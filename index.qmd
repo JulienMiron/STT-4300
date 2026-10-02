@@ -1,7 +1,26 @@
-# STT-4300 — Régression II {.unnumbered}
+---
+title: "STT-4300"
+---
 
-Site du cours STT-4300. Vous trouverez ici le plan de cours, l'échéancier, et les notes de cours complètes.
+<script>document.body.classList.add('page-home');</script>
 
-- [**Notes de cours**](notes/index.html) — le livre complet : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques, GAM.
-- [**Plan de cours**](plan-de-cours.qmd)
-- [**Échéancier**](echeancier.qmd)
+<div class="home-page">
+<div class="home-hero">
+<div class="home-hero__inner">
+<div class="home-hero-copy">
+
+<h1 class="home-title">STT-4300</h1>
+<p class="home-course-code">Régression II</p>
+<p class="home-lead">Notes de cours, plan de cours et échéancier : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques et modèles additifs généralisés.</p>
+
+<div class="home-actions">
+<a class="home-action home-action--primary" href="notes/index.html"><span>Notes de cours</span></a>
+<a class="home-action home-action--secondary" href="plan-de-cours.html"><span>Plan de cours</span></a>
+<a class="home-action home-action--secondary" href="echeancier.html"><span>Échéancier</span></a>
+</div>
+
+</div>
+<div class="home-visual">
+<img src="notes/images/logit_courbe_annotee.png" alt="">
+</div>
+</div>

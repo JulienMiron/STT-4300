@@ -4002,13 +4002,16 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </header>
 
 
-<p>Notebook interactif (code exécuté dans le navigateur via webR) à présenter et modifier en direct pendant le cours. Il ne fait pas partie des notes publiées.</p>
 <p>Jeu de données : <code>Default</code> (package <code>ISLR</code>) — défaut de paiement sur carte de crédit, en fonction du solde (<code>balance</code>), du revenu (<code>income</code>) et du statut étudiant (<code>student</code>).</p>
 <div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <section id="exploration-visuelle" class="level2">
 <h2 class="anchored" data-anchor-id="exploration-visuelle">1. Exploration visuelle</h2>
-<p>Avant d’ajuster quoi que ce soit : à l’œil, la probabilité de défaut semble-t-elle augmenter avec le solde ? De façon linéaire ou pas ? Y a-t-il une différence visible entre étudiants et non-étudiants ?</p>
+<p>Avant d’ajuster quoi que ce soit, on aimerait visualiser les données pour se faire une idée de la relation entre le défaut et les variables explicatives. On peut représenter le défaut (0/1) en fonction du solde de carte de crédit, en coloriant selon le statut étudiant.</p>
+<!-- 
+ggplot(Default, aes(x = balance, y = as.numeric(default) - 1, color = student)) +
+  geom_jitter(width = 0, height = 0.03, alpha = 0.3) +
+  labs(x = "Solde de carte de crédit", y = "Défaut (0/1)", color = "Étudiant") -->
 <div id="qwebr-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p><strong>Discussion.</strong> Pourquoi une droite de régression linéaire simple serait-elle mal adaptée ici ? Que remplace-t-on par quoi dans un modèle logistique ?</p>

@@ -1,6 +1,16 @@
+---
+title: "Échéancier"
+---
+
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
 # Échéancier
 
-<!-- Page à compléter. Squelette fourni à titre indicatif. -->
+<p class="hero-lead">Page à compléter — squelette fourni à titre indicatif.</p>
+
+</div>
 
 | Semaine | Date | Sujet | Notes |
 |---|---|---|---|

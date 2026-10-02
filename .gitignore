@@ -12,8 +12,9 @@
 images/frames/
 images/frames_*/
 
-# rendus locaux des notebooks de cours (notebooks-classe/) : pas publiés, pas versionnés
-notebooks-classe/*.html
+# notebooks de cours (notebooks-classe/) : le .html rendu est versionné
+# (pour l'ouvrir directement sans Quarto), seuls les fichiers intermédiaires
+# de rendu sont ignorés
 notebooks-classe/*.nb.html
 notebooks-classe/*_files/
 notebooks-classe/*.knit.md

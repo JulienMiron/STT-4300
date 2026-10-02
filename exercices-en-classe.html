@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Julien Miron">
 
-<title>Régression II – STT-4300</title>
+<title>11&nbsp; Exercices en classe – Régression II -- STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -37,7 +36,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01-regression-lineaire.html" rel="next">
+<link href="./exercices-theoriques.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -138,7 +137,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Préface</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./exercices-en-classe.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exercices en classe</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -172,7 +171,7 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Préface</span></a>
   </div>
 </li>
@@ -238,7 +237,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./exercices-en-classe.html" class="sidebar-item-text sidebar-link">
+  <a href="./exercices-en-classe.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exercices en classe</span></span></a>
   </div>
 </li>
@@ -247,37 +246,21 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
-    <h2 id="toc-title">Table des matières</h2>
-   
-  <ul>
-  <li><a href="#préface" id="toc-préface" class="nav-link active" data-scroll-target="#préface">Préface</a></li>
-  <li><a href="#version-pdf-des-notes-de-cours" id="toc-version-pdf-des-notes-de-cours" class="nav-link" data-scroll-target="#version-pdf-des-notes-de-cours">Version pdf des notes de cours</a></li>
-  <li><a href="#remerciements" id="toc-remerciements" class="nav-link" data-scroll-target="#remerciements">Remerciements</a></li>
-  <li><a href="#provenance-des-données" id="toc-provenance-des-données" class="nav-link" data-scroll-target="#provenance-des-données">Provenance des données</a></li>
-  <li><a href="#utilisation-de-lia" id="toc-utilisation-de-lia" class="nav-link" data-scroll-target="#utilisation-de-lia">Utilisation de l’IA</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Régression II – STT-4300</h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Exercices en classe</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Auteur</div>
-    <div class="quarto-title-meta-contents">
-             <p>Julien Miron </p>
-          </div>
-  </div>
     
   
     <div>
@@ -294,31 +277,12 @@ window.Quarto = {
 </header>
 
 
-<section id="préface" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="préface">Préface</h2>
-<p>Ces notes de cours couvrent la régression linéaire, les modèles linéaires généralisés (régression logistique, régression de Poisson), les méthodes de validation et de sélection de modèles, la régularisation (ridge, lasso), les méthodes de régression non-paramétrique (<span class="math inline">\(k\)</span> plus proches voisins, estimateur de noyau, splines) et les modèles additifs généralisés (GAM).</p>
-<p>Si vous constatez des coquilles ou des erreurs, merci de m’envoyer <a href="mailto:julien.miron@mat.ulaval.ca">un courriel</a>.</p>
-<p>Pour en savoir plus sur moi et sur mes autres projets, vous pouvez consulter <a href="https://julienmiron.github.io/SitePerso/" target="_blank">mon site personnel</a>.</p>
-</section>
-<section id="version-pdf-des-notes-de-cours" class="level2">
-<h2 class="anchored" data-anchor-id="version-pdf-des-notes-de-cours">Version pdf des notes de cours</h2>
-<p>Pour télécharger la version pdf des notes de cours il suffit de cliquer <a href="_book/Régression-II----STT-4300.pdf" target="_blank"> ici</a> ou <a href="_book/Régression-II----STT-4300.pdf" target="_blank"> là</a>.</p>
-<p>Ça fonctionne <a href="_book/Régression-II----STT-4300.pdf" target="_blank"> ici</a> aussi.</p>
-</section>
-<section id="remerciements" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="remerciements">Remerciements</h2>
-<p>Ces notes s’appuient en partie sur du matériel de cours développé respectivement par Lajmi Lakhal Chaieb, Thierry Duchesne, Michel Carbon et Khader Khadraoui de l’Université Laval et Eva Cantoni de l’Université de Genève. Je remercie également Guillaume Blanc et Benjamin Poilane pour leur révision méticuleuse.</p>
-</section>
-<section id="provenance-des-données" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="provenance-des-données">Provenance des données</h2>
-<p>Certains des jeux de données utilisés dans ces notes proviennent en partie de <a href="https://donneesbleues.ca/">donneesbleues.ca</a>.</p>
-</section>
-<section id="utilisation-de-lia" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="utilisation-de-lia">Utilisation de l’IA</h2>
-<p>La rédaction de certains passages, ainsi que le développement de certains exemples en R, ont bénéficié de l’assistance de Claude Sonnet 5, un modèle de langage développé par Anthropic. Mais surtout, Claude a été très utile dans la réalisation des animations des chapitres.</p>
+<p>Cette page rassemble les notebooks d’exemples explorés en classe, au fur et à mesure qu’ils deviennent disponibles. Contrairement aux <a href="./exercices-theoriques.html">exercices théoriques</a>, ce sont des explorations pratiques avec du code R exécutable directement dans la page.</p>
+<ul>
+<li><a href="notebooks-classe/03-regression-logistique-exemples.html">Exemples en classe — Régression logistique</a></li>
+</ul>
 
 
-</section>
 
 </main> <!-- /main -->
 <script>
@@ -752,11 +716,11 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./exercices-theoriques.html" class="pagination-link" aria-label="Exercices théoriques">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exercices théoriques</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01-regression-lineaire.html" class="pagination-link" aria-label="Rappels de régression linéaire">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Rappels de régression linéaire</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
@@ -767,7 +731,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/exercices-en-classe.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

@@ -278,9 +278,7 @@ window.Quarto = {
 
 
 <p>Cette page rassemble les notebooks d’exemples explorés en classe, au fur et à mesure qu’ils deviennent disponibles. Contrairement aux <a href="./exercices-theoriques.html">exercices théoriques</a>, ce sont des explorations pratiques avec du code R exécutable directement dans la page.</p>
-<ul>
-<li><a href="../notebooks-classe/03-regression-logistique-exemples.html">Exemples en classe — Régression logistique</a></li>
-</ul>
+<p><em>Aucun exemple disponible pour le moment.</em></p>
 
 
 
@@ -313,6 +311,21 @@ document.addEventListener("DOMContentLoaded", function () {
     logo.src = logo.src.replace(/[^/]+$/, gif) + "?v=" + Date.now();
   }
 });
+</script>
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

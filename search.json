@@ -4,27 +4,55 @@
     "href": "echeancier.html",
     "title": "Échéancier",
     "section": "",
-    "text": "Échéancier\n\n\n\n\nSemaine\nDate\nSujet\nNotes"
+    "text": "STT-4300 — Régression II\n\n\nÉchéancier\n\nPage à compléter — squelette fourni à titre indicatif.\n\n\n\n\n\n\nSemaine\nDate\nSujet\nNotes"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "STT-4300 — Régression II",
+    "title": "STT-4300",
     "section": "",
-    "text": "STT-4300 — Régression II\nSite du cours STT-4300. Vous trouverez ici le plan de cours, l’échéancier, et les notes de cours complètes.\n\nNotes de cours — le livre complet : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques, GAM.\nPlan de cours\nÉchéancier"
+    "text": "STT-4300\n\n\nRégression II\n\n\nNotes de cours, plan de cours et échéancier : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques et modèles additifs généralisés.\n\n\nNotes de cours Plan de cours Échéancier"
   },
   {
     "objectID": "plan-de-cours.html",
     "href": "plan-de-cours.html",
     "title": "Plan de cours",
     "section": "",
-    "text": "Évaluation\nPondération\nDate"
+    "text": "STT-4300 — Régression II\n\n\n\n\nPage à compléter — squelette fourni à titre indicatif."
+  },
+  {
+    "objectID": "plan-de-cours.html#description-du-cours",
+    "href": "plan-de-cours.html#description-du-cours",
+    "title": "Plan de cours",
+    "section": "Description du cours",
+    "text": "Description du cours"
+  },
+  {
+    "objectID": "plan-de-cours.html#objectifs-dapprentissage",
+    "href": "plan-de-cours.html#objectifs-dapprentissage",
+    "title": "Plan de cours",
+    "section": "Objectifs d’apprentissage",
+    "text": "Objectifs d’apprentissage"
   },
   {
     "objectID": "plan-de-cours.html#évaluation",
     "href": "plan-de-cours.html#évaluation",
     "title": "Plan de cours",
-    "section": "",
-    "text": "Évaluation\nPondération\nDate"
+    "section": "Évaluation",
+    "text": "Évaluation\n\n\n\n\nÉvaluation\nPondération\nDate"
+  },
+  {
+    "objectID": "plan-de-cours.html#matériel",
+    "href": "plan-de-cours.html#matériel",
+    "title": "Plan de cours",
+    "section": "Matériel",
+    "text": "Matériel\n\n\nNotes de cours"
+  },
+  {
+    "objectID": "plan-de-cours.html#politiques-du-cours",
+    "href": "plan-de-cours.html#politiques-du-cours",
+    "title": "Plan de cours",
+    "section": "Politiques du cours",
+    "text": "Politiques du cours"
   }
 ]

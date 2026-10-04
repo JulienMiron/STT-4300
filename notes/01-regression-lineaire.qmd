@@ -1,4 +1,4 @@
-# Rappels de régression linéaire
+# 0\ Rappels de régression linéaire {.unnumbered}
 
 ## Le modèle linéaire
 

@@ -18,6 +18,7 @@ website:
 
   page-footer:
     left: "Site de cours STT-4300"
+    center: "[Julien Miron](https://julienmiron.github.io/SitePerso/)"
     right: "Généré avec Quarto"
 
   navbar:
@@ -32,6 +33,11 @@ website:
         text: Calendrier
       - href: notes/index.html
         text: Notes de cours
+    tools:
+      - toggle-appearance: true
+
+  back-to-top-navigation: true
+  reader-mode: true
 
 lang: fr
 language:
@@ -46,7 +52,9 @@ format:
     include-after-body:
       - logo-couleur-du-jour.html
       - date-modification-bas-page.html
-    theme: lumen
+    theme:
+      light: lumen
+      dark: darkly
     css: styles.css
     toc: false
 

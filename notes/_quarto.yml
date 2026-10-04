@@ -25,12 +25,17 @@ book:
 
   page-footer:
     left: "Notes de cours STT-4300"
+    center: "[Julien Miron](https://julienmiron.github.io/SitePerso/)"
     right: "Généré avec Quarto"
 
   sidebar:
     style: floating
     collapse-level: 1              # replie tout sauf les titres de chapitre
     logo: images/logit_plot.png    # affichée au-dessus du titre dans la sidebar
+    tools:
+      - icon: house-door
+        href: ../index.html
+        text: "Retour au site du cours"
 
 
   chapters:
@@ -73,7 +78,9 @@ format:
       margin-width: 250px    # TdM de droite — défaut ~200-250px selon thème
       gutter-width: 1rem     # espace entre les colonnes
 
-    theme: lumen
+    theme:
+      light: lumen
+      dark: darkly
     css: styles.css
     toc: true
     toc-expand: true

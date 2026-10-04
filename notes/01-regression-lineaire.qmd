@@ -17,7 +17,7 @@ Sous ces hypothèses, on a $\mu_i =E[Y_i|x_{i1},\ldots, x_{ip}] =  \beta_0 + \be
 ## Estimation par moindres carrés
 
 On estime $\beta$ en minimisant la somme des carrés des écarts :
-$$SS_E =\sum_{i=1}^n\epsilon_i^2= \sum_{i=1}^n \left\{Y_i - (\beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip})\right\}^2 = (\boldsymbol{Y}-\boldsymbol{X\beta})^\top(\boldsymbol{Y}-\boldsymbol{X\beta})=\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}.$$
+$$SS_E = \sum_{i=1}^n \left\{Y_i - (\beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip})\right\}^2 = (\boldsymbol{Y}-\boldsymbol{X\beta})^\top(\boldsymbol{Y}-\boldsymbol{X\beta}).$$
 
 La solution explicite est
 $$\boxed{\hat{\boldsymbol{\beta}} = (\boldsymbol{X}^\top \boldsymbol{X})^{-1} \boldsymbol{X}^\top \boldsymbol{Y}}$$
@@ -31,8 +31,8 @@ Les valeurs prédites sont $\hat{\boldsymbol{Y}} = \boldsymbol{X\hat{\beta}} = \
 :::
 
 L'estimateur sans biais usuel de $\sigma^2$ est
-$$\hat\sigma^2 = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n-(p+1)}.$$
-L'estimateur du maximum de vraisemblance de $\sigma^2$ est $$\hat\sigma^2_{MV} = \frac{\boldsymbol{\epsilon}^\top\boldsymbol{\epsilon}}{n}.$$
+$$\hat\sigma^2 = \frac{\sum_{i=1}^n e_i^2}{n-(p+1)} = \frac{\boldsymbol{e}^\top\boldsymbol{e}}{n-(p+1)},$$
+où $e_i = Y_i - \hat Y_i$ sont les résidus (voir la section sur les diagnostics du modèle, plus loin). L'estimateur du maximum de vraisemblance de $\sigma^2$ est $$\hat\sigma^2_{MV} = \frac{\boldsymbol{e}^\top\boldsymbol{e}}{n}.$$
 
 ## Inférence statistique
 

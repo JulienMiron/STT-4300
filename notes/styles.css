@@ -22,6 +22,7 @@ a {
 
 body {
   background-color: var(--fond-clair);
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 /* ============================================================

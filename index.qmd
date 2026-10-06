@@ -15,8 +15,8 @@ title: "STT-4300"
 
 <div class="home-actions">
 <a class="home-action home-action--primary" href="notes/index.html"><span>Notes de cours</span></a>
-<a class="home-action home-action--secondary" href="plan-de-cours.html"><span>Plan de cours</span></a>
 <a class="home-action home-action--secondary" href="calendrier.html"><span>Calendrier</span></a>
+<a class="home-action home-action--secondary" href="Projet/projet.html"><span>Projet de session</span></a>
 </div>
 
 </div>

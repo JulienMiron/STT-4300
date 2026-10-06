@@ -61,6 +61,17 @@ jobs:
       - name: Render site
         run: quarto render --to html
 
+      # cahier.qmd assemble en un seul PDF le calendrier, le projet de session
+      # et les labos via {{< include >}} ; il n'est pas dans project.render
+      # (voir le commentaire dans _quarto.yml) et doit donc être rendu dans
+      # son propre appel, séparé du rendu principal du site. N'étant pas dans
+      # la liste du projet, Quarto ignore project.output-dir et écrit le PDF
+      # à la racine du dépôt : on le déplace nous-mêmes dans _site/.
+      - name: Rendre le cahier PDF (calendrier + projet + labos)
+        run: |
+          quarto render cahier.qmd --to pdf
+          mv cahier.pdf _site/cahier.pdf
+
       # Rendu en second : notes/_quarto.yml écrit directement dans
       # ../_site/notes, donc son rendu doit être la dernière écriture dans
       # _site/ au cas où le rendu du site nettoierait son propre output-dir.

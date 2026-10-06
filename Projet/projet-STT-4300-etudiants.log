@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  6 OCT 2026 13:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  6 OCT 2026 14:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/Cours/STT-4300/H27/Projet/projet-STT-4300-etudiants
-(/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/Cours/STT-4300/H27/Projet/projet-STT-4300-etudiants.tex
+**/Users/jmiron/Documents/GitHub/STT-4300/Projet/projet-STT-4300-etudiants
+(/Users/jmiron/Documents/GitHub/STT-4300/Projet/projet-STT-4300-etudiants.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (/usr/local/texlive/2025/texmf-dist/tex/latex/koma-script/scrartcl.cls
@@ -923,11 +923,11 @@ Package rerunfilecheck Info: File `projet-STT-4300-etudiants.out' has not change
  ) 
 Here is how much of TeX's memory you used:
  34111 strings out of 473832
- 740363 string characters out of 5729482
+ 740246 string characters out of 5729482
  1579923 words of memory out of 5000000
  56679 multiletter control sequences out of 15000+600000
  566556 words of font info for 80 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 124i,8n,121p,11002b,1746s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 124i,8n,121p,10963b,1746s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on projet-STT-4300-etudiants.pdf (7 pages).

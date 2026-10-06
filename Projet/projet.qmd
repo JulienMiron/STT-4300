@@ -1,0 +1,234 @@
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
+# Projet de session
+
+</div>
+
+::: {.callout-warning}
+## La version Brio fait foi
+
+Ce document décrit le projet de session à titre indicatif. La version officielle est celle déposée sur **Brio** : en cas de doute ou de différence entre les deux, c'est l'information sur **Brio** qui prévaut.
+:::
+
+<div class="module-quick-facts two-facts">
+<div class="module-fact"><p><span class="resource-icon">📊</span><span><span class="fact-label">Pondération</span><span class="fact-value">50 % de la note finale</span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">👥</span><span><span class="fact-label">Équipes</span><span class="fact-value">3 ou 4 étudiants</span></span></p></div>
+</div>
+
+## Projet de session
+
+### Vue d'ensemble
+
+Le projet de session consiste à mener, en équipe, une analyse complète d'un jeu de données à l'aide d'un GLM : une régression logistique (réponse binaire ou proportion) ou une régression de Poisson (réponse de comptage). Le choix du modèle et du jeu de données revient à votre équipe, sous réserve de mon approbation au Jalon 1.
+
+Le projet avance par étapes, au rythme de cinq jalons dont les dates des labos servent d'échéances. Chaque jalon produit un livrable court qui s'intègre à votre rapport final, de sorte qu'il n'y a pas de gros bloc de travail à la fin de la session.
+
+::: {.callout-note}
+## Objectif général
+
+Passer d'une question concrète à un modèle défendable, c'est-à-dire un modèle dont vous savez expliquer le choix, vérifier l'ajustement, interpréter les coefficients et reconnaître les limites.
+:::
+
+### Modalités
+
+- Équipes de 3 ou 4 étudiants, formées au Jalon 1.
+- Un dépôt GitHub par équipe, avec un projet R reproductible (`renv` recommandé). Je dois avoir accès au dépôt.
+- Tout le code est en R et le rapport est rédigé en Quarto ou en LaTeX : le document doit se compiler de zéro sans intervention manuelle.
+
+### Choix du jeu de données
+
+Votre jeu de données doit respecter les critères suivants.
+
+1. Une variable réponse $Y$ claire : binaire (ou proportion $y_i/n_i$) pour la régression logistique, ou comptage pour la régression de Poisson.
+2. Au moins $n = 200$ observations et au moins 6 covariables potentielles, avec un mélange de variables quantitatives et qualitatives.
+3. Une question de recherche que vous pouvez énoncer en une phrase.
+4. Des données libres de droits et sans information permettant d'identifier des personnes.
+5. Un peu de désordre (valeurs manquantes, catégories rares, valeurs aberrantes) : le nettoyage fait partie de l'exercice.
+
+Trouvez votre jeu de données, par exemple à partir de Données Québec, de Statistique Canada, du dépôt UCI, de Kaggle ou de données ouvertes de la Ville de Québec (collisions, 311, bacs de recyclage, etc.).
+
+### Livrable final
+
+Le projet se termine par une présentation en classe (10 minutes plus 5 minutes de questions) accompagnée d'un produit de communication, au choix de votre équipe :
+
+- une application Shiny qui permet d'explorer le modèle (prédictions selon les valeurs des covariables, effet d'une variable, diagnostics) ;
+- un site web Quarto (ou un tableau de bord) racontant l'analyse ;
+- un poster scientifique (format 36 × 48 po) ;
+- un autre format du même niveau, à me proposer (balado, bande dessinée statistique, vidéo de 5 minutes, etc.).
+
+Peu importe le format, vous devez aussi remettre un rapport technique de 8 à 12 pages qui rassemble les livrables des jalons et la conclusion.
+
+Le produit de communication s'adresse à un public non statisticien. Votre présentation doit donc traduire les résultats en langage clair : parlez de rapport de cotes ou de variation en pourcentage du taux, pas seulement de coefficients $\hat\beta_j$.
+
+### Contenu attendu du rapport
+
+1. Question de recherche et description des données.
+2. Nettoyage et analyse exploratoire.
+3. Modèle retenu, avec sa justification.
+4. Estimation, intervalles de confiance et tests (valeur-$p$) pour les paramètres d'intérêt.
+5. Sélection de variables et comparaison de modèles.
+6. Diagnostics et validation (résidus, observations influentes, surdispersion pour Poisson, calibration et courbe ROC pour la logistique, validation croisée).
+7. Interprétation, limites et ouverture vers d'autres modèles.
+8. Une section « Ce qui pourrait fausser nos conclusions » (biais de sélection, variables omises, différence entre corrélation et causalité). Si les données concernent des personnes, ajoutez une courte réflexion éthique : qui est dans les données et qui n'y est pas ?
+
+## Jalons
+
+Le projet comporte cinq jalons. La date de chaque labo sert d'échéance au jalon correspondant, mais vous n'avez pas à attendre le labo pour vous y mettre : un jalon peut être complété avant, il n'est pas nécessaire de le faire en classe pendant le labo. Chaque jalon donne lieu à un livrable court (une à deux pages ou un fichier source).
+
+### Jalon 1 : choix du jeu de données
+
+Objectif : former les équipes, choisir une question de recherche et valider la faisabilité.
+
+Tâches :
+
+- explorer au moins deux jeux de données candidats avec `str()`, `summary()` et `skimr::skim()` ;
+- énoncer une question de recherche et identifier la variable réponse $Y$ ainsi que les covariables potentielles ;
+- justifier le choix entre logistique et Poisson ;
+- vérifier les critères du choix de jeu de données ci-dessus.
+
+::: {.callout-tip}
+## Exemple
+
+Pour un jeu de données de collisions routières par intersection, vous pourriez poser $Y_i \sim \text{Poisson}(\mu_i)$ avec
+$$
+  \log(\mu_i) = \log(t_i) + \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip},
+$$
+où $t_i$ est une mesure d'exposition (ici, le trafic moyen) qui entre dans le modèle comme décalage (`offset`).
+:::
+
+Livrable : une page de proposition (question, données, variable réponse, modèle envisagé, répartition des tâches). Je l'approuve ou je demande des ajustements.
+
+### Jalon 2 : nettoyage et analyse primaire
+
+Objectif : connaître ses données avant de modéliser.
+
+Tâches :
+
+- documenter les variables (type, unité, valeurs permises) dans un dictionnaire de données ;
+- traiter les valeurs manquantes (quantifier, comprendre le mécanisme, choisir une stratégie et la justifier) ;
+- recoder les variables qualitatives (niveaux rares, catégorie de référence) ;
+- produire des statistiques descriptives et des graphiques de $Y$ en fonction de chaque covariable ;
+- repérer les valeurs aberrantes et les problèmes de colinéarité (corrélations, facteurs d'inflation de la variance) ;
+- mettre de côté au hasard 20 % des observations (jeu de réserve) sans y toucher avant le Jalon 4 : elles serviront à évaluer honnêtement votre modèle final.
+
+```{r}
+#| eval: false
+library(tidyverse)
+donnees <- read_csv("donnees.csv")
+
+# proportion de Y selon une covariable qualitative
+donnees |>
+  group_by(covariable) |>
+  summarise(n = n(), prop = mean(y), .groups = "drop")
+
+# valeurs manquantes
+donnees |> summarise(across(everything(), ~ mean(is.na(.x))))
+```
+
+Livrable : un fichier source qui part des données brutes et produit les données nettoyées et le jeu de réserve, avec une section expliquant chaque décision prise.
+
+### Jalon 3 : ajustement et début d'inférence
+
+Objectif : ajuster un premier GLM et interpréter les résultats.
+
+Tâches :
+
+- ajuster un modèle complet avec `glm()` ;
+- interpréter chaque coefficient sur l'échelle du prédicteur linéaire et sur l'échelle naturelle (rapport de cotes $e^{\hat\beta_j}$ ou rapport de taux) ;
+- construire des intervalles de confiance de Wald et par vraisemblance profilée (`confint()`), puis comparer ;
+- effectuer des tests de Wald et des tests du rapport de vraisemblance, en précisant la valeur-$p$ et l'hypothèse testée ;
+- tracer l'effet d'une covariable sur la probabilité (ou le taux) prédite, les autres covariables étant fixées.
+
+```{r}
+#| eval: false
+ajust <- glm(y ~ ., data = donnees_propres, family = binomial)   # ou poisson
+summary(ajust)
+exp(cbind(OR = coef(ajust), confint(ajust)))
+anova(ajust, test = "Chisq")
+```
+
+::: {.callout-note}
+## Remarque
+
+Pour Poisson, vérifiez dès cette étape la surdispersion en comparant la déviance résiduelle à ses degrés de liberté. Si le rapport est nettement supérieur à 1, passez à un modèle quasi-Poisson ou binomial négatif.
+:::
+
+Livrable : une page d'interprétation écrite pour un lecteur non statisticien.
+
+### Jalon 4 : sélection de variables
+
+Objectif : comparer des modèles de façon rigoureuse.
+
+Tâches :
+
+- sélection pas à pas (`step()`) avec l'AIC et le BIC, et discussion des limites de cette approche, notamment l'inférence faite après sélection ;
+- régularisation ridge et lasso avec `glmnet`, choix de $\lambda$ par validation croisée ;
+- comparaison du pouvoir prédictif par validation croisée, puis une évaluation finale du modèle retenu sur le jeu de réserve (taux de bonne classification, AUC et déviance pour la logistique ; erreur quadratique et déviance pour Poisson) ;
+- examen de la stabilité : les variables retenues changent-elles si l'on rééchantillonne (bootstrap) ?
+
+```{r}
+#| eval: false
+library(glmnet)
+X <- model.matrix(y ~ ., donnees_propres)[, -1]
+cv <- cv.glmnet(X, donnees_propres$y, family = "binomial", alpha = 1)
+coef(cv, s = "lambda.1se")
+```
+
+Livrable : un tableau comparatif d'au moins trois modèles (complet, sélectionné, lasso), avec un choix final justifié.
+
+### Jalon 5 : ouverture sur d'autres modèles
+
+Objectif : voir jusqu'où le GLM est adéquat et ce qui pourrait le remplacer ou le compléter.
+
+Tâches (choisissez-en au moins une) :
+
+- ajouter une relation non linéaire par splines ou par un GAM (`mgcv::gam()`) et comparer avec le GLM au moyen de l'AIC et de la validation croisée ;
+- essayer une méthode de plus proches voisins ou à noyau pour la prédiction ;
+- tester un modèle pour données surdispersées (quasi-Poisson, binomial négatif) ou avec excès de zéros (modèle à inflation de zéros) ;
+- comparer avec une méthode d'apprentissage automatique (forêt aléatoire, arbre de décision) et discuter du compromis entre interprétabilité et prédiction.
+
+```{r}
+#| eval: false
+library(mgcv)
+gam1 <- gam(y ~ s(diametre) + s(hauteur) + espece, data = donnees_propres,
+            family = binomial, method = "REML")
+plot(gam1, pages = 1)
+AIC(ajust, gam1)
+```
+
+Livrable : une demi-page répondant à la question « le GLM suffit-il ? », appuyée par au moins une comparaison chiffrée.
+
+## Évaluation
+
+Le projet compte pour 45 % de la note finale.
+
+| Composante | Pondération |
+|---|---|
+| Livrables des jalons (5 × 3 %) | 15 % |
+| Rapport technique | 15 % |
+| Présentation et produit de communication | 10 % |
+| Contribution individuelle (évaluation par les pairs) | 5 % |
+| **Total** | **45 %** |
+
+Critères d'évaluation du rapport et de la présentation :
+
+- justesse statistique (modèle adapté, hypothèses vérifiées, inférence correcte) ;
+- qualité de l'interprétation (claire, nuancée, liée à la question de départ) ;
+- reproductibilité (le document se compile sans intervention) ;
+- clarté de la communication (graphiques lisibles, vulgarisation) ;
+- profondeur de l'analyse (diagnostics, sélection de modèle, ouverture).
+
+## Calendrier suggéré
+
+La date de chaque labo sert d'échéance au jalon correspondant (voir le [calendrier du cours](../calendrier.html) et l'onglet [Labos](../labos/labo1.html)). Vous pouvez compléter un jalon avant cette date ; il n'est pas nécessaire d'attendre le labo, ni de faire le travail en classe.
+
+| Jalon | Échéance |
+|---|---|
+| Jalon 1 : choix du jeu de données | Labo 1 — 11 mars |
+| Jalon 2 : nettoyage et analyse primaire | Labo 2 — 18 mars |
+| Jalon 3 : ajustement et début d'inférence | Labo 3 — 25 mars |
+| Jalon 4 : sélection de variables | Labo 4 — 1 avril |
+| Jalon 5 : ouverture sur d'autres modèles | Labo 5 — 8 avril |
+| Présentations | 22 avril |

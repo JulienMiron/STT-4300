@@ -7,11 +7,17 @@ project:
     - index.qmd
     - plan-de-cours.qmd
     - calendrier.qmd
+    - Projet/projet.qmd
     - labos/labo1.qmd
     - labos/labo2.qmd
     - labos/labo3.qmd
     - labos/labo4.qmd
     - labos/labo5.qmd
+    # cahier.qmd (calendrier + projet + labos en un seul PDF) n'est PAS dans
+    # cette liste : il inclut via {{< include >}} des fichiers qui sont aussi
+    # rendus comme pages du site, et le rendre dans la même passe cause une
+    # collision (rename error) sur ces fichiers partagés. Il se rend dans une
+    # passe séparée, comme notes/ ci-dessous : `quarto render cahier.qmd --to pdf`.
   resources:
     - notebooks-classe/*.html   # notebooks d'exemples en classe, liés depuis notes/exercices-en-classe.qmd
 
@@ -36,6 +42,8 @@ website:
         text: Plan de cours
       - href: calendrier.qmd
         text: Calendrier
+      - href: Projet/projet.qmd
+        text: Projet de session
       - text: Labos
         menu:
           - href: labos/labo1.qmd
@@ -51,9 +59,9 @@ website:
       - href: notes/index.html
         text: Notes de cours
     tools:
-      - toggle-appearance: true
-
-  reader-mode: true
+      - icon: download
+        href: cahier.pdf
+        text: "Télécharger le calendrier, le projet et les labos (PDF)"
 
 lang: fr
 language:
@@ -70,7 +78,6 @@ format:
       - date-modification-bas-page.html
     theme:
       light: lumen
-      dark: darkly
     css: styles.css
     toc: false
 

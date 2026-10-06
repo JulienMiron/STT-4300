@@ -1,0 +1,42 @@
+---
+title: "STT-4300 — Régression II"
+subtitle: "Calendrier, projet de session et laboratoires"
+author: "Julien Miron"
+date: last-modified
+lang: fr
+date-format: "D MMMM YYYY"
+toc: true
+number-sections: true
+format:
+  pdf:
+    documentclass: scrartcl
+    classoption: [11pt, letterpaper]
+    geometry: margin=2.5cm
+    colorlinks: true
+    linkcolor: accent
+    citecolor: accent
+    urlcolor: accent
+    toccolor: accent
+    include-in-header:
+      text: |
+        \usepackage{xcolor}
+        \definecolor{accent}{HTML}{0E9E6C}
+        \addtokomafont{section}{\color{accent}}
+        \addtokomafont{subsection}{\color{accent}}
+        \addtokomafont{subsubsection}{\color{accent}}
+        \addtokomafont{disposition}{\rmfamily}
+---
+
+{{< include calendrier.qmd >}}
+
+{{< include Projet/projet.qmd >}}
+
+{{< include labos/labo1.qmd >}}
+
+{{< include labos/labo2.qmd >}}
+
+{{< include labos/labo3.qmd >}}
+
+{{< include labos/labo4.qmd >}}
+
+{{< include labos/labo5.qmd >}}

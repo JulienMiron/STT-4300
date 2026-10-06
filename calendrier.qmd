@@ -13,22 +13,24 @@
 Ce calendrier est fourni à titre indicatif. La version officielle est celle déposée sur **Brio** : en cas de doute ou de différence entre les deux, c'est l'information sur **Brio** qui prévaut.
 :::
 
+<a class="portal-button" href="cahier.pdf" download>📄 Télécharger le calendrier, le projet et les labos (PDF)</a>
+
 
 | Semaine | Date | Sujet | Notes |
-|---|---|---|---|
+|-|--|---|----|
 | 1 | 14 janvier | Théorie | MC + régression logistique |
 | 2 | 21 janvier | Théorie | Régression logistique |
 | 3 | 28 janvier | Théorie | GLM + régression de Poisson |
 | 4 | 4 février | Théorie | GLM + régression de Poisson |
 | 5 | 11 février | Théorie | Validation croisée + régularisation |
 | 6 | 18 février | Révision | |
-| 7 | 25 février | Examen | |
-| 8 | 4 mars | SEMAINE DE LECTURE |  |
-| 9 | 11 mars | Labo 1 |  |
-| 10 | 18 mars | Labo 2 |  |
-| 11 | 25 mars | Labo 3 |  |
-| 12 | 1 avril | Labo 4 |  |
-| 13 | 8 avril | Labo 5 |  |
-| 14 | 15 avril | Labo 14 |  |
+| 7 | 25 février | **Examen** | |
+| 8 | 4 mars | SEMAINE DE  | LECTURE |
+| 9 | 11 mars | **Labo 1** : Régression non paramétrique : kNN et estimateur de noyau | **Partie 1 du projet** : Choix du jeu de données |
+| 10 | 18 mars | **Labo 2** : Régression non linéaire : polynômes et splines | **Partie 2 du projet** : Nettoyage et analyse primaire |
+| 11 | 25 mars | **Labo 3** : Modèles additifs généralisés (GAM)| **Partie 3 du projet** : Ajustement et début d'inférence |
+| 12 | 1 avril | **Labo 4** : Synthèse : kNN, noyau, splines et GAM en compétition| **Partie 4 du projet** : Sélection de variables et validation croisée |
+| 13 | 8 avril | **Labo 5** : Regard critique sur les réponses d’un assistant IA | **Partie 5 du projet** : Ouverture sur d'autres modèles |
+| 14 | 15 avril | Travail sur le projet | Finalisation du projet |
 | 15 | 22 avril | Présentations |  |
 | 16 | 29 avril | Labo 16 |  |

@@ -52,6 +52,13 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+        env:
+          # requis par `tinytex: true` : sans token, l'appel à l'API GitHub
+          # pour la dernière release de rstudio/tinytex-releases échoue
+          # parfois avec une erreur 403 sur les runners partagés.
+          GH_TOKEN: ${{ github.token }}
 
       - name: Check R used by Quarto
         run: |

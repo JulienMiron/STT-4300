@@ -20,6 +20,7 @@ project:
     # passe séparée, comme notes/ ci-dessous : `quarto render cahier.qmd --to pdf`.
   resources:
     - notebooks-classe/*.html   # notebooks d'exemples en classe, liés depuis notes/exercices-en-classe.qmd
+    - labos/disponibilite.json  # dates de déblocage lues par labo-disponibilite.html
 
 website:
   title: "STT-4300 Régression II"
@@ -76,6 +77,7 @@ format:
     include-after-body:
       - logo-couleur-du-jour.html
       - date-modification-bas-page.html
+      - labo-disponibilite.html
     theme:
       light: lumen
     css: styles.css

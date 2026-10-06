@@ -17,20 +17,41 @@ Ce calendrier est fourni à titre indicatif. La version officielle est celle dé
 
 
 | Semaine | Date | Sujet | Notes |
-|-|--|---|----|
-| 1 | 14 janvier | Théorie | MC + régression logistique |
-| 2 | 21 janvier | Théorie | Régression logistique |
-| 3 | 28 janvier | Théorie | GLM + régression de Poisson |
-| 4 | 4 février | Théorie | GLM + régression de Poisson |
-| 5 | 11 février | Théorie | Validation croisée + régularisation |
+|-|--|----|----|
+| 1 | 14 janvier | MC + régression logistique |  |
+| 2 | 21 janvier | Régression logistique |  |
+| 3 | 28 janvier | GLM + régression de Poisson |  |
+| 4 | 4 février | GLM + régression de Poisson |  |
+| 5 | 11 février | Validation croisée + régularisation |  |
 | 6 | 18 février | Révision | |
-| 7 | 25 février | **Examen** | |
-| 8 | 4 mars | SEMAINE DE  | LECTURE |
-| 9 | 11 mars | **Labo 1** : Régression non paramétrique : kNN et estimateur de noyau | **Partie 1 du projet** : Choix du jeu de données |
-| 10 | 18 mars | **Labo 2** : Régression non linéaire : polynômes et splines | **Partie 2 du projet** : Nettoyage et analyse primaire |
-| 11 | 25 mars | **Labo 3** : Modèles additifs généralisés (GAM)| **Partie 3 du projet** : Ajustement et début d'inférence |
-| 12 | 1 avril | **Labo 4** : Synthèse : kNN, noyau, splines et GAM en compétition| **Partie 4 du projet** : Sélection de variables et validation croisée |
-| 13 | 8 avril | **Labo 5** : Regard critique sur les réponses d’un assistant IA | **Partie 5 du projet** : Ouverture sur d'autres modèles |
+| 7 | 25 février | [**EXAMEN**]{.cal-exam} | |
+| [8]{.cal-off} | 4 mars | SEMAINE DE LECTURE |  |
+| 9 | 11 mars | [**Labo 1**]{.cal-labo}  : Régression non paramétrique : kNN et estimateur de noyau | [**Partie 1 du projet**]{.cal-projet} : Choix du jeu de données |
+| 10 | 18 mars | [**Labo 2**]{.cal-labo} : Régression non linéaire : polynômes et splines | [**Partie 2 du projet**]{.cal-projet} : Nettoyage et analyse primaire |
+| 11 | 25 mars | [**Labo 3**]{.cal-labo} : Modèles additifs généralisés (GAM)| [**Partie 3 du projet**]{.cal-projet} : Ajustement et début d'inférence |
+| 12 | 1 avril | [**Labo 4**]{.cal-labo} : Synthèse : kNN, noyau, splines et GAM en compétition| [**Partie 4 du projet**]{.cal-projet} : Sélection de variables et validation croisée |
+| 13 | 8 avril | [**Labo 5**]{.cal-labo} : Regard critique sur les réponses d’un assistant IA | [**Partie 5 du projet**]{.cal-projet} : Ouverture sur d'autres modèles |
 | 14 | 15 avril | Travail sur le projet | Finalisation du projet |
 | 15 | 22 avril | Présentations |  |
 | 16 | 29 avril | Labo 16 |  |
+
+<script>
+// Pandoc ne génère pas de colspan pour les tableaux en pipes : on fusionne
+// la ligne de la semaine de lecture (repérée par .cal-off) en une seule
+// cellule pleine largeur après coup.
+(function () {
+  var marqueur = document.querySelector('#quarto-document-content .cal-off');
+  if (!marqueur) return;
+  var ligne = marqueur.closest('tr');
+  if (!ligne || ligne.children.length < 4) return;
+
+  var sujet = ligne.children[2].textContent.trim();
+
+  ligne.innerHTML = '';
+  var cellule = document.createElement('td');
+  cellule.className = 'cal-off cal-off-banner';
+  cellule.colSpan = 4;
+  cellule.textContent = sujet;
+  ligne.appendChild(cellule);
+})();
+</script>

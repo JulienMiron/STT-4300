@@ -2548,3 +2548,33 @@ blockquote { border-left: 4px solid var(--ulaval-yellow); padding-left: 1rem; co
   color: var(--muted);
   font-size: .85rem;
 }
+
+/* ===================== AJOUTS PROPRES À STT-4300 ===================== */
+
+/* Calendrier : « Examen » en rouge, ligne de la semaine de lecture grisée */
+.cal-exam { color: #dc2713; }
+#quarto-document-content tr:has(.cal-off) td {
+  background: var(--soft);
+  color: var(--muted);
+}
+
+.cal-labo { color: var(--purple); }
+#quarto-document-content tr:has(.cal-off) td {
+  background: var(--soft);
+  color: var(--muted);
+}
+
+/* Ligne de la semaine de lecture fusionnée en une seule cellule (voir le
+   <script> de calendrier.qmd) : on la centre et on l'espace un peu plus. */
+.cal-off-banner {
+  text-align: center;
+  font-weight: 600;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.cal-projet { color: var(--green); }
+#quarto-document-content tr:has(.cal-off) td {
+  background: var(--soft);
+  color: var(--muted);
+}

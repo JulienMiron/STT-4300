@@ -1,0 +1,54 @@
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
+# Labo 4
+
+</div>
+
+<!-- TODO: remplacer les valeurs ci-dessous -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact"><p><span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value"></span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Synthèse : kNN, noyau, splines et GAM en compétition</span></span></p></div>
+</div>
+
+## Objectifs
+
+- Comparer, sur un même jeu de données, l'ensemble des méthodes non paramétriques et non linéaires vues jusqu'ici (kNN, noyau, splines, GAM).
+- Estimer et comparer l'erreur de prédiction test de chaque méthode par validation croisée.
+- Développer un jugement critique sur le choix d'une méthode selon le contexte (nombre de variables, interprétabilité recherchée, taille de l'échantillon).
+
+## Mise en contexte
+
+On utilise le jeu de données `College` (librairie `ISLR`), avec $Y = $ `Outstate` (frais de scolarité hors-État) et $X = $ `Expend` (dépenses par étudiant).
+
+```{r}
+#| eval: false
+library(ISLR)
+library(FNN)
+library(KernSmooth)
+library(splines)
+library(mgcv)
+data(College)
+```
+
+## Consignes
+
+1. Partitionner les données en un ensemble d'entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à $K=10$ plis réutilisable pour toutes les méthodes suivantes.
+2. Ajuster, sur l'ensemble d'entraînement, chacun des modèles suivants pour prédire `Outstate` en fonction de `Expend` :
+   - un modèle linéaire simple (référence) ;
+   - un estimateur kNN (`knn.reg`), avec $k$ choisi par validation croisée ;
+   - un estimateur de noyau (`locpoly`), avec $h$ choisi par validation croisée ;
+   - une spline de lissage (`smooth.spline`, `cv = TRUE`) ;
+   - un GAM univarié (`gam(Outstate ~ s(Expend))`).
+3. Pour chaque méthode, calculer l'erreur quadratique moyenne sur l'ensemble test (ou moyenne des erreurs de validation croisée). Présenter les résultats dans un tableau.
+4. Superposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points `Outstate` vs `Expend`. Commenter les ressemblances et différences.
+5. **Extension multivariée.** Ajuster un GAM avec plusieurs prédicteurs, par exemple
+   `gam(Outstate ~ s(Room.Board) + s(PhD) + s(perc.alumni) + s(Expend) + s(Grad.Rate), data = College)`.
+   Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant. Quelles variables semblent avoir un effet non linéaire marqué ?
+6. Rédiger une conclusion (15-20 lignes) qui répond à la question : *dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM ?* Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d'interprétabilité.
+
+## Matériel
+
+- Notes de cours : [kNN et noyau](../notes/07-knn-noyau.html), [Splines](../notes/08-splines.html), [GAM](../notes/09-gam.html)
+- Librairies R : `FNN`, `KernSmooth`, `splines`, `mgcv`, `ISLR`

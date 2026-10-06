@@ -7,6 +7,11 @@ project:
     - index.qmd
     - plan-de-cours.qmd
     - calendrier.qmd
+    - labos/labo1.qmd
+    - labos/labo2.qmd
+    - labos/labo3.qmd
+    - labos/labo4.qmd
+    - labos/labo5.qmd
   resources:
     - notebooks-classe/*.html   # notebooks d'exemples en classe, liés depuis notes/exercices-en-classe.qmd
 
@@ -31,6 +36,18 @@ website:
         text: Plan de cours
       - href: calendrier.qmd
         text: Calendrier
+      - text: Labos
+        menu:
+          - href: labos/labo1.qmd
+            text: Labo 1
+          - href: labos/labo2.qmd
+            text: Labo 2
+          - href: labos/labo3.qmd
+            text: Labo 3
+          - href: labos/labo4.qmd
+            text: Labo 4
+          - href: labos/labo5.qmd
+            text: Labo 5
       - href: notes/index.html
         text: Notes de cours
     tools:

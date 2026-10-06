@@ -1,0 +1,45 @@
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
+# Labo 1
+
+</div>
+
+<!-- TODO: remplacer les valeurs ci-dessous -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact"><p><span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value"></span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Régression non paramétrique : kNN et estimateur de noyau</span></span></p></div>
+</div>
+
+## Objectifs
+
+- Implémenter et comparer l'estimateur des $k$ plus proches voisins (kNN) et l'estimateur de noyau de Nadaraya-Watson.
+- Comprendre, de façon empirique, le compromis biais-variance associé au choix de $k$ et de la fenêtre $h$.
+- Sélectionner $k$ et $h$ par validation croisée et comparer les courbes ajustées obtenues.
+
+## Mise en contexte
+
+On utilise le jeu de données `Auto` (librairie `ISLR`), avec $Y = $ `mpg` et $X = $ `weight`, comme dans les notes de cours sur la régression non paramétrique.
+
+```{r}
+#| eval: false
+library(ISLR)
+library(FNN)
+library(KernSmooth)
+data(Auto)
+```
+
+## Consignes
+
+1. Produire un nuage de points `mpg` en fonction de `weight` et discuter brièvement pourquoi une relation linéaire semble inadéquate.
+2. À l'aide de `knn.reg` (librairie `FNN`), ajuster l'estimateur kNN pour plusieurs valeurs de $k$ (par exemple $k = 5, 25, 45, 100, 300$). Superposer les courbes ajustées au nuage de points et commenter l'effet de $k$ sur la rugosité de la courbe.
+3. Utiliser le critère `PRESS` de `knn.reg` (LOOCV) pour sélectionner $k_{\min}$. Comparer avec la valeur $k_{\min}=45$ mentionnée dans les notes.
+4. À l'aide de `locpoly` (librairie `KernSmooth`, `degree=0`), ajuster l'estimateur de Nadaraya-Watson pour plusieurs valeurs de la fenêtre $h$. Encore une fois, illustrer l'effet de $h$ sur la courbe ajustée.
+5. Choisir $h$ par validation croisée (vous pouvez coder vous-même une boucle de LOOCV ou de $K$-fold CV) et comparer la courbe obtenue à celle de kNN avec $k_{\min}$.
+6. En une dizaine de lignes, comparer les deux approches : avantages, inconvénients, et situations où l'une serait préférable à l'autre (notamment en présence de plusieurs variables explicatives — voir la distance de Mahalanobis dans les notes).
+
+## Matériel
+
+- Notes de cours : [Régression non paramétrique — kNN et noyau](../notes/07-knn-noyau.html)
+- Librairies R : `FNN`, `KernSmooth`, `ISLR`

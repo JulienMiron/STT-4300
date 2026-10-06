@@ -16,6 +16,19 @@ Ce calendrier est fourni à titre indicatif. La version officielle est celle dé
 
 | Semaine | Date | Sujet | Notes |
 |---|---|---|---|
-| 1 | 23 janvier | Labo 1 | Test |
-| 2 | 30 janvier | Labo 2 | À réaliser sur R |
-| 3 | 7 février | Labo 3 | Encore un test |
+| 1 | 14 janvier | Théorie | MC + régression logistique |
+| 2 | 21 janvier | Théorie | Régression logistique |
+| 3 | 28 janvier | Théorie | GLM + régression de Poisson |
+| 4 | 4 février | Théorie | GLM + régression de Poisson |
+| 5 | 11 février | Théorie | Validation croisée + régularisation |
+| 6 | 18 février | Révision | |
+| 7 | 25 février | Examen | |
+| 8 | 4 mars | SEMAINE DE LECTURE |  |
+| 9 | 11 mars | Labo 1 |  |
+| 10 | 18 mars | Labo 2 |  |
+| 11 | 25 mars | Labo 3 |  |
+| 12 | 1 avril | Labo 4 |  |
+| 13 | 8 avril | Labo 5 |  |
+| 14 | 15 avril | Labo 14 |  |
+| 15 | 22 avril | Présentations |  |
+| 16 | 29 avril | Labo 16 |  |

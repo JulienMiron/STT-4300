@@ -1,0 +1,44 @@
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
+# Labo 3
+
+</div>
+
+<!-- TODO: remplacer les valeurs ci-dessous -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact"><p><span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value"></span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Modèles additifs généralisés (GAM)</span></span></p></div>
+</div>
+
+## Objectifs
+
+- Ajuster un modèle additif avec la librairie `mgcv` et interpréter les effets lissés de chaque variable.
+- Comprendre le rôle du paramètre de lissage et des degrés de liberté effectifs dans le compromis biais-variance.
+- Étendre les GAM au cas d'une réponse non gaussienne (GAM logistique).
+
+## Mise en contexte
+
+On reprend le jeu de données `Auto` (librairie `ISLR`), avec $Y = $ `mpg` et deux variables explicatives, `weight` et `horsepower`.
+
+```{r}
+#| eval: false
+library(ISLR)
+library(mgcv)
+data(Auto)
+```
+
+## Consignes
+
+1. Ajuster le modèle additif `mod1 <- gam(mpg ~ s(weight) + s(horsepower), data = Auto)`. Afficher les effets partiels estimés (`plot(mod1, pages = 1)`) et commenter leur forme : sont-ils linéaires ? Justifient-ils l'usage d'un GAM plutôt que d'un modèle linéaire ?
+2. Examiner `summary(mod1)` : rapporter les degrés de liberté effectifs de chaque terme lissé et la déviance expliquée. Tester $H_0 : f_j \equiv 0$ pour chacune des deux variables.
+3. Comparer le modèle additif à un modèle linéaire usuel (`lm(mpg ~ weight + horsepower)`) et à un modèle polynomial (par exemple degré 2 pour chaque variable) à l'aide de l'AIC et d'une estimation de l'erreur de prédiction par validation croisée.
+4. Faire varier artificiellement le paramètre de lissage d'un des termes (argument `sp` de `gam`) pour illustrer l'effet de $\lambda \to 0$ et $\lambda \to \infty$ sur la courbe ajustée.
+5. Ajuster un GAM avec interaction simple, par exemple `s(weight, horsepower)` (lissage bivarié), et discuter de ce que cela apporte (ou non) par rapport au modèle additif pur.
+6. **GAM logistique.** Construire une variable binaire à partir de `mpg` (par exemple $Y = \mathbf{1}\{\texttt{mpg} > \text{médiane}\}$) et ajuster `gam(Y ~ s(weight), family = binomial, data = Auto)`. Représenter la probabilité ajustée en fonction de `weight` et comparer à une régression logistique usuelle.
+
+## Matériel
+
+- Notes de cours : [Modèles additifs et modèles additifs généralisés (GAM)](../notes/09-gam.html)
+- Librairies R : `mgcv`, `ISLR`

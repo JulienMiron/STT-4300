@@ -1,0 +1,45 @@
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
+# Labo 2
+
+</div>
+
+<!-- TODO: remplacer les valeurs ci-dessous -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact"><p><span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value"></span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Régression non linéaire : polynômes et splines</span></span></p></div>
+</div>
+
+## Objectifs
+
+- Ajuster des modèles de régression polynomiale, par fonctions constantes par morceaux, et par splines de régression.
+- Choisir le degré du polynôme (ou le nombre de nœuds) par un critère d'information (AIC/BIC) et par validation croisée.
+- Comprendre l'intérêt des splines naturelles et des splines de lissage (`smooth.spline`) par rapport aux splines de régression classiques.
+
+## Mise en contexte
+
+On reprend le jeu de données `Auto` (librairie `ISLR`), avec $Y = $ `mpg` et $X = $ `weight`.
+
+```{r}
+#| eval: false
+library(ISLR)
+library(splines)
+data(Auto)
+```
+
+## Consignes
+
+1. Ajuster des régressions polynomiales de degré $p = 1, 2, 3, 5, 10$ (`lm(mpg ~ poly(weight, p, raw=TRUE))`). Superposer les courbes ajustées et commenter le comportement aux extrémités du domaine pour les degrés élevés.
+2. Sélectionner le degré $p$ à l'aide de l'AIC/BIC, puis à l'aide de la validation croisée (LOOCV ou 10-fold). Les deux critères mènent-ils à la même valeur de $p$ ?
+3. Ajuster un modèle à fonctions constantes par morceaux avec `cut(weight, K)` pour quelques valeurs de $K$, et comparer visuellement à la régression polynomiale.
+4. Ajuster une spline de régression cubique avec `bs(weight, knots = ...)` pour un choix de nœuds que vous justifierez (par exemple les quartiles de `weight`), puis une spline naturelle avec `ns(weight, df = 4)`. Comparer les deux courbes, en particulier au-delà de la plage des données observées.
+5. Ajuster une spline de lissage avec `smooth.spline(Auto$weight, Auto$mpg, cv = TRUE)`. Rapporter les degrés de liberté effectifs sélectionnés et comparer la courbe obtenue aux splines de régression du point 4.
+6. Construire un intervalle de confiance ponctuel pour $f(x)$ autour d'une valeur de $x$ de votre choix, pour le modèle polynomial retenu au point 2.
+7. Rédiger une courte conclusion (5-10 lignes) comparant l'ensemble des méthodes du labo selon : flexibilité, risque de surajustement, interprétabilité, et facilité d'implémentation.
+
+## Matériel
+
+- Notes de cours : [Régression non linéaire — polynômes, fonctions par morceaux et splines](../notes/08-splines.html)
+- Librairies R : `splines`, `ISLR`

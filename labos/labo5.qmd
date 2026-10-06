@@ -1,0 +1,51 @@
+<div class="portal-hero">
+
+<p class="eyebrow">STT-4300 — Régression II</p>
+
+# Labo 5
+
+</div>
+
+<!-- TODO: remplacer les valeurs ci-dessous -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact"><p><span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value"></span></span></p></div>
+<div class="module-fact"><p><span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Regard critique sur les réponses d'un assistant IA (Claude)</span></span></p></div>
+</div>
+
+::: {.callout-note}
+## Un labo différent
+
+Ce labo ne porte pas sur l'implémentation d'une méthode, mais sur votre capacité à **évaluer de façon critique** une explication statistique produite par un assistant conversationnel (Claude). L'objectif n'est pas de disqualifier l'outil, mais d'apprendre à le confronter à vos propres connaissances plutôt qu'à lui faire confiance aveuglément.
+:::
+
+## Objectifs
+
+- Formuler une question technique précise sur la matière du cours (régression non paramétrique, régression non linéaire, GAM).
+- Évaluer la justesse, la complétude et la clarté d'une réponse générée par Claude, en s'appuyant sur les notes de cours et vos propres calculs.
+- Identifier les forces et les limites d'un assistant IA comme outil d'apprentissage en statistique.
+
+## Consignes
+
+1. Choisissez **une** question précise (pas une question trop générale du type « explique-moi les splines ») portant sur un concept des labos 1 à 4. Quelques exemples, à adapter ou remplacer par une question de votre cru :
+   - « Pourquoi la variance de l'estimateur kNN est-elle $\sigma^2/k$, et pourquoi ce résultat suppose-t-il $Var[\epsilon_i]$ constante ? »
+   - « Pourquoi les splines naturelles imposent-elles la linéarité de $f$ aux extrémités, et en quoi cela réduit-il la variance de $\hat f(x)$ près des bords ? »
+   - « Quelle est la différence entre la validation croisée ordinaire (OCV) et la validation croisée généralisée (GCV) pour choisir le paramètre de lissage d'un GAM ? »
+   - « Pourquoi dit-on que les modèles additifs permettent d'éviter le fléau de la dimension auquel se heurtent les estimateurs à noyau ? »
+2. Posez votre question à Claude et conservez l'échange intégral (question et réponse complète, sans l'éditer).
+3. Rédigez une évaluation critique de la réponse obtenue, structurée en quatre points :
+   - **Exactitude** : la réponse est-elle correcte ? Si elle contient une erreur, une imprécision ou une simplification abusive, identifiez-la précisément et expliquez pourquoi c'est incorrect (appuyez-vous sur les notes de cours ou sur un calcul).
+   - **Complétude** : la réponse omet-elle une nuance ou une hypothèse importante (p. ex. une condition de régularité, un cas particulier) ?
+   - **Clarté et niveau** : la réponse est-elle adaptée au niveau du cours ? Est-elle trop vague, trop technique, ou truffée de jargon non défini ?
+   - **Verdict global** : sur une échelle qualitative (excellente / correcte mais incomplète / partiellement erronée / erronée), que donneriez-vous à cette réponse, et pourquoi ?
+4. Si la réponse contient une erreur ou une lacune, rédigez **vous-même** une version corrigée ou complétée du passage problématique (quelques phrases suffisent).
+5. En 5-10 lignes, commentez : dans quel contexte un assistant comme Claude est-il utile pour apprendre les méthodes de ce cours, et dans quel contexte faut-il s'en méfier ou vérifier systématiquement ses affirmations ?
+
+## Remise
+
+- L'échange complet avec Claude (question et réponse, non modifiés).
+- Votre évaluation critique (points 3-5 ci-dessus).
+
+## Matériel
+
+- Notes de cours : [kNN et noyau](../notes/07-knn-noyau.html), [Splines](../notes/08-splines.html), [GAM](../notes/09-gam.html)
+- Un compte donnant accès à Claude (claude.ai) ou à un autre assistant conversationnel équivalent

@@ -1,0 +1,280 @@
+% !TeX program = xelatex
+\documentclass[11pt,letterpaper]{scrartcl}
+
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\usepackage{polyglossia}
+\setmainlanguage{french}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\usepackage[colorlinks=true,linkcolor=accent,urlcolor=accent]{hyperref}
+
+\definecolor{accent}{HTML}{0E9E6C}
+\setlist{itemsep=2pt,topsep=4pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+
+% Environnements (mêmes couleurs que le livre)
+\newtcolorbox{envremarque}{enhanced,breakable,colback=gray!8,colframe=gray!8,
+  borderline west={3pt}{0pt}{gray!70},boxrule=0pt,arc=2pt,left=10pt}
+\newtcolorbox{envexemple}{enhanced,breakable,colback=violet!6,colframe=violet!6,
+  borderline west={3pt}{0pt}{violet!70},boxrule=0pt,arc=2pt,left=10pt}
+\newtcolorbox{envdefinition}{enhanced,breakable,colback=blue!5,colframe=blue!5,
+  borderline west={3pt}{0pt}{blue!70!black},boxrule=0pt,arc=2pt,left=10pt}
+
+\lstset{language=R,basicstyle=\ttfamily\small,backgroundcolor=\color{gray!6},
+  frame=single,rulecolor=\color{gray!30},breaklines=true,columns=fullflexible,
+  keywordstyle=\color{blue!60!black},commentstyle=\color{gray},
+  showstringspaces=false,xleftmargin=4pt,xrightmargin=4pt}
+
+\addtokomafont{section}{\color{accent}}
+\addtokomafont{subsection}{\color{accent}}
+
+\title{Projet de session et laboratoires\\\large STT-4300 -- Régression II}
+\author{Julien Miron}
+\date{Hiver 2027}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\bigskip
+
+%=============================================================
+\section{Projet de session}
+
+\subsection{Vue d'ensemble d}
+
+Le projet de session consiste à mener, en équipe, une analyse complète d'un jeu de données à l'aide d'un GLM : une régression logistique (réponse binaire ou proportion) ou une régression de Poisson (réponse de comptage). Le choix du modèle et du jeu de données revient à votre équipe, sous réserve de mon approbation au Labo~1.
+
+Le projet avance par étapes, au rythme des cinq laboratoires faits en classe. Chaque laboratoire produit un livrable court qui s'intègre à votre rapport final, de sorte qu'il n'y a pas de gros bloc de travail à la fin de la session.
+
+\begin{envremarque}
+Objectif général : passer d'une question concrète à un modèle défendable, c'est-à-dire un modèle dont vous savez expliquer le choix, vérifier l'ajustement, interpréter les coefficients et reconnaître les limites.
+\end{envremarque}
+
+\subsection{Modalités}
+
+\begin{itemize}
+  \item Équipes de 3 ou 4 étudiants, formées au Labo~1.
+  \item Un dépôt GitHub par équipe, avec un projet R reproductible (\texttt{renv} recommandé). Je dois avoir accès au dépôt. kkk
+  \item Tout le code est en R et le rapport est rédigé en Quarto ou en \LaTeX{} : le document doit se compiler de zéro sans intervention manuelle.
+\end{itemize}
+
+\subsection{Choix du jeu de données}
+
+Votre jeu de données doit respecter les critères suivants.
+\begin{enumerate}
+  \item Une variable réponse $Y$ claire : binaire (ou proportion $y_i/n_i$) pour la régression logistique, ou comptage pour la régression de Poisson.
+  \item Au moins $n = 200$ observations et au moins 6 covariables potentielles, avec un mélange de variables quantitatives et qualitatives.
+  \item Une question de recherche que vous pouvez énoncer en une phrase.
+  \item Des données libres de droits et sans information permettant d'identifier des personnes.
+  \item Un peu de désordre (valeurs manquantes, catégories rares, valeurs aberrantes) : le nettoyage fait partie de l'exercice.
+\end{enumerate}
+
+Trouvez votre jeu de données, par exemple à partir de Données Québec, de Statistique Canada, du dépôt UCI, de Kaggle ou de données ouvertes de la Ville de Québec (collisions, 311, bacs de recyclage, etc.).
+
+\subsection{Livrable final}
+
+Le projet se termine par une présentation en classe (10 minutes plus 5 minutes de questions) accompagnée d'un produit de communication, au choix de votre équipe :
+\begin{itemize}
+  \item une application Shiny qui permet d'explorer le modèle (prédictions selon les valeurs des covariables, effet d'une variable, diagnostics) ;
+  \item un site web Quarto (ou un tableau de bord) racontant l'analyse ;
+  \item un poster scientifique (format $36 \times 48$ po) ;
+  \item un autre format du même niveau, à me proposer (balado, bande dessinée statistique, vidéo de 5 minutes, etc.).
+\end{itemize}
+
+Peu importe le format, vous devez aussi remettre un rapport technique de 8 à 12 pages qui rassemble les livrables des laboratoires et la conclusion.
+
+Le produit de communication s'adresse à un public non statisticien. Votre présentation doit donc traduire les résultats en langage clair : parlez de rapport de cotes ou de variation en pourcentage du taux, pas seulement de coefficients $\hat\beta_j$.
+
+\subsection{Contenu attendu du rapport}
+
+\begin{enumerate}
+  \item Question de recherche et description des données.
+  \item Nettoyage et analyse exploratoire.
+  \item Modèle retenu, avec sa justification.
+  \item Estimation, intervalles de confiance et tests (valeur-$p$) pour les paramètres d'intérêt.
+  \item Sélection de variables et comparaison de modèles.
+  \item Diagnostics et validation (résidus, observations influentes, surdispersion pour Poisson, calibration et courbe ROC pour la logistique, validation croisée).
+  \item Interprétation, limites et ouverture vers d'autres modèles.
+  \item Une section « Ce qui pourrait fausser nos conclusions » (biais de sélection, variables omises, différence entre corrélation et causalité). Si les données concernent des personnes, ajoutez une courte réflexion éthique : qui est dans les données et qui n'y est pas ?
+\end{enumerate}
+
+%=============================================================
+\section{Laboratoires}
+
+Les cinq laboratoires ont lieu en classe, pendant environ une heure chacun. Je circule entre les équipes pour répondre à vos questions. Chaque laboratoire se termine par un livrable court (une à deux pages ou un fichier source) à remettre dans la semaine qui suit.
+
+\subsection{Labo 1 : choix du jeu de données}
+
+Objectif : former les équipes, choisir une question de recherche et valider la faisabilité.
+
+Tâches en classe :
+\begin{itemize}
+  \item explorer au moins deux jeux de données candidats avec \texttt{str()}, \texttt{summary()} et \texttt{skimr::skim()} ;
+  \item énoncer une question de recherche et identifier la variable réponse $Y$ ainsi que les covariables potentielles ;
+  \item justifier le choix entre logistique et Poisson ;
+  \item vérifier les critères du choix de jeu de données ci-dessus.
+\end{itemize}
+
+\begin{envexemple}
+Pour un jeu de données de collisions routières par intersection, vous pourriez poser $Y_i \sim \text{Poisson}(\mu_i)$ avec
+\[
+  \log(\mu_i) = \log(t_i) + \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip},
+\]
+où $t_i$ est une mesure d'exposition (ici, le trafic moyen) qui entre dans le modèle comme décalage (\texttt{offset}).
+\end{envexemple}
+
+Livrable : une page de proposition (question, données, variable réponse, modèle envisagé, répartition des tâches). Je l'approuve ou je demande des ajustements.
+
+\subsection{Labo 2 : nettoyage et analyse primaire}
+
+Objectif : connaître ses données avant de modéliser.
+
+Tâches en classe :
+\begin{itemize}
+  \item documenter les variables (type, unité, valeurs permises) dans un dictionnaire de données ;
+  \item traiter les valeurs manquantes (quantifier, comprendre le mécanisme, choisir une stratégie et la justifier) ;
+  \item recoder les variables qualitatives (niveaux rares, catégorie de référence) ;
+  \item produire des statistiques descriptives et des graphiques de $Y$ en fonction de chaque covariable ;
+  \item repérer les valeurs aberrantes et les problèmes de colinéarité (corrélations, facteurs d'inflation de la variance) ;
+  \item mettre de côté au hasard $20\,\%$ des observations (jeu de réserve) sans y toucher avant le Labo~4 : elles serviront à évaluer honnêtement votre modèle final.
+\end{itemize}
+
+\begin{lstlisting}
+library(tidyverse)
+donnees <- read_csv("donnees.csv")
+
+# proportion de Y selon une covariable qualitative
+donnees |>
+  group_by(covariable) |>
+  summarise(n = n(), prop = mean(y), .groups = "drop")
+
+# valeurs manquantes
+donnees |> summarise(across(everything(), ~ mean(is.na(.x))))
+\end{lstlisting}
+
+Livrable : un fichier source qui part des données brutes et produit les données nettoyées et le jeu de réserve, avec une section expliquant chaque décision prise.
+
+\subsection{Labo 3 : ajustement et début d'inférence}
+
+Objectif : ajuster un premier GLM et interpréter les résultats.
+
+Tâches en classe :
+\begin{itemize}
+  \item ajuster un modèle complet avec \texttt{glm()} ;
+  \item interpréter chaque coefficient sur l'échelle du prédicteur linéaire et sur l'échelle naturelle (rapport de cotes $e^{\hat\beta_j}$ ou rapport de taux) ;
+  \item construire des intervalles de confiance de Wald et par vraisemblance profilée (\texttt{confint()}), puis comparer ;
+  \item effectuer des tests de Wald et des tests du rapport de vraisemblance, en précisant la valeur-$p$ et l'hypothèse testée ;
+  \item tracer l'effet d'une covariable sur la probabilité (ou le taux) prédite, les autres covariables étant fixées.
+\end{itemize}
+
+\begin{lstlisting}
+ajust <- glm(y ~ ., data = donnees_propres, family = binomial)   # ou poisson
+summary(ajust)
+exp(cbind(OR = coef(ajust), confint(ajust)))
+anova(ajust, test = "Chisq")
+\end{lstlisting}
+
+\begin{envremarque}
+Pour Poisson, vérifiez dès cette étape la surdispersion en comparant la déviance résiduelle à ses degrés de liberté. Si le rapport est nettement supérieur à 1, passez à un modèle quasi-Poisson ou binomial négatif.
+\end{envremarque}
+
+Livrable : une page d'interprétation écrite pour un lecteur non statisticien.
+
+\subsection{Labo 4 : sélection de variables}
+
+Objectif : comparer des modèles de façon rigoureuse.
+
+Tâches en classe :
+\begin{itemize}
+  \item sélection pas à pas (\texttt{step()}) avec l'AIC et le BIC, et discussion des limites de cette approche, notamment l'inférence faite après sélection ;
+  \item régularisation ridge et lasso avec \texttt{glmnet}, choix de $\lambda$ par validation croisée ;
+  \item comparaison du pouvoir prédictif par validation croisée, puis une évaluation finale du modèle retenu sur le jeu de réserve (taux de bonne classification, AUC et déviance pour la logistique ; erreur quadratique et déviance pour Poisson) ;
+  \item examen de la stabilité : les variables retenues changent-elles si l'on rééchantillonne (bootstrap) ?
+\end{itemize}
+
+\begin{lstlisting}
+library(glmnet)
+X <- model.matrix(y ~ ., donnees_propres)[, -1]
+cv <- cv.glmnet(X, donnees_propres$y, family = "binomial", alpha = 1)
+coef(cv, s = "lambda.1se")
+\end{lstlisting}
+
+Livrable : un tableau comparatif d'au moins trois modèles (complet, sélectionné, lasso), avec un choix final justifié.
+
+\subsection{Labo 5 : ouverture sur d'autres modèles}
+
+Objectif : voir jusqu'où le GLM est adéquat et ce qui pourrait le remplacer ou le compléter.
+
+Tâches en classe (choisissez-en au moins une) :
+\begin{itemize}
+  \item ajouter une relation non linéaire par splines ou par un GAM (\texttt{mgcv::gam()}) et comparer avec le GLM au moyen de l'AIC et de la validation croisée ;
+  \item essayer une méthode de plus proches voisins ou à noyau pour la prédiction ;
+  \item tester un modèle pour données surdispersées (quasi-Poisson, binomial négatif) ou avec excès de zéros (modèle à inflation de zéros) ;
+  \item comparer avec une méthode d'apprentissage automatique (forêt aléatoire, arbre de décision) et discuter du compromis entre interprétabilité et prédiction.
+\end{itemize}
+
+\begin{lstlisting}
+library(mgcv)
+gam1 <- gam(y ~ s(diametre) + s(hauteur) + espece, data = donnees_propres,
+            family = binomial, method = "REML")
+plot(gam1, pages = 1)
+AIC(ajust, gam1)
+\end{lstlisting}
+
+Livrable : une demi-page répondant à la question « le GLM suffit-il ? », appuyée par au moins une comparaison chiffrée.
+
+%=============================================================
+\section{Évaluation}
+
+Le projet compte pour $45\,\%$ de la note finale.
+
+\begin{center}
+\begin{tabular}{@{}lc@{}}
+\toprule
+Composante & Pondération \\
+\midrule
+Livrables des laboratoires ($5 \times 3\,\%$) & $15\,\%$ \\
+Rapport technique & $15\,\%$ \\
+Présentation et produit de communication & $10\,\%$ \\
+Contribution individuelle (évaluation par les pairs) & $5\,\%$ \\
+\midrule
+Total & $45\,\%$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Critères d'évaluation du rapport et de la présentation :
+\begin{itemize}
+  \item justesse statistique (modèle adapté, hypothèses vérifiées, inférence correcte) ;
+  \item qualité de l'interprétation (claire, nuancée, liée à la question de départ) ;
+  \item reproductibilité (le document se compile sans intervention) ;
+  \item clarté de la communication (graphiques lisibles, vulgarisation) ;
+  \item profondeur de l'analyse (diagnostics, sélection de modèle, ouverture).
+\end{itemize}
+
+%=============================================================
+\section{Calendrier suggéré}
+
+\begin{center}
+\begin{tabular}{@{}cll@{}}
+\toprule
+Semaine & Matière en cours & Activité \\
+\midrule
+3  & Régression logistique & Labo 1 : choix du jeu de données \\
+5  & GLM, Poisson & Labo 2 : nettoyage et analyse primaire \\
+7  & GLM, inférence & Labo 3 : ajustement et inférence \\
+10 & Validation croisée, régularisation & Labo 4 : sélection de variables \\
+12 & Splines, GAM & Labo 5 : ouverture \\
+14 & & Présentations \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

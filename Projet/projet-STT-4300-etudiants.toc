@@ -1,0 +1,16 @@
+\xpg@aux {}{french}
+\contentsline {section}{\numberline {1}Projet de session}{1}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Vue d'ensemble d}{1}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Modalités}{2}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Choix du jeu de données}{2}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Livrable final}{2}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Contenu attendu du rapport}{3}{subsection.1.5}%
+\contentsline {section}{\numberline {2}Laboratoires}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Labo 1 : choix du jeu de données}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Labo 2 : nettoyage et analyse primaire}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Labo 3 : ajustement et début d'inférence}{4}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Labo 4 : sélection de variables}{5}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Labo 5 : ouverture sur d'autres modèles}{6}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Évaluation}{6}{section.3}%
+\contentsline {section}{\numberline {4}Calendrier suggéré}{7}{section.4}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

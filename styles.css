@@ -2551,14 +2551,10 @@ blockquote { border-left: 4px solid var(--ulaval-yellow); padding-left: 1rem; co
 
 /* ===================== AJOUTS PROPRES À STT-4300 ===================== */
 
-/* Calendrier : « Examen » en rouge, ligne de la semaine de lecture grisée */
+/* Calendrier : couleurs des libellés, ligne de la semaine de lecture grisée */
 .cal-exam { color: #dc2713; }
-#quarto-document-content tr:has(.cal-off) td {
-  background: var(--soft);
-  color: var(--muted);
-}
-
 .cal-labo { color: var(--purple); }
+.cal-projet { color: var(--green); }
 #quarto-document-content tr:has(.cal-off) td {
   background: var(--soft);
   color: var(--muted);
@@ -2571,10 +2567,4 @@ blockquote { border-left: 4px solid var(--ulaval-yellow); padding-left: 1rem; co
   font-weight: 600;
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.cal-projet { color: var(--green); }
-#quarto-document-content tr:has(.cal-off) td {
-  background: var(--soft);
-  color: var(--muted);
 }

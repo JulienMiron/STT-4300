@@ -583,43 +583,6 @@ STT-4300 — Régression II
   }
 })();
 </script>
-<script>
-// Masque le contenu d'une page labos/laboN.html tant que la date associée
-// dans labos/disponibilite.json n'est pas atteinte (comparaison faite dans
-// le fuseau horaire du navigateur de la personne qui consulte la page).
-// Sans effet sur les autres pages du site.
-(function () {
-  var m = location.pathname.match(/\/labos\/(labo\d)\.html$/);
-  if (!m) return;
-  var id = m[1];
-
-  fetch('disponibilite.json')
-    .then(function (r) { return r.json(); })
-    .then(function (dates) {
-      var dateStr = dates[id];
-      if (!dateStr) return;
-
-      var disponible = new Date(dateStr + 'T00:00:00');
-      if (new Date() >= disponible) return;
-
-      var content = document.getElementById('quarto-document-content');
-      if (!content) return;
-
-      var dateAffichee = disponible.toLocaleDateString('fr-CA', {
-        year: 'numeric', month: 'long', day: 'numeric'
-      });
-      content.innerHTML =
-        '<div class="callout callout-style-default callout-warning">' +
-        '<div class="callout-body-container callout-body">' +
-        '<p>Ce labo sera disponible à partir du <strong>' + dateAffichee + '</strong>.</p>' +
-        '</div></div>';
-    })
-    .catch(function () {
-      // Si le fichier de dates est introuvable (hors ligne, etc.), on
-      // laisse le contenu du labo visible plutôt que de bloquer l'accès.
-    });
-})();
-</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

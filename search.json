@@ -1,0 +1,268 @@
+[
+  {
+    "objectID": "labos/labo5.html",
+    "href": "labos/labo5.html",
+    "title": "Labo 5",
+    "section": "",
+    "text": "STT-4300 — Régression II"
+  },
+  {
+    "objectID": "labos/labo5.html#objectifs",
+    "href": "labos/labo5.html#objectifs",
+    "title": "Labo 5",
+    "section": "Objectifs",
+    "text": "Objectifs\n\nFormuler une question technique précise sur la matière du cours (régression non paramétrique, régression non linéaire, GAM).\nÉvaluer la justesse, la complétude et la clarté d’une réponse générée par Claude, en s’appuyant sur les notes de cours et vos propres calculs.\nIdentifier les forces et les limites d’un assistant IA comme outil d’apprentissage en statistique."
+  },
+  {
+    "objectID": "labos/labo5.html#consignes",
+    "href": "labos/labo5.html#consignes",
+    "title": "Labo 5",
+    "section": "Consignes",
+    "text": "Consignes\n\nChoisissez une question précise (pas une question trop générale du type « explique-moi les splines ») portant sur un concept des labos 1 à 4. Quelques exemples, à adapter ou remplacer par une question de votre cru :\n\n« Pourquoi la variance de l’estimateur kNN est-elle \\(\\sigma^2/k\\), et pourquoi ce résultat suppose-t-il \\(Var[\\epsilon_i]\\) constante ? »\n« Pourquoi les splines naturelles imposent-elles la linéarité de \\(f\\) aux extrémités, et en quoi cela réduit-il la variance de \\(\\hat f(x)\\) près des bords ? »\n« Quelle est la différence entre la validation croisée ordinaire (OCV) et la validation croisée généralisée (GCV) pour choisir le paramètre de lissage d’un GAM ? »\n« Pourquoi dit-on que les modèles additifs permettent d’éviter le fléau de la dimension auquel se heurtent les estimateurs à noyau ? »\n\nPosez votre question à Claude et conservez l’échange intégral (question et réponse complète, sans l’éditer).\nRédigez une évaluation critique de la réponse obtenue, structurée en quatre points :\n\nExactitude : la réponse est-elle correcte ? Si elle contient une erreur, une imprécision ou une simplification abusive, identifiez-la précisément et expliquez pourquoi c’est incorrect (appuyez-vous sur les notes de cours ou sur un calcul).\nComplétude : la réponse omet-elle une nuance ou une hypothèse importante (p. ex. une condition de régularité, un cas particulier) ?\nClarté et niveau : la réponse est-elle adaptée au niveau du cours ? Est-elle trop vague, trop technique, ou truffée de jargon non défini ?\nVerdict global : sur une échelle qualitative (excellente / correcte mais incomplète / partiellement erronée / erronée), que donneriez-vous à cette réponse, et pourquoi ?\n\nSi la réponse contient une erreur ou une lacune, rédigez vous-même une version corrigée ou complétée du passage problématique (quelques phrases suffisent).\nEn quelques lignes, commentez : dans quel contexte un assistant comme Claude est-il utile pour apprendre les méthodes de ce cours ?"
+  },
+  {
+    "objectID": "labos/labo5.html#remise",
+    "href": "labos/labo5.html#remise",
+    "title": "Labo 5",
+    "section": "Remise",
+    "text": "Remise\n\nL’échange complet avec Claude (question et réponse, non modifiés).\nVotre évaluation critique (points 3-5 ci-dessus)."
+  },
+  {
+    "objectID": "labos/labo5.html#matériel",
+    "href": "labos/labo5.html#matériel",
+    "title": "Labo 5",
+    "section": "Matériel",
+    "text": "Matériel\n\nNotes de cours : kNN et noyau, Splines, GAM\nUn compte donnant accès à Claude (claude.ai) ou à un autre assistant conversationnel équivalent"
+  },
+  {
+    "objectID": "labos/labo3.html",
+    "href": "labos/labo3.html",
+    "title": "Labo 3",
+    "section": "",
+    "text": "STT-4300 — Régression II"
+  },
+  {
+    "objectID": "labos/labo3.html#objectifs",
+    "href": "labos/labo3.html#objectifs",
+    "title": "Labo 3",
+    "section": "Objectifs",
+    "text": "Objectifs\n\nAjuster un modèle additif avec la librairie mgcv et interpréter les effets lissés de chaque variable.\nComprendre le rôle du paramètre de lissage et des degrés de liberté effectifs dans le compromis biais-variance.\nÉtendre les GAM au cas d’une réponse non gaussienne (GAM logistique)."
+  },
+  {
+    "objectID": "labos/labo3.html#mise-en-contexte",
+    "href": "labos/labo3.html#mise-en-contexte",
+    "title": "Labo 3",
+    "section": "Mise en contexte",
+    "text": "Mise en contexte\nOn reprend le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et deux variables explicatives, weight et horsepower.\n\nlibrary(ISLR)\nlibrary(mgcv)\ndata(Auto)"
+  },
+  {
+    "objectID": "labos/labo3.html#consignes",
+    "href": "labos/labo3.html#consignes",
+    "title": "Labo 3",
+    "section": "Consignes",
+    "text": "Consignes\n\nAjuster le modèle additif mod1 &lt;- gam(mpg ~ s(weight) + s(horsepower), data = Auto). Afficher les effets partiels estimés (plot(mod1, pages = 1)) et commenter leur forme : sont-ils linéaires ? Justifient-ils l’usage d’un GAM plutôt que d’un modèle linéaire ?\nExaminer summary(mod1) : rapporter les degrés de liberté effectifs de chaque terme lissé et la déviance expliquée. Tester \\(H_0 : f_j \\equiv 0\\) pour chacune des deux variables.\nComparer le modèle additif à un modèle linéaire usuel (lm(mpg ~ weight + horsepower)) et à un modèle polynomial (par exemple degré 2 pour chaque variable) à l’aide de l’AIC et d’une estimation de l’erreur de prédiction par validation croisée.\nFaire varier artificiellement le paramètre de lissage d’un des termes (argument sp de gam) pour illustrer l’effet de \\(\\lambda \\to 0\\) et \\(\\lambda \\to \\infty\\) sur la courbe ajustée.\nAjuster un GAM avec interaction simple, par exemple s(weight, horsepower) (lissage bivarié), et discuter de ce que cela apporte (ou non) par rapport au modèle additif pur.\nGAM logistique. Construire une variable binaire à partir de mpg (par exemple \\(Y = \\mathbf{1}\\{\\texttt{mpg} &gt; \\text{médiane}\\}\\)) et ajuster gam(Y ~ s(weight), family = binomial, data = Auto). Représenter la probabilité ajustée en fonction de weight et comparer à une régression logistique usuelle."
+  },
+  {
+    "objectID": "labos/labo3.html#matériel",
+    "href": "labos/labo3.html#matériel",
+    "title": "Labo 3",
+    "section": "Matériel",
+    "text": "Matériel\n\nNotes de cours : Modèles additifs et modèles additifs généralisés (GAM)\nLibrairies R : mgcv, ISLR"
+  },
+  {
+    "objectID": "labos/labo1.html",
+    "href": "labos/labo1.html",
+    "title": "Labo 1",
+    "section": "",
+    "text": "STT-4300 — Régression II"
+  },
+  {
+    "objectID": "labos/labo1.html#objectifs",
+    "href": "labos/labo1.html#objectifs",
+    "title": "Labo 1",
+    "section": "Objectifs",
+    "text": "Objectifs\n\nImplémenter et comparer l’estimateur des \\(k\\) plus proches voisins (kNN) et l’estimateur de noyau de Nadaraya-Watson.\nComprendre, de façon empirique, le compromis biais-variance associé au choix de \\(k\\) et de la fenêtre \\(h\\).\nSélectionner \\(k\\) et \\(h\\) par validation croisée et comparer les courbes ajustées obtenues."
+  },
+  {
+    "objectID": "labos/labo1.html#mise-en-contexte",
+    "href": "labos/labo1.html#mise-en-contexte",
+    "title": "Labo 1",
+    "section": "Mise en contexte⁄",
+    "text": "Mise en contexte⁄\nOn utilise le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et $X = $ weight, comme dans les notes de cours sur la régression non paramétrique.\n\nlibrary(ISLR)\nlibrary(FNN)\nlibrary(KernSmooth)\ndata(Auto)"
+  },
+  {
+    "objectID": "labos/labo1.html#consignes",
+    "href": "labos/labo1.html#consignes",
+    "title": "Labo 1",
+    "section": "Consignes",
+    "text": "Consignes\n\nProduire un nuage de points mpg en fonction de weight et discuter brièvement pourquoi une relation linéaire semble inadéquate.\nÀ l’aide de knn.reg (librairie FNN), ajuster l’estimateur kNN pour plusieurs valeurs de \\(k\\) (par exemple \\(k = 5, 25, 45, 100, 300\\)). Superposer les courbes ajustées au nuage de points et commenter l’effet de \\(k\\) sur la rugosité de la courbe.\nUtiliser le critère PRESS de knn.reg (LOOCV) pour sélectionner \\(k_{\\min}\\). Comparer avec la valeur \\(k_{\\min}=45\\) mentionnée dans les notes.\nÀ l’aide de locpoly (librairie KernSmooth, degree=0), ajuster l’estimateur de Nadaraya-Watson pour plusieurs valeurs de la fenêtre \\(h\\). Encore une fois, illustrer l’effet de \\(h\\) sur la courbe ajustée.\nChoisir \\(h\\) par validation croisée (vous pouvez coder vous-même une boucle de LOOCV ou de \\(K\\)-fold CV) et comparer la courbe obtenue à celle de kNN avec \\(k_{\\min}\\).\nEn une dizaine de lignes, comparer les deux approches : avantages, inconvénients, et situations où l’une serait préférable à l’autre (notamment en présence de plusieurs variables explicatives — voir la distance de Mahalanobis dans les notes)."
+  },
+  {
+    "objectID": "labos/labo1.html#matériel",
+    "href": "labos/labo1.html#matériel",
+    "title": "Labo 1",
+    "section": "Matériel",
+    "text": "Matériel\n\nNotes de cours : Régression non paramétrique — kNN et noyau\nLibrairies R : FNN, KernSmooth, ISLR"
+  },
+  {
+    "objectID": "calendrier.html",
+    "href": "calendrier.html",
+    "title": "Calendrier",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nCalendrier\n\n\n\n\n\n\n\n\nAvertissementLa version Brio fait foi\n\n\n\nCe calendrier est fourni à titre indicatif. La version officielle est celle déposée sur Brio : en cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut.\n\n\n📄 Télécharger le calendrier, le projet et les labos (PDF)\n\n\n\n\n\n\n\n\n\nSemaine\nDate\nSujet\nNotes\n\n\n\n\n1\n14 janvier\nMC + régression logistique\n\n\n\n2\n21 janvier\nRégression logistique\n\n\n\n3\n28 janvier\nGLM + régression de Poisson\n\n\n\n4\n4 février\nGLM + régression de Poisson\n\n\n\n5\n11 février\nValidation croisée + régularisation\n\n\n\n6\n18 février\nRévision\n\n\n\n7\n25 février\nEXAMEN\n\n\n\n8\n4 mars\nSEMAINE DE LECTURE\n\n\n\n9\n11 mars\nLabo 1 : Régression non paramétrique : kNN et estimateur de noyau\nPartie 1 du projet : Choix du jeu de données\n\n\n10\n18 mars\nLabo 2 : Régression non linéaire : polynômes et splines\nPartie 2 du projet : Nettoyage et analyse primaire\n\n\n11\n25 mars\nLabo 3 : Modèles additifs généralisés (GAM)\nPartie 3 du projet : Ajustement et début d’inférence\n\n\n12\n1 avril\nLabo 4 : Synthèse : kNN, noyau, splines et GAM en compétition\nPartie 4 du projet : Sélection de variables et validation croisée\n\n\n13\n8 avril\nLabo 5 : Regard critique sur les réponses d’un assistant IA\nPartie 5 du projet : Ouverture sur d’autres modèles\n\n\n14\n15 avril\nTravail sur le projet\nFinalisation du projet\n\n\n15\n22 avril\nPrésentations\n\n\n\n16\n29 avril\nLabo 16"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "STT-4300",
+    "section": "",
+    "text": "STT-4300\n\n\nRégression II\n\n\nNotes de cours, plan de cours et calendrier : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques et modèles additifs généralisés.\n\n\nNotes de cours Calendrier Projet de session"
+  },
+  {
+    "objectID": "plan-de-cours.html",
+    "href": "plan-de-cours.html",
+    "title": "Plan de cours",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\n\n\nPage à compléter — squelette fourni à titre indicatif."
+  },
+  {
+    "objectID": "plan-de-cours.html#description-du-cours",
+    "href": "plan-de-cours.html#description-du-cours",
+    "title": "Plan de cours",
+    "section": "Description du cours",
+    "text": "Description du cours"
+  },
+  {
+    "objectID": "plan-de-cours.html#objectifs-dapprentissage",
+    "href": "plan-de-cours.html#objectifs-dapprentissage",
+    "title": "Plan de cours",
+    "section": "Objectifs d’apprentissage",
+    "text": "Objectifs d’apprentissage"
+  },
+  {
+    "objectID": "plan-de-cours.html#évaluation",
+    "href": "plan-de-cours.html#évaluation",
+    "title": "Plan de cours",
+    "section": "Évaluation",
+    "text": "Évaluation\n\n\n\n\nÉvaluation\nPondération\nDate"
+  },
+  {
+    "objectID": "plan-de-cours.html#matériel",
+    "href": "plan-de-cours.html#matériel",
+    "title": "Plan de cours",
+    "section": "Matériel",
+    "text": "Matériel\n\n\nNotes de cours"
+  },
+  {
+    "objectID": "plan-de-cours.html#politiques-du-cours",
+    "href": "plan-de-cours.html#politiques-du-cours",
+    "title": "Plan de cours",
+    "section": "Politiques du cours",
+    "text": "Politiques du cours"
+  },
+  {
+    "objectID": "Projet/projet.html",
+    "href": "Projet/projet.html",
+    "title": "Projet de session",
+    "section": "",
+    "text": "STT-4300 — Régression II"
+  },
+  {
+    "objectID": "Projet/projet.html#projet-de-session-1",
+    "href": "Projet/projet.html#projet-de-session-1",
+    "title": "Projet de session",
+    "section": "Projet de session",
+    "text": "Projet de session\n\nVue d’ensemble\nLe projet de session consiste à mener, en équipe, une analyse complète d’un jeu de données à l’aide d’un GLM : une régression logistique (réponse binaire ou proportion) ou une régression de Poisson (réponse de comptage). Le choix du modèle et du jeu de données revient à votre équipe, sous réserve de mon approbation au Jalon 1.\nLe projet avance par étapes, au rythme de cinq jalons dont les dates des labos servent d’échéances. Chaque jalon produit un livrable court qui s’intègre à votre rapport final, de sorte qu’il n’y a pas de gros bloc de travail à la fin de la session.\n\n\n\n\n\n\nNoteObjectif général\n\n\n\nPasser d’une question concrète à un modèle défendable, c’est-à-dire un modèle dont vous savez expliquer le choix, vérifier l’ajustement, interpréter les coefficients et reconnaître les limites.\n\n\n\n\nModalités\n\nÉquipes de 3 ou 4 étudiants, formées au Jalon 1.\nUn dépôt GitHub par équipe, avec un projet R reproductible (renv recommandé). Je dois avoir accès au dépôt.\nTout le code est en R et le rapport est rédigé en Quarto ou en LaTeX : le document doit se compiler de zéro sans intervention manuelle.\n\n\n\nChoix du jeu de données\nVotre jeu de données doit respecter les critères suivants.\n\nUne variable réponse \\(Y\\) claire : binaire (ou proportion \\(y_i/n_i\\)) pour la régression logistique, ou comptage pour la régression de Poisson.\nAu moins \\(n = 200\\) observations et au moins 6 covariables potentielles, avec un mélange de variables quantitatives et qualitatives.\nUne question de recherche que vous pouvez énoncer en une phrase.\nDes données libres de droits et sans information permettant d’identifier des personnes.\nUn peu de désordre (valeurs manquantes, catégories rares, valeurs aberrantes) : le nettoyage fait partie de l’exercice.\n\nTrouvez votre jeu de données, par exemple à partir de Données Québec, de Statistique Canada, du dépôt UCI, de Kaggle ou de données ouvertes de la Ville de Québec (collisions, 311, bacs de recyclage, etc.).\n\n\nLivrable final\nLe projet se termine par une présentation en classe (10 minutes plus 5 minutes de questions) accompagnée d’un produit de communication, au choix de votre équipe :\n\nune application Shiny qui permet d’explorer le modèle (prédictions selon les valeurs des covariables, effet d’une variable, diagnostics) ;\nun site web Quarto (ou un tableau de bord) racontant l’analyse ;\nun poster scientifique (format 36 × 48 po) ;\nun autre format du même niveau, à me proposer (balado, bande dessinée statistique, vidéo de 5 minutes, etc.).\n\nPeu importe le format, vous devez aussi remettre un rapport technique de 8 à 12 pages qui rassemble les livrables des jalons et la conclusion.\nLe produit de communication s’adresse à un public non statisticien. Votre présentation doit donc traduire les résultats en langage clair : parlez de rapport de cotes ou de variation en pourcentage du taux, pas seulement de coefficients \\(\\hat\\beta_j\\).\n\n\nContenu attendu du rapport\n\nQuestion de recherche et description des données.\nNettoyage et analyse exploratoire.\nModèle retenu, avec sa justification.\nEstimation, intervalles de confiance et tests (valeur-\\(p\\)) pour les paramètres d’intérêt.\nSélection de variables et comparaison de modèles.\nDiagnostics et validation (résidus, observations influentes, surdispersion pour Poisson, calibration et courbe ROC pour la logistique, validation croisée).\nInterprétation, limites et ouverture vers d’autres modèles.\nUne section « Ce qui pourrait fausser nos conclusions » (biais de sélection, variables omises, différence entre corrélation et causalité). Si les données concernent des personnes, ajoutez une courte réflexion éthique : qui est dans les données et qui n’y est pas ?"
+  },
+  {
+    "objectID": "Projet/projet.html#jalons",
+    "href": "Projet/projet.html#jalons",
+    "title": "Projet de session",
+    "section": "Jalons",
+    "text": "Jalons\nLe projet comporte cinq jalons. La date de chaque labo sert d’échéance au jalon correspondant, mais vous n’avez pas à attendre le labo pour vous y mettre : un jalon peut être complété avant, il n’est pas nécessaire de le faire en classe pendant le labo. Chaque jalon donne lieu à un livrable court (une à deux pages ou un fichier source).\n\nJalon 1 : choix du jeu de données\nObjectif : former les équipes, choisir une question de recherche et valider la faisabilité.\nTâches :\n\nexplorer au moins deux jeux de données candidats avec str(), summary() et skimr::skim() ;\nénoncer une question de recherche et identifier la variable réponse \\(Y\\) ainsi que les covariables potentielles ;\njustifier le choix entre logistique et Poisson ;\nvérifier les critères du choix de jeu de données ci-dessus.\n\n\n\n\n\n\n\nAstuceExemple\n\n\n\nPour un jeu de données de collisions routières par intersection, vous pourriez poser \\(Y_i \\sim \\text{Poisson}(\\mu_i)\\) avec \\[\n  \\log(\\mu_i) = \\log(t_i) + \\beta_0 + \\beta_1 x_{i1} + \\cdots + \\beta_p x_{ip},\n\\] où \\(t_i\\) est une mesure d’exposition (ici, le trafic moyen) qui entre dans le modèle comme décalage (offset).\n\n\nLivrable : une page de proposition (question, données, variable réponse, modèle envisagé, répartition des tâches). Je l’approuve ou je demande des ajustements.\n\n\nJalon 2 : nettoyage et analyse primaire\nObjectif : connaître ses données avant de modéliser.\nTâches :\n\ndocumenter les variables (type, unité, valeurs permises) dans un dictionnaire de données ;\ntraiter les valeurs manquantes (quantifier, comprendre le mécanisme, choisir une stratégie et la justifier) ;\nrecoder les variables qualitatives (niveaux rares, catégorie de référence) ;\nproduire des statistiques descriptives et des graphiques de \\(Y\\) en fonction de chaque covariable ;\nrepérer les valeurs aberrantes et les problèmes de colinéarité (corrélations, facteurs d’inflation de la variance) ;\nmettre de côté au hasard 20 % des observations (jeu de réserve) sans y toucher avant le Jalon 4 : elles serviront à évaluer honnêtement votre modèle final.\n\n\nlibrary(tidyverse)\ndonnees &lt;- read_csv(\"donnees.csv\")\n\n# proportion de Y selon une covariable qualitative\ndonnees |&gt;\n  group_by(covariable) |&gt;\n  summarise(n = n(), prop = mean(y), .groups = \"drop\")\n\n# valeurs manquantes\ndonnees |&gt; summarise(across(everything(), ~ mean(is.na(.x))))\n\nLivrable : un fichier source qui part des données brutes et produit les données nettoyées et le jeu de réserve, avec une section expliquant chaque décision prise.\n\n\nJalon 3 : ajustement et début d’inférence\nObjectif : ajuster un premier GLM et interpréter les résultats.\nTâches :\n\najuster un modèle complet avec glm() ;\ninterpréter chaque coefficient sur l’échelle du prédicteur linéaire et sur l’échelle naturelle (rapport de cotes \\(e^{\\hat\\beta_j}\\) ou rapport de taux) ;\nconstruire des intervalles de confiance de Wald et par vraisemblance profilée (confint()), puis comparer ;\neffectuer des tests de Wald et des tests du rapport de vraisemblance, en précisant la valeur-\\(p\\) et l’hypothèse testée ;\ntracer l’effet d’une covariable sur la probabilité (ou le taux) prédite, les autres covariables étant fixées.\n\n\najust &lt;- glm(y ~ ., data = donnees_propres, family = binomial)   # ou poisson\nsummary(ajust)\nexp(cbind(OR = coef(ajust), confint(ajust)))\nanova(ajust, test = \"Chisq\")\n\n\n\n\n\n\n\nNoteRemarque\n\n\n\nPour Poisson, vérifiez dès cette étape la surdispersion en comparant la déviance résiduelle à ses degrés de liberté. Si le rapport est nettement supérieur à 1, passez à un modèle quasi-Poisson ou binomial négatif.\n\n\nLivrable : une page d’interprétation écrite pour un lecteur non statisticien.\n\n\nJalon 4 : sélection de variables\nObjectif : comparer des modèles de façon rigoureuse.\nTâches :\n\nsélection pas à pas (step()) avec l’AIC et le BIC, et discussion des limites de cette approche, notamment l’inférence faite après sélection ;\nrégularisation ridge et lasso avec glmnet, choix de \\(\\lambda\\) par validation croisée ;\ncomparaison du pouvoir prédictif par validation croisée, puis une évaluation finale du modèle retenu sur le jeu de réserve (taux de bonne classification, AUC et déviance pour la logistique ; erreur quadratique et déviance pour Poisson) ;\nexamen de la stabilité : les variables retenues changent-elles si l’on rééchantillonne (bootstrap) ?\n\n\nlibrary(glmnet)\nX &lt;- model.matrix(y ~ ., donnees_propres)[, -1]\ncv &lt;- cv.glmnet(X, donnees_propres$y, family = \"binomial\", alpha = 1)\ncoef(cv, s = \"lambda.1se\")\n\nLivrable : un tableau comparatif d’au moins trois modèles (complet, sélectionné, lasso), avec un choix final justifié.\n\n\nJalon 5 : ouverture sur d’autres modèles\nObjectif : voir jusqu’où le GLM est adéquat et ce qui pourrait le remplacer ou le compléter.\nTâches (choisissez-en au moins une) :\n\najouter une relation non linéaire par splines ou par un GAM (mgcv::gam()) et comparer avec le GLM au moyen de l’AIC et de la validation croisée ;\nessayer une méthode de plus proches voisins ou à noyau pour la prédiction ;\ntester un modèle pour données surdispersées (quasi-Poisson, binomial négatif) ou avec excès de zéros (modèle à inflation de zéros) ;\ncomparer avec une méthode d’apprentissage automatique (forêt aléatoire, arbre de décision) et discuter du compromis entre interprétabilité et prédiction.\n\n\nlibrary(mgcv)\ngam1 &lt;- gam(y ~ s(diametre) + s(hauteur) + espece, data = donnees_propres,\n            family = binomial, method = \"REML\")\nplot(gam1, pages = 1)\nAIC(ajust, gam1)\n\nLivrable : une demi-page répondant à la question « le GLM suffit-il ? », appuyée par au moins une comparaison chiffrée."
+  },
+  {
+    "objectID": "Projet/projet.html#évaluation",
+    "href": "Projet/projet.html#évaluation",
+    "title": "Projet de session",
+    "section": "Évaluation",
+    "text": "Évaluation\nLe projet compte pour 45 % de la note finale.\n\n\n\nComposante\nPondération\n\n\n\n\nLivrables des jalons (5 × 3 %)\n15 %\n\n\nRapport technique\n15 %\n\n\nPrésentation et produit de communication\n10 %\n\n\nContribution individuelle (évaluation par les pairs)\n5 %\n\n\nTotal\n45 %\n\n\n\nCritères d’évaluation du rapport et de la présentation :\n\njustesse statistique (modèle adapté, hypothèses vérifiées, inférence correcte) ;\nqualité de l’interprétation (claire, nuancée, liée à la question de départ) ;\nreproductibilité (le document se compile sans intervention) ;\nclarté de la communication (graphiques lisibles, vulgarisation) ;\nprofondeur de l’analyse (diagnostics, sélection de modèle, ouverture)."
+  },
+  {
+    "objectID": "Projet/projet.html#calendrier-suggéré",
+    "href": "Projet/projet.html#calendrier-suggéré",
+    "title": "Projet de session",
+    "section": "Calendrier suggéré",
+    "text": "Calendrier suggéré\nLa date de chaque labo sert d’échéance au jalon correspondant (voir le calendrier du cours et l’onglet Labos). Vous pouvez compléter un jalon avant cette date ; il n’est pas nécessaire d’attendre le labo, ni de faire le travail en classe.\n\n\n\nJalon\nÉchéance\n\n\n\n\nJalon 1 : choix du jeu de données\nLabo 1 — 11 mars\n\n\nJalon 2 : nettoyage et analyse primaire\nLabo 2 — 18 mars\n\n\nJalon 3 : ajustement et début d’inférence\nLabo 3 — 25 mars\n\n\nJalon 4 : sélection de variables\nLabo 4 — 1 avril\n\n\nJalon 5 : ouverture sur d’autres modèles\nLabo 5 — 8 avril\n\n\nPrésentations\n22 avril"
+  },
+  {
+    "objectID": "labos/labo2.html",
+    "href": "labos/labo2.html",
+    "title": "Labo 2",
+    "section": "",
+    "text": "STT-4300 — Régression II"
+  },
+  {
+    "objectID": "labos/labo2.html#objectifs",
+    "href": "labos/labo2.html#objectifs",
+    "title": "Labo 2",
+    "section": "Objectifs",
+    "text": "Objectifs\n\nAjuster des modèles de régression polynomiale, par fonctions constantes par morceaux, et par splines de régression.\nChoisir le degré du polynôme (ou le nombre de nœuds) par un critère d’information (AIC/BIC) et par validation croisée.\nComprendre l’intérêt des splines naturelles et des splines de lissage (smooth.spline) par rapport aux splines de régression classiques."
+  },
+  {
+    "objectID": "labos/labo2.html#mise-en-contexte",
+    "href": "labos/labo2.html#mise-en-contexte",
+    "title": "Labo 2",
+    "section": "Mise en contexte",
+    "text": "Mise en contexte\nOn reprend le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et $X = $ weight.\n\nlibrary(ISLR)\nlibrary(splines)\ndata(Auto)"
+  },
+  {
+    "objectID": "labos/labo2.html#consignes",
+    "href": "labos/labo2.html#consignes",
+    "title": "Labo 2",
+    "section": "Consignes",
+    "text": "Consignes\n\nAjuster des régressions polynomiales de degré \\(p = 1, 2, 3, 5, 10\\) (lm(mpg ~ poly(weight, p, raw=TRUE))). Superposer les courbes ajustées et commenter le comportement aux extrémités du domaine pour les degrés élevés.\nSélectionner le degré \\(p\\) à l’aide de l’AIC/BIC, puis à l’aide de la validation croisée (LOOCV ou 10-fold). Les deux critères mènent-ils à la même valeur de \\(p\\) ?\nAjuster un modèle à fonctions constantes par morceaux avec cut(weight, K) pour quelques valeurs de \\(K\\), et comparer visuellement à la régression polynomiale.\nAjuster une spline de régression cubique avec bs(weight, knots = ...) pour un choix de nœuds que vous justifierez (par exemple les quartiles de weight), puis une spline naturelle avec ns(weight, df = 4). Comparer les deux courbes, en particulier au-delà de la plage des données observées.\nAjuster une spline de lissage avec smooth.spline(Auto$weight, Auto$mpg, cv = TRUE). Rapporter les degrés de liberté effectifs sélectionnés et comparer la courbe obtenue aux splines de régression du point 4.\nConstruire un intervalle de confiance ponctuel pour \\(f(x)\\) autour d’une valeur de \\(x\\) de votre choix, pour le modèle polynomial retenu au point 2.\nRédiger une courte conclusion (5-10 lignes) comparant l’ensemble des méthodes du labo selon : flexibilité, risque de surajustement, interprétabilité, et facilité d’implémentation."
+  },
+  {
+    "objectID": "labos/labo2.html#matériel",
+    "href": "labos/labo2.html#matériel",
+    "title": "Labo 2",
+    "section": "Matériel",
+    "text": "Matériel\n\nNotes de cours : Régression non linéaire — polynômes, fonctions par morceaux et splines\nLibrairies R : splines, ISLR"
+  },
+  {
+    "objectID": "labos/labo4.html",
+    "href": "labos/labo4.html",
+    "title": "Labo 4",
+    "section": "",
+    "text": "STT-4300 — Régression II"
+  },
+  {
+    "objectID": "labos/labo4.html#objectifs",
+    "href": "labos/labo4.html#objectifs",
+    "title": "Labo 4",
+    "section": "Objectifs",
+    "text": "Objectifs\n\nComparer, sur un même jeu de données, l’ensemble des méthodes non paramétriques et non linéaires vues jusqu’ici (kNN, noyau, splines, GAM).\nEstimer et comparer l’erreur de prédiction test de chaque méthode par validation croisée.\nDévelopper un jugement critique sur le choix d’une méthode selon le contexte (nombre de variables, interprétabilité recherchée, taille de l’échantillon)."
+  },
+  {
+    "objectID": "labos/labo4.html#mise-en-contexte",
+    "href": "labos/labo4.html#mise-en-contexte",
+    "title": "Labo 4",
+    "section": "Mise en contexte",
+    "text": "Mise en contexte\nOn utilise le jeu de données College (librairie ISLR), avec $Y = $ Outstate (frais de scolarité hors-État) et $X = $ Expend (dépenses par étudiant).\n\nlibrary(ISLR)\nlibrary(FNN)\nlibrary(KernSmooth)\nlibrary(splines)\nlibrary(mgcv)\ndata(College)"
+  },
+  {
+    "objectID": "labos/labo4.html#consignes",
+    "href": "labos/labo4.html#consignes",
+    "title": "Labo 4",
+    "section": "Consignes",
+    "text": "Consignes\n\nPartitionner les données en un ensemble d’entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à \\(K=10\\) plis réutilisable pour toutes les méthodes suivantes.\nAjuster, sur l’ensemble d’entraînement, chacun des modèles suivants pour prédire Outstate en fonction de Expend :\n\nun modèle linéaire simple (référence) ;\nun estimateur kNN (knn.reg), avec \\(k\\) choisi par validation croisée ;\nun estimateur de noyau (locpoly), avec \\(h\\) choisi par validation croisée ;\nune spline de lissage (smooth.spline, cv = TRUE) ;\nun GAM univarié (gam(Outstate ~ s(Expend))).\n\nPour chaque méthode, calculer l’erreur quadratique moyenne sur l’ensemble test (ou moyenne des erreurs de validation croisée). Présenter les résultats dans un tableau.\nSuperposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points Outstate vs Expend. Commenter les ressemblances et différences.\nExtension multivariée. Ajuster un GAM avec plusieurs prédicteurs, par exemple gam(Outstate ~ s(Room.Board) + s(PhD) + s(perc.alumni) + s(Expend) + s(Grad.Rate), data = College). Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant. Quelles variables semblent avoir un effet non linéaire marqué ?\nRédiger une conclusion (15-20 lignes) qui répond à la question : dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM ? Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d’interprétabilité."
+  },
+  {
+    "objectID": "labos/labo4.html#matériel",
+    "href": "labos/labo4.html#matériel",
+    "title": "Labo 4",
+    "section": "Matériel",
+    "text": "Matériel\n\nNotes de cours : kNN et noyau, Splines, GAM\nLibrairies R : FNN, KernSmooth, splines, mgcv, ISLR"
+  }
+]

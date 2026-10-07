@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Modèles linéaires généralisés (GLM) – Régression II -- STT-4300</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05-prediction-validation-croisee.html" rel="next">
+<link href="./03-regression-logistique.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-186cc4f3b3b5b88b332c09520efa9a33.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-e557378848e27b59c7ac5d3d13486f95.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-186cc4f3b3b5b88b332c09520efa9a33.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+ <script>
+          window.MathJax = {
+            chtml: {
+              linebreaks: { inline: false }
+            },
+            tex: {
+              macros: {
+                bb: "\\boldsymbol\\beta",
+                hb: "\\hat{\\boldsymbol\\beta}",
+                hv: ["\\hat{\\text V}(#1)", 1],
+                hvar: ["\\widehat{\\text{Var}}(#1)", 1],
+                hbj: ["\\hat\\beta_{#1}", 1],
+                hpi: ["\\hat\\pi_{#1}", 1],
+                heta: ["\\hat\\eta_{#1}", 1],
+                hmu: ["\\hat\\mu_{#1}", 1]
+              }
+            }
+          };
+          </script>  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-modeles-lineaires-generalises.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Régression II – STT-4300</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./../index.html" title="Retour au site du cours" class="quarto-navigation-tool px-1" aria-label="Retour au site du cours"><i class="bi bi-house-door"></i></a>
+    <a href="https://github.com/JulienMiron/STT-4300/tree/main/notes/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-regression-lineaire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">0&nbsp;Rappels de régression linéaire</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-regression-logistique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Régression non-paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur de noyau</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./exercices-theoriques.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exercices théoriques</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./exercices-en-classe.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exercices en classe</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#famille-exponentielle" id="toc-famille-exponentielle" class="nav-link active" data-scroll-target="#famille-exponentielle"><span class="header-section-number">3.1</span> Famille exponentielle</a>
+  <ul class="collapse">
+  <li><a href="#définition" id="toc-définition" class="nav-link" data-scroll-target="#définition"><span class="header-section-number">3.1.1</span> Définition</a></li>
+  <li><a href="#mise-en-forme-des-lois-usuelles" id="toc-mise-en-forme-des-lois-usuelles" class="nav-link" data-scroll-target="#mise-en-forme-des-lois-usuelles"><span class="header-section-number">3.1.2</span> Mise en forme des lois usuelles</a></li>
+  </ul></li>
+  <li><a href="#définition-dun-modèle-linéaire-généralisé" id="toc-définition-dun-modèle-linéaire-généralisé" class="nav-link" data-scroll-target="#définition-dun-modèle-linéaire-généralisé"><span class="header-section-number">3.2</span> Définition d’un modèle linéaire généralisé</a></li>
+  <li><a href="#estimation-des-paramètres" id="toc-estimation-des-paramètres" class="nav-link" data-scroll-target="#estimation-des-paramètres"><span class="header-section-number">3.3</span> Estimation des paramètres</a>
+  <ul class="collapse">
+  <li><a href="#vraisemblance-et-score" id="toc-vraisemblance-et-score" class="nav-link" data-scroll-target="#vraisemblance-et-score"><span class="header-section-number">3.3.1</span> Vraisemblance et score</a></li>
+  <li><a href="#loi-asymptotique-de-hb" id="toc-loi-asymptotique-de-hb" class="nav-link" data-scroll-target="#loi-asymptotique-de-hb"><span class="header-section-number">3.3.2</span> loi asymptotique de <span class="math inline">\(\hb\)</span></a></li>
+  <li><a href="#déviance-individuelle" id="toc-déviance-individuelle" class="nav-link" data-scroll-target="#déviance-individuelle"><span class="header-section-number">3.3.3</span> Déviance individuelle</a></li>
+  <li><a href="#estimation-de-phi" id="toc-estimation-de-phi" class="nav-link" data-scroll-target="#estimation-de-phi"><span class="header-section-number">3.3.4</span> Estimation de <span class="math inline">\(\phi\)</span></a></li>
+  </ul></li>
+  <li><a href="#inférence-statistique" id="toc-inférence-statistique" class="nav-link" data-scroll-target="#inférence-statistique"><span class="header-section-number">3.4</span> Inférence statistique</a>
+  <ul class="collapse">
+  <li><a href="#intervalles-de-confiance-et-tests-pour-beta_j" id="toc-intervalles-de-confiance-et-tests-pour-beta_j" class="nav-link" data-scroll-target="#intervalles-de-confiance-et-tests-pour-beta_j"><span class="header-section-number">3.4.1</span> Intervalles de confiance et tests pour <span class="math inline">\(\beta_j\)</span></a></li>
+  <li><a href="#intervalle-de-confiance-pour-une-valeur-prédite" id="toc-intervalle-de-confiance-pour-une-valeur-prédite" class="nav-link" data-scroll-target="#intervalle-de-confiance-pour-une-valeur-prédite"><span class="header-section-number">3.4.2</span> Intervalle de confiance pour une valeur prédite</a></li>
+  <li><a href="#comparaison-de-modèles-emboîtés" id="toc-comparaison-de-modèles-emboîtés" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés"><span class="header-section-number">3.4.3</span> Comparaison de modèles emboîtés</a></li>
+  </ul></li>
+  <li><a href="#sélection-et-validation-de-modèles" id="toc-sélection-et-validation-de-modèles" class="nav-link" data-scroll-target="#sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</a></li>
+  <li><a href="#sec-poisson" id="toc-sec-poisson" class="nav-link" data-scroll-target="#sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression de Poisson</a>
+  <ul class="collapse">
+  <li><a href="#variables-explicatives-offset" id="toc-variables-explicatives-offset" class="nav-link" data-scroll-target="#variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></a></li>
+  <li><a href="#vraisemblance-et-score-1" id="toc-vraisemblance-et-score-1" class="nav-link" data-scroll-target="#vraisemblance-et-score-1"><span class="header-section-number">3.6.2</span> Vraisemblance et score</a></li>
+  <li><a href="#information-de-fisher-et-variance-des-estimateurs" id="toc-information-de-fisher-et-variance-des-estimateurs" class="nav-link" data-scroll-target="#information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">3.6.3</span> Information de Fisher et variance des estimateurs</a></li>
+  <li><a href="#déviance-et-adéquation" id="toc-déviance-et-adéquation" class="nav-link" data-scroll-target="#déviance-et-adéquation"><span class="header-section-number">3.6.4</span> Déviance et adéquation</a></li>
+  <li><a href="#sec-surdispersion" id="toc-sec-surdispersion" class="nav-link" data-scroll-target="#sec-surdispersion"><span class="header-section-number">3.6.5</span> Variabilité extra-Poissonienne</a></li>
+  <li><a href="#comparaison-de-modèles-emboîtés-1" id="toc-comparaison-de-modèles-emboîtés-1" class="nav-link" data-scroll-target="#comparaison-de-modèles-emboîtés-1"><span class="header-section-number">3.6.6</span> Comparaison de modèles emboîtés</a></li>
+  <li><a href="#graphiques-et-observations-aberrantes" id="toc-graphiques-et-observations-aberrantes" class="nav-link" data-scroll-target="#graphiques-et-observations-aberrantes"><span class="header-section-number">3.6.7</span> Graphiques et observations aberrantes</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/notes/04-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-GLM" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">7 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>La régression linéaire et la régression logistique partagent plusieurs concepts : inférence sur les coefficients <span class="math inline">\(\beta\)</span>, sélection de modèles, diagnostics. Ce chapitre en donne une présentation unifiée : on suppose que la loi de la variable réponse appartient à la famille exponentielle, qui inclut notamment les lois normale, de Bernoulli, binomiale, de Poisson et gamma. Les régressions linéaire et logistique, vues aux chapitres précédents, en sont donc des cas particuliers.</p>
+<section id="famille-exponentielle" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="famille-exponentielle"><span class="header-section-number">3.1</span> Famille exponentielle</h2>
+<section id="définition" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="définition"><span class="header-section-number">3.1.1</span> Définition</h3>
+<div class="env-definition" data-titre="Famille exponentielle">
+<p><span class="env-titre">Définition — Famille exponentielle</span></p>
+<p>La loi de la variable aléatoire <span class="math inline">\(Y\)</span> appartient à la famille exponentielle si sa fonction de probabilité (densité si <span class="math inline">\(Y\)</span> est continue, fonction de masse si <span class="math inline">\(Y\)</span> est discrète) s’écrit</p>
+<p><span class="math display">\[
+f_Y(y) = a(y,\phi)\exp\left\{\frac{y\theta - b(\theta)}{\phi}\right\},
+\]</span></p>
+<p>où <span class="math inline">\(\theta\)</span> est le paramètre canonique et <span class="math inline">\(\phi\)</span> le paramètre de dispersion. La fonction <span class="math inline">\(b(\cdot)\)</span> est appelée fonction cumulante.</p>
+</div>
+<p>Cette écriture peut sembler abstraite au premier abord, mais elle a l’avantage de regrouper sous un même formalisme des lois qui semblent, à première vue, très différentes (continues ou discrètes, bornées ou non). Une fois qu’une loi est mise sous cette forme, on peut en déduire directement son espérance et sa variance, sans repasser par le calcul habituel des moments.</p>
+<div class="env-remarque" data-titre="Forme canonique générale">
+<p><span class="env-titre">Remarque — Forme canonique générale</span></p>
+<p>La forme utilisée ci-dessus est celle adaptée aux GLM, où <span class="math inline">\(\phi\)</span> apparaît explicitement comme diviseur. En statistique mathématique, on rencontre plus souvent une écriture encore plus générale, sans référence à <span class="math inline">\(\phi\)</span> :</p>
+<p><span class="math display">\[
+f_Y(y\mid\theta) = h(y)\, c(\theta)\, \exp\left\{\sum_{k=1}^K w_k(\theta)\, t_k(y)\right\},
+\]</span></p>
+<p>où <span class="math inline">\(h(y)\)</span> ne dépend pas de <span class="math inline">\(\theta\)</span>, <span class="math inline">\(c(\theta)\)</span> est une constante de normalisation ne dépendant pas de <span class="math inline">\(y\)</span>, et les <span class="math inline">\(t_k(y)\)</span> sont des statistiques suffisantes associées aux paramètres naturels <span class="math inline">\(w_k(\theta)\)</span>.</p>
+<p>Dans le cas à un seul paramètre naturel (<span class="math inline">\(K=1\)</span>), avec <span class="math inline">\(t_1(y) = y\)</span>, cette écriture se réduit à</p>
+<p><span class="math display">\[
+f_Y(y\mid\theta) = h(y)\exp\left\{w(\theta)\, y - A(\theta)\right\}, \qquad A(\theta) = -\log c(\theta).
+\]</span></p>
+<p>On retrouve la forme du chapitre en posant <span class="math inline">\(w(\theta) = \theta/\phi\)</span> et <span class="math inline">\(A(\theta) = b(\theta)/\phi\)</span> : le paramètre de dispersion <span class="math inline">\(\phi\)</span> se trouve alors absorbé dans le paramètre naturel et dans <span class="math inline">\(h(y)\)</span> plutôt que d’apparaître séparément. Cette forme rappelle en particulier que <span class="math inline">\(Y\)</span> est une statistique suffisante pour <span class="math inline">\(\theta\)</span> dans un GLM, puisque <span class="math inline">\(t(y)=y\)</span>.</p>
+</div>
+<div id="sec-famexp" class="env-propriete" data-titre="Moments d'une variable de la famille exponentielle">
+<p><span class="env-titre">Propriété — Moments d’une variable de la famille exponentielle</span></p>
+<p>Si <span class="math inline">\(Y\)</span> appartient à la famille exponentielle, alors</p>
+<p><span class="math display">\[
+E[Y] = \mu = b'(\theta) \qquad \text{et} \qquad Var[Y] = \phi\, b''(\theta) = \phi\, V(\mu),
+\]</span></p>
+<p>où <span class="math inline">\(V(u) = b''\!\left[(b')^{-1}(u)\right]\)</span> est appelée fonction de variance.</p>
+</div>
+<div class="env-theo" data-titre="Calcul de tous les moments par la fonction génératrice des cumulants">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Calcul de tous les moments par la fonction génératrice des cumulants</span></p>
+<p>La propriété précédente ne donne que le premier moment et la variance. On peut en fait obtenir <em>tous</em> les moments de <span class="math inline">\(Y\)</span> en passant par sa fonction génératrice des moments (MGF).</p>
+<p><strong>Fonction génératrice des moments.</strong> Pour <span class="math inline">\(Y\)</span> de densité <span class="math inline">\(f_Y(y) = a(y,\phi)\exp\{(y\theta-b(\theta))/\phi\}\)</span>,</p>
+<p><span class="math display">\[
+M_Y(t) = E[e^{tY}] = \int a(y,\phi)\exp\left\{\frac{y(\theta+t\phi) - b(\theta)}{\phi}\right\}dy.
+\]</span></p>
+<p>Puisque <span class="math inline">\(f_Y\)</span> s’intègre à <span class="math inline">\(1\)</span> pour tout paramètre canonique valide <span class="math inline">\(\theta'\)</span>, on sait que</p>
+<p><span class="math display">\[
+\int a(y,\phi)\exp\left\{\frac{y\theta'}{\phi}\right\}dy = \exp\left\{\frac{b(\theta')}{\phi}\right\}.
+\]</span></p>
+<p>En posant <span class="math inline">\(\theta' = \theta+t\phi\)</span> dans l’intégrale de <span class="math inline">\(M_Y(t)\)</span>, celle-ci se réduit à</p>
+<p><span class="math display">\[
+M_Y(t) = \exp\left\{\frac{b(\theta+t\phi) - b(\theta)}{\phi}\right\}.
+\]</span></p>
+<p><strong>Fonction génératrice des cumulants.</strong> En prenant le logarithme de <span class="math inline">\(M_Y(t)\)</span>, on obtient la fonction génératrice des cumulants (CGF) :</p>
+<p><span class="math display">\[
+K(t) = \log M_Y(t) = \frac{b(\theta+t\phi) - b(\theta)}{\phi}.
+\]</span></p>
+<p>Les cumulants <span class="math inline">\(\kappa_n\)</span> de <span class="math inline">\(Y\)</span> sont par définition les dérivées de <span class="math inline">\(K(t)\)</span> évaluées en <span class="math inline">\(t=0\)</span>. En dérivant <span class="math inline">\(n\)</span> fois par rapport à <span class="math inline">\(t\)</span> (la dérivation porte uniquement sur <span class="math inline">\(\theta+t\phi\)</span>, chaque dérivation faisant sortir un facteur <span class="math inline">\(\phi\)</span>),</p>
+<p><span class="math display">\[
+K^{(n)}(t) = \phi^{\,n-1}\, b^{(n)}(\theta+t\phi) \qquad\Longrightarrow\qquad \kappa_n = K^{(n)}(0) = \phi^{\,n-1}\, b^{(n)}(\theta).
+\]</span></p>
+<p>Ainsi, chaque cumulant de <span class="math inline">\(Y\)</span> s’obtient simplement en dérivant <span class="math inline">\(n\)</span> fois la fonction cumulante <span class="math inline">\(b(\theta)\)</span>, puis en multipliant par <span class="math inline">\(\phi^{n-1}\)</span> — d’où le nom de <span class="math inline">\(b(\theta)\)</span>. On retrouve en particulier <span class="math inline">\(\kappa_1 = b'(\theta) = \mu\)</span> et <span class="math inline">\(\kappa_2 = \phi\, b''(\theta) = \phi\, V(\mu)\)</span>, conformément à la propriété précédente.</p>
+<p><strong>Des cumulants aux moments.</strong> Les cumulants d’ordre supérieur donnent accès aux caractéristiques de forme de la loi, par les relations cumulants-moments usuelles, par exemple :</p>
+<p><span class="math display">\[
+\kappa_3 = E[(Y-\mu)^3] \qquad\text{(asymétrie)}, \qquad \kappa_4 = E[(Y-\mu)^4] - 3\kappa_2^2 \qquad\text{(aplatissement en excès)}.
+\]</span></p>
+</div>
+<p>Le paramètre canonique <span class="math inline">\(\theta\)</span> est donc directement lié à l’espérance de <span class="math inline">\(Y\)</span> (via <span class="math inline">\(\mu = b'(\theta)\)</span>), tandis que le paramètre de dispersion <span class="math inline">\(\phi\)</span> module l’amplitude de la variance autour de la fonction de variance <span class="math inline">\(V(\mu)\)</span>, qui elle dépend de la loi choisie. Pour certaines lois (Bernoulli, binomiale, Poisson), <span class="math inline">\(\phi\)</span> est fixé à 1 : la variance ne dépend alors que de la moyenne, une contrainte qu’il faudra garder à l’œil lors des diagnostics (voir la <a href="#sec-surdispersion">surdispersion</a>).</p>
+</section>
+<section id="mise-en-forme-des-lois-usuelles" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="mise-en-forme-des-lois-usuelles"><span class="header-section-number">3.1.2</span> Mise en forme des lois usuelles</h3>
+<p>Pour identifier <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\phi\)</span>, <span class="math inline">\(a(y,\phi)\)</span> et <span class="math inline">\(b(\theta)\)</span> pour une loi donnée, la démarche est toujours la même : on part de la fonction de probabilité, on prend son logarithme, et on réarrange les termes pour faire apparaître la forme <span class="math inline">\(\{y\theta - b(\theta)\}/\phi\)</span>, tout ce qui reste (ne dépendant pas de <span class="math inline">\(\theta\)</span>) formant <span class="math inline">\(\log a(y,\phi)\)</span>.</p>
+<div class="env-exemple" data-titre="Loi normale">
+<p><span class="env-titre">Exemple — Loi normale</span></p>
+<p>Soit <span class="math inline">\(Y\sim\mathcal{N}(\mu,\sigma^2)\)</span>, de densité</p>
+<p><span class="math display">\[
+f_Y(y) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{-\frac{(y-\mu)^2}{2\sigma^2}\right\}.
+\]</span></p>
+<p>En développant le carré au numérateur de l’exposant,</p>
+<p><span class="math display">\[
+-\frac{(y-\mu)^2}{2\sigma^2} = \frac{y\mu - \mu^2/2}{\sigma^2} - \frac{y^2}{2\sigma^2},
+\]</span></p>
+<p>on obtient</p>
+<p><span class="math display">\[
+f_Y(y) = \underbrace{\frac{1}{\sqrt{2\pi\sigma^2}}\exp\left\{\frac{-y^2}{2\sigma^2}\right\}}_{a(y,\phi)}\exp\left\{\frac{y\mu - \mu^2/2}{\sigma^2}\right\}.
+\]</span></p>
+<p>En comparant à la forme générale :</p>
+<p><span class="math display">\[
+\theta = \mu, \qquad \phi = \sigma^2, \qquad b(\theta) = \frac{\mu^2}{2}.
+\]</span></p>
+<p>On vérifie que</p>
+<p><span class="math display">\[
+b'(\theta) = \theta = \mu, \qquad b''(\theta) = 1.
+\]</span></p>
+<p>D’où</p>
+<p><span class="math display">\[
+E[Y] = \mu, \qquad Var[Y] = \sigma^2 \times 1 = \sigma^2, \qquad V(\mu) = 1.
+\]</span></p>
+<p>La variance ne dépend donc pas de la moyenne.</p>
+</div>
+<div class="env-exemple" data-titre="Loi binomiale">
+<p><span class="env-titre">Exemple — Loi binomiale</span></p>
+<p>Soit <span class="math inline">\(Y\sim\mathrm{Bin}(m,\pi)\)</span>, de fonction de masse</p>
+<p><span class="math display">\[
+P(Y=y) = \binom{m}{y}\pi^y(1-\pi)^{m-y}, \qquad y = 0,1,\ldots,m.
+\]</span></p>
+<p>On isole d’abord le terme en <span class="math inline">\(y\)</span> dans l’exponentielle :</p>
+<p><span class="math display">\[
+\pi^y(1-\pi)^{m-y} = \exp\left\{y\log(\pi) + (m-y)\log(1-\pi)\right\} = \exp\left\{y\log\!\left(\frac{\pi}{1-\pi}\right) + m\log(1-\pi)\right\}.
+\]</span></p>
+<p>Ce qui permet la réécriture</p>
+<p><span class="math display">\[
+P(Y=y) = \binom{m}{y}\exp\left\{y\log\!\left(\frac{\pi}{1-\pi}\right) + m\log(1-\pi)\right\}, \qquad y = 0,1,\ldots,m.
+\]</span></p>
+<p>On identifie donc</p>
+<p><span class="math display">\[
+\theta = \log\!\left(\frac{\pi}{1-\pi}\right), \qquad \phi = 1, \qquad a(y,\phi) = \binom{m}{y}.
+\]</span></p>
+<p>Le paramètre canonique <span class="math inline">\(\theta\)</span> est ici le logit de <span class="math inline">\(\pi\)</span>, ce qui explique pourquoi ce lien est dit <em>canonique</em> pour la loi binomiale.</p>
+<p>Comme <span class="math inline">\(\pi = e^\theta/(1+e^\theta)\)</span>, on a</p>
+<p><span class="math display">\[
+1-\pi = \frac{1}{1+e^\theta} \qquad\Longrightarrow\qquad \log(1-\pi) = -\log(1+e^\theta).
+\]</span></p>
+<p>D’où</p>
+<p><span class="math display">\[
+b(\theta) = -m\log(1-\pi) = m\log(1+e^\theta).
+\]</span></p>
+<p>On vérifie que</p>
+<p><span class="math display">\[
+b'(\theta) = m\pi = E[Y], \qquad b''(\theta) = m\pi(1-\pi) = Var[Y].
+\]</span></p>
+<p>En substituant <span class="math inline">\(\mu = m\pi\)</span>, on obtient</p>
+<p><span class="math display">\[
+V(\mu) = \frac{\mu(m-\mu)}{m}.
+\]</span></p>
+</div>
+<div class="env-exemple" data-titre="Loi de Poisson">
+<p><span class="env-titre">Exemple — Loi de Poisson</span></p>
+<p>Soit <span class="math inline">\(Y\sim\mathcal{P}(\lambda)\)</span>, de fonction de masse</p>
+<p><span class="math display">\[
+P(Y=y) = \frac{\lambda^y e^{-\lambda}}{y!} = \frac{1}{y!}\exp\left\{y\log(\lambda) - \lambda\right\}, \qquad y = 0,1,2,\ldots
+\]</span></p>
+<p>On identifie directement</p>
+<p><span class="math display">\[
+\theta = \log(\lambda), \qquad \phi = 1, \qquad a(y,\phi) = \frac{1}{y!}, \qquad b(\theta) = \lambda = e^\theta.
+\]</span></p>
+<p>On a</p>
+<p><span class="math display">\[
+b'(\theta) = e^\theta = \lambda, \qquad b''(\theta) = e^\theta = \lambda.
+\]</span></p>
+<p>Ceci redonne la propriété bien connue</p>
+<p><span class="math display">\[
+E[Y] = Var[Y] = \lambda, \qquad V(\mu) = \mu.
+\]</span></p>
+</div>
+<div class="env-exemple" data-titre="Loi gamma">
+<p><span class="env-titre">Exemple — Loi gamma</span></p>
+<p>La loi gamma est habituellement paramétrée par sa forme <span class="math inline">\(\alpha\)</span> et son taux (ou son échelle) <span class="math inline">\(\beta\)</span>. Pour l’écrire sous forme exponentielle avec un paramètre canonique lié directement à la moyenne, on la reparamétrise avec</p>
+<p><span class="math display">\[
+\mu = \alpha\beta \quad\text{(la moyenne)}, \qquad \phi = \frac{1}{\alpha}.
+\]</span></p>
+<p>Après réarrangement, on obtient</p>
+<p><span class="math display">\[
+\theta = -\frac{1}{\mu}, \qquad b(\theta) = -\log(-\theta).
+\]</span></p>
+<p>On vérifie que</p>
+<p><span class="math display">\[
+b'(\theta) = -\frac{1}{\theta} = \mu, \qquad b''(\theta) = \frac{1}{\theta^2} = \mu^2.
+\]</span></p>
+<p>D’où</p>
+<p><span class="math display">\[
+Var[Y] = \phi\mu^2, \qquad V(\mu) = \mu^2.
+\]</span></p>
+<p>Contrairement aux trois exemples précédents, la variance croît ici avec le carré de la moyenne.</p>
+</div>
+<p>Le tableau suivant résume ces résultats :</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>loi</th>
+<th><span class="math inline">\(\theta\)</span></th>
+<th><span class="math inline">\(\phi\)</span></th>
+<th><span class="math inline">\(b(\theta)\)</span></th>
+<th><span class="math inline">\(V(\mu)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\mathcal{N}(\mu,\sigma^2)\)</span></td>
+<td><span class="math inline">\(\mu\)</span></td>
+<td><span class="math inline">\(\sigma^2\)</span></td>
+<td><span class="math inline">\(\theta^2/2\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathrm{Bin}(m,\pi)\)</span></td>
+<td><span class="math inline">\(\log\{\pi/(1-\pi)\}\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(m\log(1+e^\theta)\)</span></td>
+<td><span class="math inline">\(\mu(m-\mu)/m\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\mathcal{P}(\lambda)\)</span></td>
+<td><span class="math inline">\(\log(\lambda)\)</span></td>
+<td><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(e^\theta\)</span></td>
+<td><span class="math inline">\(\mu\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathrm{Gamma}(\mu,\phi)\)</span></td>
+<td><span class="math inline">\(-1/\mu\)</span></td>
+<td><span class="math inline">\(\phi\)</span></td>
+<td><span class="math inline">\(-\log(-\theta)\)</span></td>
+<td><span class="math inline">\(\mu^2\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="définition-dun-modèle-linéaire-généralisé" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="définition-dun-modèle-linéaire-généralisé"><span class="header-section-number">3.2</span> Définition d’un modèle linéaire généralisé</h2>
+<div class="env-definition" data-titre="Modèle linéaire généralisé">
+<p><span class="env-titre">Définition — Modèle linéaire généralisé</span></p>
+<p>Un modèle linéaire généralisé (GLM) est composé de trois éléments :</p>
+<ol type="1">
+<li><p>Composante aléatoire : <span class="math inline">\(Y_i\)</span> suit une loi de la famille exponentielle de paramètres <span class="math inline">\((\theta_i, \phi)\)</span>. Chaque observation possède son propre paramètre canonique <span class="math inline">\(\theta_i\)</span>, mais le paramètre de dispersion <span class="math inline">\(\phi\)</span> est commun à toutes les observations. Ainsi <span class="math inline">\(E[Y_i] = \mu_i = b'(\theta_i)\)</span> et <span class="math inline">\(Var[Y_i] = \phi\, V(\mu_i)\)</span>.</p></li>
+<li><p>Composante systématique : le prédicteur linéaire <span class="math inline">\(\eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}\)</span>, qui combine linéairement les variables explicatives.</p></li>
+<li><p>Fonction de lien : une fonction <span class="math inline">\(g\)</span>, monotone et dérivable, qui relie l’espérance <span class="math inline">\(\mu_i\)</span> au prédicteur linéaire par <span class="math inline">\(g(\mu_i) = \eta_i\)</span>.</p></li>
+</ol>
+</div>
+<div class="env-definition" data-titre="Lien canonique">
+<p><span class="env-titre">Définition — Lien canonique</span></p>
+<p>La fonction de lien est dite canonique lorsqu’elle égale directement <span class="math inline">\(\eta_i\)</span> au paramètre canonique <span class="math inline">\(\theta_i\)</span>, c’est-à-dire lorsque <span class="math inline">\(g[b'(u)] = u\)</span> pour tout <span class="math inline">\(u\)</span>. C’est le choix qui apparaît naturellement lorsqu’on écrit la loi sous forme exponentielle : par exemple, pour la loi binomiale, <span class="math inline">\(\theta = \text{logit}(\pi)\)</span>, d’où le lien logit ; pour la loi de Poisson, <span class="math inline">\(\theta = \log(\lambda)\)</span>, d’où le lien log.</p>
+</div>
+<p>Les paramètres du modèle sont donc <span class="math inline">\(\boldsymbol\beta = (\beta_0,\ldots,\beta_p)^\top\)</span> et <span class="math inline">\(\phi\)</span>. On retrouve comme cas particuliers la régression linéaire (loi normale, lien identité), la régression logistique (loi binomiale, lien logit) et la régression de Poisson (loi de Poisson, lien log). Rien n’empêche cependant d’utiliser un lien non canonique ; le lien canonique n’a pas de statut privilégié sur le plan de l’interprétation, mais il simplifie certains calculs, comme on le verra à la section suivante.</p>
+</section>
+<section id="estimation-des-paramètres" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="estimation-des-paramètres"><span class="header-section-number">3.3</span> Estimation des paramètres</h2>
+<section id="vraisemblance-et-score" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="vraisemblance-et-score"><span class="header-section-number">3.3.1</span> Vraisemblance et score</h3>
+<p>La log-vraisemblance des données <span class="math inline">\(\Delta = \{(Y_i,X_i)\}\)</span> s’écrit, en sommant les contributions individuelles données par la forme exponentielle,</p>
+<p><span class="math display">\[
+\ell(\boldsymbol\beta,\phi\mid\Delta) = \sum_{i=1}^n\log[a(y_i,\phi)] + \frac{1}{\phi}\sum_{i=1}^n[y_i\theta_i - b(\theta_i)] = \ell_1(\phi) + \frac{1}{\phi}\, \ell_2(\boldsymbol\beta).
+\]</span></p>
+<p>Le point important est que <span class="math inline">\(\theta_i\)</span> dépend de <span class="math inline">\(\boldsymbol\beta\)</span> (indirectement, via <span class="math inline">\(\mu_i = g^{-1}(\eta_i)\)</span> puis <span class="math inline">\(\theta_i = (b')^{-1}(\mu_i)\)</span>), mais que <span class="math inline">\(\phi\)</span> n’apparaît que comme facteur multiplicatif devant <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> et dans le terme <span class="math inline">\(\ell_1(\phi)\)</span>, qui ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>. Il s’ensuit que l’estimateur du maximum de vraisemblance <span class="math inline">\(\hb\)</span> maximise <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> seul, peu importe la valeur de <span class="math inline">\(\phi\)</span> : l’estimation de <span class="math inline">\(\boldsymbol\beta\)</span> et celle de <span class="math inline">\(\phi\)</span> se font donc de façon séparée.</p>
+<p>Comme pour la régression logistique, il n’existe généralement pas de solution analytique à ce problème de maximisation, à cause de la fonction de lien <span class="math inline">\(g\)</span>, qui introduit une relation non linéaire entre <span class="math inline">\(\boldsymbol\beta\)</span> et l’espérance <span class="math inline">\(\mu_i\)</span>. On résout donc numériquement l’équation du score par l’algorithme IRLS (<em>Iteratively Reweighted Least Squares</em>), une application de la méthode de Fisher scoring à ce problème : à chaque itération, on ajuste une régression linéaire pondérée dont les poids et la variable réponse transformée sont mis à jour à partir des valeurs ajustées courantes, jusqu’à convergence.</p>
+</section>
+<section id="loi-asymptotique-de-hb" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="loi-asymptotique-de-hb"><span class="header-section-number">3.3.2</span> loi asymptotique de <span class="math inline">\(\hb\)</span></h3>
+<div class="env-propriete" data-titre="loi asymptotique de l'estimateur du maximum de vraisemblance">
+<p><span class="env-titre">Propriété — loi asymptotique de l’estimateur du maximum de vraisemblance</span></p>
+<p>L’estimateur <span class="math inline">\(\hb\)</span> obtenu par maximisation de <span class="math inline">\(\ell_2(\boldsymbol\beta)\)</span> a pour loi asymptotique</p>
+<p><span class="math display">\[
+\hb \ \overset{\cdot}{\sim}\ \mathcal{N}\left\{\boldsymbol\beta,\ \phi\,(X^\top W X)^{-1}\right\},
+\]</span></p>
+<p>où <span class="math inline">\(X\)</span> est la matrice de design, <span class="math inline">\(W = \mathrm{diag}\{W_1,\ldots,W_n\}\)</span> et</p>
+<p><span class="math display">\[
+W_i = \frac{1}{V(\hat\mu_i)\left[g'(\hat\mu_i)\right]^2},
+\]</span></p>
+<p>avec <span class="math inline">\(\hat\mu_i = g^{-1}(\hat\eta_i)\)</span> et <span class="math inline">\(\hat\eta_i = \hat\beta_0 + \hat\beta_1 X_{i1} + \cdots + \hat\beta_p X_{ip}\)</span>.</p>
+</div>
+<p>Cette forme englobe les résultats vus aux chapitres précédents : en régression linéaire (<span class="math inline">\(V(\mu)=1\)</span>, <span class="math inline">\(g'(\mu)=1\)</span>), <span class="math inline">\(W_i = 1\)</span> pour tout <span class="math inline">\(i\)</span> et on retrouve la variance usuelle des moindres carrés ; en régression logistique (<span class="math inline">\(m_i=1\)</span>), on retrouve <span class="math inline">\(w_i = \hat\mu_i(1-\hat\mu_i)\)</span> après simplification.</p>
+</section>
+<section id="déviance-individuelle" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="déviance-individuelle"><span class="header-section-number">3.3.3</span> Déviance individuelle</h3>
+<p>Comme au chapitre sur la <a href="03-regression-logistique.html#sec-deviance">régression logistique</a>, on veut comparer l’ajustement <span class="math inline">\(\mu\)</span> d’un modèle à l’ajustement parfait <span class="math inline">\(y\)</span>, et ce pour n’importe quelle loi de la famille exponentielle. Posons</p>
+<p><span class="math display">\[
+t(y,\mu) = y\theta - b(\theta),
+\]</span></p>
+<p>la partie de la log-vraisemblance individuelle qui dépend de <span class="math inline">\(\theta\)</span> (donc de <span class="math inline">\(\mu\)</span>, puisque <span class="math inline">\(\mu = b'(\theta)\)</span>). La déviance individuelle est alors définie, comme dans le cas binomial, par deux fois la différence entre la vraisemblance évaluée en l’ajustement parfait et celle évaluée en <span class="math inline">\(\mu\)</span> :</p>
+<p><span class="math display">\[
+d(y,\mu) = 2\left\{t(y,y) - t(y,\mu)\right\}.
+\]</span></p>
+<div class="env-propriete" data-titre="Non-négativité de la déviance individuelle">
+<p><span class="env-titre">Propriété — Non-négativité de la déviance individuelle</span></p>
+<p>En dérivant <span class="math inline">\(d(y,\mu)\)</span> par rapport à <span class="math inline">\(\theta\)</span> (le paramètre canonique associé à <span class="math inline">\(\mu\)</span>),</p>
+<p><span class="math display">\[
+\frac{\partial d(y,\mu)}{\partial\theta} = -\{y - b'(\theta)\} \qquad \text{et} \qquad \frac{\partial^2 d(y,\mu)}{\partial\theta^2} = b''(\theta) = V(\mu) &gt; 0.
+\]</span></p>
+<p>La dérivée première s’annule lorsque <span class="math inline">\(\mu = y\)</span>, et la dérivée seconde est toujours positive : <span class="math inline">\(d(y,\mu)\)</span> atteint donc un minimum en <span class="math inline">\(\mu=y\)</span>, où elle vaut <span class="math inline">\(0\)</span>. Ainsi <span class="math inline">\(d(y,\mu) \geq 0\)</span> pour tout <span class="math inline">\(\mu\)</span>, avec égalité si et seulement si <span class="math inline">\(\mu = y\)</span>.</p>
+</div>
+<p>Pour la loi normale, on retrouve <span class="math inline">\(d(y,\mu) = (y-\mu)^2\)</span> : la déviance individuelle généralise donc directement le carré du résidu utilisé en régression linéaire classique.</p>
+<div class="env-propriete" data-titre="loi asymptotique de la déviance">
+<p><span class="env-titre">Propriété — loi asymptotique de la déviance</span></p>
+<p>On montre que <span class="math inline">\(d(Y,\mu)/\phi\)</span> suit approximativement une loi <span class="math inline">\(\chi^2_1\)</span>. Pour des variables indépendantes <span class="math inline">\(\{Y_1,\ldots,Y_n\}\)</span> de paramètres <span class="math inline">\((\mu_i,\phi)\)</span>, où le paramètre de dispersion <span class="math inline">\(\phi\)</span> est commun à toutes les observations, la déviance et la déviance standardisée du modèle sont</p>
+<p><span class="math display">\[
+D(y,\mu) = \sum_{i=1}^n d(y_i,\mu_i) \qquad\text{et}\qquad D^*(y,\mu) = \frac{D(y,\mu)}{\phi} \ \overset{\cdot}{\sim}\ \chi^2_n.
+\]</span></p>
+</div>
+<div class="env-remarque" data-titre="Le cas normal">
+<p><span class="env-titre">Remarque — Le cas normal</span></p>
+<p>Dans le cas de la loi normale, on a</p>
+<p><span class="math display">\[
+D^*(y,\mu) = \frac{D(y,\mu)}{\phi} = \frac{\sum_{i=1}^n (y_i-\mu_i)^2}{\sigma^2} \sim \chi^2_n,
+\]</span></p>
+<p>qui n’est pas une approximation, mais bien la loi exacte de la déviance standardisée.</p>
+</div>
+</section>
+<section id="estimation-de-phi" class="level3" data-number="3.3.4">
+<h3 data-number="3.3.4" class="anchored" data-anchor-id="estimation-de-phi"><span class="header-section-number">3.3.4</span> Estimation de <span class="math inline">\(\phi\)</span></h3>
+<p>Si <span class="math inline">\(\phi\)</span> est fixé par la loi (Bernoulli, binomiale, Poisson), la procédure d’estimation s’arrête à <span class="math inline">\(\hb\)</span>. Autrement (loi normale, gamma), <span class="math inline">\(\phi\)</span> doit lui aussi être estimé. L’estimateur du maximum de vraisemblance de <span class="math inline">\(\phi\)</span> est biaisé en petits échantillons, ce qui motive l’usage d’estimateurs par la <a href="#theo-estim-phi">méthode des moments</a> plutôt que de rechercher directement le maximum de <span class="math inline">\(\ell_1(\phi)\)</span>.</p>
+<p>On calcule pour cela deux statistiques, qui généralisent la statistique du khi-deux de Pearson et la déviance vues en régression logistique :</p>
+<p><span class="math display">\[
+X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{V(\hat\mu_i)} \qquad\text{et}\qquad D(y,\hat\mu) = \sum_{i=1}^n d(y_i,\hat\mu_i).
+\]</span></p>
+<p>Ces deux statistiques, une fois divisées par <span class="math inline">\(\phi\)</span>, suivent approximativement une loi <span class="math inline">\(\chi^2_{n-(p+1)}\)</span>, ce qui mène directement aux estimateurs de Pearson et de déviance :</p>
+<p><span class="math display">\[
+\tilde\phi_P = \frac{X^2}{n-(p+1)}, \qquad \tilde\phi_D = \frac{D(y,\hat\mu)}{n-(p+1)}.
+\]</span></p>
+<div class="env-remarque" data-titre="Lequel choisir?">
+<p><span class="env-titre">Remarque — Lequel choisir?</span></p>
+<p>L’estimateur de Pearson possède un biais négligeable et demeure raisonnablement robuste à une mauvaise spécification de la loi ; c’est l’estimateur utilisé par défaut par la fonction <code>glm</code> de R. L’estimateur de déviance a une variance plus faible en général, mais peut devenir instable lorsque des valeurs de <span class="math inline">\(y\)</span> sont proches des bornes de leur support (par exemple, <span class="math inline">\(y\)</span> près de <span class="math inline">\(0\)</span> pour la loi gamma).</p>
+</div>
+<div id="theo-estim-phi" class="env-theo" data-titre="Estimateurs de $\phi$ par la méthode des moments">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Estimateurs de <span class="math inline">\(\phi\)</span> par la méthode des moments</span></p>
+<p>On cherche un estimateur de <span class="math inline">\(\phi\)</span> à partir des deux statistiques</p>
+<p><span class="math display">\[
+X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{V(\hat\mu_i)}, \qquad D(y,\hat\mu) = \sum_{i=1}^n d(y_i,\hat\mu_i),
+\]</span></p>
+<p>sachant que chacune, une fois divisée par <span class="math inline">\(\phi\)</span>, suit approximativement une loi du khi-deux :</p>
+<p><span class="math display">\[
+\frac{X^2}{\phi} \ \overset{\cdot}{\sim}\ \chi^2_{n-(p+1)}, \qquad \frac{D(y,\hat\mu)}{\phi} \ \overset{\cdot}{\sim}\ \chi^2_{n-(p+1)}.
+\]</span></p>
+<p><strong>Espérance d’une loi du khi-deux.</strong> Une variable suivant une loi <span class="math inline">\(\chi^2_d\)</span> a pour espérance <span class="math inline">\(d\)</span>. En appliquant ce fait aux deux quantités ci-dessus,</p>
+<p><span class="math display">\[
+E\!\left[\frac{X^2}{\phi}\right] \approx n-(p+1), \qquad E\!\left[\frac{D(y,\hat\mu)}{\phi}\right] \approx n-(p+1).
+\]</span></p>
+<p><strong>Isoler <span class="math inline">\(\phi\)</span>.</strong> Le paramètre <span class="math inline">\(\phi\)</span> est une constante, pas une variable aléatoire ; il peut donc sortir de l’espérance dans chacune des deux expressions :</p>
+<p><span class="math display">\[
+\frac{E[X^2]}{\phi} \approx n-(p+1), \qquad \frac{E[D(y,\hat\mu)]}{\phi} \approx n-(p+1).
+\]</span></p>
+<p>En résolvant pour <span class="math inline">\(\phi\)</span>,</p>
+<p><span class="math display">\[
+\phi \approx \frac{E[X^2]}{n-(p+1)}, \qquad \phi \approx \frac{E[D(y,\hat\mu)]}{n-(p+1)}.
+\]</span></p>
+<p><strong>Substitution empirique.</strong> La méthode des moments consiste précisément à remplacer une espérance théorique, qu’on ne connaît pas, par sa valeur observée. On remplace donc <span class="math inline">\(E[X^2]\)</span> par <span class="math inline">\(X^2\)</span> et <span class="math inline">\(E[D(y,\hat\mu)]\)</span> par <span class="math inline">\(D(y,\hat\mu)\)</span>, ce qui donne les deux estimateurs :</p>
+<p><span class="math display">\[
+\tilde\phi_P = \frac{X^2}{n-(p+1)}, \qquad \tilde\phi_D = \frac{D(y,\hat\mu)}{n-(p+1)}.
+\]</span></p>
+<p>La division par <span class="math inline">\(n-(p+1)\)</span> plutôt que par <span class="math inline">\(n\)</span> permet en plus d’obtenir un estimateur sans biais.</p>
+</div>
+</section>
+</section>
+<section id="inférence-statistique" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="inférence-statistique"><span class="header-section-number">3.4</span> Inférence statistique</h2>
+<section id="intervalles-de-confiance-et-tests-pour-beta_j" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="intervalles-de-confiance-et-tests-pour-beta_j"><span class="header-section-number">3.4.1</span> Intervalles de confiance et tests pour <span class="math inline">\(\beta_j\)</span></h3>
+<p><strong>Cas où <span class="math inline">\(\phi\)</span> est fixé.</strong> Comme en régression logistique, les intervalles de confiance et les tests concernant <span class="math inline">\(\boldsymbol\beta\)</span> reposent sur la normalité asymptotique de <span class="math inline">\(\hb\)</span>. Un intervalle de confiance de niveau <span class="math inline">\((1-\alpha)\)</span> pour <span class="math inline">\(\beta_j\)</span> est</p>
+<p><span class="math display">\[
+\left[\hbj{j} - z_{\alpha/2}\sqrt{\phi\, v_j}\,;\ \hbj{j} + z_{\alpha/2}\sqrt{\phi\, v_j}\right],
+\]</span></p>
+<p>où <span class="math inline">\(v_j\)</span> est le <span class="math inline">\((j+1)^{\text{ème}}\)</span> élément diagonal de <span class="math inline">\((X^\top W X)^{-1}\)</span> et <span class="math inline">\(z_\gamma\)</span> est le quantile de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> défini par <span class="math inline">\(P(Z&gt;z_\gamma)=\gamma\)</span>. Le test de <span class="math inline">\(H_0 : \beta_j = 0\)</span> se fait exactement comme au chapitre précédent, avec <span class="math inline">\(z_{obs} = \hbj{j}/\sqrt{\phi\, v_j}\)</span>.</p>
+<p><strong>Cas où <span class="math inline">\(\phi\)</span> est inconnu.</strong> On remplace <span class="math inline">\(\phi\)</span> par son estimateur <span class="math inline">\(\tilde\phi_P\)</span>, et les quantiles de la <span class="math inline">\(\mathcal{N}(0,1)\)</span> par ceux de la loi de Student à <span class="math inline">\(n-(p+1)\)</span> degrés de liberté, pour tenir compte de l’incertitude additionnelle introduite par l’estimation de <span class="math inline">\(\phi\)</span> :</p>
+<p><span class="math display">\[
+\left[\hbj{j} - t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\,;\ \hbj{j} + t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\right].
+\]</span></p>
+<div class="env-theo" data-titre="Les intervalles de confiance">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Les intervalles de confiance</span></p>
+<p>Le cas <span class="math inline">\(\phi\)</span> inconnu regroupe en réalité deux situations de nature théorique différente.</p>
+<p>Pour la gaussienne, la gamma ou l’inverse gaussienne, <span class="math inline">\(\phi\)</span> est un paramètre naturel de la famille exponentielle. L’intervalle de confiance basé sur la loi de Student à <span class="math inline">\(n-(p+1)\)</span> degrés de liberté découle alors directement de la théorie de la vraisemblance exacte.</p>
+<p>Pour les modèles quasi-Poisson et quasi-binomiale (cas de surdispersion), la situation est différente : Poisson et la binomiale imposent nominalement <span class="math inline">\(\phi=1\)</span>, et ne sont donc pas de vraies familles exponentielles à dispersion libre. Lorsqu’on observe de la surdispersion, on relâche cette contrainte en introduisant un <span class="math inline">\(\phi\)</span> libre estimé par <span class="math inline">\(\tilde\phi_P\)</span>, sans changer la fonction de variance sous-jacente. On obtient alors le même intervalle</p>
+<p><span class="math display">\[
+\left[\hbj{j} - t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\,;\ \hbj{j} + t_{\alpha/2,\,n-(p+1)}\sqrt{\tilde\phi_P\, v_j}\right],
+\]</span></p>
+<p>mais sa justification repose sur une approximation asymptotique via la quasi-vraisemblance plutôt que sur la théorie exacte de la vraisemblance. Le résultat pratique est identique, mais la garantie théorique est un peu plus faible que dans le cas d’une vraie famille exponentielle à dispersion libre.</p>
+</div>
+</section>
+<section id="intervalle-de-confiance-pour-une-valeur-prédite" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="intervalle-de-confiance-pour-une-valeur-prédite"><span class="header-section-number">3.4.2</span> Intervalle de confiance pour une valeur prédite</h3>
+<p>Pour une observation future <span class="math inline">\(X^* = (1,X_1^*,\ldots,X_p^*)^\top\)</span>, on pose <span class="math inline">\(\eta^* = {X^*}^\top\boldsymbol\beta\)</span> et <span class="math inline">\(\mu^* = g^{-1}(\eta^*)\)</span>. Comme <span class="math inline">\(\hat\eta^*\)</span> est une combinaison linéaire de <span class="math inline">\(\hat\beta\)</span>, sa variance s’obtient directement :</p>
+<p><span class="math display">\[
+\hat{\text V}(\hat\eta^*) = {X^*}^\top \hat{\text V}(\hat\beta)\, X^*,
+\]</span></p>
+<p>d’où l’intervalle de confiance pour <span class="math inline">\(\eta^*\)</span>,</p>
+<p><span class="math display">\[
+\left[{X^*}^\top\hat\beta \pm z_{\alpha/2}\sqrt{\hat{\text V}(\hat\eta^*)}\right],
+\]</span></p>
+<p>et, en appliquant <span class="math inline">\(g^{-1}\)</span> aux deux bornes, un intervalle de confiance pour <span class="math inline">\(\mu^*\)</span>. Comme pour la régression logistique, cette façon de procéder (transformer les bornes de l’intervalle construit sur l’échelle du prédicteur linéaire) garantit que l’intervalle final respecte le domaine de <span class="math inline">\(\mu^*\)</span> (par exemple <span class="math inline">\([0,1]\)</span> pour une proportion), contrairement à une application directe de la méthode du delta sur <span class="math inline">\(\hat\mu^*\)</span>.</p>
+</section>
+<section id="comparaison-de-modèles-emboîtés" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés"><span class="header-section-number">3.4.3</span> Comparaison de modèles emboîtés</h3>
+<p>Pour comparer un modèle réduit <span class="math inline">\(A\)</span> à un modèle complet <span class="math inline">\(B\)</span> (avec <span class="math inline">\(A\)</span> emboîté dans <span class="math inline">\(B\)</span>), on procède par différence de déviances, comme en régression logistique.</p>
+<div class="env-propriete" data-titre="Cas $\phi$ fixé">
+<p><span class="env-titre">Propriété — Cas <span class="math inline">\(\phi\)</span> fixé</span></p>
+<p><span class="math display">\[
+X_{obs} = \frac{D_A(y,\hat\mu) - D_B(y,\hat\mu)}{\phi}
+\]</span></p>
+<p>suit approximativement une loi <span class="math inline">\(\chi^2_d\)</span> sous l’hypothèse que le modèle réduit <span class="math inline">\(A\)</span> est adéquat, où <span class="math inline">\(d\)</span> est la différence du nombre de paramètres entre les deux modèles. On rejette <span class="math inline">\(H_0\)</span> au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(X_{obs} &gt; \chi^2_{d,\alpha}\)</span>.</p>
+</div>
+<div class="env-propriete" data-titre="Cas $\phi$ inconnu">
+<p><span class="env-titre">Propriété — Cas <span class="math inline">\(\phi\)</span> inconnu</span></p>
+<p>On remplace <span class="math inline">\(\phi\)</span> par <span class="math inline">\(\tilde\phi_P\)</span> (calculé sur le modèle complet) et on compare à une loi <span class="math inline">\(F\)</span> plutôt qu’à une loi <span class="math inline">\(\chi^2\)</span>, pour tenir compte de l’incertitude sur <span class="math inline">\(\phi\)</span> :</p>
+<p><span class="math display">\[
+X_{obs} = \frac{\{D_A(y,\hat\mu) - D_B(y,\hat\mu)\}/d}{\tilde\phi_P}\ \sim\ F_{d,\,n-(p+1)} \quad\text{sous } H_0.
+\]</span></p>
+</div>
+</section>
+</section>
+<section id="sélection-et-validation-de-modèles" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="sélection-et-validation-de-modèles"><span class="header-section-number">3.5</span> Sélection et validation de modèles</h2>
+<p>Les procédures pas à pas <em>backward</em>, <em>forward</em> et <em>stepwise</em>, telles que décrites au chapitre précédent, restent valides pour tout GLM, sur la base des critères</p>
+<p><span class="math display">\[
+AIC = -2\,\ell(\hb,\tilde\phi_P\mid\Delta) + 2(p+1), \qquad BIC = -2\,\ell(\hb,\tilde\phi_P\mid\Delta) + \log(n)(p+1).
+\]</span></p>
+<p>De même, les outils de validation vus aux chapitres sur les régressions linéaire et logistique — résidus de Pearson et de déviance, effet levier, DFBETAS, DFFITS, distance de Cook — se généralisent directement à l’ensemble des GLM, en substituant la déviance individuelle <span class="math inline">\(d_i\)</span> à la somme des carrés des résidus lorsque requis.</p>
+</section>
+<section id="sec-poisson" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-poisson"><span class="header-section-number">3.6</span> Exemple détaillé : la régression de Poisson</h2>
+<p>La variable réponse <span class="math inline">\(Y_i \in \mathbb{N}\)</span> dénote ici un dénombrement (nombre de survivants dans un groupe, nombre de nouveaux cas d’une maladie, nombre de sinistres, etc.). La régression de Poisson suppose <span class="math inline">\(Y_i \sim \mathcal{P}(\mu_i)\)</span> :</p>
+<p><span class="math display">\[
+P(Y_i = y_i) = e^{-\mu_i}\frac{\mu_i^{y_i}}{y_i!}, \qquad E[Y_i] = Var[Y_i] = \mu_i.
+\]</span></p>
+<div class="env-exemple" data-titre="Jeu de données [`empress`]{#data-empress}">
+<p><span class="env-titre">Exemple — Jeu de données <span id="data-empress"><code>empress</code></span></span></p>
+<p>Le 29 mai 1914, le paquebot <em>Empress of Ireland</em> coule dans le fleuve Saint-Laurent, au large de Pointe-au-Père (Rimouski), après une collision avec le charbonnier <em>Storstad</em>. Le navire sombre en moins de quinze minutes. Le jeu de données porte sur les 1057 passagers à bord (l’équipage est exclu) et existe en deux versions :</p>
+<ol type="1">
+<li><p><code>empress_individus.csv</code> : une ligne par passager, avec la classe (<code>classe</code>, et sa version numérique <code>classe_num</code> valant 1, 2 ou 3), le sexe (<code>sexe</code>), le groupe d’âge (<code>groupe_age</code>) et une indicatrice de survie (<code>survecu</code>).</p></li>
+<li><p><code>empress_agrege.csv</code> : une ligne par strate classe <span class="math inline">\(\times\)</span> sexe <span class="math inline">\(\times\)</span> groupe d’âge (11 strates, aucun garçon ne voyageant en première classe), avec le nombre de passagers <span class="math inline">\(m_i\)</span> (<code>effectif</code>) et le nombre de survivants <span class="math inline">\(y_i\)</span> (<code>survivants</code>).</p></li>
+</ol>
+<p>Cette section utilise la version agrégée ; la version individuelle est utilisée au chapitre sur la validation croisée.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>niveaux.classe <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Première"</span>, <span class="st">"Deuxième"</span>, <span class="st">"Troisième"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>empress.agr <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/empress_agrege.csv"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>empress.agr<span class="sc">$</span>classe <span class="ot">&lt;-</span> <span class="fu">factor</span>(empress.agr<span class="sc">$</span>classe, <span class="at">levels =</span> niveaux.classe)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>empress.agr</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      classe  sexe groupe_age effectif survivants classe_num
+1   Première Homme     Adulte       49         24          1
+2   Première Femme     Adulte       34         11          1
+3   Première Femme     Enfant        4          1          1
+4   Deuxième Homme     Adulte      114         33          2
+5   Deuxième Homme     Enfant       11          0          2
+6   Deuxième Femme     Adulte      107         13          2
+7   Deuxième Femme     Enfant       21          2          2
+8  Troisième Homme     Adulte      446        115          3
+9  Troisième Homme     Enfant       54          1          3
+10 Troisième Femme     Adulte      169         17          3
+11 Troisième Femme     Enfant       48          0          3</code></pre>
+</div>
+</div>
+</div>
+<p>Avec la fonction de lien canonique <span class="math inline">\(g(\mu_i) = \log(\mu_i)\)</span>, on a</p>
+<p><span class="math display">\[
+\mu_i = e^{\eta_i}, \qquad \eta_i = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip},
+\]</span></p>
+<p>c’est-à-dire</p>
+<p><span class="math display">\[
+\mu_i = e^{\beta_0}\times\left\{e^{\beta_1}\right\}^{X_{i1}}\times\cdots\times\left\{e^{\beta_p}\right\}^{X_{ip}}.
+\]</span></p>
+<div class="env-remarque" data-titre="Interprétation des coefficients">
+<p><span class="env-titre">Remarque — Interprétation des coefficients</span></p>
+<p>Si <span class="math inline">\(X_{ij}\)</span> augmente d’une unité, toutes les autres variables étant fixées, <span class="math inline">\(\mu_i\)</span> est multiplié par <span class="math inline">\(e^{\beta_j}\)</span> : l’effet est multiplicatif sur l’échelle de la réponse, exactement comme le rapport de cotes <span class="math inline">\(e^{\beta_j}\)</span> l’était sur la cote en régression logistique. Si <span class="math inline">\(\beta_j &gt; 0\)</span>, alors <span class="math inline">\(e^{\beta_j}&gt;1\)</span> et <span class="math inline">\(\mu_i\)</span> croît avec <span class="math inline">\(X_{ij}\)</span> ; si <span class="math inline">\(\beta_j&lt;0\)</span>, <span class="math inline">\(\mu_i\)</span> décroît.</p>
+</div>
+<section id="variables-explicatives-offset" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="variables-explicatives-offset"><span class="header-section-number">3.6.1</span> Variables explicatives <em>offset</em></h3>
+<div class="env-theo" data-titre="Approximation de la loi binomiale par la loi de Poisson">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Approximation de la loi binomiale par la loi de Poisson</span></p>
+<p>Soit <span class="math inline">\(Y_i \sim \text{Bin}(m_i, \pi_i)\)</span>. Si <span class="math inline">\(m_i \to \infty\)</span> et <span class="math inline">\(\pi_i \to 0\)</span> de sorte que <span class="math inline">\(\mu_i = m_i\pi_i\)</span> reste fixe (ou converge vers une constante), alors la loi de <span class="math inline">\(Y_i\)</span> converge vers une loi de Poisson de moyenne <span class="math inline">\(\mu_i\)</span> :</p>
+<p><span class="math display">\[
+P(Y_i = y) = \binom{m_i}{y}\pi_i^y(1-\pi_i)^{m_i-y} \;\longrightarrow\; e^{-\mu_i}\frac{\mu_i^y}{y!}.
+\]</span></p>
+<p><strong>Intuition.</strong> Quand <span class="math inline">\(\pi_i\)</span> est petit, l’événement <span class="math inline">\(\{Y_i = y\}\)</span> correspond à <span class="math inline">\(y\)</span> « succès » très improbables parmi un très grand nombre d’essais. Le nombre d’essais <span class="math inline">\(m_i\)</span> n’a alors presque plus d’importance en soi : ce qui détermine la loi de <span class="math inline">\(Y_i\)</span>, c’est essentiellement le produit <span class="math inline">\(\mu_i = m_i \pi_i\)</span>, c’est-à-dire le nombre de succès <em>attendu</em>. Deux strates avec des <span class="math inline">\((m_i,\pi_i)\)</span> très différents mais le même <span class="math inline">\(\mu_i\)</span> (par exemple <span class="math inline">\(m_i=10\,000,\ \pi_i=0{,}001\)</span> contre <span class="math inline">\(m_i=1000,\ \pi_i=0{,}01\)</span>) produisent des distributions de <span class="math inline">\(Y_i\)</span> presque identiques.</p>
+<p><strong>Repère pratique.</strong> L’approximation est jugée satisfaisante lorsque <span class="math inline">\(m_i\)</span> est grand (disons <span class="math inline">\(m_i \geq 20\)</span>) et <span class="math inline">\(\pi_i\)</span> est petit (disons <span class="math inline">\(\pi_i \leq 0{,}05\)</span>), de sorte que <span class="math inline">\(\mu_i = m_i\pi_i\)</span> demeure modéré. C’est le cas de la strate des garçons de troisième classe d’<a href="#data-empress"><code>empress</code></a> : <span class="math inline">\(m = 54\)</span> et <span class="math inline">\(\tilde\pi = 1/54 \approx 0{,}019\)</span>, d’où <span class="math inline">\(\mu \approx 1\)</span>. Ce ne l’est pas pour les hommes adultes de première classe (<span class="math inline">\(m = 49\)</span>, <span class="math inline">\(\tilde\pi = 24/49 \approx 0{,}49\)</span>), un point sur lequel on reviendra lors des diagnostics.</p>
+<p><strong>Conséquence pour la modélisation.</strong> Dans ce régime, les deux paramètres <span class="math inline">\((m_i,\pi_i)\)</span> ne sont plus identifiables séparément à partir de <span class="math inline">\(Y_i\)</span> seul : seule leur combinaison <span class="math inline">\(\mu_i\)</span> compte. Il devient donc plus naturel — et numériquement plus stable — de modéliser directement <span class="math inline">\(\mu_i\)</span> comme un compte de Poisson plutôt que <span class="math inline">\(\pi_i\)</span> comme une proportion binomiale. Comme <span class="math inline">\(\mu_i\)</span> dépend mécaniquement de <span class="math inline">\(m_i\)</span> (une strate plus grande produit plus de cas même à risque individuel égal), on ne relie pas les covariables à <span class="math inline">\(\mu_i\)</span> directement, mais au taux <span class="math inline">\(\mu_i/m_i\)</span>, ce qui mène à la variable offset <span class="math inline">\(\log(m_i)\)</span> introduite plus bas.</p>
+</div>
+<p>Lorsque la probabilité individuelle de l’événement est petite (par exemple <span class="math inline">\(\tilde\pi = 1/54 \approx 0{,}019\)</span> pour les garçons de troisième classe), les nombres de cas se comportent davantage comme un dénombrement rare que comme une proportion binomiale, et la régression de Poisson devient une alternative naturelle à la régression logistique. On modélise alors l’espérance du taux <span class="math inline">\(Y_i/m_i\)</span> :</p>
+<p><span class="math display">\[
+\log\!\left(\frac{\mu_i}{m_i}\right) = \beta_0 + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}
+\quad\Longleftrightarrow\quad
+\log(\mu_i) = \beta_0 + \log(m_i) + \beta_1 X_{i1} + \cdots + \beta_p X_{ip}.
+\]</span></p>
+<div class="env-definition" data-titre="Variable offset">
+<p><span class="env-titre">Définition — Variable offset</span></p>
+<p>Le terme <span class="math inline">\(\log(m_i)\)</span> dans l’équation ci-dessus est une variable explicative dont le coefficient est fixé à <span class="math inline">\(1\)</span> plutôt qu’estimé : on parle de variable offset. Une variable offset est utile lorsque l’espérance de <span class="math inline">\(Y_i\)</span> est proportionnelle à une autre quantité connue (une population exposée, une durée d’exposition, un effort d’échantillonnage), et qu’on souhaite modéliser un taux plutôt qu’un compte brut.</p>
+</div>
+<div class="env-exemple" data-titre="Ajustement sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Ajustement sur <a href="#data-empress"><code>empress</code></a></span></p>
+<p>On modélise le nombre de survivants de chaque strate, avec l’effectif de la strate comme offset et des effets additifs de la classe, du sexe et du groupe d’âge.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>modele.additif <span class="ot">&lt;-</span> <span class="fu">glm</span>(survivants <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(effectif)) <span class="sc">+</span> classe <span class="sc">+</span> sexe <span class="sc">+</span> groupe_age,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">family =</span> poisson, <span class="at">data =</span> empress.agr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.additif)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   Estimate Std. Error   z value     Pr(&gt;|z|)
+(Intercept)      -1.3576348  0.2108504 -6.438852 1.203801e-10
+classeDeuxième   -0.6542217  0.2208236 -2.962644 3.050087e-03
+classeTroisième  -0.8020421  0.1888224 -4.247599 2.160736e-05
+sexeHomme         0.7651304  0.1714048  4.463880 8.048867e-06
+groupe_ageEnfant -1.8689502  0.5061053 -3.692809 2.217905e-04</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(modele.additif))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     (Intercept)   classeDeuxième  classeTroisième        sexeHomme 
+       0.2572685        0.5198465        0.4484123        2.1492747 
+groupe_ageEnfant 
+       0.1542855 </code></pre>
+</div>
+</div>
+<p>Les autres variables étant fixées, le taux de survie des hommes est environ 2,15 fois celui des femmes, celui des enfants environ 0,15 fois celui des adultes, et ceux des passagers de deuxième et de troisième classe environ 0,52 et 0,45 fois celui des passagers de première classe. L’effet du sexe va à l’encontre du principe « les femmes et les enfants d’abord » : le naufrage, survenu en pleine nuit et en quelques minutes, a laissé peu de temps pour organiser l’évacuation.</p>
+<p>On peut comparer les taux de survie observés et prédits dans chaque strate :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>empress.agr <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">taux_predit =</span> <span class="fu">predict</span>(modele.additif, <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">/</span> effectif,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">taux_observe =</span> survivants <span class="sc">/</span> effectif) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> classe, <span class="at">color =</span> sexe)) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> taux_observe), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> taux_predit, <span class="at">group =</span> sexe)) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> groupe_age) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Classe"</span>, <span class="at">y =</span> <span class="st">"Taux de survie"</span>, <span class="at">color =</span> <span class="st">"Sexe"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Taux de survie observés (points) et prédits (lignes)"</span>) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04-modeles-lineaires-generalises_files/figure-html/empress-taux-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Les taux prédits suivent d’assez près les taux observés chez les adultes. Les écarts sont plus marqués chez les enfants, où les effectifs sont petits (4 filles seulement en première classe).</p>
+</div>
+</section>
+<section id="vraisemblance-et-score-1" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="vraisemblance-et-score-1"><span class="header-section-number">3.6.2</span> Vraisemblance et score</h3>
+<p>La log-vraisemblance générale, avant de substituer le lien log, s’écrit</p>
+<p><span class="math display">\[
+\ell(\boldsymbol\mu;\boldsymbol y) = \sum_{i=1}^n \left\{y_i\log(\mu_i) - \mu_i\right\} - \sum_{i=1}^n \log(y_i!),
+\]</span></p>
+<p>où le dernier terme ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span> et peut être ignoré pour l’estimation.</p>
+<div class="env-log" data-titre="Log-vraisemblance et score sous le lien log">
+<p><span class="env-titre">Le cas du lien log — Log-vraisemblance et score sous le lien log</span></p>
+<p>Avec <span class="math inline">\(\mu_i = e^{\eta_i}\)</span>, on a <span class="math inline">\(\log(\mu_i) = \eta_i\)</span>, de sorte que</p>
+<p><span class="math display">\[
+\ell(\boldsymbol\beta;\boldsymbol y) = \sum_{i=1}^n\left\{y_i \eta_i - e^{\eta_i}\right\} + K,
+\]</span></p>
+<p>où <span class="math inline">\(K = -\sum_i \log(y_i!)\)</span> ne dépend pas de <span class="math inline">\(\boldsymbol\beta\)</span>.</p>
+<p><strong>Dérivée par rapport à <span class="math inline">\(\beta_j\)</span>.</strong> En notant <span class="math inline">\(\dfrac{\partial \eta_i}{\partial \beta_j} = X_{ij}\)</span> (avec <span class="math inline">\(X_{i0}\equiv 1\)</span>), le terme <span class="math inline">\(y_i\eta_i\)</span> se dérive directement en <span class="math inline">\(y_i X_{ij}\)</span>. Pour le second terme, par la règle de dérivation en chaîne,</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial \beta_j}\, e^{\eta_i} = e^{\eta_i}\cdot\frac{\partial \eta_i}{\partial \beta_j} = \mu_i X_{ij}.
+\]</span></p>
+<p>D’où</p>
+<p><span class="math display">\[
+\frac{\partial \ell(\boldsymbol\beta)}{\partial \beta_j} = \sum_{i=1}^n (y_i - \mu_i) X_{ij},
+\]</span></p>
+<p>et, sous forme matricielle,</p>
+<p><span class="math display">\[
+\boldsymbol U(\boldsymbol\beta) = \boldsymbol X^\top(\boldsymbol y - \boldsymbol\mu).
+\]</span></p>
+<p>Cette expression a exactement la même forme que le score de la régression binomiale (<a href="03-regression-logistique.html#eq-score-vecteur" class="quarto-xref">Équation&nbsp;<span>2.2</span></a>) — seule la relation entre <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\eta_i\)</span> diffère d’un lien à l’autre.</p>
+</div>
+<p>Comme pour la régression logistique, l’équation <span class="math inline">\(\boldsymbol U(\boldsymbol\beta)=\boldsymbol 0\)</span> n’a pas de solution analytique : on résout numériquement par IRLS (Fisher scoring), implémenté dans <code>glm</code> avec <code>family = poisson</code>.</p>
+</section>
+<section id="information-de-fisher-et-variance-des-estimateurs" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="information-de-fisher-et-variance-des-estimateurs"><span class="header-section-number">3.6.3</span> Information de Fisher et variance des estimateurs</h3>
+<p>La loi asymptotique de <span class="math inline">\(\hb\)</span> est</p>
+<p><span class="math display">\[
+\hb \;\dot\sim\; \mathcal{N}\{\boldsymbol\beta,\, (X^\top W X)^{-1}\},
+\]</span></p>
+<p>où <span class="math inline">\(W=\mathrm{diag}(w_i)\)</span>.</p>
+<div class="env-log" data-titre="Expression de $w_i$ sous le lien log">
+<p><span class="env-titre">Le cas du lien log — Expression de <span class="math inline">\(w_i\)</span> sous le lien log</span></p>
+<p>Puisque <span class="math inline">\(Var[Y_i]=\mu_i\)</span> et <span class="math inline">\(d\mu_i/d\eta_i = \mu_i\)</span> (lien canonique), le poids IRLS se simplifie en</p>
+<p><span class="math display">\[
+w_i = \frac{(d\mu_i/d\eta_i)^2}{Var[Y_i]} = \frac{\mu_i^2}{\mu_i} = \mu_i,
+\]</span></p>
+<p>évalué en <span class="math inline">\(\hat\mu_i = e^{\hat\eta_i}\)</span>. Comme pour la binomiale, <span class="math inline">\(\phi=1\)</span> ici : aucun paramètre de dispersion additionnel n’est estimé dans le modèle de Poisson usuel.</p>
+</div>
+</section>
+<section id="déviance-et-adéquation" class="level3" data-number="3.6.4">
+<h3 data-number="3.6.4" class="anchored" data-anchor-id="déviance-et-adéquation"><span class="header-section-number">3.6.4</span> Déviance et adéquation</h3>
+<p>La déviance individuelle, obtenue en appliquant la définition générale <span class="math inline">\(d(y,\mu)=2\{\ell(y,y)-\ell(y,\mu)\}\)</span> à la loi de Poisson, se dérive comme suit.</p>
+<div class="env-log" data-titre="Dérivation de la déviance">
+<p><span class="env-titre">Le cas du lien log — Dérivation de la déviance</span></p>
+<p>La contribution à la log-vraisemblance d’une observation, en fonction de <span class="math inline">\(\mu\)</span>, est <span class="math inline">\(\ell_i(\mu) = y\log(\mu) - \mu\)</span> (à la constante <span class="math inline">\(-\log(y!)\)</span> près, qui s’annule dans la différence). Le modèle saturé pose <span class="math inline">\(\tilde\mu = y\)</span>, d’où</p>
+<p><span class="math display">\[
+\ell_i(y) - \ell_i(\mu) = \left\{y\log(y) - y\right\} - \left\{y\log(\mu) - \mu\right\} = y\log\!\left(\frac{y}{\mu}\right) - (y-\mu),
+\]</span></p>
+<p>avec la convention <span class="math inline">\(y\log(y) \equiv 0\)</span> si <span class="math inline">\(y=0\)</span>. D’où</p>
+<p><span class="math display">\[
+d(y,\mu) = 2\left\{y\log\!\left(\frac{y}{\mu}\right) - (y - \mu)\right\}.
+\]</span></p>
+</div>
+<p>L’adéquation globale se vérifie avec</p>
+<p><span class="math display">\[
+X^2 = \sum_{i=1}^n\frac{(y_i - \hat\mu_i)^2}{\hat\mu_i} \qquad\text{et}\qquad D = \sum_{i=1}^n d(y_i,\hat\mu_i),
+\]</span></p>
+<p>qui suivent toutes deux approximativement une <span class="math inline">\(\chi^2_{n-(p+1)}\)</span> si le modèle est bien adapté et si les <span class="math inline">\(\mu_i\)</span> ne sont pas trop petits.</p>
+<div class="env-exemple" data-titre="Adéquation sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Adéquation sur <a href="#data-empress"><code>empress</code></a></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mu_hat <span class="ot">&lt;-</span> <span class="fu">fitted</span>(modele.additif)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(empress.agr)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">coef</span>(modele.additif)) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">sum</span>((empress.agr<span class="sc">$</span>survivants <span class="sc">-</span> mu_hat)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> mu_hat)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>D  <span class="ot">&lt;-</span> <span class="fu">deviance</span>(modele.additif)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">X2 =</span> X2, <span class="at">D =</span> D, <span class="at">dl =</span> n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       X2         D        dl 
+13.564715  9.884635  6.000000 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(X2, <span class="at">df =</span> n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.03489506</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(D,  <span class="at">df =</span> n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1295951</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(mu_hat, <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     1      2      3      4      5      6      7      8      9     10     11 
+ 27.09   8.75   0.16  32.77   0.49  14.31   0.43 110.58   2.07  19.50   0.85 </code></pre>
+</div>
+</div>
+<div class="env-remarque" data-titre="Adéquation et taille des $\mu_i$">
+<p><span class="env-titre">Remarque — Adéquation et taille des <span class="math inline">\(\mu_i\)</span></span></p>
+<p>Les deux statistiques ne mènent pas à la même conclusion au seuil de 5 % : la déviance ne rejette pas le modèle (valeur-p <span class="math inline">\(\approx 0{,}13\)</span>), alors que la statistique de Pearson le rejette (valeur-p <span class="math inline">\(\approx 0{,}035\)</span>). L’écart s’explique par la taille des <span class="math inline">\(\hat\mu_i\)</span> : quatre strates ont une valeur ajustée inférieure à 1, ce qui place l’approximation <span class="math inline">\(\chi^2\)</span> hors de sa zone de validité. La statistique <span class="math inline">\(X^2\)</span>, qui divise par <span class="math inline">\(\hat\mu_i\)</span>, y est particulièrement sensible : les filles de première classe (<span class="math inline">\(y = 1\)</span>, <span class="math inline">\(\hat\mu \approx 0{,}16\)</span>) et de deuxième classe (<span class="math inline">\(y = 2\)</span>, <span class="math inline">\(\hat\mu \approx 0{,}43\)</span>) fournissent à elles seules environ les trois quarts de <span class="math inline">\(X^2\)</span>. Avec seulement <span class="math inline">\(n-(p+1) = 6\)</span> degrés de liberté, aucune des deux valeurs-p ne doit être prise au pied de la lettre.</p>
+</div>
+</div>
+</section>
+<section id="sec-surdispersion" class="level3" data-number="3.6.5">
+<h3 data-number="3.6.5" class="anchored" data-anchor-id="sec-surdispersion"><span class="header-section-number">3.6.5</span> Variabilité extra-Poissonienne</h3>
+<p>En pratique, il arrive fréquemment que <span class="math inline">\(Var[Y_i] &gt; E[Y_i]\)</span>, c’est-à-dire que la variance observée dans les données dépasse ce que prévoit la loi de Poisson (qui impose <span class="math inline">\(\phi = 1\)</span>). Ce phénomène est appelé surdispersion. Deux stratégies courantes permettent d’en tenir compte.</p>
+<div class="env-remarque" data-titre="Approche quasi-Poisson">
+<p><span class="env-titre">Remarque — Approche quasi-Poisson</span></p>
+<p>On spécifie seulement les deux premiers moments de <span class="math inline">\(Y_i\)</span>, sans supposer de loi précise : <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \phi\,\mu_i\)</span>. On obtient les mêmes estimateurs ponctuels <span class="math inline">\(\hb\)</span> qu’avec la régression de Poisson usuelle, mais <span class="math inline">\(Var(\hb)\)</span> est multipliée par <span class="math inline">\(\tilde\phi_P = X^2/(n-(p+1))\)</span>, ce qui élargit les intervalles de confiance et rend les tests plus conservateurs. En R : <code>family = quasipoisson</code>. Cette approche permet de construire des intervalles de confiance et des tests valides sur <span class="math inline">\(\boldsymbol\beta\)</span>, mais elle n’implique pas de vraie fonction de vraisemblance : l’AIC et le BIC n’y sont donc pas définis.</p>
+</div>
+<div class="env-definition" data-titre="Loi binomiale négative">
+<p><span class="env-titre">Définition — Loi binomiale négative</span></p>
+<p>On dit que <span class="math inline">\(Y_i\)</span> suit une loi binomiale négative de paramètres <span class="math inline">\(\mu_i\)</span> et <span class="math inline">\(\alpha\)</span> si</p>
+<p><span class="math display">\[
+P(Y_i = y_i) = \frac{\Gamma(y_i + 1/\alpha)}{\Gamma(y_i+1)\Gamma(1/\alpha)}\left(\frac{1/\alpha}{\mu_i + 1/\alpha}\right)^{1/\alpha}\left(\frac{\mu_i}{\mu_i + 1/\alpha}\right)^{y_i}, \quad y_i = 0,1,2,\ldots,\ \alpha &gt; 0.
+\]</span></p>
+</div>
+<p>On montre que <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math inline">\(Var[Y_i] = \mu_i + \alpha\mu_i^2\)</span> : la variance excède toujours l’espérance dès que <span class="math inline">\(\alpha&gt;0\)</span>, et la loi de Poisson est retrouvée à la limite <span class="math inline">\(\alpha \to 0\)</span>. Avec <span class="math inline">\(\mu_i = e^{x_i^\top\boldsymbol\beta}\)</span>, les coefficients <span class="math inline">\(\boldsymbol\beta\)</span> gardent exactement la même interprétation multiplicative que pour la régression de Poisson. En R, on ajuste ce modèle avec la fonction <code>glm.nb</code> de la librairie <code>MASS</code>, qui estime conjointement <span class="math inline">\(\boldsymbol\beta\)</span> et <span class="math inline">\(\alpha\)</span> par maximum de vraisemblance (la fonction rapporte <span class="math inline">\(\theta = 1/\alpha\)</span>).</p>
+<div class="env-propriete" data-titre="Test de surdispersion">
+<p><span class="env-titre">Propriété — Test de surdispersion</span></p>
+<p>Comme la régression de Poisson correspond au cas particulier <span class="math inline">\(\alpha=0\)</span> de la binomiale négative, on peut tester <span class="math inline">\(H_0 : \alpha = 0\)</span> en comparant les déviances des deux modèles emboîtés, <span class="math inline">\(D_0\)</span> (Poisson) et <span class="math inline">\(D_1\)</span> (binomiale négative) : <span class="math inline">\(Q_{obs} = D_0 - D_1\)</span>. Comme <span class="math inline">\(\alpha=0\)</span> se trouve à la frontière de l’espace des paramètres (on ne peut avoir <span class="math inline">\(\alpha&lt;0\)</span>), la statistique de test ne suit pas simplement une <span class="math inline">\(\chi^2_1\)</span> sous <span class="math inline">\(H_0\)</span>, mais un mélange</p>
+<p><span class="math display">\[
+Q \sim \tfrac{1}{2}\chi^2_0 + \tfrac{1}{2}\chi^2_1 \quad\text{sous } H_0,
+\]</span></p>
+<p>où <span class="math inline">\(\chi^2_0\)</span> désigne la loi dégénérée en <span class="math inline">\(0\)</span>. Le seuil observé est donc <span class="math inline">\(\alpha^* = P(\chi^2_1 &gt; Q_{obs})/2\)</span>, soit la moitié de ce qu’on obtiendrait avec une <span class="math inline">\(\chi^2_1\)</span> usuelle.</p>
+</div>
+<div class="env-exemple" data-titre="Test de surdispersion sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Test de surdispersion sur <a href="#data-empress"><code>empress</code></a></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>modele.nb <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(survivants <span class="sc">~</span> <span class="fu">offset</span>(<span class="fu">log</span>(effectif)) <span class="sc">+</span> classe <span class="sc">+</span> sexe <span class="sc">+</span> groupe_age,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> empress.agr)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>modele.nb<span class="sc">$</span>theta</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25506.2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Q.obs <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">deviance</span>(modele.additif) <span class="sc">-</span> <span class="fu">deviance</span>(modele.nb), <span class="dv">0</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>alpha.etoile <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(Q.obs, <span class="at">df =</span> <span class="dv">1</span>)) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>alpha.etoile</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4828094</code></pre>
+</div>
+</div>
+<p>L’estimation de <span class="math inline">\(\theta\)</span> est très grande, donc <span class="math inline">\(\hat\alpha = 1/\hat\theta\)</span> est pratiquement nul : le maximum de vraisemblance se trouve à la frontière <span class="math inline">\(\alpha = 0\)</span>, et <code>glm.nb</code> peut signaler que l’algorithme a atteint sa limite d’itérations. On a alors <span class="math inline">\(Q_{obs} \approx 0\)</span> et <span class="math inline">\(\alpha^* \approx 0{,}5\)</span> : on ne détecte pas de variabilité extra-Poissonienne, et le modèle de Poisson usuel demeure approprié.</p>
+</div>
+</section>
+<section id="comparaison-de-modèles-emboîtés-1" class="level3" data-number="3.6.6">
+<h3 data-number="3.6.6" class="anchored" data-anchor-id="comparaison-de-modèles-emboîtés-1"><span class="header-section-number">3.6.6</span> Comparaison de modèles emboîtés</h3>
+<p>Comme en régression logistique, on peut comparer deux modèles emboîtés par différence de déviances plutôt que d’examiner l’adéquation d’un seul modèle.</p>
+<div class="env-exemple" data-titre="Effet de la classe sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Effet de la classe sur <a href="#data-empress"><code>empress</code></a></span></p>
+<p>On teste d’abord l’effet de la classe, puis on vérifie si cet effet peut se résumer à une tendance log-linéaire en remplaçant le facteur <code>classe</code> par la variable numérique <code>classe_num</code>. Ce second modèle est emboîté dans le premier : un seul coefficient pour la classe au lieu de deux.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>modele.sans.classe <span class="ot">&lt;-</span> <span class="fu">update</span>(modele.additif, . <span class="sc">~</span> . <span class="sc">-</span> classe)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modele.sans.classe, modele.additif, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: survivants ~ sexe + groupe_age + offset(log(effectif))
+Model 2: survivants ~ offset(log(effectif)) + classe + sexe + groupe_age
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1         8    25.2806                          
+2         6     9.8846  2   15.396 0.0004537 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>modele.classe.num <span class="ot">&lt;-</span> <span class="fu">update</span>(modele.additif, . <span class="sc">~</span> . <span class="sc">-</span> classe <span class="sc">+</span> classe_num)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(modele.classe.num, modele.additif, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: survivants ~ sexe + groupe_age + classe_num + offset(log(effectif))
+Model 2: survivants ~ offset(log(effectif)) + classe + sexe + groupe_age
+  Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)
+1         7    12.0837                     
+2         6     9.8846  1   2.1991   0.1381</code></pre>
+</div>
+</div>
+<p>Le premier test rejette nettement l’hypothèse d’absence d’effet de la classe (différence de déviances d’environ 15,4 à 2 degrés de liberté, valeur-p <span class="math inline">\(\approx 0{,}0005\)</span>). Le second ne rejette pas le modèle avec tendance log-linéaire (différence d’environ 2,2 à 1 degré de liberté, valeur-p <span class="math inline">\(\approx 0{,}14\)</span>) : chaque classe inférieure multiplierait alors le taux de survie par un même facteur. Les coefficients du modèle additif (<span class="math inline">\(-0{,}65\)</span> pour la deuxième classe, <span class="math inline">\(-0{,}80\)</span> pour la troisième) suggèrent plutôt un écart concentré entre la première classe et les deux autres, mais 11 strates ne suffisent pas à trancher.</p>
+</div>
+</section>
+<section id="graphiques-et-observations-aberrantes" class="level3" data-number="3.6.7">
+<h3 data-number="3.6.7" class="anchored" data-anchor-id="graphiques-et-observations-aberrantes"><span class="header-section-number">3.6.7</span> Graphiques et observations aberrantes</h3>
+<p>Comme en régression logistique, on trace les résidus de déviance en fonction du numéro d’observation pour repérer une extra-variabilité, et on examine leviers, distance de Cook et DFBETAS pour repérer les observations influentes.</p>
+<div class="env-exemple" data-titre="Diagnostics sur [`empress`](#data-empress)">
+<p><span class="env-titre">Exemple — Diagnostics sur <a href="#data-empress"><code>empress</code></a></span></p>
+<p>Résidus en fonction du numéro d’observation :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>res_dev <span class="ot">&lt;-</span> <span class="fu">residuals</span>(modele.additif, <span class="at">type =</span> <span class="st">"deviance"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(res_dev, <span class="at">xlab =</span> <span class="st">"Numéro d'observation"</span>, <span class="at">ylab =</span> <span class="st">"Résidu de déviance"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">2.5</span>, <span class="fl">2.5</span>))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>), <span class="at">lty =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04-modeles-lineaires-generalises_files/figure-html/empress-residus-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Aucun résidu de déviance ne dépasse les seuils de <span class="math inline">\(\pm 2\)</span> ; les plus grands (environ 1,7 et 1,4) correspondent aux filles de deuxième et de première classe, déjà repérées dans l’analyse de l’adéquation.</p>
+<p>Estimation de <span class="math inline">\(\phi\)</span> :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>chi2_p <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">residuals</span>(modele.additif, <span class="at">type =</span> <span class="st">"pearson"</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>phi_hat <span class="ot">&lt;-</span> chi2_p <span class="sc">/</span> (n <span class="sc">-</span> (p <span class="sc">+</span> <span class="dv">1</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>phi_hat</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.260786</code></pre>
+</div>
+</div>
+<p>On obtient <span class="math inline">\(\tilde\phi_P \approx 2{,}3\)</span>, ce qui pourrait suggérer de la surdispersion. Cette valeur est toutefois gonflée par les deux mêmes strates à très petit <span class="math inline">\(\hat\mu_i\)</span> et repose sur seulement 6 degrés de liberté ; elle doit être lue à la lumière du test de surdispersion, qui ne détectait aucune variabilité extra-Poissonienne.</p>
+<p>Observations aberrantes et valeurs influentes :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(modele.additif, <span class="at">which =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04-modeles-lineaires-generalises_files/figure-html/empress-cook-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(modele.additif)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(h, <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    1     2     3     4     5     6     7     8     9    10    11 
+0.801 0.389 0.046 0.775 0.133 0.503 0.119 0.917 0.526 0.564 0.227 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(h <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> (p <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> n)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>8 
+8 </code></pre>
+</div>
+</div>
+<p>La strate des hommes adultes de troisième classe (observation 8) se détache nettement, avec une distance de Cook d’environ 4,7 et un levier d’environ 0,92. Elle regroupe 446 des 1057 passagers et 115 des 217 survivants : elle pèse donc très lourd dans l’estimation, puisque le poids IRLS vaut <span class="math inline">\(w_i = \hat\mu_i\)</span>. La strate des hommes adultes de première classe (observation 1, distance de Cook d’environ 1,4) est la seconde plus influente ; c’est aussi celle où le taux de survie (<span class="math inline">\(\approx 0{,}49\)</span>) s’éloigne le plus du régime où l’approximation de Poisson est justifiée.</p>
+<p>Le seuil usuel pour un levier élevé est <span class="math inline">\(2(p+1)/n\)</span>. Ici, il vaut <span class="math inline">\(10/11 \approx 0{,}91\)</span> : avec aussi peu d’observations que de paramètres ou presque, ce repère devient peu discriminant, et il vaut mieux examiner les valeurs qui se détachent nettement des autres.</p>
+</div>
+<div class="env-remarque" data-titre="Poisson ou binomial?">
+<p><span class="env-titre">Remarque — Poisson ou binomial?</span></p>
+<p>Plusieurs taux de survie d’<a href="#data-empress"><code>empress</code></a> sont modérés, et le modèle binomial <code>glm(cbind(survivants, effectif - survivants) ~ classe + sexe + groupe_age, family = binomial)</code> serait plus naturel pour ces données. Il mène aux mêmes conclusions qualitatives (effets de la classe, du sexe et du groupe d’âge de mêmes signes), mais ses coefficients s’interprètent comme des rapports de cotes plutôt que comme des rapports de taux. L’exemple sert ici à illustrer l’offset et les outils propres à la régression de Poisson.</p>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const gifs = {
+    "index":                              "index_plot.gif",
+    "01-regression-lineaire":             "lineaire_plot.gif",
+    "02-monte-carlo":                     "monte_carlo_plot.gif",
+    "03-regression-logistique":           "logit_plot.gif",
+    "04-modeles-lineaires-generalises":   "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "exercices-theoriques":               "exercices_plot.gif"
+  };
+
+  let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
+  if (page === "") page = "index";
+
+  const gif = gifs[page];
+  if (gif) {
+    // Date.now() change à chaque chargement de page → force le rechargement du gif
+    logo.src = logo.src.replace(/[^/]+$/, gif) + "?v=" + Date.now();
+  }
+});
+</script>
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03-regression-logistique.html" class="pagination-link" aria-label="Modèles de régression pour données binaires">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05-prediction-validation-croisee.html" class="pagination-link" aria-label="Prédiction, mesures de performance et validation croisée">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Notes de cours STT-4300</p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/notes/04-modeles-lineaires-generalises.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

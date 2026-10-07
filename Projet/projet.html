@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>projet – STT-4300 Régression II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d879eba7f9f7abf158eeecada124be5f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">STT-4300 Régression II</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Recherche"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Accueil</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../plan-de-cours.html"> 
+<span class="menu-text">Plan de cours</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../calendrier.html"> 
+<span class="menu-text">Calendrier</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../Projet/projet.html" aria-current="page"> 
+<span class="menu-text">Projet de session</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Labos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labos">    
+        <li>
+    <a class="dropdown-item" href="../labos/labo1.html">
+ <span class="dropdown-text">Labo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo2.html">
+ <span class="dropdown-text">Labo 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo3.html">
+ <span class="dropdown-text">Labo 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo4.html">
+ <span class="dropdown-text">Labo 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo5.html">
+ <span class="dropdown-text">Labo 5</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../notes/index.html"> 
+<span class="menu-text">Notes de cours</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="../cahier.pdf" title="Télécharger le calendrier, le projet et les labos (PDF)" class="quarto-navigation-tool px-1" aria-label="Télécharger le calendrier, le projet et les labos (PDF)"><i class="bi bi-download"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">7 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="portal-hero">
+<p class="eyebrow">
+STT-4300 — Régression II
+</p>
+<section id="projet-de-session" class="level1">
+<h1>Projet de session</h1>
+</section>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avertissement</span>La version Brio fait foi
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ce document décrit le projet de session à titre indicatif. La version officielle est celle déposée sur <strong>Brio</strong> : en cas de doute ou de différence entre les deux, c’est l’information sur <strong>Brio</strong> qui prévaut.</p>
+</div>
+</div>
+<div class="module-quick-facts two-facts">
+<div class="module-fact">
+<p>
+<span class="resource-icon">📊</span><span><span class="fact-label">Pondération</span><span class="fact-value">50 % de la note finale</span></span>
+</p>
+</div>
+<div class="module-fact">
+<p>
+<span class="resource-icon">👥</span><span><span class="fact-label">Équipes</span><span class="fact-value">3 ou 4 étudiants</span></span>
+</p>
+</div>
+</div>
+<section id="projet-de-session-1" class="level2">
+<h2 class="anchored" data-anchor-id="projet-de-session-1">Projet de session</h2>
+<section id="vue-densemble" class="level3">
+<h3 class="anchored" data-anchor-id="vue-densemble">Vue d’ensemble</h3>
+<p>Le projet de session consiste à mener, en équipe, une analyse complète d’un jeu de données à l’aide d’un GLM : une régression logistique (réponse binaire ou proportion) ou une régression de Poisson (réponse de comptage). Le choix du modèle et du jeu de données revient à votre équipe, sous réserve de mon approbation au Jalon 1.</p>
+<p>Le projet avance par étapes, au rythme de cinq jalons dont les dates des labos servent d’échéances. Chaque jalon produit un livrable court qui s’intègre à votre rapport final, de sorte qu’il n’y a pas de gros bloc de travail à la fin de la session.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Objectif général
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Passer d’une question concrète à un modèle défendable, c’est-à-dire un modèle dont vous savez expliquer le choix, vérifier l’ajustement, interpréter les coefficients et reconnaître les limites.</p>
+</div>
+</div>
+</section>
+<section id="modalités" class="level3">
+<h3 class="anchored" data-anchor-id="modalités">Modalités</h3>
+<ul>
+<li>Équipes de 3 ou 4 étudiants, formées au Jalon 1.</li>
+<li>Un dépôt GitHub par équipe, avec un projet R reproductible (<code>renv</code> recommandé). Je dois avoir accès au dépôt.</li>
+<li>Tout le code est en R et le rapport est rédigé en Quarto ou en LaTeX : le document doit se compiler de zéro sans intervention manuelle.</li>
+</ul>
+</section>
+<section id="choix-du-jeu-de-données" class="level3">
+<h3 class="anchored" data-anchor-id="choix-du-jeu-de-données">Choix du jeu de données</h3>
+<p>Votre jeu de données doit respecter les critères suivants.</p>
+<ol type="1">
+<li>Une variable réponse <span class="math inline">\(Y\)</span> claire : binaire (ou proportion <span class="math inline">\(y_i/n_i\)</span>) pour la régression logistique, ou comptage pour la régression de Poisson.</li>
+<li>Au moins <span class="math inline">\(n = 200\)</span> observations et au moins 6 covariables potentielles, avec un mélange de variables quantitatives et qualitatives.</li>
+<li>Une question de recherche que vous pouvez énoncer en une phrase.</li>
+<li>Des données libres de droits et sans information permettant d’identifier des personnes.</li>
+<li>Un peu de désordre (valeurs manquantes, catégories rares, valeurs aberrantes) : le nettoyage fait partie de l’exercice.</li>
+</ol>
+<p>Trouvez votre jeu de données, par exemple à partir de Données Québec, de Statistique Canada, du dépôt UCI, de Kaggle ou de données ouvertes de la Ville de Québec (collisions, 311, bacs de recyclage, etc.).</p>
+</section>
+<section id="livrable-final" class="level3">
+<h3 class="anchored" data-anchor-id="livrable-final">Livrable final</h3>
+<p>Le projet se termine par une présentation en classe (10 minutes plus 5 minutes de questions) accompagnée d’un produit de communication, au choix de votre équipe :</p>
+<ul>
+<li>une application Shiny qui permet d’explorer le modèle (prédictions selon les valeurs des covariables, effet d’une variable, diagnostics) ;</li>
+<li>un site web Quarto (ou un tableau de bord) racontant l’analyse ;</li>
+<li>un poster scientifique (format 36 × 48 po) ;</li>
+<li>un autre format du même niveau, à me proposer (balado, bande dessinée statistique, vidéo de 5 minutes, etc.).</li>
+</ul>
+<p>Peu importe le format, vous devez aussi remettre un rapport technique de 8 à 12 pages qui rassemble les livrables des jalons et la conclusion.</p>
+<p>Le produit de communication s’adresse à un public non statisticien. Votre présentation doit donc traduire les résultats en langage clair : parlez de rapport de cotes ou de variation en pourcentage du taux, pas seulement de coefficients <span class="math inline">\(\hat\beta_j\)</span>.</p>
+</section>
+<section id="contenu-attendu-du-rapport" class="level3">
+<h3 class="anchored" data-anchor-id="contenu-attendu-du-rapport">Contenu attendu du rapport</h3>
+<ol type="1">
+<li>Question de recherche et description des données.</li>
+<li>Nettoyage et analyse exploratoire.</li>
+<li>Modèle retenu, avec sa justification.</li>
+<li>Estimation, intervalles de confiance et tests (valeur-<span class="math inline">\(p\)</span>) pour les paramètres d’intérêt.</li>
+<li>Sélection de variables et comparaison de modèles.</li>
+<li>Diagnostics et validation (résidus, observations influentes, surdispersion pour Poisson, calibration et courbe ROC pour la logistique, validation croisée).</li>
+<li>Interprétation, limites et ouverture vers d’autres modèles.</li>
+<li>Une section « Ce qui pourrait fausser nos conclusions » (biais de sélection, variables omises, différence entre corrélation et causalité). Si les données concernent des personnes, ajoutez une courte réflexion éthique : qui est dans les données et qui n’y est pas ?</li>
+</ol>
+</section>
+</section>
+<section id="jalons" class="level2">
+<h2 class="anchored" data-anchor-id="jalons">Jalons</h2>
+<p>Le projet comporte cinq jalons. La date de chaque labo sert d’échéance au jalon correspondant, mais vous n’avez pas à attendre le labo pour vous y mettre : un jalon peut être complété avant, il n’est pas nécessaire de le faire en classe pendant le labo. Chaque jalon donne lieu à un livrable court (une à deux pages ou un fichier source).</p>
+<section id="jalon-1-choix-du-jeu-de-données" class="level3">
+<h3 class="anchored" data-anchor-id="jalon-1-choix-du-jeu-de-données">Jalon 1 : choix du jeu de données</h3>
+<p>Objectif : former les équipes, choisir une question de recherche et valider la faisabilité.</p>
+<p>Tâches :</p>
+<ul>
+<li>explorer au moins deux jeux de données candidats avec <code>str()</code>, <code>summary()</code> et <code>skimr::skim()</code> ;</li>
+<li>énoncer une question de recherche et identifier la variable réponse <span class="math inline">\(Y\)</span> ainsi que les covariables potentielles ;</li>
+<li>justifier le choix entre logistique et Poisson ;</li>
+<li>vérifier les critères du choix de jeu de données ci-dessus.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Astuce</span>Exemple
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pour un jeu de données de collisions routières par intersection, vous pourriez poser <span class="math inline">\(Y_i \sim \text{Poisson}(\mu_i)\)</span> avec <span class="math display">\[
+  \log(\mu_i) = \log(t_i) + \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip},
+\]</span> où <span class="math inline">\(t_i\)</span> est une mesure d’exposition (ici, le trafic moyen) qui entre dans le modèle comme décalage (<code>offset</code>).</p>
+</div>
+</div>
+<p>Livrable : une page de proposition (question, données, variable réponse, modèle envisagé, répartition des tâches). Je l’approuve ou je demande des ajustements.</p>
+</section>
+<section id="jalon-2-nettoyage-et-analyse-primaire" class="level3">
+<h3 class="anchored" data-anchor-id="jalon-2-nettoyage-et-analyse-primaire">Jalon 2 : nettoyage et analyse primaire</h3>
+<p>Objectif : connaître ses données avant de modéliser.</p>
+<p>Tâches :</p>
+<ul>
+<li>documenter les variables (type, unité, valeurs permises) dans un dictionnaire de données ;</li>
+<li>traiter les valeurs manquantes (quantifier, comprendre le mécanisme, choisir une stratégie et la justifier) ;</li>
+<li>recoder les variables qualitatives (niveaux rares, catégorie de référence) ;</li>
+<li>produire des statistiques descriptives et des graphiques de <span class="math inline">\(Y\)</span> en fonction de chaque covariable ;</li>
+<li>repérer les valeurs aberrantes et les problèmes de colinéarité (corrélations, facteurs d’inflation de la variance) ;</li>
+<li>mettre de côté au hasard 20 % des observations (jeu de réserve) sans y toucher avant le Jalon 4 : elles serviront à évaluer honnêtement votre modèle final.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>donnees <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"donnees.csv"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># proportion de Y selon une covariable qualitative</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>donnees <span class="sc">|&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(covariable) <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">prop =</span> <span class="fu">mean</span>(y), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># valeurs manquantes</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>donnees <span class="sc">|&gt;</span> <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">mean</span>(<span class="fu">is.na</span>(.x))))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Livrable : un fichier source qui part des données brutes et produit les données nettoyées et le jeu de réserve, avec une section expliquant chaque décision prise.</p>
+</section>
+<section id="jalon-3-ajustement-et-début-dinférence" class="level3">
+<h3 class="anchored" data-anchor-id="jalon-3-ajustement-et-début-dinférence">Jalon 3 : ajustement et début d’inférence</h3>
+<p>Objectif : ajuster un premier GLM et interpréter les résultats.</p>
+<p>Tâches :</p>
+<ul>
+<li>ajuster un modèle complet avec <code>glm()</code> ;</li>
+<li>interpréter chaque coefficient sur l’échelle du prédicteur linéaire et sur l’échelle naturelle (rapport de cotes <span class="math inline">\(e^{\hat\beta_j}\)</span> ou rapport de taux) ;</li>
+<li>construire des intervalles de confiance de Wald et par vraisemblance profilée (<code>confint()</code>), puis comparer ;</li>
+<li>effectuer des tests de Wald et des tests du rapport de vraisemblance, en précisant la valeur-<span class="math inline">\(p\)</span> et l’hypothèse testée ;</li>
+<li>tracer l’effet d’une covariable sur la probabilité (ou le taux) prédite, les autres covariables étant fixées.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ajust <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> ., <span class="at">data =</span> donnees_propres, <span class="at">family =</span> binomial)   <span class="co"># ou poisson</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ajust)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">cbind</span>(<span class="at">OR =</span> <span class="fu">coef</span>(ajust), <span class="fu">confint</span>(ajust)))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(ajust, <span class="at">test =</span> <span class="st">"Chisq"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Remarque
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pour Poisson, vérifiez dès cette étape la surdispersion en comparant la déviance résiduelle à ses degrés de liberté. Si le rapport est nettement supérieur à 1, passez à un modèle quasi-Poisson ou binomial négatif.</p>
+</div>
+</div>
+<p>Livrable : une page d’interprétation écrite pour un lecteur non statisticien.</p>
+</section>
+<section id="jalon-4-sélection-de-variables" class="level3">
+<h3 class="anchored" data-anchor-id="jalon-4-sélection-de-variables">Jalon 4 : sélection de variables</h3>
+<p>Objectif : comparer des modèles de façon rigoureuse.</p>
+<p>Tâches :</p>
+<ul>
+<li>sélection pas à pas (<code>step()</code>) avec l’AIC et le BIC, et discussion des limites de cette approche, notamment l’inférence faite après sélection ;</li>
+<li>régularisation ridge et lasso avec <code>glmnet</code>, choix de <span class="math inline">\(\lambda\)</span> par validation croisée ;</li>
+<li>comparaison du pouvoir prédictif par validation croisée, puis une évaluation finale du modèle retenu sur le jeu de réserve (taux de bonne classification, AUC et déviance pour la logistique ; erreur quadratique et déviance pour Poisson) ;</li>
+<li>examen de la stabilité : les variables retenues changent-elles si l’on rééchantillonne (bootstrap) ?</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(y <span class="sc">~</span> ., donnees_propres)[, <span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">cv.glmnet</span>(X, donnees_propres<span class="sc">$</span>y, <span class="at">family =</span> <span class="st">"binomial"</span>, <span class="at">alpha =</span> <span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(cv, <span class="at">s =</span> <span class="st">"lambda.1se"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Livrable : un tableau comparatif d’au moins trois modèles (complet, sélectionné, lasso), avec un choix final justifié.</p>
+</section>
+<section id="jalon-5-ouverture-sur-dautres-modèles" class="level3">
+<h3 class="anchored" data-anchor-id="jalon-5-ouverture-sur-dautres-modèles">Jalon 5 : ouverture sur d’autres modèles</h3>
+<p>Objectif : voir jusqu’où le GLM est adéquat et ce qui pourrait le remplacer ou le compléter.</p>
+<p>Tâches (choisissez-en au moins une) :</p>
+<ul>
+<li>ajouter une relation non linéaire par splines ou par un GAM (<code>mgcv::gam()</code>) et comparer avec le GLM au moyen de l’AIC et de la validation croisée ;</li>
+<li>essayer une méthode de plus proches voisins ou à noyau pour la prédiction ;</li>
+<li>tester un modèle pour données surdispersées (quasi-Poisson, binomial négatif) ou avec excès de zéros (modèle à inflation de zéros) ;</li>
+<li>comparer avec une méthode d’apprentissage automatique (forêt aléatoire, arbre de décision) et discuter du compromis entre interprétabilité et prédiction.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>gam1 <span class="ot">&lt;-</span> <span class="fu">gam</span>(y <span class="sc">~</span> <span class="fu">s</span>(diametre) <span class="sc">+</span> <span class="fu">s</span>(hauteur) <span class="sc">+</span> espece, <span class="at">data =</span> donnees_propres,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> binomial, <span class="at">method =</span> <span class="st">"REML"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gam1, <span class="at">pages =</span> <span class="dv">1</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(ajust, gam1)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Livrable : une demi-page répondant à la question « le GLM suffit-il ? », appuyée par au moins une comparaison chiffrée.</p>
+</section>
+</section>
+<section id="évaluation" class="level2">
+<h2 class="anchored" data-anchor-id="évaluation">Évaluation</h2>
+<p>Le projet compte pour 45 % de la note finale.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Composante</th>
+<th>Pondération</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Livrables des jalons (5 × 3 %)</td>
+<td>15 %</td>
+</tr>
+<tr class="even">
+<td>Rapport technique</td>
+<td>15 %</td>
+</tr>
+<tr class="odd">
+<td>Présentation et produit de communication</td>
+<td>10 %</td>
+</tr>
+<tr class="even">
+<td>Contribution individuelle (évaluation par les pairs)</td>
+<td>5 %</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td><strong>45 %</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Critères d’évaluation du rapport et de la présentation :</p>
+<ul>
+<li>justesse statistique (modèle adapté, hypothèses vérifiées, inférence correcte) ;</li>
+<li>qualité de l’interprétation (claire, nuancée, liée à la question de départ) ;</li>
+<li>reproductibilité (le document se compile sans intervention) ;</li>
+<li>clarté de la communication (graphiques lisibles, vulgarisation) ;</li>
+<li>profondeur de l’analyse (diagnostics, sélection de modèle, ouverture).</li>
+</ul>
+</section>
+<section id="calendrier-suggéré" class="level2">
+<h2 class="anchored" data-anchor-id="calendrier-suggéré">Calendrier suggéré</h2>
+<p>La date de chaque labo sert d’échéance au jalon correspondant (voir le <a href="../calendrier.html">calendrier du cours</a> et l’onglet <a href="../labos/labo1.html">Labos</a>). Vous pouvez compléter un jalon avant cette date ; il n’est pas nécessaire d’attendre le labo, ni de faire le travail en classe.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Jalon</th>
+<th>Échéance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jalon 1 : choix du jeu de données</td>
+<td>Labo 1 — 11 mars</td>
+</tr>
+<tr class="even">
+<td>Jalon 2 : nettoyage et analyse primaire</td>
+<td>Labo 2 — 18 mars</td>
+</tr>
+<tr class="odd">
+<td>Jalon 3 : ajustement et début d’inférence</td>
+<td>Labo 3 — 25 mars</td>
+</tr>
+<tr class="even">
+<td>Jalon 4 : sélection de variables</td>
+<td>Labo 4 — 1 avril</td>
+</tr>
+<tr class="odd">
+<td>Jalon 5 : ouverture sur d’autres modèles</td>
+<td>Labo 5 — 8 avril</td>
+</tr>
+<tr class="even">
+<td>Présentations</td>
+<td>22 avril</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script>
+// Déplace le bloc « Dernière modification » (généré par Quarto en haut de page)
+// vers le bas du contenu. N'a aucun effet sur la page d'accueil, dont le
+// bloc de titre est déjà masqué.
+(function () {
+  if (document.body.classList.contains('page-home')) return;
+  var meta = document.querySelector('.quarto-title-meta');
+  var content = document.getElementById('quarto-document-content');
+  if (meta && content) {
+    content.appendChild(meta);
+  }
+})();
+</script>
+<script>
+// Masque le contenu d'une page labos/laboN.html tant que la date associée
+// dans labos/disponibilite.json n'est pas atteinte (comparaison faite dans
+// le fuseau horaire du navigateur de la personne qui consulte la page).
+// Sans effet sur les autres pages du site.
+(function () {
+  var m = location.pathname.match(/\/labos\/(labo\d)\.html$/);
+  if (!m) return;
+  var id = m[1];
+
+  fetch('disponibilite.json')
+    .then(function (r) { return r.json(); })
+    .then(function (dates) {
+      var dateStr = dates[id];
+      if (!dateStr) return;
+
+      var disponible = new Date(dateStr + 'T00:00:00');
+      if (new Date() >= disponible) return;
+
+      var content = document.getElementById('quarto-document-content');
+      if (!content) return;
+
+      var dateAffichee = disponible.toLocaleDateString('fr-CA', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+      content.innerHTML =
+        '<div class="callout callout-style-default callout-warning">' +
+        '<div class="callout-body-container callout-body">' +
+        '<p>Ce labo sera disponible à partir du <strong>' + dateAffichee + '</strong>.</p>' +
+        '</div></div>';
+    })
+    .catch(function () {
+      // Si le fichier de dates est introuvable (hors ligne, etc.), on
+      // laisse le contenu du labo visible plutôt que de bloquer l'accès.
+    });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/julienmiron\.github\.io\/STT-4300\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Site de cours STT-4300</p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

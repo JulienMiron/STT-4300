@@ -54,7 +54,7 @@ p <- ggplot() +
 
 p  # affiche dans le Plots pane de Positron (fond blanc là, normal)
 
-setwd("/Users/jmiron/Library/CloudStorage/OneDrive-UniversitéLaval/Quarto/STT-4300/images")
+setwd("/Users/jmiron/GitHub/STT-4300/notes/images")
 
 ggsave(
   "logit_plot.png",

@@ -5,7 +5,7 @@ library(ggplot2)
 library(gifski)
 library(mgcv)   # requis seulement pour le chapitre GAM
 
-base_dir    <- "/Users/jmiron/Documents/GitHub/STT-4300/notes/images"
+base_dir    <- "/Users/jmiron/GitHub/STT-4300/notes/images"
 n_frames    <- 150
 largeur_img <- 8
 hauteur_img <- 5.5

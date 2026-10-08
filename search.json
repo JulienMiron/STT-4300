@@ -4,105 +4,21 @@
     "href": "labos/labo5.html",
     "title": "Labo 5",
     "section": "",
-    "text": "STT-4300 — Régression II"
-  },
-  {
-    "objectID": "labos/labo5.html#objectifs",
-    "href": "labos/labo5.html#objectifs",
-    "title": "Labo 5",
-    "section": "Objectifs",
-    "text": "Objectifs\n\nFormuler une question technique précise sur la matière du cours (régression non paramétrique, régression non linéaire, GAM).\nÉvaluer la justesse, la complétude et la clarté d’une réponse générée par Claude, en s’appuyant sur les notes de cours et vos propres calculs.\nIdentifier les forces et les limites d’un assistant IA comme outil d’apprentissage en statistique."
-  },
-  {
-    "objectID": "labos/labo5.html#consignes",
-    "href": "labos/labo5.html#consignes",
-    "title": "Labo 5",
-    "section": "Consignes",
-    "text": "Consignes\n\nChoisissez une question précise (pas une question trop générale du type « explique-moi les splines ») portant sur un concept des labos 1 à 4. Quelques exemples, à adapter ou remplacer par une question de votre cru :\n\n« Pourquoi la variance de l’estimateur kNN est-elle \\(\\sigma^2/k\\), et pourquoi ce résultat suppose-t-il \\(Var[\\epsilon_i]\\) constante ? »\n« Pourquoi les splines naturelles imposent-elles la linéarité de \\(f\\) aux extrémités, et en quoi cela réduit-il la variance de \\(\\hat f(x)\\) près des bords ? »\n« Quelle est la différence entre la validation croisée ordinaire (OCV) et la validation croisée généralisée (GCV) pour choisir le paramètre de lissage d’un GAM ? »\n« Pourquoi dit-on que les modèles additifs permettent d’éviter le fléau de la dimension auquel se heurtent les estimateurs à noyau ? »\n\nPosez votre question à Claude et conservez l’échange intégral (question et réponse complète, sans l’éditer).\nRédigez une évaluation critique de la réponse obtenue, structurée en quatre points :\n\nExactitude : la réponse est-elle correcte ? Si elle contient une erreur, une imprécision ou une simplification abusive, identifiez-la précisément et expliquez pourquoi c’est incorrect (appuyez-vous sur les notes de cours ou sur un calcul).\nComplétude : la réponse omet-elle une nuance ou une hypothèse importante (p. ex. une condition de régularité, un cas particulier) ?\nClarté et niveau : la réponse est-elle adaptée au niveau du cours ? Est-elle trop vague, trop technique, ou truffée de jargon non défini ?\nVerdict global : sur une échelle qualitative (excellente / correcte mais incomplète / partiellement erronée / erronée), que donneriez-vous à cette réponse, et pourquoi ?\n\nSi la réponse contient une erreur ou une lacune, rédigez vous-même une version corrigée ou complétée du passage problématique (quelques phrases suffisent).\nEn 5-10 lignes, commentez : dans quel contexte un assistant comme Claude est-il utile pour apprendre les méthodes de ce cours, et dans quel contexte faut-il s’en méfier ou vérifier systématiquement ses affirmations ?"
-  },
-  {
-    "objectID": "labos/labo5.html#remise",
-    "href": "labos/labo5.html#remise",
-    "title": "Labo 5",
-    "section": "Remise",
-    "text": "Remise\n\nL’échange complet avec Claude (question et réponse, non modifiés).\nVotre évaluation critique (points 3-5 ci-dessus)."
-  },
-  {
-    "objectID": "labos/labo5.html#matériel",
-    "href": "labos/labo5.html#matériel",
-    "title": "Labo 5",
-    "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : kNN et noyau, Splines, GAM\nUn compte donnant accès à Claude (claude.ai) ou à un autre assistant conversationnel équivalent"
+    "text": "STT-4300 — Régression II\n\n\nLabo 5\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 8 avril 2027."
   },
   {
     "objectID": "labos/labo3.html",
     "href": "labos/labo3.html",
     "title": "Labo 3",
     "section": "",
-    "text": "STT-4300 — Régression II"
-  },
-  {
-    "objectID": "labos/labo3.html#objectifs",
-    "href": "labos/labo3.html#objectifs",
-    "title": "Labo 3",
-    "section": "Objectifs",
-    "text": "Objectifs\n\nAjuster un modèle additif avec la librairie mgcv et interpréter les effets lissés de chaque variable.\nComprendre le rôle du paramètre de lissage et des degrés de liberté effectifs dans le compromis biais-variance.\nÉtendre les GAM au cas d’une réponse non gaussienne (GAM logistique)."
-  },
-  {
-    "objectID": "labos/labo3.html#mise-en-contexte",
-    "href": "labos/labo3.html#mise-en-contexte",
-    "title": "Labo 3",
-    "section": "Mise en contexte",
-    "text": "Mise en contexte\nOn reprend le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et deux variables explicatives, weight et horsepower.\n\nlibrary(ISLR)\nlibrary(mgcv)\ndata(Auto)"
-  },
-  {
-    "objectID": "labos/labo3.html#consignes",
-    "href": "labos/labo3.html#consignes",
-    "title": "Labo 3",
-    "section": "Consignes",
-    "text": "Consignes\n\nAjuster le modèle additif mod1 &lt;- gam(mpg ~ s(weight) + s(horsepower), data = Auto). Afficher les effets partiels estimés (plot(mod1, pages = 1)) et commenter leur forme : sont-ils linéaires ? Justifient-ils l’usage d’un GAM plutôt que d’un modèle linéaire ?\nExaminer summary(mod1) : rapporter les degrés de liberté effectifs de chaque terme lissé et la déviance expliquée. Tester \\(H_0 : f_j \\equiv 0\\) pour chacune des deux variables.\nComparer le modèle additif à un modèle linéaire usuel (lm(mpg ~ weight + horsepower)) et à un modèle polynomial (par exemple degré 2 pour chaque variable) à l’aide de l’AIC et d’une estimation de l’erreur de prédiction par validation croisée.\nFaire varier artificiellement le paramètre de lissage d’un des termes (argument sp de gam) pour illustrer l’effet de \\(\\lambda \\to 0\\) et \\(\\lambda \\to \\infty\\) sur la courbe ajustée.\nAjuster un GAM avec interaction simple, par exemple s(weight, horsepower) (lissage bivarié), et discuter de ce que cela apporte (ou non) par rapport au modèle additif pur.\nGAM logistique. Construire une variable binaire à partir de mpg (par exemple \\(Y = \\mathbf{1}\\{\\texttt{mpg} &gt; \\text{médiane}\\}\\)) et ajuster gam(Y ~ s(weight), family = binomial, data = Auto). Représenter la probabilité ajustée en fonction de weight et comparer à une régression logistique usuelle."
-  },
-  {
-    "objectID": "labos/labo3.html#matériel",
-    "href": "labos/labo3.html#matériel",
-    "title": "Labo 3",
-    "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : Modèles additifs et modèles additifs généralisés (GAM)\nLibrairies R : mgcv, ISLR"
+    "text": "STT-4300 — Régression II\n\n\nLabo 3\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 25 mars 2027."
   },
   {
     "objectID": "labos/labo1.html",
     "href": "labos/labo1.html",
     "title": "Labo 1",
     "section": "",
-    "text": "STT-4300 — Régression II"
-  },
-  {
-    "objectID": "labos/labo1.html#objectifs",
-    "href": "labos/labo1.html#objectifs",
-    "title": "Labo 1",
-    "section": "Objectifs",
-    "text": "Objectifs\n\nImplémenter et comparer l’estimateur des \\(k\\) plus proches voisins (kNN) et l’estimateur de noyau de Nadaraya-Watson.\nComprendre, de façon empirique, le compromis biais-variance associé au choix de \\(k\\) et de la fenêtre \\(h\\).\nSélectionner \\(k\\) et \\(h\\) par validation croisée et comparer les courbes ajustées obtenues."
-  },
-  {
-    "objectID": "labos/labo1.html#mise-en-contexte",
-    "href": "labos/labo1.html#mise-en-contexte",
-    "title": "Labo 1",
-    "section": "Mise en contexte",
-    "text": "Mise en contexte\nOn utilise le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et $X = $ weight, comme dans les notes de cours sur la régression non paramétrique.\n\nlibrary(ISLR)\nlibrary(FNN)\nlibrary(KernSmooth)\ndata(Auto)"
-  },
-  {
-    "objectID": "labos/labo1.html#consignes",
-    "href": "labos/labo1.html#consignes",
-    "title": "Labo 1",
-    "section": "Consignes",
-    "text": "Consignes\n\nProduire un nuage de points mpg en fonction de weight et discuter brièvement pourquoi une relation linéaire semble inadéquate.\nÀ l’aide de knn.reg (librairie FNN), ajuster l’estimateur kNN pour plusieurs valeurs de \\(k\\) (par exemple \\(k = 5, 25, 45, 100, 300\\)). Superposer les courbes ajustées au nuage de points et commenter l’effet de \\(k\\) sur la rugosité de la courbe.\nUtiliser le critère PRESS de knn.reg (LOOCV) pour sélectionner \\(k_{\\min}\\). Comparer avec la valeur \\(k_{\\min}=45\\) mentionnée dans les notes.\nÀ l’aide de locpoly (librairie KernSmooth, degree=0), ajuster l’estimateur de Nadaraya-Watson pour plusieurs valeurs de la fenêtre \\(h\\). Encore une fois, illustrer l’effet de \\(h\\) sur la courbe ajustée.\nChoisir \\(h\\) par validation croisée (vous pouvez coder vous-même une boucle de LOOCV ou de \\(K\\)-fold CV) et comparer la courbe obtenue à celle de kNN avec \\(k_{\\min}\\).\nEn une dizaine de lignes, comparer les deux approches : avantages, inconvénients, et situations où l’une serait préférable à l’autre (notamment en présence de plusieurs variables explicatives — voir la distance de Mahalanobis dans les notes)."
-  },
-  {
-    "objectID": "labos/labo1.html#matériel",
-    "href": "labos/labo1.html#matériel",
-    "title": "Labo 1",
-    "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : Régression non paramétrique — kNN et noyau\nLibrairies R : FNN, KernSmooth, ISLR"
+    "text": "STT-4300 — Régression II\n\n\nLabo 1\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 11 mars 2027."
   },
   {
     "objectID": "calendrier.html",
@@ -200,69 +116,13 @@
     "href": "labos/labo2.html",
     "title": "Labo 2",
     "section": "",
-    "text": "STT-4300 — Régression II"
-  },
-  {
-    "objectID": "labos/labo2.html#objectifs",
-    "href": "labos/labo2.html#objectifs",
-    "title": "Labo 2",
-    "section": "Objectifs",
-    "text": "Objectifs\n\nAjuster des modèles de régression polynomiale, par fonctions constantes par morceaux, et par splines de régression.\nChoisir le degré du polynôme (ou le nombre de nœuds) par un critère d’information (AIC/BIC) et par validation croisée.\nComprendre l’intérêt des splines naturelles et des splines de lissage (smooth.spline) par rapport aux splines de régression classiques."
-  },
-  {
-    "objectID": "labos/labo2.html#mise-en-contexte",
-    "href": "labos/labo2.html#mise-en-contexte",
-    "title": "Labo 2",
-    "section": "Mise en contexte",
-    "text": "Mise en contexte\nOn reprend le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et $X = $ weight.\n\nlibrary(ISLR)\nlibrary(splines)\ndata(Auto)"
-  },
-  {
-    "objectID": "labos/labo2.html#consignes",
-    "href": "labos/labo2.html#consignes",
-    "title": "Labo 2",
-    "section": "Consignes",
-    "text": "Consignes\n\nAjuster des régressions polynomiales de degré \\(p = 1, 2, 3, 5, 10\\) (lm(mpg ~ poly(weight, p, raw=TRUE))). Superposer les courbes ajustées et commenter le comportement aux extrémités du domaine pour les degrés élevés.\nSélectionner le degré \\(p\\) à l’aide de l’AIC/BIC, puis à l’aide de la validation croisée (LOOCV ou 10-fold). Les deux critères mènent-ils à la même valeur de \\(p\\) ?\nAjuster un modèle à fonctions constantes par morceaux avec cut(weight, K) pour quelques valeurs de \\(K\\), et comparer visuellement à la régression polynomiale.\nAjuster une spline de régression cubique avec bs(weight, knots = ...) pour un choix de nœuds que vous justifierez (par exemple les quartiles de weight), puis une spline naturelle avec ns(weight, df = 4). Comparer les deux courbes, en particulier au-delà de la plage des données observées.\nAjuster une spline de lissage avec smooth.spline(Auto$weight, Auto$mpg, cv = TRUE). Rapporter les degrés de liberté effectifs sélectionnés et comparer la courbe obtenue aux splines de régression du point 4.\nConstruire un intervalle de confiance ponctuel pour \\(f(x)\\) autour d’une valeur de \\(x\\) de votre choix, pour le modèle polynomial retenu au point 2.\nRédiger une courte conclusion (5-10 lignes) comparant l’ensemble des méthodes du labo selon : flexibilité, risque de surajustement, interprétabilité, et facilité d’implémentation."
-  },
-  {
-    "objectID": "labos/labo2.html#matériel",
-    "href": "labos/labo2.html#matériel",
-    "title": "Labo 2",
-    "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : Régression non linéaire — polynômes, fonctions par morceaux et splines\nLibrairies R : splines, ISLR"
+    "text": "STT-4300 — Régression II\n\n\nLabo 2\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 18 mars 2027."
   },
   {
     "objectID": "labos/labo4.html",
     "href": "labos/labo4.html",
     "title": "Labo 4",
     "section": "",
-    "text": "STT-4300 — Régression II"
-  },
-  {
-    "objectID": "labos/labo4.html#objectifs",
-    "href": "labos/labo4.html#objectifs",
-    "title": "Labo 4",
-    "section": "Objectifs",
-    "text": "Objectifs\n\nComparer, sur un même jeu de données, l’ensemble des méthodes non paramétriques et non linéaires vues jusqu’ici (kNN, noyau, splines, GAM).\nEstimer et comparer l’erreur de prédiction test de chaque méthode par validation croisée.\nDévelopper un jugement critique sur le choix d’une méthode selon le contexte (nombre de variables, interprétabilité recherchée, taille de l’échantillon)."
-  },
-  {
-    "objectID": "labos/labo4.html#mise-en-contexte",
-    "href": "labos/labo4.html#mise-en-contexte",
-    "title": "Labo 4",
-    "section": "Mise en contexte",
-    "text": "Mise en contexte\nOn utilise le jeu de données College (librairie ISLR), avec $Y = $ Outstate (frais de scolarité hors-État) et $X = $ Expend (dépenses par étudiant).\n\nlibrary(ISLR)\nlibrary(FNN)\nlibrary(KernSmooth)\nlibrary(splines)\nlibrary(mgcv)\ndata(College)"
-  },
-  {
-    "objectID": "labos/labo4.html#consignes",
-    "href": "labos/labo4.html#consignes",
-    "title": "Labo 4",
-    "section": "Consignes",
-    "text": "Consignes\n\nPartitionner les données en un ensemble d’entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à \\(K=10\\) plis réutilisable pour toutes les méthodes suivantes.\nAjuster, sur l’ensemble d’entraînement, chacun des modèles suivants pour prédire Outstate en fonction de Expend :\n\nun modèle linéaire simple (référence) ;\nun estimateur kNN (knn.reg), avec \\(k\\) choisi par validation croisée ;\nun estimateur de noyau (locpoly), avec \\(h\\) choisi par validation croisée ;\nune spline de lissage (smooth.spline, cv = TRUE) ;\nun GAM univarié (gam(Outstate ~ s(Expend))).\n\nPour chaque méthode, calculer l’erreur quadratique moyenne sur l’ensemble test (ou moyenne des erreurs de validation croisée). Présenter les résultats dans un tableau.\nSuperposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points Outstate vs Expend. Commenter les ressemblances et différences.\nExtension multivariée. Ajuster un GAM avec plusieurs prédicteurs, par exemple gam(Outstate ~ s(Room.Board) + s(PhD) + s(perc.alumni) + s(Expend) + s(Grad.Rate), data = College). Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant. Quelles variables semblent avoir un effet non linéaire marqué ?\nRédiger une conclusion (15-20 lignes) qui répond à la question : dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM ? Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d’interprétabilité."
-  },
-  {
-    "objectID": "labos/labo4.html#matériel",
-    "href": "labos/labo4.html#matériel",
-    "title": "Labo 4",
-    "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : kNN et noyau, Splines, GAM\nLibrairies R : FNN, KernSmooth, splines, mgcv, ISLR"
+    "text": "STT-4300 — Régression II\n\n\nLabo 4\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 1er avril 2027."
   }
 ]

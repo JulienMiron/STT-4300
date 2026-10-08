@@ -139,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./notes/index.html" target="_blank"> 
+    <a class="nav-link" href="./notes/index.html"> 
 <span class="menu-text">Notes de cours</span></a>
   </li>  
 </ul>
@@ -171,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">7 octobre 2026</p>
+      <p class="date-modified">8 octobre 2026</p>
     </div>
   </div>
     
@@ -368,6 +368,43 @@ STT-4300 — Régression II
   if (meta && content) {
     content.appendChild(meta);
   }
+})();
+</script>
+<script>
+// Masque le contenu d'une page labos/laboN.html tant que la date associée
+// dans labos/disponibilite.json n'est pas atteinte (comparaison faite dans
+// le fuseau horaire du navigateur de la personne qui consulte la page).
+// Sans effet sur les autres pages du site.
+(function () {
+  var m = location.pathname.match(/\/labos\/(labo\d)\.html$/);
+  if (!m) return;
+  var id = m[1];
+
+  fetch('disponibilite.json')
+    .then(function (r) { return r.json(); })
+    .then(function (dates) {
+      var dateStr = dates[id];
+      if (!dateStr) return;
+
+      var disponible = new Date(dateStr + 'T00:00:00');
+      if (new Date() >= disponible) return;
+
+      var content = document.getElementById('quarto-document-content');
+      if (!content) return;
+
+      var dateAffichee = disponible.toLocaleDateString('fr-CA', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+      content.innerHTML =
+        '<div class="callout callout-style-default callout-warning">' +
+        '<div class="callout-body-container callout-body">' +
+        '<p>Ce labo sera disponible à partir du <strong>' + dateAffichee + '</strong>.</p>' +
+        '</div></div>';
+    })
+    .catch(function () {
+      // Si le fichier de dates est introuvable (hors ligne, etc.), on
+      // laisse le contenu du labo visible plutôt que de bloquer l'accès.
+    });
 })();
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
@@ -778,7 +815,7 @@ STT-4300 — Régression II
 </div>   
     <div class="nav-footer-center">
 <p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/calendrier.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

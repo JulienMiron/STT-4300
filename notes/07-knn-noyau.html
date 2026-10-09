@@ -684,6 +684,15 @@ Figure&nbsp;6.5: Estimateur de Nadaraya-Watson pour <span class="math inline">\(
 </div>
 </div>
 </div>
+<div class="env-remarque" data-titre="$k$NN ou Nadaraya-Watson : quelle est la différence?">
+<p><span class="env-titre">Remarque — <span class="math inline">\(k\)</span>NN ou Nadaraya-Watson : quelle est la différence?</span></p>
+<p>Les deux estimateurs reposent sur la même idée : pour estimer <span class="math inline">\(f(x)\)</span>, on fait une moyenne des <span class="math inline">\(Y_i\)</span> des observations dont le <span class="math inline">\(X_i\)</span> est proche de <span class="math inline">\(x\)</span>. Ils diffèrent par la façon de définir « proche » et de pondérer.</p>
+<ul>
+<li><p>L’estimateur <span class="math inline">\(k\)</span>NN fixe le nombre de voisins : il prend toujours les <span class="math inline">\(k\)</span> observations les plus proches de <span class="math inline">\(x\)</span>, quelle que soit leur distance, et leur donne à chacune le même poids <span class="math inline">\(1/k\)</span>. La taille du voisinage s’adapte donc à la densité des données : il est étroit là où les observations sont nombreuses et large là où elles sont rares. En contrepartie, l’estimateur est une fonction en escalier : il saute chaque fois qu’une observation entre dans le voisinage ou en sort, et la variance <span class="math inline">\(\sigma^2/k\)</span> est la même partout.</p></li>
+<li><p>L’estimateur de Nadaraya-Watson fixe la largeur du voisinage par <span class="math inline">\(h\)</span> : toutes les observations contribuent, avec un poids qui décroît continûment avec la distance <span class="math inline">\(|X_i - x|/h\)</span>. Le nombre effectif de voisins varie donc d’un <span class="math inline">\(x\)</span> à l’autre : il est grand là où les données sont denses (variance faible) et petit là où elles sont rares (variance élevée, comme pour les gros arbres d’<a href="#data-arbres"><code>arbres</code></a>). En contrepartie, l’estimateur est lisse, puisque les poids varient continûment avec <span class="math inline">\(x\)</span>.</p></li>
+</ul>
+<p>Autrement dit, <span class="math inline">\(k\)</span>NN adapte la fenêtre et garde la variance constante ; Nadaraya-Watson garde la fenêtre et laisse la variance varier. Les deux ont un paramètre de lissage (<span class="math inline">\(k\)</span> ou <span class="math inline">\(h\)</span>) que l’on choisit par validation croisée et, pour des valeurs comparables (un <span class="math inline">\(h\)</span> tel que le voisinage contient environ <span class="math inline">\(k\)</span> observations), ils donnent des courbes très semblables, comme le montre la <a href="#fig-arbres-noyau" class="quarto-xref">Figure&nbsp;<span>6.5</span></a>.</p>
+</div>
 </section>
 </section>
 <section id="régression-non-paramétrique-et-classification" class="level2" data-number="6.3">

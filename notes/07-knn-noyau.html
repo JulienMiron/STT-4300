@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -464,7 +499,30 @@ window.Quarto = {
 </header>
 
 
-<p>Considérons le jeu de données <code>Auto</code> : la réponse <span class="math inline">\(Y\)</span> est <code>mpg</code> et la variable explicative <span class="math inline">\(X\)</span> est le poids de la voiture (<code>weight</code>). Le nuage de points montre que la relation entre <span class="math inline">\(X\)</span> et <span class="math inline">\(Y\)</span> n’est clairement pas linéaire. Ce chapitre présente des approches <strong>non-paramétriques</strong> pour étudier une telle relation, sans postuler de forme fonctionnelle.</p>
+<p>Reprenons le jeu de données <a href="#data-arbres"><code>arbres</code></a> du <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 4</span></a> : la réponse <span class="math inline">\(Y\)</span> est la hauteur de l’arbre (<code>height_m</code>, en m) et la variable explicative <span class="math inline">\(X\)</span> est son diamètre à hauteur de poitrine (<code>diameter_cm</code>, en cm). Le nuage de points montre que la relation entre <span class="math inline">\(X\)</span> et <span class="math inline">\(Y\)</span> n’est clairement pas linéaire : la hauteur croît rapidement avec le diamètre pour les petits arbres, puis de plus en plus lentement. Au <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 4</span></a>, on avait contourné le problème en passant à l’échelle log-log. Ce chapitre présente des approches <strong>non-paramétriques</strong> pour étudier une telle relation, sans postuler de forme fonctionnelle.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/arbres.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> arbres<span class="sc">$</span>diameter_cm</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> arbres<span class="sc">$</span>height_m</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(D)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbres, <span class="fu">aes</span>(diameter_cm, height_m)) <span class="sc">+</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diamètre (cm)"</span>, <span class="at">y =</span> <span class="st">"Hauteur (m)"</span>) <span class="sc">+</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-arbres-nuage" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbres-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-knn-noyau_files/figure-html/fig-arbres-nuage-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbres-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: Hauteur en fonction du diamètre pour les 200 arbres du jeu de données <code>arbres</code>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <section id="estimateur-des-k-plus-proches-voisins" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="estimateur-des-k-plus-proches-voisins"><span class="header-section-number">6.1</span> Estimateur des <span class="math inline">\(k\)</span> plus proches voisins</h2>
 <section id="définition" class="level3" data-number="6.1.1">
@@ -472,15 +530,75 @@ window.Quarto = {
 <p>On suppose que la relation entre <span class="math inline">\(X\)</span> et <span class="math inline">\(Y\)</span> s’écrit <span class="math display">\[Y_i = f(X_i) + \epsilon_i,\]</span> où <span class="math inline">\(f\)</span> est une fonction inconnue à estimer et <span class="math inline">\(\epsilon_i\)</span> vérifie <span class="math inline">\(E[\epsilon_i\mid X_i] = 0\)</span>. On suppose <span class="math inline">\(f\)</span> assez lisse (deux fois dérivable). Sous ces hypothèses, <span class="math display">\[f(x) = E[Y\mid X = x].\]</span> On suppose de plus <span class="math inline">\(X\)</span> continue, de sorte que <span class="math inline">\(P(X_i = X_{i'}) = 0\)</span> si <span class="math inline">\(i\neq i'\)</span>.</p>
 <p>L’estimateur des <span class="math inline">\(k\)</span> plus proches voisins (<span class="math inline">\(k\)</span>NN) est <span class="math display">\[\hat f(x) = \frac{1}{k}\sum_{i\in N_k(x)} Y_i,\]</span> où <span class="math inline">\(N_k(x)\)</span> est l’ensemble des indices des <span class="math inline">\(k\)</span> plus proches voisins de <span class="math inline">\(x\)</span> : on pose <span class="math inline">\(d_i(x) = (X_i - x)^2\)</span>, on ordonne <span class="math inline">\(d_{(1)}(x) &lt; \cdots &lt; d_{(n)}(x)\)</span>, et <span class="math inline">\(N_k(x)\)</span> contient les indices <span class="math inline">\(i\)</span> tels que <span class="math inline">\(d_i(x) \leq d_{(k)}(x)\)</span>.</p>
 <p>En R : fonction <code>knn.reg</code> de la librairie <code>FNN</code>.</p>
+<div class="env-remarque" data-titre="Valeurs ex æquo">
+<p><span class="env-titre">Remarque — Valeurs ex æquo</span></p>
+<p>Les diamètres d’<a href="#data-arbres"><code>arbres</code></a> sont mesurés au dixième de centimètre près : plusieurs arbres partagent donc exactement le même diamètre, contrairement à l’hypothèse <span class="math inline">\(P(X_i = X_{i'}) = 0\)</span>. Lorsque des observations sont à égale distance de <span class="math inline">\(x\)</span>, <code>knn.reg</code> en retient un sous-ensemble de façon arbitraire. Avec 200 arbres, l’effet sur <span class="math inline">\(\hat f\)</span> est négligeable, mais il faut en être conscient lorsque <span class="math inline">\(X\)</span> est fortement discrétisée.</p>
+</div>
 </section>
 <section id="compromis-biais-variance-et-choix-de-k" class="level3" data-number="6.1.2">
 <h3 data-number="6.1.2" class="anchored" data-anchor-id="compromis-biais-variance-et-choix-de-k"><span class="header-section-number">6.1.2</span> Compromis biais-variance et choix de <span class="math inline">\(k\)</span></h3>
-<p>Le comportement de <span class="math inline">\(\hat f\)</span> dépend fortement de <span class="math inline">\(k\)</span>. Lorsque <span class="math inline">\(X_i\)</span> est proche de <span class="math inline">\(x\)</span>, un développement de Taylor donne <span class="math display">\[E[\hat f(x)] \approx f(x) + f'(x)\,\frac{1}{k}\sum_{i\in N_k(x)}(E[X_i] - x) + \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2.\]</span> Si les <span class="math inline">\(X_i\)</span> sont symétriquement distribués autour de <span class="math inline">\(x\)</span>, le terme du premier ordre s’annule et <span class="math display">\[\mbox{biais}[\hat f(x)] \approx \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2,\]</span> quantité qui <strong>croît avec <span class="math inline">\(k\)</span></strong> (les voisins sont de plus en plus éloignés). D’autre part, si <span class="math inline">\(Var[\epsilon_i] = \sigma^2\)</span>, alors <span class="math display">\[Var[\hat f(x)] = \frac{\sigma^2}{k},\]</span> qui <strong>décroît avec <span class="math inline">\(k\)</span></strong>. Il faut donc sélectionner le <span class="math inline">\(k\)</span> qui minimise l’erreur quadratique moyenne <span class="math display">\[\mbox{biais}^2[\hat f(x)] + Var[\hat f(x)].\]</span> En pratique, on sélectionne <span class="math inline">\(k\)</span> par <strong>validation croisée</strong> (le critère <code>PRESS</code> de <code>knn.reg</code> correspond au LOOCV). Sur les données <code>Auto</code>, on obtient <span class="math inline">\(k_{\min} = 45\)</span>.</p>
+<p>Le comportement de <span class="math inline">\(\hat f\)</span> dépend fortement de <span class="math inline">\(k\)</span>. Lorsque <span class="math inline">\(X_i\)</span> est proche de <span class="math inline">\(x\)</span>, un développement de Taylor donne <span class="math display">\[E[\hat f(x)] \approx f(x) + f'(x)\,\frac{1}{k}\sum_{i\in N_k(x)}(E[X_i] - x) + \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2.\]</span> Si les <span class="math inline">\(X_i\)</span> sont symétriquement distribués autour de <span class="math inline">\(x\)</span>, le terme du premier ordre s’annule et <span class="math display">\[\mbox{biais}[\hat f(x)] \approx \frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i] - x)^2,\]</span> quantité qui <strong>croît avec <span class="math inline">\(k\)</span></strong> (les voisins sont de plus en plus éloignés). D’autre part, si <span class="math inline">\(Var[\epsilon_i] = \sigma^2\)</span>, alors <span class="math display">\[Var[\hat f(x)] = \frac{\sigma^2}{k},\]</span> qui <strong>décroît avec <span class="math inline">\(k\)</span></strong>. Il faut donc sélectionner le <span class="math inline">\(k\)</span> qui minimise l’erreur quadratique moyenne <span class="math display">\[\mbox{biais}^2[\hat f(x)] + Var[\hat f(x)].\]</span> En pratique, on sélectionne <span class="math inline">\(k\)</span> par <strong>validation croisée</strong> : lorsqu’on n’y fournit pas de jeu test, <code>knn.reg</code> calcule le critère <code>PRESS</code> <span class="math inline">\(= \sum_i (Y_i - \hat f_{-i}(X_i))^2\)</span>, qui correspond au LOOCV.</p>
+<div class="env-exemple" data-titre="Choix de $k$ sur [`arbres`](#data-arbres)">
+<p><span class="env-titre">Exemple — Choix de <span class="math inline">\(k\)</span> sur <a href="#data-arbres"><code>arbres</code></a></span></p>
+<p>On calcule <span class="math inline">\(\mbox{PRESS}/n\)</span> pour <span class="math inline">\(k = 1, \ldots, 60\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ks <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">60</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>press <span class="ot">&lt;-</span> <span class="fu">sapply</span>(ks, <span class="cf">function</span>(k) <span class="fu">knn.reg</span>(<span class="at">train =</span> D, <span class="at">y =</span> H, <span class="at">k =</span> k)<span class="sc">$</span>PRESS <span class="sc">/</span> n)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>k.min <span class="ot">&lt;-</span> ks[<span class="fu">which.min</span>(press)]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>k.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">k =</span> ks, press), <span class="fu">aes</span>(k, press)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> k.min, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"k"</span>, <span class="at">y =</span> <span class="st">"PRESS / n"</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-arbres-knn-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbres-knn-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-knn-noyau_files/figure-html/fig-arbres-knn-cv-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbres-knn-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2: Erreur quadratique moyenne LOOCV de l’estimateur <span class="math inline">\(k\)</span>NN en fonction de <span class="math inline">\(k\)</span> sur les données <code>arbres</code>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Le critère est très élevé pour <span class="math inline">\(k = 1\)</span> (variance maximale), chute rapidement, atteint son minimum en <span class="math inline">\(k_{\min} = 9\)</span> puis remonte lentement lorsque le biais prend le dessus. La <a href="#fig-arbres-knn" class="quarto-xref">Figure&nbsp;<span>6.3</span></a> compare l’estimateur pour trois valeurs de <span class="math inline">\(k\)</span> : avec <span class="math inline">\(k = 3\)</span>, la courbe suit le bruit des observations ; avec <span class="math inline">\(k = 45\)</span>, elle est lisse mais écrase la croissance rapide des petits diamètres et sous-estime la hauteur des plus gros arbres, qui ont peu de voisins de leur taille.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(D), <span class="fu">max</span>(D), <span class="at">length.out =</span> <span class="dv">300</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>courbes <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">3</span>, k.min, <span class="dv">45</span>), <span class="cf">function</span>(k) {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">k =</span> <span class="fu">paste</span>(<span class="st">"k ="</span>, k), <span class="at">x =</span> grille,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">f =</span> <span class="fu">knn.reg</span>(<span class="at">train =</span> D, <span class="at">test =</span> <span class="fu">matrix</span>(grille), <span class="at">y =</span> H, <span class="at">k =</span> k)<span class="sc">$</span>pred)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbres, <span class="fu">aes</span>(diameter_cm, height_m)) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> courbes, <span class="fu">aes</span>(x, f, <span class="at">colour =</span> k), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diamètre (cm)"</span>, <span class="at">y =</span> <span class="st">"Hauteur (m)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-arbres-knn" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbres-knn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-knn-noyau_files/figure-html/fig-arbres-knn-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbres-knn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.3: Estimateur <span class="math inline">\(k\)</span>NN de la hauteur en fonction du diamètre pour <span class="math inline">\(k = 3\)</span>, <span class="math inline">\(k = k_{\min}\)</span> et <span class="math inline">\(k = 45\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="plusieurs-variables-explicatives-et-distance-de-mahalanobis" class="level3" data-number="6.1.3">
 <h3 data-number="6.1.3" class="anchored" data-anchor-id="plusieurs-variables-explicatives-et-distance-de-mahalanobis"><span class="header-section-number">6.1.3</span> Plusieurs variables explicatives et distance de Mahalanobis</h3>
-<p>Avec deux variables explicatives, le modèle devient <span class="math inline">\(Y_i = f(X_{i1}, X_{i2}) + \epsilon_i\)</span> et l’estimateur <span class="math inline">\(k\)</span>NN est identique, seule la définition de la distance change. La distance euclidienne <span class="math display">\[d_i(x) = (X_{i1} - x_1)^2 + (X_{i2} - x_2)^2\]</span> pose problème si les ordres de grandeur des variables diffèrent (p.&nbsp;ex.&nbsp;poids en kg de 1500 à 5000 et cylindrée en pouces<span class="math inline">\(^3\)</span> de 60 à 500) : la variable de plus grande amplitude domine. On pondère alors par l’inverse de la matrice de variance-covariance empirique : <span class="math display">\[d_i(x) = \begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix}^{\!\top} V^{-1}\begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix},
-\qquad V = \begin{pmatrix} s_1^2 &amp; s_{12} \\ s_{12} &amp; s_2^2\end{pmatrix}.\]</span> C’est la <strong>distance de Mahalanobis</strong>, qui se généralise directement à <span class="math inline">\(p\)</span> variables continues.</p>
+<p>Avec deux variables explicatives, le modèle devient <span class="math inline">\(Y_i = f(X_{i1}, X_{i2}) + \epsilon_i\)</span> et l’estimateur <span class="math inline">\(k\)</span>NN est identique, seule la définition de la distance change. La distance euclidienne <span class="math display">\[d_i(x) = (X_{i1} - x_1)^2 + (X_{i2} - x_2)^2\]</span> pose problème si les ordres de grandeur des variables diffèrent. Dans <a href="#data-arbres"><code>arbres</code></a>, on pourrait vouloir prédire la hauteur à partir du diamètre et de l’âge (<code>age_years</code>, disponible pour 148 arbres) : le diamètre va de 9 à 41 cm alors que l’âge va de 15 à 153 ans, de sorte qu’une différence d’un an pèse autant qu’une différence d’un centimètre et que l’âge domine le calcul des voisins. On pondère alors par l’inverse de la matrice de variance-covariance empirique : <span class="math display">\[d_i(x) = \begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix}^{\!\top} V^{-1}\begin{pmatrix} X_{i1}-x_1 \\ X_{i2}-x_2\end{pmatrix},
+\qquad V = \begin{pmatrix} s_1^2 &amp; s_{12} \\ s_{12} &amp; s_2^2\end{pmatrix}.\]</span> C’est la <strong>distance de Mahalanobis</strong>, qui se généralise directement à <span class="math inline">\(p\)</span> variables continues. En pratique, on peut transformer les variables par <span class="math inline">\(V^{-1/2}\)</span> (ou, plus simplement, les standardiser) avant d’appeler <code>knn.reg</code>.</p>
 </section>
 </section>
 <section id="estimateur-de-noyau-nadaraya-watson" class="level2" data-number="6.2">
@@ -493,17 +611,130 @@ window.Quarto = {
 </section>
 <section id="choix-du-paramètre-de-fenêtre-h" class="level3" data-number="6.2.2">
 <h3 data-number="6.2.2" class="anchored" data-anchor-id="choix-du-paramètre-de-fenêtre-h"><span class="header-section-number">6.2.2</span> Choix du paramètre de fenêtre <span class="math inline">\(h\)</span></h3>
-<p>Comme pour <span class="math inline">\(k\)</span>NN : un <span class="math inline">\(h\)</span> trop petit produit une courbe très oscillante (variance élevée), un <span class="math inline">\(h\)</span> trop grand écrase la structure (biais élevé). On choisit <span class="math inline">\(h\)</span> par validation croisée. En excluant une observation à la fois, on montre que le critère s’écrit <span class="math display">\[cv.n = \frac{1}{n}\sum_{i=1}^n\left(\frac{Y_i - \hat f(X_i)}{1 - w_i(X_i)}\right)^2.\]</span> Sur les données <code>Auto</code> avec le noyau gaussien, on obtient <span class="math inline">\(h_{\min} = 110\)</span>.</p>
+<p>Comme pour <span class="math inline">\(k\)</span>NN : un <span class="math inline">\(h\)</span> trop petit produit une courbe très oscillante (variance élevée), un <span class="math inline">\(h\)</span> trop grand écrase la structure (biais élevé). On choisit <span class="math inline">\(h\)</span> par validation croisée. En excluant une observation à la fois, on montre que le critère s’écrit <span class="math display">\[cv.n = \frac{1}{n}\sum_{i=1}^n\left(\frac{Y_i - \hat f(X_i)}{1 - w_i(X_i)}\right)^2.\]</span></p>
+<div class="env-exemple" data-titre="Choix de $h$ sur [`arbres`](#data-arbres)">
+<p><span class="env-titre">Exemple — Choix de <span class="math inline">\(h\)</span> sur <a href="#data-arbres"><code>arbres</code></a></span></p>
+<p>La formule ci-dessus se programme directement : la matrice <code>W</code> contient les poids <span class="math inline">\(w_j(X_i)\)</span>, de sorte que <code>W %*% H</code> donne les valeurs ajustées et <code>diag(W)</code> les <span class="math inline">\(w_i(X_i)\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cv.noyau <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(D, D, <span class="st">"-"</span>) <span class="sc">/</span> h)   <span class="co"># W[i, j] = K((D[j] - D[i]) / h)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> W <span class="sc">/</span> <span class="fu">rowSums</span>(W)                 <span class="co"># poids w_j(D[i])</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  f.hat <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(W <span class="sc">%*%</span> H)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(((H <span class="sc">-</span> f.hat) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">diag</span>(W)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>hs <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.2</span>, <span class="dv">10</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>cvs <span class="ot">&lt;-</span> <span class="fu">sapply</span>(hs, cv.noyau)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>h.min <span class="ot">&lt;-</span> hs[<span class="fu">which.min</span>(cvs)]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>h.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">h =</span> hs, <span class="at">cv =</span> cvs), <span class="fu">aes</span>(h, cv)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> h.min, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"h (cm)"</span>, <span class="at">y =</span> <span class="st">"cv.n"</span>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-arbres-noyau-cv" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbres-noyau-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-knn-noyau_files/figure-html/fig-arbres-noyau-cv-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbres-noyau-cv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.4: Critère de validation croisée de l’estimateur de Nadaraya-Watson (noyau gaussien) en fonction de la fenêtre <span class="math inline">\(h\)</span> sur les données <code>arbres</code>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Avec le noyau gaussien, on obtient <span class="math inline">\(h_{\min} = 2\)</span> cm. La <a href="#fig-arbres-noyau" class="quarto-xref">Figure&nbsp;<span>6.5</span></a> montre que l’estimateur de Nadaraya-Watson avec <span class="math inline">\(h = h_{\min}\)</span> est proche de l’estimateur <span class="math inline">\(k\)</span>NN avec <span class="math inline">\(k = k_{\min}\)</span>, mais sans ses sauts : les deux méthodes captent la même relation concave.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>nw <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="fl">0.5</span>, h.min, <span class="dv">8</span>), <span class="cf">function</span>(h) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  ajust <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(<span class="at">x =</span> D, <span class="at">y =</span> H, <span class="at">degree =</span> <span class="dv">0</span>, <span class="at">bandwidth =</span> h, <span class="at">range.x =</span> <span class="fu">range</span>(D))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">h =</span> <span class="fu">paste</span>(<span class="st">"h ="</span>, h), <span class="at">x =</span> ajust<span class="sc">$</span>x, <span class="at">f =</span> ajust<span class="sc">$</span>y)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>knn.min <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> grille,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">f =</span> <span class="fu">knn.reg</span>(<span class="at">train =</span> D, <span class="at">test =</span> <span class="fu">matrix</span>(grille), <span class="at">y =</span> H, <span class="at">k =</span> k.min)<span class="sc">$</span>pred)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbres, <span class="fu">aes</span>(diameter_cm, height_m)) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> nw, <span class="fu">aes</span>(x, f, <span class="at">colour =</span> h), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> knn.min, <span class="fu">aes</span>(x, f), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diamètre (cm)"</span>, <span class="at">y =</span> <span class="st">"Hauteur (m)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-arbres-noyau" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbres-noyau-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-knn-noyau_files/figure-html/fig-arbres-noyau-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbres-noyau-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.5: Estimateur de Nadaraya-Watson pour <span class="math inline">\(h = 0{,}5\)</span>, <span class="math inline">\(h = h_{\min}\)</span> et <span class="math inline">\(h = 8\)</span> cm, et estimateur <span class="math inline">\(k\)</span>NN avec <span class="math inline">\(k = k_{\min}\)</span> (tirets).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="régression-non-paramétrique-et-classification" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="régression-non-paramétrique-et-classification"><span class="header-section-number">6.3</span> Régression non-paramétrique et classification</h2>
-<p>Considérons le jeu de données <code>Default</code> (librairie <code>ISLR</code>, <span class="math inline">\(n = 10\,000\)</span>) : la réponse binaire <span class="math inline">\(Y_i\)</span> vaut 1 si le sujet fait défaut sur sa carte de crédit, la variable explicative est le solde à payer. Le modèle est <span class="math inline">\(g(x) = P(Y = 1\mid X = x)\)</span>, qu’on estime par <span class="math inline">\(k\)</span>NN : <span class="math display">\[\hat g(x) = \frac{1}{k}\sum_{i\in N_k(x)}Y_i \in [0,1].\]</span></p>
+<p>Dans <a href="#data-arbres"><code>arbres</code></a>, la variable <code>canopy_stratum</code> donne la position de l’arbre dans le couvert : un arbre est dominant ou codominant s’il reçoit la lumière directement, intermédiaire ou opprimé s’il pousse sous le couvert des autres. Posons <span class="math inline">\(Y_i = 1\)</span> si l’arbre <span class="math inline">\(i\)</span> est dans la strate inférieure (intermédiaire ou opprimé), ce qui concerne 61 des 200 arbres, et <span class="math inline">\(Y_i = 0\)</span> sinon. On veut prédire la strate à partir du diamètre <span class="math inline">\(X_i\)</span>. Le modèle est <span class="math inline">\(g(x) = P(Y = 1\mid X = x)\)</span>, qu’on estime par <span class="math inline">\(k\)</span>NN : <span class="math display">\[\hat g(x) = \frac{1}{k}\sum_{i\in N_k(x)}Y_i \in [0,1].\]</span></p>
 <p>Pour choisir <span class="math inline">\(k\)</span>, deux critères de validation croisée :</p>
 <ol type="1">
-<li><p><strong>Taux d’erreur test</strong> : on pose <span class="math inline">\(\hat Y_i = \mathbf{1}_{\{\hat f_{-i}(X_i) &gt; u\}}\)</span> (avec <span class="math inline">\(u = 1/2\)</span> en pratique) et on minimise <span class="math display">\[\frac{1}{n}\sum_{i=1}^n\mathbf{1}_{\{y_i\neq\hat y_i\}}.\]</span> Sur <code>Default</code>, on obtient <span class="math inline">\(k = 190\)</span>. Le résultat dépend toutefois du seuil arbitraire <span class="math inline">\(u\)</span> (avec <span class="math inline">\(u = 1/4\)</span> : <span class="math inline">\(k = 290\)</span> ; avec <span class="math inline">\(u = 3/4\)</span> : <span class="math inline">\(k = 50\)</span>).</p></li>
-<li><p><strong>Aire sous la courbe ROC</strong> : on choisit le <span class="math inline">\(k\)</span> qui <strong>maximise</strong> l’AUC (librairie <code>pROC</code>), critère qui ne dépend d’aucun seuil. Sur <code>Default</code>, on obtient <span class="math inline">\(k = 200\)</span>, proche du résultat précédent avec <span class="math inline">\(u = 1/2\)</span>.</p></li>
+<li><p><strong>Taux d’erreur test</strong> : on pose <span class="math inline">\(\hat Y_i = \mathbf{1}_{\{\hat g_{-i}(X_i) &gt; u\}}\)</span> (avec <span class="math inline">\(u = 1/2\)</span> en pratique) et on minimise <span class="math display">\[\frac{1}{n}\sum_{i=1}^n\mathbf{1}_{\{y_i\neq\hat y_i\}}.\]</span></p></li>
+<li><p><strong>Aire sous la courbe ROC</strong> : on choisit le <span class="math inline">\(k\)</span> qui <strong>maximise</strong> l’AUC (voir le <a href="03-regression-logistique.html#sec-roc" class="quarto-xref"><span>Section 2.5</span></a>), critère qui ne dépend d’aucun seuil.</p></li>
 </ol>
+<div class="env-exemple" data-titre="Prédire la strate d'un arbre à partir de son diamètre">
+<p><span class="env-titre">Exemple — Prédire la strate d’un arbre à partir de son diamètre</span></p>
+<p>On calcule, pour chaque <span class="math inline">\(k\)</span>, les prédictions LOOCV <span class="math inline">\(\hat g_{-i}(X_i)\)</span>, puis le taux d’erreur pour trois seuils <span class="math inline">\(u\)</span> et l’AUC. Cette dernière se calcule à partir des rangs des <span class="math inline">\(\hat g_{-i}(X_i)\)</span> (statistique de Mann-Whitney), ce qui évite de tracer la courbe ROC pour chaque <span class="math inline">\(k\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(arbres<span class="sc">$</span>canopy_stratum <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Intermédiaire"</span>, <span class="st">"Opprimé"</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># g.loo[i, k] : estimation kNN de g(D[i]) sans l'observation i</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>ks <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>g.loo <span class="ot">&lt;-</span> <span class="fu">sapply</span>(ks, <span class="cf">function</span>(k) {</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="cf">function</span>(i) <span class="fu">mean</span>(Y[<span class="sc">-</span>i][<span class="fu">order</span>(<span class="fu">abs</span>(D[<span class="sc">-</span>i] <span class="sc">-</span> D[i]))[<span class="dv">1</span><span class="sc">:</span>k]]))</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>taux.erreur <span class="ot">&lt;-</span> <span class="cf">function</span>(u) <span class="fu">apply</span>(g.loo, <span class="dv">2</span>, <span class="cf">function</span>(g) <span class="fu">mean</span>(Y <span class="sc">!=</span> (g <span class="sc">&gt;</span> u)))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>auc <span class="ot">&lt;-</span> <span class="cf">function</span>(g) {</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">rank</span>(g); n1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(Y <span class="sc">==</span> <span class="dv">1</span>); n0 <span class="ot">&lt;-</span> n <span class="sc">-</span> n1</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">sum</span>(r[Y <span class="sc">==</span> <span class="dv">1</span>]) <span class="sc">-</span> n1 <span class="sc">*</span> (n1 <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span>) <span class="sc">/</span> (n1 <span class="sc">*</span> n0)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>), <span class="cf">function</span>(u) ks[<span class="fu">which.min</span>(<span class="fu">taux.erreur</span>(u))])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 32 12  9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>aucs <span class="ot">&lt;-</span> <span class="fu">apply</span>(g.loo, <span class="dv">2</span>, auc)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ks[<span class="fu">which.max</span>(aucs)]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 48</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="fu">data.frame</span>(<span class="at">critere =</span> <span class="st">"Taux d'erreur (u = 1/2)"</span>, <span class="at">k =</span> ks, <span class="at">valeur =</span> <span class="fu">taux.erreur</span>(<span class="fl">0.5</span>)),</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">data.frame</span>(<span class="at">critere =</span> <span class="st">"AUC"</span>, <span class="at">k =</span> ks, <span class="at">valeur =</span> aucs))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(res, <span class="fu">aes</span>(k, valeur)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> critere, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"k"</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-arbres-classif" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbres-classif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="07-knn-noyau_files/figure-html/fig-arbres-classif-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbres-classif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.6: Taux d’erreur LOOCV (seuil <span class="math inline">\(u = 1/2\)</span>) et AUC de l’estimateur <span class="math inline">\(k\)</span>NN de <span class="math inline">\(P(\mbox{strate inférieure}\mid \mbox{diamètre})\)</span> en fonction de <span class="math inline">\(k\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Avec <span class="math inline">\(u = 1/2\)</span>, le taux d’erreur est minimal en <span class="math inline">\(k = 12\)</span>, mais la courbe est très irrégulière et le résultat dépend du seuil arbitraire <span class="math inline">\(u\)</span> : avec <span class="math inline">\(u = 1/4\)</span> on obtient <span class="math inline">\(k = 32\)</span> et avec <span class="math inline">\(u = 3/4\)</span>, <span class="math inline">\(k = 9\)</span>. L’AUC varie plus régulièrement avec <span class="math inline">\(k\)</span> : elle augmente rapidement jusqu’à <span class="math inline">\(k \approx 20\)</span>, puis forme un plateau autour de 0,72 jusqu’à <span class="math inline">\(k \approx 60\)</span>, avec un maximum en <span class="math inline">\(k = 48\)</span>. Le diamètre seul ne permet qu’une prédiction modeste de la strate (AUC <span class="math inline">\(\approx 0{,}73\)</span>) : environ un arbre sur deux de moins de 12 cm est sous le couvert, contre moins d’un sur vingt au-delà de 20 cm, mais entre les deux, la strate dépend surtout des arbres voisins, que le jeu de données ne décrit pas.</p>
+</div>
 
 
 </section>

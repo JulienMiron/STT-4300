@@ -692,6 +692,10 @@ Figure&nbsp;7.4: Fonctions constantes par morceaux ajustées au cycle journalier
 </section>
 <section id="régression-avec-des-splines" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="régression-avec-des-splines"><span class="header-section-number">7.3</span> Régression avec des splines</h2>
+<div class="env-remarque" data-titre="Modéliser plutôt qu'interpréter">
+<p><span class="env-titre">Remarque — Modéliser plutôt qu’interpréter</span></p>
+<p>Dans les chapitres précédents, les coefficients avaient un sens : une pente, un rapport de cotes, l’effet d’une classe. Ce n’est plus le cas ici. Les paramètres <span class="math inline">\(\beta_k\)</span> d’une spline multiplient des fonctions de base qui n’ont pas d’interprétation propre, et on ne cherchera ni à les tester un à un ni à les commenter. L’objectif est différent : décrire le mieux possible la relation entre <span class="math inline">\(x\)</span> et <span class="math inline">\(y\)</span>, c’est-à-dire estimer la courbe <span class="math inline">\(f(x) = E[Y\mid X = x]\)</span> et prédire avec précision. Les questions pertinentes deviennent la forme de <span class="math inline">\(\hat f\)</span>, l’erreur de prédiction estimée par validation croisée et le nombre de degrés de liberté qu’on accorde à la courbe, et non la valeur de tel ou tel coefficient.</p>
+</div>
 <section id="splines-de-régression" class="level3" data-number="7.3.1">
 <h3 data-number="7.3.1" class="anchored" data-anchor-id="splines-de-régression"><span class="header-section-number">7.3.1</span> Splines de régression</h3>
 <p>Les <strong>splines</strong> sont des polynômes définis par intervalles, avec des contraintes de régularité aux points de jonction (<strong>nœuds</strong>, <em>knots</em>).</p>

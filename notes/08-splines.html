@@ -504,6 +504,59 @@ window.Quarto = {
 \boldsymbol X = \begin{pmatrix} 1 &amp; X_1 &amp; \cdots &amp; X_1^p\\ \vdots &amp; \vdots &amp; &amp; \vdots\\ 1 &amp; X_n &amp; \cdots &amp; X_n^p \end{pmatrix}.\]</span> Le vecteur <span class="math inline">\(\boldsymbol\beta\)</span> contient <span class="math inline">\(p+1\)</span> éléments : on dit qu’on a <span class="math inline">\(p+1\)</span> <strong>degrés de liberté</strong>.</p>
 <p>Pour sélectionner <span class="math inline">\(p\)</span>, on peut utiliser l’<span class="math inline">\(AIC\)</span>, le <span class="math inline">\(BIC\)</span>, des tests <span class="math inline">\(F\)</span>, ou — dans l’esprit du <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 4</span></a> — choisir la valeur qui minimise le taux d’erreur test estimé par validation croisée (la version LOOCV admet une expression explicite).</p>
 <p>Une fois <span class="math inline">\(p\)</span> choisi, <span class="math inline">\(\hat f(x) = \boldsymbol x_*\hat{\boldsymbol\beta}\)</span> avec <span class="math inline">\(\boldsymbol x_* = (1,\ x,\ x^2,\ \ldots,\ x^p)\)</span>, et <span class="math display">\[Var[\hat f(x)] = \boldsymbol x_*\, Var[\hat{\boldsymbol\beta}]\, \boldsymbol x_*^\top,\]</span> ce qui permet de construire des bandes de confiance autour de <span class="math inline">\(\hat f(x)\)</span>. En R : <code>lm(mpg ~ poly(weight, 2, raw = TRUE), data = Auto)</code>.</p>
+<div class="env-exemple" data-titre="Régression polynomiale sur [`arbres`](#data-arbres)">
+<p><span class="env-titre">Exemple — Régression polynomiale sur <a href="#data-arbres"><code>arbres</code></a></span></p>
+<p>On reprend la hauteur en fonction du diamètre du <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 6</span></a>. On ajuste des polynômes de degré 1 à 6 et on choisit <span class="math inline">\(p\)</span> par LOOCV, en utilisant la formule explicite du <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 4</span></a> : <span class="math inline">\(VC_{(n)} = \frac{1}{n}\sum_i \left(\frac{e_i}{1 - h_i}\right)^2\)</span>, où <span class="math inline">\(e_i\)</span> est le résidu et <span class="math inline">\(h_i\)</span> le levier de l’observation <span class="math inline">\(i\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/arbres.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>degres <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>modeles <span class="ot">&lt;-</span> <span class="fu">lapply</span>(degres, <span class="cf">function</span>(p) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(height_m <span class="sc">~</span> <span class="fu">poly</span>(diameter_cm, p, <span class="at">raw =</span> <span class="cn">TRUE</span>), <span class="at">data =</span> arbres)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>vc.n <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modeles, <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">degre =</span> degres, <span class="at">vc.n =</span> <span class="fu">round</span>(vc.n, <span class="dv">3</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">AIC =</span> <span class="fu">round</span>(<span class="fu">sapply</span>(modeles, AIC), <span class="dv">1</span>), <span class="at">BIC =</span> <span class="fu">round</span>(<span class="fu">sapply</span>(modeles, BIC), <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]    [,2]    [,3]    [,4]    [,5]    [,6]
+degre   1.000   2.000   3.000   4.000   5.000   6.000
+vc.n    6.241   6.217   6.306   6.641   6.949   6.367
+AIC   934.400 932.300 933.400 934.700 936.500 933.700
+BIC   944.300 945.500 949.900 954.500 959.600 960.100</code></pre>
+</div>
+</div>
+<p>La LOOCV et l’AIC retiennent le degré 2, le BIC la droite ; les écarts entre les degrés 1, 2 et 3 sont minces. Le polynôme de degré 2 a un coefficient négatif sur <span class="math inline">\(x^2\)</span> qui traduit la concavité de la relation. Au-delà du degré 3, l’erreur de validation croisée augmente : les termes supplémentaires suivent le bruit des observations. On note que le degré 2 donne <span class="math inline">\(VC_{(n)} \approx 6{,}2\)</span>, du même ordre que l’estimateur de noyau du <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 6</span></a>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">diameter_cm =</span> <span class="fu">seq</span>(<span class="fu">min</span>(arbres<span class="sc">$</span>diameter_cm), <span class="fu">max</span>(arbres<span class="sc">$</span>diameter_cm), <span class="at">length.out =</span> <span class="dv">300</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ajust <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>), <span class="cf">function</span>(p) {</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p =</span> <span class="fu">paste</span>(<span class="st">"p ="</span>, p), grille, <span class="at">f =</span> <span class="fu">predict</span>(modeles[[p]], <span class="at">newdata =</span> grille))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>bande <span class="ot">&lt;-</span> <span class="fu">cbind</span>(grille, <span class="fu">predict</span>(modeles[[<span class="dv">2</span>]], <span class="at">newdata =</span> grille, <span class="at">interval =</span> <span class="st">"confidence"</span>))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbres, <span class="fu">aes</span>(diameter_cm, height_m)) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> bande, <span class="fu">aes</span>(<span class="at">x =</span> diameter_cm, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> ajust, <span class="fu">aes</span>(diameter_cm, f, <span class="at">colour =</span> p), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diamètre (cm)"</span>, <span class="at">y =</span> <span class="st">"Hauteur (m)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-arbres-poly" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbres-poly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-arbres-poly-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbres-poly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.1: Régression polynomiale de la hauteur sur le diamètre pour <span class="math inline">\(p = 1\)</span>, <span class="math inline">\(2\)</span> et <span class="math inline">\(5\)</span>, avec la bande de confiance à 95 % de <span class="math inline">\(\hat f(x)\)</span> pour <span class="math inline">\(p = 2\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La bande de confiance, obtenue avec <code>predict(..., interval = "confidence")</code>, s’élargit nettement au-delà de 30 cm, là où les arbres sont rares : <span class="math inline">\(Var[\hat f(x)] = \boldsymbol x_*\, Var[\hat{\boldsymbol\beta}]\, \boldsymbol x_*^\top\)</span> croît avec les puissances de <span class="math inline">\(x\)</span>. Le polynôme de degré 5, lui, se distingue surtout aux extrémités du domaine, où il plonge sous les petits diamètres et se redresse pour les gros : le comportement erratique des polynômes de degré élevé aux bords est un défaut sur lequel on reviendra avec les splines.</p>
+</div>
 </section>
 <section id="régression-avec-des-fonctions-constantes-par-morceaux" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="régression-avec-des-fonctions-constantes-par-morceaux"><span class="header-section-number">7.2</span> Régression avec des fonctions constantes par morceaux</h2>
@@ -528,12 +581,12 @@ window.Quarto = {
 <p>Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœuds augmentée <span class="math inline">\(\{t_j\}\)</span>, les B-splines de degré 0 sont <span class="math display">\[B_{j,0}(x) = \mathbf{1}_{\{t_j \leq x &lt; t_{j+1}\}},\]</span> et pour <span class="math inline">\(d = 1,\ldots,p\)</span> : <span class="math display">\[B_{j,d}(x) = \frac{x - t_j}{t_{j+d} - t_j}\,B_{j,d-1}(x) + \frac{t_{j+d+1} - x}{t_{j+d+1} - t_{j+1}}\,B_{j+1,d-1}(x).\]</span> Propriétés : chaque <span class="math inline">\(B_{j,p}(x) \geq 0\)</span>, <span class="math inline">\(\sum_j B_{j,p}(x) = 1\)</span> pour tout <span class="math inline">\(x\)</span> (partition de l’unité), et la matrice de plan est <strong>creuse par bandes</strong>, ce qui rend les calculs stables et rapides.</p>
 <p>En R, la fonction <code>bs</code> de la librairie <code>splines</code> construit la base de B-splines cubiques :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>modele.splines <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">bs</span>(weight, <span class="at">knots=</span><span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2800</span>,<span class="dv">3600</span>)), <span class="at">data=</span>Auto)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.splines)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>modele.splines <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">bs</span>(weight, <span class="at">knots=</span><span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2800</span>,<span class="dv">3600</span>)), <span class="at">data=</span>Auto)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.splines)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -582,15 +635,15 @@ F-statistic: 163.7 on 6 and 385 DF,  p-value: &lt; 2.2e-16</code></pre>
 </ul>
 <p>On remarque l’analogie parfaite avec la régression ridge du <a href="06-selection-regularisation.html" class="quarto-xref"><span>Chapitre 5</span></a>. En pratique, <span class="math inline">\(\lambda\)</span> est choisi par validation croisée. En R :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(Auto<span class="sc">$</span>weight, Auto<span class="sc">$</span>mpg, <span class="at">cv=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(Auto<span class="sc">$</span>weight, Auto<span class="sc">$</span>mpg, <span class="at">cv=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in smooth.spline(Auto$weight, Auto$mpg, cv = TRUE): cross-validation
 with non-unique 'x' values seems doubtful</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10.35561</code></pre>
 </div>

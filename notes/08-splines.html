@@ -571,14 +571,34 @@ Figure&nbsp;7.1: Régression polynomiale de la hauteur sur le diamètre pour <sp
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>heure <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>mois  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">6</span>, <span class="dv">7</span>))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ozone <span class="ot">&lt;-</span> <span class="fu">subset</span>(air, Station <span class="sc">==</span> <span class="st">"06600 - Longueuil"</span> <span class="sc">&amp;</span> mois <span class="sc">%in%</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(O3))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>degres <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>modeles.o3 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(degres, <span class="cf">function</span>(p) {</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">poly</span>(heure, p, <span class="at">raw =</span> <span class="cn">TRUE</span>), <span class="at">data =</span> ozone)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>vc.n <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modeles.o3, <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">degre =</span> degres, <span class="at">vc.n =</span> <span class="fu">round</span>(vc.n, <span class="dv">1</span>), <span class="at">BIC =</span> <span class="fu">round</span>(<span class="fu">sapply</span>(modeles.o3, BIC), <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ozone <span class="ot">&lt;-</span> <span class="fu">subset</span>(air, Station <span class="sc">==</span> <span class="st">"06600 - Longueuil"</span> <span class="sc">&amp;</span> mois <span class="sc">%in%</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(O3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-nuage" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-nuage-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.2: Concentration horaire d’ozone à Longueuil, juin à août 2025, en fonction de l’heure. Les points sont légèrement décalés horizontalement pour la lisibilité.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Le nuage de points montre une bosse nette : la concentration est minimale au petit matin, monte rapidement en avant-midi, culmine en fin d’après-midi et redescend plus lentement en soirée. On ajuste des polynômes de degré 1 à 8 et on choisit <span class="math inline">\(p\)</span> par LOOCV.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>degres <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>modeles.o3 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(degres, <span class="cf">function</span>(p) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">poly</span>(heure, p, <span class="at">raw =</span> <span class="cn">TRUE</span>), <span class="at">data =</span> ozone)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>vc.n <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modeles.o3, <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">degre =</span> degres, <span class="at">vc.n =</span> <span class="fu">round</span>(vc.n, <span class="dv">1</span>), <span class="at">BIC =</span> <span class="fu">round</span>(<span class="fu">sapply</span>(modeles.o3, BIC), <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         [,1]    [,2]    [,3]    [,4]    [,5]    [,6]    [,7]    [,8]
 degre     1.0     2.0     3.0     4.0     5.0     6.0     7.0     8.0
@@ -588,19 +608,19 @@ BIC   17244.5 17101.4 16688.6 16679.5 16645.9 16649.1 16656.8 16659.8</code></pr
 </div>
 <p>Le contraste avec <a href="#data-arbres"><code>arbres</code></a> est net. La droite est inadéquate (la courbe a un minimum vers 5 h et un maximum vers 16 h), le degré 2 ne suffit pas (la bosse est asymétrique : montée rapide le matin, descente plus lente en soirée), et <span class="math inline">\(VC_{(n)}\)</span> chute de 25 % entre les degrés 1 et 3. Au-delà, le critère devient pratiquement plat : le BIC retient <span class="math inline">\(p = 5\)</span>, mais les degrés 3 à 8 donnent des courbes presque identiques. Avec <span class="math inline">\(n = 2\,204\)</span>, chaque paramètre supplémentaire coûte peu en variance, et c’est le biais qui décide.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">heure =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">23</span>, <span class="at">length.out =</span> <span class="dv">300</span>))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>ajust <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>), <span class="cf">function</span>(p) {</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p =</span> <span class="fu">paste</span>(<span class="st">"p ="</span>, p), grille, <span class="at">f =</span> <span class="fu">predict</span>(modeles.o3[[p]], <span class="at">newdata =</span> grille))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>}))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>bande <span class="ot">&lt;-</span> <span class="fu">cbind</span>(grille, <span class="fu">predict</span>(modeles.o3[[<span class="dv">5</span>]], <span class="at">newdata =</span> grille, <span class="at">interval =</span> <span class="st">"confidence"</span>))</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> bande, <span class="fu">aes</span>(<span class="at">x =</span> heure, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> ajust, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> p), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">heure =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">23</span>, <span class="at">length.out =</span> <span class="dv">300</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ajust <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>), <span class="cf">function</span>(p) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p =</span> <span class="fu">paste</span>(<span class="st">"p ="</span>, p), grille, <span class="at">f =</span> <span class="fu">predict</span>(modeles.o3[[p]], <span class="at">newdata =</span> grille))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>bande <span class="ot">&lt;-</span> <span class="fu">cbind</span>(grille, <span class="fu">predict</span>(modeles.o3[[<span class="dv">5</span>]], <span class="at">newdata =</span> grille, <span class="at">interval =</span> <span class="st">"confidence"</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> bande, <span class="fu">aes</span>(<span class="at">x =</span> heure, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> ajust, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> p), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ozone-poly" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -608,7 +628,7 @@ BIC   17244.5 17101.4 16688.6 16679.5 16645.9 16649.1 16656.8 16659.8</code></pr
 <img src="08-splines_files/figure-html/fig-ozone-poly-1.png" class="img-fluid figure-img" width="576">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-poly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7.2: Concentration horaire d’ozone à Longueuil (juin à août 2025) et régression polynomiale pour <span class="math inline">\(p = 1\)</span>, <span class="math inline">\(3\)</span> et <span class="math inline">\(5\)</span>, avec la bande de confiance à 95 % de <span class="math inline">\(\hat f(x)\)</span> pour <span class="math inline">\(p = 5\)</span>. Les points sont légèrement décalés horizontalement pour la lisibilité.
+Figure&nbsp;7.3: Concentration horaire d’ozone à Longueuil (juin à août 2025) et régression polynomiale pour <span class="math inline">\(p = 1\)</span>, <span class="math inline">\(3\)</span> et <span class="math inline">\(5\)</span>, avec la bande de confiance à 95 % de <span class="math inline">\(\hat f(x)\)</span> pour <span class="math inline">\(p = 5\)</span>. Les points sont légèrement décalés horizontalement pour la lisibilité.
 </figcaption>
 </figure>
 </div>
@@ -640,12 +660,12 @@ Figure&nbsp;7.2: Concentration horaire d’ozone à Longueuil (juin à août 202
 <p>Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœuds augmentée <span class="math inline">\(\{t_j\}\)</span>, les B-splines de degré 0 sont <span class="math display">\[B_{j,0}(x) = \mathbf{1}_{\{t_j \leq x &lt; t_{j+1}\}},\]</span> et pour <span class="math inline">\(d = 1,\ldots,p\)</span> : <span class="math display">\[B_{j,d}(x) = \frac{x - t_j}{t_{j+d} - t_j}\,B_{j,d-1}(x) + \frac{t_{j+d+1} - x}{t_{j+d+1} - t_{j+1}}\,B_{j+1,d-1}(x).\]</span> Propriétés : chaque <span class="math inline">\(B_{j,p}(x) \geq 0\)</span>, <span class="math inline">\(\sum_j B_{j,p}(x) = 1\)</span> pour tout <span class="math inline">\(x\)</span> (partition de l’unité), et la matrice de plan est <strong>creuse par bandes</strong>, ce qui rend les calculs stables et rapides.</p>
 <p>En R, la fonction <code>bs</code> de la librairie <code>splines</code> construit la base de B-splines cubiques :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>modele.splines <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">bs</span>(weight, <span class="at">knots=</span><span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2800</span>,<span class="dv">3600</span>)), <span class="at">data=</span>Auto)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.splines)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>modele.splines <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">bs</span>(weight, <span class="at">knots=</span><span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2800</span>,<span class="dv">3600</span>)), <span class="at">data=</span>Auto)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.splines)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -694,15 +714,15 @@ F-statistic: 163.7 on 6 and 385 DF,  p-value: &lt; 2.2e-16</code></pre>
 </ul>
 <p>On remarque l’analogie parfaite avec la régression ridge du <a href="06-selection-regularisation.html" class="quarto-xref"><span>Chapitre 5</span></a>. En pratique, <span class="math inline">\(\lambda\)</span> est choisi par validation croisée. En R :</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(Auto<span class="sc">$</span>weight, Auto<span class="sc">$</span>mpg, <span class="at">cv=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(Auto<span class="sc">$</span>weight, Auto<span class="sc">$</span>mpg, <span class="at">cv=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in smooth.spline(Auto$weight, Auto$mpg, cv = TRUE): cross-validation
 with non-unique 'x' values seems doubtful</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10.35561</code></pre>
 </div>

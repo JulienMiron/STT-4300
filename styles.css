@@ -2647,10 +2647,12 @@ blockquote { border-left: 4px solid var(--ulaval-yellow); padding-left: 1rem; co
 /* Couleurs propres à STT-4300 */
 :root {
   --cal-exam: #dc2713;  /* libellés d'examen du calendrier (.cal-exam) */
+  --cal-presentations: #e68225;  /* libellés de présentations du calendrier (.cal-presentations) */
 }
 
 /* Calendrier : couleurs des libellés, ligne de la semaine de lecture grisée */
 .cal-exam { color: var(--cal-exam); }
+.cal-presentations { color: var(--cal-presentations); }
 .cal-labo { color: var(--purple); }
 .cal-projet { color: var(--green); }
 #quarto-document-content tr:has(.cal-off) td {

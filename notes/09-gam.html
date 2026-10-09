@@ -474,7 +474,6 @@ window.Quarto = {
   <li><a href="#choix-des-paramètres-de-lissage-et-comparaison-de-modèles" id="toc-choix-des-paramètres-de-lissage-et-comparaison-de-modèles" class="nav-link" data-scroll-target="#choix-des-paramètres-de-lissage-et-comparaison-de-modèles"><span class="header-section-number">8.3.2</span> Choix des paramètres de lissage et comparaison de modèles</a></li>
   <li><a href="#en-pratique-avec-r" id="toc-en-pratique-avec-r" class="nav-link" data-scroll-target="#en-pratique-avec-r"><span class="header-section-number">8.3.3</span> En pratique avec R</a></li>
   </ul></li>
-  <li><a href="#synthèse-du-cours" id="toc-synthèse-du-cours" class="nav-link" data-scroll-target="#synthèse-du-cours"><span class="header-section-number">8.4</span> Synthèse du cours</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/notes/09-gam.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
     </div>
@@ -706,50 +705,9 @@ Figure&nbsp;8.3: Probabilité estimée d’être dans la strate inférieure selo
 <p>Contrairement aux splines du <a href="08-splines.html" class="quarto-xref"><span>Chapitre 7</span></a>, cet exemple comporte des paramètres qui s’interprètent. La partie paramétrique du modèle, les <span class="math inline">\(\gamma_e\)</span>, se lit exactement comme en régression logistique : <span class="math inline">\(e^{\hat\gamma_{\text{sapin}}} = e^{0{,}795} \approx 2{,}2\)</span> est le rapport de cotes estimé de la strate inférieure entre un sapin baumier et un bouleau à papier de même diamètre, avec un intervalle de confiance à 95 % d’environ <span class="math inline">\([0{,}9;\ 5{,}7]\)</span> qui contient 1. C’est le propre des modèles additifs : les effets dont on veut une interprétation restent paramétriques, et seuls ceux dont la forme est incertaine passent par une fonction lisse. Ici, comme <span class="math inline">\(\hat f\)</span> s’est révélée linéaire, on peut aller plus loin et réajuster le modèle avec <code>glm</code> : la pente du diamètre vaut alors <span class="math inline">\(-0{,}275\)</span> par cm, soit un rapport de cotes de <span class="math inline">\(e^{-0{,}275} \approx 0{,}76\)</span> par centimètre de diamètre supplémentaire (IC à 95 % : <span class="math inline">\([0{,}68;\ 0{,}85]\)</span>), ou encore une division des cotes par environ 4 pour 5 cm de plus. Cette interprétation n’aurait pas été disponible si les degrés de liberté effectifs de <span class="math inline">\(\hat f\)</span> avaient été nettement supérieurs à 1.</p>
 </div>
 <p>Dans les deux cas, <code>summary</code> rapporte, pour chaque fonction lisse, ses degrés de liberté effectifs et un test approximatif de nullité, et <code>plot</code> trace chaque <span class="math inline">\(\hat f_j\)</span> avec ses bandes de confiance. Pour un GAM Poisson, la syntaxe est la même avec <code>family = poisson</code> et, au besoin, un terme <code>offset(log(exposition))</code> dans la formule, comme pour <code>glm</code>.</p>
-</section>
-</section>
-<section id="synthèse-du-cours" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="synthèse-du-cours"><span class="header-section-number">8.4</span> Synthèse du cours</h2>
-<p>Le tableau suivant situe les principales méthodes du cours selon la nature de la réponse et la forme de la relation avec les variables explicatives :</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th><strong>Relation linéaire</strong></th>
-<th><strong>Relation flexible</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Réponse normale</td>
-<td>régression linéaire (+ ridge/lasso)</td>
-<td>polynômes, splines, <span class="math inline">\(k\)</span>NN, Nadaraya-Watson, modèle additif</td>
-</tr>
-<tr class="even">
-<td>Réponse binaire</td>
-<td>régression logistique</td>
-<td>GAM logistique, <span class="math inline">\(k\)</span>NN</td>
-</tr>
-<tr class="odd">
-<td>Dénombrement</td>
-<td>régression Poisson</td>
-<td>GAM Poisson</td>
-</tr>
-<tr class="even">
-<td>Famille exponentielle</td>
-<td>MLG</td>
-<td>GAM</td>
-</tr>
-</tbody>
-</table>
-<p>Dans tous les cas, l’<strong>estimation de l’erreur de prévision</strong> (validation croisée) fournit le fil conducteur pour choisir la complexité du modèle : le degré du polynôme, le nombre de voisins <span class="math inline">\(k\)</span>, la fenêtre <span class="math inline">\(h\)</span>, le coefficient de pénalité <span class="math inline">\(\lambda\)</span> ou les paramètres de lissage <span class="math inline">\(\lambda_j\)</span>.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

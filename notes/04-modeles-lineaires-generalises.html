@@ -436,13 +436,13 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./exercices-theoriques.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Exercices théoriques</span></span></a>
+ <span class="menu-text">Exercices théoriques</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./exercices-en-classe.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Exercices en classe</span></span></a>
+ <span class="menu-text">Exercices en classe</span></a>
   </div>
 </li>
     </ul>
@@ -506,7 +506,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Dernière modification</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">8 octobre 2026</p>
+      <p class="date-modified">9 octobre 2026</p>
     </div>
   </div>
     
@@ -1323,10 +1323,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <script>
-// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+// Couleur du logo dérivée de la date et de l'heure, recalculée chaque minute.
 (function () {
   var d = new Date();
-  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var cle = (d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()) * 10000 + d.getHours() * 100 + d.getMinutes();
   var h = cle;
   h = Math.imul(h ^ (h >>> 16), 2246822507);
   h = Math.imul(h ^ (h >>> 13), 3266489909);

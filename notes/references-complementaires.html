@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Simulations de Monte Carlo – Régression II -- STT-4300</title>
+<title>Références complémentaires – Régression II – STT-4300</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,41 +26,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -71,8 +36,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./03-regression-logistique.html" rel="next">
-<link href="./01-regression-lineaire.html" rel="prev">
+<link href="./exercices-en-classe.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -339,7 +303,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./02-monte-carlo.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./references-complementaires.html">Références complémentaires</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -387,7 +351,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-monte-carlo.html" class="sidebar-item-text sidebar-link active">
+  <a href="./02-monte-carlo.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
   </div>
 </li>
@@ -447,7 +411,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references-complementaires.html" class="sidebar-item-text sidebar-link">
+  <a href="./references-complementaires.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Références complémentaires</span></a>
   </div>
 </li>
@@ -456,17 +420,8 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
-    <h2 id="toc-title">Table des matières</h2>
-   
-  <ul>
-  <li><a href="#principe" id="toc-principe" class="nav-link active" data-scroll-target="#principe"><span class="header-section-number">1.1</span> Principe</a></li>
-  <li><a href="#la-recette" id="toc-la-recette" class="nav-link" data-scroll-target="#la-recette"><span class="header-section-number">1.2</span> La recette</a></li>
-  <li><a href="#exemple-couverture-dun-intervalle-de-confiance" id="toc-exemple-couverture-dun-intervalle-de-confiance" class="nav-link" data-scroll-target="#exemple-couverture-dun-intervalle-de-confiance"><span class="header-section-number">1.3</span> Exemple : couverture d’un intervalle de confiance</a></li>
-  <li><a href="#précautions" id="toc-précautions" class="nav-link" data-scroll-target="#précautions"><span class="header-section-number">1.4</span> Précautions</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/notes/02-monte-carlo.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -474,7 +429,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-monte-carlo" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></h1>
+<h1 class="title">Références complémentaires</h1>
 </div>
 
 
@@ -497,171 +452,17 @@ window.Quarto = {
 </header>
 
 
-<p>Plusieurs propriétés des estimateurs et des tests vus dans ces notes ne sont connues que de façon asymptotique : la loi de <span class="math inline">\(\hb\)</span> dans un GLM, la validité des intervalles de Wald, le niveau d’un test du rapport de vraisemblance. Ces résultats disent ce qui se passe lorsque <span class="math inline">\(n \to \infty\)</span>, mais pas si l’approximation est bonne pour le <span class="math inline">\(n\)</span> dont on dispose. La simulation de Monte Carlo permet de répondre à cette question de façon empirique : on fabrique des jeux de données dont on connaît le vrai modèle, on applique la méthode étudiée, puis on observe son comportement sur un grand nombre de répétitions.</p>
-<p>Ce chapitre présente cet outil sur le modèle linéaire, où les résultats exacts sont connus et permettent de vérifier que la simulation fonctionne. On s’en servira ensuite pour la régression logistique (<a href="03-regression-logistique.html" class="quarto-xref"><span>Chapitre 2</span></a>), pour comparer des méthodes de validation croisée (<a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 4</span></a>) et pour étudier le compromis biais-variance en régression régularisée (<a href="06-selection-regularisation.html" class="quarto-xref"><span>Chapitre 5</span></a>).</p>
-<section id="principe" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="principe"><span class="header-section-number">1.1</span> Principe</h2>
-<p>On cherche à calculer une quantité de la forme <span class="math inline">\(\theta = E[g(\boldsymbol Y)]\)</span>, où <span class="math inline">\(\boldsymbol Y\)</span> est un jeu de données généré par un modèle entièrement spécifié et <span class="math inline">\(g\)</span> est une fonction de ce jeu de données : un estimateur, l’indicatrice qu’un intervalle contienne la vraie valeur, l’indicatrice qu’un test rejette <span class="math inline">\(H_0\)</span>, etc. Cette espérance est rarement calculable explicitement.</p>
-<div class="env-definition" data-titre="Simulation de Monte Carlo">
-<p><span class="env-titre">Définition — Simulation de Monte Carlo</span></p>
-<p>On génère <span class="math inline">\(B\)</span> jeux de données indépendants <span class="math inline">\(\boldsymbol Y^{(1)},\ldots,\boldsymbol Y^{(B)}\)</span> à partir du modèle spécifié et on estime <span class="math inline">\(\theta\)</span> par la moyenne</p>
-<p><span class="math display">\[
-\hat\theta_B = \frac{1}{B}\sum_{b=1}^{B} g\left(\boldsymbol Y^{(b)}\right).
-\]</span></p>
-<p>Par la loi des grands nombres, <span class="math inline">\(\hat\theta_B \to \theta\)</span> lorsque <span class="math inline">\(B \to \infty\)</span>.</p>
-</div>
-<p>Comme <span class="math inline">\(\hat\theta_B\)</span> est elle-même une quantité aléatoire, elle comporte une erreur, appelée erreur de Monte Carlo.</p>
-<div class="env-propriete" data-titre="Erreur de Monte Carlo">
-<p><span class="env-titre">Propriété — Erreur de Monte Carlo</span></p>
-<p>L’estimateur <span class="math inline">\(\hat\theta_B\)</span> est sans biais pour <span class="math inline">\(\theta\)</span> et</p>
-<p><span class="math display">\[
-Var\left[\hat\theta_B\right] = \frac{Var\left[g(\boldsymbol Y)\right]}{B}.
-\]</span></p>
-<p>Lorsque <span class="math inline">\(g\)</span> est une indicatrice, <span class="math inline">\(\theta = p\)</span> est une probabilité (par exemple, le niveau de confiance réel d’un intervalle) et l’erreur-type de Monte Carlo est estimée par</p>
-<p><span class="math display">\[
-\sqrt{\frac{\hat p_B\,(1-\hat p_B)}{B}}.
-\]</span></p>
-</div>
-<p>Par exemple, avec <span class="math inline">\(B = 1000\)</span> répétitions et une couverture réelle de <span class="math inline">\(0,95\)</span>, l’erreur-type de Monte Carlo est <span class="math inline">\(\sqrt{0,95\times 0,05/1000}\approx 0,007\)</span>. Un résultat de <span class="math inline">\(0,94\)</span> est donc compatible avec <span class="math inline">\(0,95\)</span>, alors qu’un résultat de <span class="math inline">\(0,91\)</span> ne l’est pas. Pour diviser l’erreur par deux, il faut multiplier <span class="math inline">\(B\)</span> par quatre.</p>
-<div class="env-remarque" data-titre="Erreur de Monte Carlo et erreur statistique">
-<p><span class="env-titre">Remarque — Erreur de Monte Carlo et erreur statistique</span></p>
-<p>Le nombre de répétitions <span class="math inline">\(B\)</span> contrôle uniquement la précision de la simulation, qu’on peut rendre aussi petite qu’on veut. Il ne change rien à la performance de la méthode étudiée, qui dépend de la taille d’échantillon <span class="math inline">\(n\)</span> de chaque jeu de données simulé. Il ne faut pas confondre les deux : on augmente <span class="math inline">\(B\)</span> pour mieux estimer la performance d’une méthode à <span class="math inline">\(n\)</span> fixé, et on fait varier <span class="math inline">\(n\)</span> pour voir comment cette performance change.</p>
-</div>
-</section>
-<section id="la-recette" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="la-recette"><span class="header-section-number">1.2</span> La recette</h2>
-<p>Une étude par simulation suit presque toujours les mêmes étapes.</p>
-<ol type="1">
-<li><p>Fixer le vrai modèle : les valeurs des paramètres, la taille d’échantillon <span class="math inline">\(n\)</span>, les valeurs des variables explicatives et la loi des erreurs.</p></li>
-<li><p>Écrire une fonction qui génère un jeu de données à partir de ce modèle.</p></li>
-<li><p>Répéter <span class="math inline">\(B\)</span> fois : générer un jeu de données, appliquer la méthode étudiée (ajuster le modèle, construire un intervalle, faire un test) et conserver le résultat.</p></li>
-<li><p>Résumer les <span class="math inline">\(B\)</span> résultats par une moyenne, accompagnée de son erreur de Monte Carlo.</p></li>
-</ol>
-<p>En R, on fixe la graine du générateur de nombres pseudo-aléatoires avec <code>set.seed()</code> avant la simulation, afin que les résultats soient reproductibles. La fonction <code>replicate()</code> répète une expression <span class="math inline">\(B\)</span> fois.</p>
-<div class="env-definition" data-titre="Résumés usuels">
-<p><span class="env-titre">Définition — Résumés usuels</span></p>
-<p>Soit <span class="math inline">\(\hat\beta^{(b)}\)</span> l’estimation obtenue sur le <span class="math inline">\(b^{\text{e}}\)</span> jeu de données et <span class="math inline">\([L^{(b)}, U^{(b)}]\)</span> l’intervalle de confiance correspondant. Pour un paramètre dont la vraie valeur est <span class="math inline">\(\beta\)</span>, on estime</p>
-<p><span class="math display">\[
-\begin{aligned}
-\text{le biais} &amp;: \quad \frac{1}{B}\sum_{b=1}^B \left(\hat\beta^{(b)}-\beta\right),\\
-\text{l'erreur quadratique moyenne} &amp;: \quad \frac{1}{B}\sum_{b=1}^B \left(\hat\beta^{(b)}-\beta\right)^2,\\
-\text{la couverture} &amp;: \quad \frac{1}{B}\sum_{b=1}^B \mathbb{1}\left\{L^{(b)} \leq \beta \leq U^{(b)}\right\}.
-\end{aligned}
-\]</span></p>
-<p>De même, le taux de rejet d’un test, calculé sur des données générées sous <span class="math inline">\(H_0\)</span>, estime son niveau réel, et calculé sous une alternative, il estime sa puissance.</p>
-</div>
-</section>
-<section id="exemple-couverture-dun-intervalle-de-confiance" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="exemple-couverture-dun-intervalle-de-confiance"><span class="header-section-number">1.3</span> Exemple : couverture d’un intervalle de confiance</h2>
-<p>On considère le modèle <span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i + \epsilon_i\)</span> avec <span class="math inline">\(\epsilon_i \sim \mathcal{N}(0,\sigma^2)\)</span>, où <span class="math inline">\(\beta_0 = 1\)</span>, <span class="math inline">\(\beta_1 = 2\)</span>, <span class="math inline">\(\sigma = 3\)</span> et où les <span class="math inline">\(x_i\)</span> sont <span class="math inline">\(n\)</span> valeurs également espacées entre 0 et 1. Dans ce modèle, l’intervalle de confiance de la section sur l’inférence du chapitre 1, basé sur le quantile de la loi de Student, a une couverture exactement égale à <span class="math inline">\(1-\alpha\)</span>. On va le vérifier par simulation, puis le comparer à l’intervalle obtenu en remplaçant le quantile de Student par celui de la loi normale, qui n’est valable qu’asymptotiquement.</p>
-<div class="env-exemple" data-titre="Distribution de $\hat\beta_1$ et couverture avec $n = 10$">
-<p><span class="env-titre">Exemple — Distribution de <span class="math inline">\(\hat\beta_1\)</span> et couverture avec <span class="math inline">\(n = 10\)</span></span></p>
-<p>On commence par définir la fonction qui génère un jeu de données, puis on répète <span class="math inline">\(B = 2000\)</span> fois l’ajustement du modèle en conservant <span class="math inline">\(\hat\beta_1\)</span> et son erreur-type.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>simuler_lineaire <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">beta0 =</span> <span class="dv">1</span>, <span class="at">beta1 =</span> <span class="dv">2</span>, <span class="at">sigma =</span> <span class="dv">3</span>) {</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>resultats <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">simuler_lineaire</span>(n, <span class="at">beta1 =</span> beta1)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  coefs <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)))[<span class="st">"x"</span>, ]</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">estimation =</span> coefs[[<span class="st">"Estimate"</span>]], <span class="at">erreur_type =</span> coefs[[<span class="st">"Std. Error"</span>]])</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>resultats <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(resultats))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Le biais de <span class="math inline">\(\hat\beta_1\)</span> est proche de zéro, comme le prévoit la théorie :</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(resultats<span class="sc">$</span>estimation) <span class="sc">-</span> beta1</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -0.0657941</code></pre>
-</div>
-</div>
-<p>Chaque point de la distribution ci-dessous est une estimation de <span class="math inline">\(\beta_1\)</span> sur un jeu de données différent. Elle est centrée sur la vraie valeur et a la forme d’une loi normale, ce qui correspond à <span class="math inline">\(\hat\beta_1 \sim \mathcal{N}\left\{\beta_1, \sigma^2\left[(\boldsymbol X^\top\boldsymbol X)^{-1}\right]_{22}\right\}\)</span>.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(resultats, <span class="fu">aes</span>(<span class="at">x =</span> estimation)) <span class="sc">+</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">30</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill =</span> <span class="st">"grey80"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> beta1, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(beta)[<span class="dv">1</span>]), <span class="at">y =</span> <span class="st">"Densité"</span>) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="02-monte-carlo_files/figure-html/mc-histogramme-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Distribution de <span class="math inline">\(\hat\beta_1\)</span> sur 2000 jeux de données simulés (<span class="math inline">\(n = 10\)</span>). La droite verticale indique la vraie valeur <span class="math inline">\(\beta_1 = 2\)</span>.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Pour la couverture, on construit pour chaque jeu de données les deux intervalles <span class="math inline">\(\hat\beta_1 \pm q\,se(\hat\beta_1)\)</span>, avec <span class="math inline">\(q\)</span> le quantile de Student à <span class="math inline">\(n-2\)</span> degrés de liberté ou celui de la loi normale, et on calcule la proportion des intervalles qui contiennent <span class="math inline">\(\beta_1 = 2\)</span>.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>couverture <span class="ot">&lt;-</span> <span class="cf">function</span>(res, beta, quantile) {</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">abs</span>(res<span class="sc">$</span>estimation <span class="sc">-</span> beta) <span class="sc">&lt;=</span> quantile <span class="sc">*</span> res<span class="sc">$</span>erreur_type)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">student =</span> <span class="fu">couverture</span>(resultats, beta1, <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">normale =</span> <span class="fu">couverture</span>(resultats, beta1, <span class="fu">qnorm</span>(<span class="fl">0.975</span>))</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>student normale 
- 0.9515  0.9180 </code></pre>
-</div>
-</div>
-<p>L’erreur-type de Monte Carlo sur ces proportions est d’au plus <span class="math inline">\(0,007\)</span>. L’intervalle de Student a bien une couverture compatible avec <span class="math inline">\(0,95\)</span>, alors que celle de l’intervalle fondé sur la loi normale est nettement trop faible : avec <span class="math inline">\(n = 10\)</span>, les intervalles sont trop étroits.</p>
-</div>
-<p>On peut maintenant faire varier la taille d’échantillon pour voir à partir de quand l’approximation normale devient acceptable.</p>
-<div class="env-exemple" data-titre="Couverture en fonction de $n$">
-<p><span class="env-titre">Exemple — Couverture en fonction de <span class="math inline">\(n\)</span></span></p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>couverture_n <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">B =</span> <span class="dv">2000</span>, <span class="at">beta1 =</span> <span class="dv">2</span>) {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    dat <span class="ot">&lt;-</span> <span class="fu">simuler_lineaire</span>(n, <span class="at">beta1 =</span> beta1)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    coefs <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)))[<span class="st">"x"</span>, ]</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="at">estimation =</span> coefs[[<span class="st">"Estimate"</span>]], <span class="at">erreur_type =</span> coefs[[<span class="st">"Std. Error"</span>]])</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(res))</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> n,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">student =</span> <span class="fu">couverture</span>(res, beta1, <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)),</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">normale =</span> <span class="fu">couverture</span>(res, beta1, <span class="fu">qnorm</span>(<span class="fl">0.975</span>))</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">500</span>), couverture_n))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    n student normale
-1   5   0.956  0.8690
-2  10   0.954  0.9210
-3  20   0.951  0.9340
-4  50   0.949  0.9420
-5 100   0.957  0.9555
-6 500   0.953  0.9525</code></pre>
-</div>
-</div>
-<p>La couverture de l’intervalle de Student reste autour de <span class="math inline">\(0,95\)</span> quel que soit <span class="math inline">\(n\)</span>, aux erreurs de Monte Carlo près. Celle de l’intervalle fondé sur la loi normale s’en approche seulement à mesure que <span class="math inline">\(n\)</span> augmente, ce qui est cohérent avec le fait que la loi de Student converge vers la loi normale.</p>
-</div>
-</section>
-<section id="précautions" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="précautions"><span class="header-section-number">1.4</span> Précautions</h2>
-<p>Une simulation ne démontre rien : elle décrit le comportement d’une méthode dans les configurations simulées, et seulement dans celles-ci. Une couverture de <span class="math inline">\(0,95\)</span> obtenue avec <span class="math inline">\(n = 100\)</span>, <span class="math inline">\(\sigma = 3\)</span> et des erreurs normales ne garantit pas le même résultat avec des erreurs asymétriques ou une taille d’échantillon différente. Il faut donc choisir des configurations représentatives de la situation qui nous intéresse et, dans la mesure du possible, en faire varier plusieurs.</p>
-<p>Il faut aussi garder en tête les limites suivantes.</p>
+<p>Aucune lecture n’est obligatoire : les notes se suffisent à elles-mêmes. Les ouvrages suivants sont suggérés à qui veut approfondir ou voir les mêmes idées présentées autrement. Pour chacun, on indique les chapitres des notes qu’il touche.</p>
 <ul>
-<li><p>Le choix du vrai modèle est arbitraire. Les conclusions valent pour le modèle simulé, qui n’est jamais exactement celui des données réelles.</p></li>
-<li><p>Les résultats sont aléatoires. On rapporte toujours l’erreur de Monte Carlo, ou on choisit <span class="math inline">\(B\)</span> assez grand pour qu’elle soit négligeable par rapport aux différences qu’on cherche à détecter.</p></li>
-<li><p>Il faut s’assurer que le code est correct en le testant sur un cas dont la réponse est connue, comme on l’a fait ici avec l’intervalle de Student.</p></li>
+<li><p><strong>James, G., Witten, D., Hastie, T. et Tibshirani, R. (2021).</strong> <em>An Introduction to Statistical Learning with Applications in R</em>, 2<sup>e</sup> édition, Springer. Gratuit en ligne à <a href="https://www.statlearning.com/">statlearning.com</a>. Présentation accessible, avec peu de mathématiques, de l’essentiel des chapitres <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>4&nbsp; Prédiction, mesures de performance et validation croisée</span></a> à <a href="09-gam.html" class="quarto-xref"><span>8&nbsp; Modèles additifs et modèles additifs généralisés (GAM)</span></a> : validation croisée, ridge et lasso, <span class="math inline">\(k\)</span>NN, polynômes, splines et GAM. Bon point de départ si un chapitre des notes paraît trop abstrait. Une version avec Python existe aussi.</p></li>
+<li><p><strong>Dunn, P. K. et Smyth, G. K. (2018).</strong> <em>Generalized Linear Models with Examples in R</em>, Springer. Référence principale des chapitres <a href="03-regression-logistique.html" class="quarto-xref"><span>2&nbsp; Modèles de régression pour données binaires</span></a> et <a href="04-modeles-lineaires-generalises.html" class="quarto-xref"><span>3&nbsp; Modèles linéaires généralisés (GLM)</span></a> : régression logistique et de Poisson, déviance, diagnostics, surdispersion, le tout avec les jeux de données de la librairie <code>GLMsData</code> utilisée dans les notes.</p></li>
+<li><p><strong>Faraway, J. J. (2016).</strong> <em>Extending the Linear Model with R: Generalized Linear, Mixed Effects and Nonparametric Regression Models</em>, 2<sup>e</sup> édition, Chapman &amp; Hall/CRC. Couvre en pratique les GLM (chapitres <a href="03-regression-logistique.html" class="quarto-xref"><span>2&nbsp; Modèles de régression pour données binaires</span></a> et <a href="04-modeles-lineaires-generalises.html" class="quarto-xref"><span>3&nbsp; Modèles linéaires généralisés (GLM)</span></a>), la régression non-paramétrique (chapitres <a href="07-knn-noyau.html" class="quarto-xref"><span>6&nbsp; Régression non-paramétrique : k plus proches voisins et estimateur de noyau</span></a> et <a href="08-splines.html" class="quarto-xref"><span>7&nbsp; Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></a>) et les GAM (chapitre <a href="09-gam.html" class="quarto-xref"><span>8&nbsp; Modèles additifs et modèles additifs généralisés (GAM)</span></a>), avec une approche très orientée vers l’analyse de données en R.</p></li>
+<li><p><strong>Wood, S. N. (2017).</strong> <em>Generalized Additive Models: An Introduction with R</em>, 2<sup>e</sup> édition, Chapman &amp; Hall/CRC. Référence principale des chapitres <a href="08-splines.html" class="quarto-xref"><span>7&nbsp; Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></a> et <a href="09-gam.html" class="quarto-xref"><span>8&nbsp; Modèles additifs et modèles additifs généralisés (GAM)</span></a>, par l’auteur de la librairie <code>mgcv</code> : bases de splines, pénalisation, choix du paramètre de lissage, degrés de liberté effectifs, inférence sur les fonctions lisses. Ses premiers chapitres donnent aussi une présentation compacte des modèles linéaires et des GLM. Plus exigeant mathématiquement que les précédents.</p></li>
+<li><p><strong>Hastie, T., Tibshirani, R. et Friedman, J. (2009).</strong> <em>The Elements of Statistical Learning</em>, 2<sup>e</sup> édition, Springer. Gratuit en ligne à <a href="https://hastie.su.domains/ElemStatLearn/">hastie.su.domains/ElemStatLearn</a>. Version avancée du livre de James et coll. ; utile pour le compromis biais-variance et les méthodes à noyau du chapitre <a href="07-knn-noyau.html" class="quarto-xref"><span>6&nbsp; Régression non-paramétrique : k plus proches voisins et estimateur de noyau</span></a>, la régularisation du chapitre <a href="06-selection-regularisation.html" class="quarto-xref"><span>5&nbsp; Sélection de variables et régularisation</span></a> et les splines du chapitre <a href="08-splines.html" class="quarto-xref"><span>7&nbsp; Régression non-linéaire : polynômes, fonctions par morceaux et splines</span></a>.</p></li>
+<li><p><strong>McCullagh, P. et Nelder, J. A. (1989).</strong> <em>Generalized Linear Models</em>, 2<sup>e</sup> édition, Chapman &amp; Hall. L’ouvrage fondateur des GLM (chapitre <a href="04-modeles-lineaires-generalises.html" class="quarto-xref"><span>3&nbsp; Modèles linéaires généralisés (GLM)</span></a>), pour qui veut la théorie à la source.</p></li>
 </ul>
 
 
-</section>
 
 </main> <!-- /main -->
 <script>
@@ -1124,14 +925,11 @@ document.addEventListener("DOMContentLoaded", function () {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./01-regression-lineaire.html" class="pagination-link" aria-label="0\ Rappels de régression linéaire">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">0&nbsp;Rappels de régression linéaire</span>
+      <a href="./exercices-en-classe.html" class="pagination-link" aria-label="Exercices en classe">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Exercices en classe</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./03-regression-logistique.html" class="pagination-link" aria-label="Modèles de régression pour données binaires">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
@@ -1142,7 +940,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>   
     <div class="nav-footer-center">
 <p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
-<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/notes/02-monte-carlo.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/edit/main/notes/references-complementaires.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi empty"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

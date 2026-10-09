@@ -647,7 +647,48 @@ Figure&nbsp;7.3: Concentration horaire d’ozone à Longueuil (juin à août 202
 </section>
 <section id="régression-avec-des-fonctions-constantes-par-morceaux" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="régression-avec-des-fonctions-constantes-par-morceaux"><span class="header-section-number">7.2</span> Régression avec des fonctions constantes par morceaux</h2>
-<p>Posons <span class="math inline">\([A,B]\)</span> le domaine de <span class="math inline">\(X\)</span> (en pratique <span class="math inline">\(A = \min_i X_i - \varepsilon\)</span> et <span class="math inline">\(B = \max_i X_i + \varepsilon\)</span>). Considérons une partition <span class="math inline">\(A = c_0 &lt; c_1 &lt; \cdots &lt; c_K = B\)</span> et définissons, pour <span class="math inline">\(k = 1,\ldots,K\)</span>, <span class="math display">\[b_k(x) = \begin{cases} 1 &amp; \mbox{si } x\in[c_{k-1},c_k],\\ 0 &amp; \mbox{sinon}.\end{cases}\]</span> On approxime <span class="math inline">\(f\)</span> par une fonction en escalier : <span class="math inline">\(f(x) = \beta_1 b_1(x) + \cdots + \beta_K b_K(x)\)</span>. La variable <span class="math inline">\(X\)</span> a été discrétisée et on retrouve un modèle d’ANOVA à un facteur à <span class="math inline">\(K\)</span> modalités. L’estimateur des moindres carrés est <span class="math display">\[\hat\beta_k = \frac{\sum_{i=1}^n b_k(X_i)Y_i}{n_k}, \qquad n_k = \sum_{i=1}^n b_k(X_i),\]</span> c’est-à-dire la moyenne des <span class="math inline">\(Y_i\)</span> dans l’intervalle <span class="math inline">\(k\)</span>, et <span class="math inline">\(Var[\hat\beta_k] = \sigma^2/n_k\)</span>. En R : <code>lm(mpg ~ cut(weight, 4), data = Auto)</code>.</p>
+<p>Posons <span class="math inline">\([A,B]\)</span> le domaine de <span class="math inline">\(X\)</span> (en pratique <span class="math inline">\(A = \min_i X_i - \varepsilon\)</span> et <span class="math inline">\(B = \max_i X_i + \varepsilon\)</span>). Considérons une partition <span class="math inline">\(A = c_0 &lt; c_1 &lt; \cdots &lt; c_K = B\)</span> et définissons, pour <span class="math inline">\(k = 1,\ldots,K\)</span>, <span class="math display">\[b_k(x) = \begin{cases} 1 &amp; \mbox{si } x\in[c_{k-1},c_k],\\ 0 &amp; \mbox{sinon}.\end{cases}\]</span> On approxime <span class="math inline">\(f\)</span> par une fonction en escalier : <span class="math inline">\(f(x) = \beta_1 b_1(x) + \cdots + \beta_K b_K(x)\)</span>. La variable <span class="math inline">\(X\)</span> a été discrétisée et on retrouve un modèle d’ANOVA à un facteur à <span class="math inline">\(K\)</span> modalités. L’estimateur des moindres carrés est <span class="math display">\[\hat\beta_k = \frac{\sum_{i=1}^n b_k(X_i)Y_i}{n_k}, \qquad n_k = \sum_{i=1}^n b_k(X_i),\]</span> c’est-à-dire la moyenne des <span class="math inline">\(Y_i\)</span> dans l’intervalle <span class="math inline">\(k\)</span>, et <span class="math inline">\(Var[\hat\beta_k] = \sigma^2/n_k\)</span>. En R : <code>lm(O3 ~ cut(heure, 4), data = ozone)</code>.</p>
+<div class="env-exemple" data-titre="Fonctions constantes par morceaux sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Fonctions constantes par morceaux sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>On découpe les 24 heures en <span class="math inline">\(K\)</span> intervalles de même largeur et on compare les valeurs de <span class="math inline">\(K\)</span> par LOOCV. Avec <span class="math inline">\(K = 24\)</span>, chaque intervalle contient une seule heure et <span class="math inline">\(\hat f\)</span> est simplement la moyenne horaire.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Ks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">24</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>modeles.cut <span class="ot">&lt;-</span> <span class="fu">lapply</span>(Ks, <span class="cf">function</span>(K) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">cut</span>(heure, K, <span class="at">include.lowest =</span> <span class="cn">TRUE</span>), <span class="at">data =</span> ozone)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>vc.n <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modeles.cut, <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">K =</span> Ks, <span class="at">vc.n =</span> <span class="fu">round</span>(vc.n, <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      [,1] [,2]  [,3]  [,4]  [,5]  [,6]  [,7]
+K      2.0    3   4.0   6.0   8.0  12.0  24.0
+vc.n 131.7  133 123.5 114.7 112.3 110.6 110.7</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>escalier <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>), <span class="cf">function</span>(j) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">K =</span> <span class="fu">paste</span>(<span class="st">"K ="</span>, Ks[j]), grille, <span class="at">f =</span> <span class="fu">predict</span>(modeles.cut[[j]], <span class="at">newdata =</span> grille))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_step</span>(<span class="at">data =</span> escalier, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> K), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-cut" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-cut-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-cut-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-cut-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.4: Fonctions constantes par morceaux ajustées au cycle journalier de l’ozone pour <span class="math inline">\(K = 4\)</span> et <span class="math inline">\(K = 8\)</span> intervalles.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>L’erreur de validation croisée diminue jusqu’à <span class="math inline">\(K = 12\)</span> puis stagne : les moyennes horaires (<span class="math inline">\(K = 24\)</span>) font à peine mieux que <span class="math inline">\(K = 12\)</span>, pour deux fois plus de paramètres. Même au mieux, l’approche reste en retrait du polynôme de degré 5 (<span class="math inline">\(VC_{(n)} \approx 109{,}4\)</span> avec 6 paramètres), parce qu’une fonction en escalier remplace la courbe lisse par une suite de plateaux : à l’intérieur de chaque intervalle, elle ignore la pente, et les sauts entre intervalles n’ont aucun sens physique. L’intérêt de la méthode est ailleurs : elle montre que discrétiser <span class="math inline">\(X\)</span> revient à un modèle linéaire, ce qui ouvre la voie aux splines.</p>
+</div>
 </section>
 <section id="régression-avec-des-splines" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="régression-avec-des-splines"><span class="header-section-number">7.3</span> Régression avec des splines</h2>
@@ -666,52 +707,94 @@ Figure&nbsp;7.3: Concentration horaire d’ozone à Longueuil (juin à août 202
 <h3 data-number="7.3.3" class="anchored" data-anchor-id="sec-bsplines"><span class="header-section-number">7.3.3</span> B-splines</h3>
 <p>La base des puissances tronquées est conceptuellement simple mais numériquement instable (<span class="math inline">\(\boldsymbol X^\top \boldsymbol X\)</span> mal conditionnée). En pratique, les logiciels utilisent la base des <strong>B-splines</strong>, une base équivalente dont les fonctions sont à <strong>support compact</strong> : chaque <span class="math inline">\(B\)</span>-spline de degré <span class="math inline">\(p\)</span> est non nulle sur au plus <span class="math inline">\(p+1\)</span> intervalles consécutifs.</p>
 <p>Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœuds augmentée <span class="math inline">\(\{t_j\}\)</span>, les B-splines de degré 0 sont <span class="math display">\[B_{j,0}(x) = \mathbf{1}_{\{t_j \leq x &lt; t_{j+1}\}},\]</span> et pour <span class="math inline">\(d = 1,\ldots,p\)</span> : <span class="math display">\[B_{j,d}(x) = \frac{x - t_j}{t_{j+d} - t_j}\,B_{j,d-1}(x) + \frac{t_{j+d+1} - x}{t_{j+d+1} - t_{j+1}}\,B_{j+1,d-1}(x).\]</span> Propriétés : chaque <span class="math inline">\(B_{j,p}(x) \geq 0\)</span>, <span class="math inline">\(\sum_j B_{j,p}(x) = 1\)</span> pour tout <span class="math inline">\(x\)</span> (partition de l’unité), et la matrice de plan est <strong>creuse par bandes</strong>, ce qui rend les calculs stables et rapides.</p>
-<p>En R, la fonction <code>bs</code> de la librairie <code>splines</code> construit la base de B-splines cubiques :</p>
+<p>En R, la fonction <code>bs</code> de la librairie <code>splines</code> construit la base de B-splines cubiques.</p>
+<div class="env-exemple" data-titre="B-splines cubiques sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — B-splines cubiques sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>On place trois nœuds intérieurs à 6 h, 12 h et 18 h, ce qui donne <span class="math inline">\(K = 4\)</span> intervalles et <span class="math inline">\(K + p = 7\)</span> degrés de liberté (ordonnée à l’origine comprise). La <a href="#fig-ozone-bsplines" class="quarto-xref">Figure&nbsp;<span>7.5</span></a> montre les six fonctions de base produites par <code>bs</code> : chacune est non nulle sur au plus quatre intervalles consécutifs, et leur somme vaut 1 partout.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>modele.splines <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">bs</span>(weight, <span class="at">knots=</span><span class="fu">c</span>(<span class="dv">2200</span>,<span class="dv">2800</span>,<span class="dv">3600</span>)), <span class="at">data=</span>Auto)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.splines)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">bs</span>(grille<span class="sc">$</span>heure, <span class="at">knots =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">12</span>, <span class="dv">18</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(B)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = mpg ~ bs(weight, knots = c(2200, 2800, 3600)), data = Auto)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--12.9031  -2.6702  -0.4887   1.9025  15.9416 
-
-Coefficients:
-                                         Estimate Std. Error t value Pr(&gt;|t|)
-(Intercept)                                31.414      2.776  11.315  &lt; 2e-16
-bs(weight, knots = c(2200, 2800, 3600))1    5.552      3.849   1.442   0.1500
-bs(weight, knots = c(2200, 2800, 3600))2   -3.249      2.645  -1.228   0.2201
-bs(weight, knots = c(2200, 2800, 3600))3   -7.891      3.153  -2.503   0.0127
-bs(weight, knots = c(2200, 2800, 3600))4  -16.826      3.059  -5.501 6.89e-08
-bs(weight, knots = c(2200, 2800, 3600))5  -17.937      3.581  -5.009 8.36e-07
-bs(weight, knots = c(2200, 2800, 3600))6  -20.172      3.621  -5.571 4.78e-08
-                                            
-(Intercept)                              ***
-bs(weight, knots = c(2200, 2800, 3600))1    
-bs(weight, knots = c(2200, 2800, 3600))2    
-bs(weight, knots = c(2200, 2800, 3600))3 *  
-bs(weight, knots = c(2200, 2800, 3600))4 ***
-bs(weight, knots = c(2200, 2800, 3600))5 ***
-bs(weight, knots = c(2200, 2800, 3600))6 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 4.174 on 385 degrees of freedom
-Multiple R-squared:  0.7185,    Adjusted R-squared:  0.7141 
-F-statistic: 163.7 on 6 and 385 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre><code>[1] 300   6</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">heure =</span> grille<span class="sc">$</span>heure, <span class="at">k =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(B), <span class="at">each =</span> <span class="fu">nrow</span>(B))),</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">b =</span> <span class="fu">as.vector</span>(B))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(base, <span class="fu">aes</span>(heure, b, <span class="at">colour =</span> k)) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">12</span>, <span class="dv">18</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="fu">expression</span>(b[k](x)), <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-bsplines" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-bsplines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-bsplines-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-bsplines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.5: Base de B-splines cubiques sur <span class="math inline">\([0, 23]\)</span> avec nœuds intérieurs à 6, 12 et 18 h (tirets).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Le modèle s’ajuste avec <code>lm</code> comme n’importe quel modèle linéaire :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>modele.bs <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">bs</span>(heure, <span class="at">knots =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">12</span>, <span class="dv">18</span>)), <span class="at">data =</span> ozone)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.bs)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                    Estimate Std. Error    t value
+(Intercept)                       24.4589975  0.9926665 24.6396932
+bs(heure, knots = c(6, 12, 18))1   0.4549517  2.0147284  0.2258129
+bs(heure, knots = c(6, 12, 18))2 -13.8897033  1.5748454 -8.8197250
+bs(heure, knots = c(6, 12, 18))3  17.4597645  1.7217356 10.1407932
+bs(heure, knots = c(6, 12, 18))4  18.8803791  1.6895631 11.1747109
+bs(heure, knots = c(6, 12, 18))5   4.8291070  1.7470414  2.7641629
+bs(heure, knots = c(6, 12, 18))6   1.3632836  1.4136373  0.9643801
+                                      Pr(&gt;|t|)
+(Intercept)                      1.442856e-118
+bs(heure, knots = c(6, 12, 18))1  8.213679e-01
+bs(heure, knots = c(6, 12, 18))2  2.287619e-18
+bs(heure, knots = c(6, 12, 18))3  1.196750e-23
+bs(heure, knots = c(6, 12, 18))4  3.081624e-28
+bs(heure, knots = c(6, 12, 18))5  5.754533e-03
+bs(heure, knots = c(6, 12, 18))6  3.349615e-01</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((<span class="fu">residuals</span>(modele.bs) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(modele.bs)))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 109.1377</code></pre>
+</div>
+</div>
+<p>Les coefficients individuels ne s’interprètent pas (chaque <span class="math inline">\(b_k\)</span> n’agit que localement), mais la courbe ajustée, tracée plus loin à la <a href="#fig-ozone-splines" class="quarto-xref">Figure&nbsp;<span>7.7</span></a>, est pratiquement confondue avec le polynôme de degré 5 et la LOOCV est du même ordre (<span class="math inline">\(VC_{(n)} \approx 109{,}1\)</span>). Sur une courbe aussi régulière, les deux bases décrivent la même fonction ; la spline a l’avantage de rester sage aux extrémités et de permettre d’ajouter des nœuds là où la courbe change vite sans augmenter le degré partout.</p>
 </div>
 </section>
 <section id="splines-naturelles" class="level3" data-number="7.3.4">
 <h3 data-number="7.3.4" class="anchored" data-anchor-id="splines-naturelles"><span class="header-section-number">7.3.4</span> Splines naturelles</h3>
-<p>L’estimateur par splines peut être instable aux extrémités du domaine de <span class="math inline">\(X\)</span> (comportement erratique des polynômes au-delà des nœuds extrêmes). Les <strong>splines naturelles</strong> remédient à ce problème : elles sont définies exactement comme les splines, à l’exception qu’on impose que la fonction soit <strong>linéaire</strong> sur les intervalles extrêmes <span class="math inline">\([c_0,c_1)\)</span> et <span class="math inline">\([c_{K-1},c_K)\)</span>. Ces contraintes supplémentaires libèrent des degrés de liberté qui peuvent être réinvestis en nœuds intérieurs. En R : <code>lm(mpg ~ ns(weight, df = 4), data = Auto)</code>.</p>
+<p>L’estimateur par splines peut être instable aux extrémités du domaine de <span class="math inline">\(X\)</span> (comportement erratique des polynômes au-delà des nœuds extrêmes). Les <strong>splines naturelles</strong> remédient à ce problème : elles sont définies exactement comme les splines, à l’exception qu’on impose que la fonction soit <strong>linéaire</strong> sur les intervalles extrêmes <span class="math inline">\([c_0,c_1)\)</span> et <span class="math inline">\([c_{K-1},c_K)\)</span>. Ces contraintes supplémentaires libèrent des degrés de liberté qui peuvent être réinvestis en nœuds intérieurs. En R : <code>lm(O3 ~ ns(heure, df = 4), data = ozone)</code>, où <code>df</code> fixe le nombre de degrés de liberté et où <code>ns</code> place les nœuds aux quantiles de <span class="math inline">\(X\)</span>.</p>
+<div class="env-exemple" data-titre="Splines de régression et splines naturelles sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Splines de régression et splines naturelles sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>On compare, pour un même nombre de degrés de liberté, la spline cubique (<code>bs</code>) et la spline naturelle (<code>ns</code>) par LOOCV.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>vc.bs <span class="ot">&lt;-</span> <span class="fu">sapply</span>(dfs, <span class="cf">function</span>(d) {</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">bs</span>(heure, <span class="at">df =</span> d), <span class="at">data =</span> ozone)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>vc.ns <span class="ot">&lt;-</span> <span class="fu">sapply</span>(dfs, <span class="cf">function</span>(d) {</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">ns</span>(heure, <span class="at">df =</span> d), <span class="at">data =</span> ozone)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">df =</span> dfs, <span class="at">bs =</span> <span class="fu">round</span>(vc.bs, <span class="dv">1</span>), <span class="at">ns =</span> <span class="fu">round</span>(vc.ns, <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]
+df   3.0   4.0   5.0   6.0   7.0   8.0   9.0  10.0
+bs 112.2 111.4 109.6 109.2 109.5 109.2 109.3 109.4
+ns 110.0 109.8 109.5 109.1 109.2 109.2 109.3 109.4</code></pre>
+</div>
+</div>
+<p>À degrés de liberté égaux, la spline naturelle fait un peu mieux pour les petites valeurs de <code>df</code> : les deux degrés de liberté que <code>bs</code> dépense à courber la fonction dans les intervalles extrêmes, <code>ns</code> les investit en nœuds intérieurs. À partir de six degrés de liberté, les deux se valent et rejoignent le polynôme de degré 5 et les B-splines à nœuds fixes. Avec <span class="math inline">\(n = 2\,204\)</span> et une courbe sans comportement erratique aux bords, l’avantage des splines naturelles est modeste ; il devient important lorsque les observations sont rares aux extrémités, comme pour les gros arbres d’<a href="#data-arbres"><code>arbres</code></a>.</p>
+</div>
 </section>
 <section id="splines-de-lissage-splines-pénalisées" class="level3" data-number="7.3.5">
 <h3 data-number="7.3.5" class="anchored" data-anchor-id="splines-de-lissage-splines-pénalisées"><span class="header-section-number">7.3.5</span> Splines de lissage (splines pénalisées)</h3>
@@ -720,20 +803,77 @@ F-statistic: 163.7 on 6 and 385 DF,  p-value: &lt; 2.2e-16</code></pre>
 <li><p><span class="math inline">\(\lambda = 0\)</span> : aucune pénalité, risque de surajustement ;</p></li>
 <li><p><span class="math inline">\(\lambda\to\infty\)</span> : <span class="math inline">\(f''\equiv 0\)</span>, on retrouve la droite des moindres carrés.</p></li>
 </ul>
-<p>On remarque l’analogie parfaite avec la régression ridge du <a href="06-selection-regularisation.html" class="quarto-xref"><span>Chapitre 5</span></a>. En pratique, <span class="math inline">\(\lambda\)</span> est choisi par validation croisée. En R :</p>
+<p>On remarque l’analogie parfaite avec la régression ridge du <a href="06-selection-regularisation.html" class="quarto-xref"><span>Chapitre 5</span></a>. En pratique, <span class="math inline">\(\lambda\)</span> est choisi par validation croisée. En R : <code>smooth.spline(x, y)</code>, qui place un nœud à chaque valeur distincte de <span class="math inline">\(x\)</span> et choisit <span class="math inline">\(\lambda\)</span> par validation croisée généralisée (GCV), une approximation de la LOOCV ; <code>cv = TRUE</code> demande la LOOCV exacte.</p>
+<div class="env-exemple" data-titre="Spline de lissage sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Spline de lissage sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(Auto<span class="sc">$</span>weight, Auto<span class="sc">$</span>mpg, <span class="at">cv=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in smooth.spline(Auto$weight, Auto$mpg, cv = TRUE): cross-validation
-with non-unique 'x' values seems doubtful</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>modele.sp<span class="sc">$</span>df</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(ozone<span class="sc">$</span>heure, ozone<span class="sc">$</span>O3)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>modele.sp</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 10.35561</code></pre>
+<pre><code>Call:
+smooth.spline(x = ozone$heure, y = ozone$O3)
+
+Smoothing Parameter  spar= 0.4916719  lambda= 0.01890238 (14 iterations)
+Equivalent Degrees of Freedom (Df): 7.685062
+Penalized Criterion (RSS): 405.0395
+GCV: 109.2475</code></pre>
 </div>
+</div>
+<p>Les 24 heures distinctes donnent 24 nœuds, donc 24 degrés de liberté avant pénalisation (un paramètre par heure, comme les moyennes horaires de la <a href="#fig-ozone-cut" class="quarto-xref">Figure&nbsp;<span>7.4</span></a>) ; la pénalité les ramène à 7.7 degrés de liberté effectifs, et le critère GCV (109.2) rejoint la LOOCV des meilleurs modèles précédents. La LOOCV exacte (<code>cv = TRUE</code>) n’est pas recommandée ici : avec des valeurs de <span class="math inline">\(x\)</span> répétées, exclure une observation à la fois ne change presque rien à l’ajustement en ce point, et <code>smooth.spline</code> émet d’ailleurs un avertissement.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>lissage <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"df = 3"</span>, <span class="dv">3</span>), <span class="fu">c</span>(<span class="st">"GCV"</span>, <span class="cn">NA</span>), <span class="fu">c</span>(<span class="st">"df = 20"</span>, <span class="dv">20</span>)), <span class="cf">function</span>(z) {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  sp <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.na</span>(z[<span class="dv">2</span>])) modele.sp <span class="cf">else</span> <span class="fu">smooth.spline</span>(ozone<span class="sc">$</span>heure, ozone<span class="sc">$</span>O3, <span class="at">df =</span> <span class="fu">as.numeric</span>(z[<span class="dv">2</span>]))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="fu">sprintf</span>(<span class="st">"%s (df = %.1f, lambda = %.2g)"</span>, z[<span class="dv">1</span>], sp<span class="sc">$</span>df, sp<span class="sc">$</span>lambda),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">heure =</span> grille<span class="sc">$</span>heure, <span class="at">f =</span> <span class="fu">predict</span>(sp, grille<span class="sc">$</span>heure)<span class="sc">$</span>y)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> lissage, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> m), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-lissage" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-lissage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-lissage-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-lissage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.6: Splines de lissage pour trois valeurs de <span class="math inline">\(\lambda\)</span> : forte pénalisation (3 degrés de liberté effectifs), valeur choisie par GCV et faible pénalisation (20 degrés de liberté effectifs).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Avec trois degrés de liberté, la pénalité écrase la bosse ; avec vingt, la courbe est libre de suivre les moyennes horaires, mais comme celles-ci sont très régulières, elle reste lisse et presque confondue avec la solution GCV. C’est la force de la pénalisation : on part d’une base très riche (un nœud par valeur de <span class="math inline">\(x\)</span>) et on laisse <span class="math inline">\(\lambda\)</span> décider de la complexité, sans avoir à choisir le nombre ni la position des nœuds.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>modele.ns <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">ns</span>(heure, <span class="at">df =</span> <span class="dv">4</span>), <span class="at">data =</span> ozone)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>courbes <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"Polynôme, p = 5"</span>, grille, <span class="at">f =</span> <span class="fu">predict</span>(modeles.o3[[<span class="dv">5</span>]], <span class="at">newdata =</span> grille)),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"B-splines, nœuds 6, 12, 18"</span>, grille, <span class="at">f =</span> <span class="fu">predict</span>(modele.bs, <span class="at">newdata =</span> grille)),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"Spline naturelle, df = 4"</span>, grille, <span class="at">f =</span> <span class="fu">predict</span>(modele.ns, <span class="at">newdata =</span> grille)),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"Spline de lissage (GCV)"</span>, <span class="at">heure =</span> grille<span class="sc">$</span>heure, <span class="at">f =</span> <span class="fu">predict</span>(modele.sp, grille<span class="sc">$</span>heure)<span class="sc">$</span>y)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> courbes, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> m), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-splines" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-splines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-splines-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-splines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7.7: Cycle journalier de l’ozone estimé par le polynôme de degré 5, les B-splines cubiques à nœuds 6, 12 et 18 h, la spline naturelle à 4 degrés de liberté et la spline de lissage (GCV).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Les quatre estimateurs sont pratiquement indiscernables. Lorsque <span class="math inline">\(n\)</span> est grand et que <span class="math inline">\(f\)</span> est lisse, le choix de la base importe peu : ce qui compte, c’est le nombre de degrés de liberté effectifs, et tous les critères de validation croisée s’accordent ici sur une complexité de 5 à 8.</p>
 </div>
 <div class="env-remarque">
 <p><span class="env-titre">Remarque</span></p>

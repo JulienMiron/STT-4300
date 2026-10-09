@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -74,6 +109,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -193,21 +257,66 @@ STT-4300 — Régression II
 <h1>Labo 4</h1>
 </section>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<!-- TODO: remplacer les valeurs ci-dessous -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact">
+<p>
+<span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value"></span></span>
+</p>
 </div>
-<div class="callout-title-container flex-fill">
-Note
+<div class="module-fact">
+<p>
+<span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Synthèse : kNN, noyau, splines et GAM en compétition</span></span>
+</p>
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p>Ce labo sera disponible à partir du 1er avril 2027.</p>
+<section id="objectifs" class="level2">
+<h2 class="anchored" data-anchor-id="objectifs">Objectifs</h2>
+<ul>
+<li>Comparer, sur un même jeu de données, l’ensemble des méthodes non paramétriques et non linéaires vues jusqu’ici (kNN, noyau, splines, GAM).</li>
+<li>Estimer et comparer l’erreur de prédiction test de chaque méthode par validation croisée.</li>
+<li>Développer un jugement critique sur le choix d’une méthode selon le contexte (nombre de variables, interprétabilité recherchée, taille de l’échantillon).</li>
+</ul>
+</section>
+<section id="mise-en-contexte" class="level2">
+<h2 class="anchored" data-anchor-id="mise-en-contexte">Mise en contexte</h2>
+<p>On utilise le jeu de données <code>College</code> (librairie <code>ISLR</code>), avec $Y = $ <code>Outstate</code> (frais de scolarité hors-État) et $X = $ <code>Expend</code> (dépenses par étudiant).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(College)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
+</section>
+<section id="consignes" class="level2">
+<h2 class="anchored" data-anchor-id="consignes">Consignes</h2>
+<ol type="1">
+<li>Partitionner les données en un ensemble d’entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à <span class="math inline">\(K=10\)</span> plis réutilisable pour toutes les méthodes suivantes.</li>
+<li>Ajuster, sur l’ensemble d’entraînement, chacun des modèles suivants pour prédire <code>Outstate</code> en fonction de <code>Expend</code> :
+<ul>
+<li>un modèle linéaire simple (référence) ;</li>
+<li>un estimateur kNN (<code>knn.reg</code>), avec <span class="math inline">\(k\)</span> choisi par validation croisée ;</li>
+<li>un estimateur de noyau (<code>locpoly</code>), avec <span class="math inline">\(h\)</span> choisi par validation croisée ;</li>
+<li>une spline de lissage (<code>smooth.spline</code>, <code>cv = TRUE</code>) ;</li>
+<li>un GAM univarié (<code>gam(Outstate ~ s(Expend))</code>).</li>
+</ul></li>
+<li>Pour chaque méthode, calculer l’erreur quadratique moyenne sur l’ensemble test (ou moyenne des erreurs de validation croisée). Présenter les résultats dans un tableau.</li>
+<li>Superposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points <code>Outstate</code> vs <code>Expend</code>. Commenter les ressemblances et différences.</li>
+<li><strong>Extension multivariée.</strong> Ajuster un GAM avec plusieurs prédicteurs, par exemple <code>gam(Outstate ~ s(Room.Board) + s(PhD) + s(perc.alumni) + s(Expend) + s(Grad.Rate), data = College)</code>. Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant. Quelles variables semblent avoir un effet non linéaire marqué ?</li>
+<li>Rédiger une conclusion (15-20 lignes) qui répond à la question : <em>dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM ?</em> Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d’interprétabilité.</li>
+</ol>
+</section>
+<section id="matériel" class="level2">
+<h2 class="anchored" data-anchor-id="matériel">Matériel</h2>
+<ul>
+<li>Notes de cours : <a href="../notes/07-knn-noyau.html">kNN et noyau</a>, <a href="../notes/08-splines.html">Splines</a>, <a href="../notes/09-gam.html">GAM</a></li>
+<li>Librairies R : <code>FNN</code>, <code>KernSmooth</code>, <code>splines</code>, <code>mgcv</code>, <code>ISLR</code></li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script>

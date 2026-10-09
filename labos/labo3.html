@@ -275,34 +275,37 @@ STT-4300 — Régression II
 <ul>
 <li>Ajuster un modèle additif avec la librairie <code>mgcv</code> et interpréter les effets lissés de chaque variable.</li>
 <li>Comprendre le rôle du paramètre de lissage et des degrés de liberté effectifs dans le compromis biais-variance.</li>
-<li>Étendre les GAM au cas d’une réponse non gaussienne (GAM logistique).</li>
+<li>Vérifier l’hypothèse d’additivité et étendre les GAM au cas d’une réponse non gaussienne (GAM logistique).</li>
 </ul>
 </section>
 <section id="mise-en-contexte" class="level2">
 <h2 class="anchored" data-anchor-id="mise-en-contexte">Mise en contexte</h2>
-<p>On reprend le jeu de données <code>Auto</code> (librairie <code>ISLR</code>), avec $Y = $ <code>mpg</code> et deux variables explicatives, <code>weight</code> et <code>horsepower</code>.</p>
+<p>On reprend le jeu de données <code>qualite_air</code> (<a href="../notes/Jeux de données/qualite_air.csv">télécharger</a>) du labo 2, mais sur l’année entière : les mesures horaires d’ozone de 2025 à la station de Longueuil, soit environ 8 700 observations. La réponse <span class="math inline">\(Y\)</span> est la concentration d’ozone (<code>O3</code>) et il y a deux variables explicatives, l’heure de la journée (<code>heure</code>) et le jour de l’année (<code>jour</code>, de 1 à 365). Pour le GAM logistique, on utilisera le jeu de données <code>arbres</code> (<a href="../notes/Jeux de données/arbres.csv">télécharger</a>) du labo 1.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>heure <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>jour  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">1</span>, <span class="dv">10</span>)), <span class="st">"%j"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>longueuil <span class="ot">&lt;-</span> <span class="fu">subset</span>(air, Station <span class="sc">==</span> <span class="st">"06600 - Longueuil"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(O3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="consignes" class="level2">
 <h2 class="anchored" data-anchor-id="consignes">Consignes</h2>
 <ol type="1">
-<li>Ajuster le modèle additif <code>mod1 &lt;- gam(mpg ~ s(weight) + s(horsepower), data = Auto)</code>. Afficher les effets partiels estimés (<code>plot(mod1, pages = 1)</code>) et commenter leur forme : sont-ils linéaires ? Justifient-ils l’usage d’un GAM plutôt que d’un modèle linéaire ?</li>
-<li>Examiner <code>summary(mod1)</code> : rapporter les degrés de liberté effectifs de chaque terme lissé et la déviance expliquée. Tester <span class="math inline">\(H_0 : f_j \equiv 0\)</span> pour chacune des deux variables.</li>
-<li>Comparer le modèle additif à un modèle linéaire usuel (<code>lm(mpg ~ weight + horsepower)</code>) et à un modèle polynomial (par exemple degré 2 pour chaque variable) à l’aide de l’AIC et d’une estimation de l’erreur de prédiction par validation croisée.</li>
-<li>Faire varier artificiellement le paramètre de lissage d’un des termes (argument <code>sp</code> de <code>gam</code>) pour illustrer l’effet de <span class="math inline">\(\lambda \to 0\)</span> et <span class="math inline">\(\lambda \to \infty\)</span> sur la courbe ajustée.</li>
-<li>Ajuster un GAM avec interaction simple, par exemple <code>s(weight, horsepower)</code> (lissage bivarié), et discuter de ce que cela apporte (ou non) par rapport au modèle additif pur.</li>
-<li><strong>GAM logistique.</strong> Construire une variable binaire à partir de <code>mpg</code> (par exemple <span class="math inline">\(Y = \mathbf{1}\{\texttt{mpg} &gt; \text{médiane}\}\)</span>) et ajuster <code>gam(Y ~ s(weight), family = binomial, data = Auto)</code>. Représenter la probabilité ajustée en fonction de <code>weight</code> et comparer à une régression logistique usuelle.</li>
+<li>Ajuster le modèle additif <code>mod1 &lt;- gam(O3 ~ s(heure) + s(jour), data = longueuil)</code>. Afficher les effets partiels estimés (<code>plot(mod1, pages = 1)</code>) et commenter leur forme : sont-ils linéaires? Que représente chacun des deux cycles? Justifient-ils l’usage d’un GAM plutôt que d’un modèle linéaire?</li>
+<li>Examiner <code>summary(mod1)</code> : rapporter les degrés de liberté effectifs de chaque terme lissé et la déviance expliquée. Tester <span class="math inline">\(H_0 : f_j \equiv 0\)</span> pour chacune des deux variables. L’un des deux termes utilise presque tous ses degrés de liberté disponibles : lequel, et qu’est-ce que cela suggère?</li>
+<li>Comparer le modèle additif à un modèle linéaire usuel (<code>lm(O3 ~ heure + jour)</code>) et à un modèle polynomial (par exemple degré 5 pour chaque variable) à l’aide de l’AIC et d’une estimation de l’erreur de prédiction par validation croisée. Réfléchir à ce que vaut une validation croisée par blocs tirés au hasard quand les observations sont des heures consécutives.</li>
+<li>Faire varier artificiellement le paramètre de lissage du terme <code>s(jour)</code> (argument <code>sp</code>, en donnant au terme une base plus riche avec <code>k = 30</code>) pour illustrer l’effet de <span class="math inline">\(\lambda \to 0\)</span> et <span class="math inline">\(\lambda \to \infty\)</span> sur la courbe ajustée. Que choisit le GCV avec cette base plus riche, et pourquoi?</li>
+<li>Le modèle additif suppose que le cycle journalier a la même forme toute l’année. Ajuster une surface <code>te(heure, jour)</code>, puis un modèle avec effets principaux et interaction pure, <code>s(heure) + s(jour) + ti(heure, jour)</code>. L’hypothèse d’additivité tient-elle? Discuter de ce que l’interaction apporte, et de ce qu’elle coûte.</li>
+<li>GAM logistique. Sur <code>arbres</code>, poser <span class="math inline">\(Y = 1\)</span> si l’arbre est dans la strate inférieure du couvert (<code>canopy_stratum</code> égal à <code>Intermédiaire</code> ou <code>Opprimé</code>) et ajuster <code>gam(Y ~ s(diameter_cm) + espece, family = binomial)</code>. Représenter la probabilité ajustée en fonction du diamètre et comparer à une régression logistique usuelle. Que valent les degrés de liberté effectifs, et qu’en conclure?</li>
 </ol>
 </section>
 <section id="matériel" class="level2">
 <h2 class="anchored" data-anchor-id="matériel">Matériel</h2>
 <ul>
 <li>Notes de cours : <a href="../notes/09-gam.html">Modèles additifs et modèles additifs généralisés (GAM)</a></li>
-<li>Librairies R : <code>mgcv</code>, <code>ISLR</code></li>
+<li>Données : <a href="../notes/Jeux de données/qualite_air.csv"><code>qualite_air.csv</code></a>, <a href="../notes/Jeux de données/arbres.csv"><code>arbres.csv</code></a></li>
+<li>Librairies R : <code>mgcv</code></li>
 </ul>
 
 

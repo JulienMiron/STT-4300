@@ -280,39 +280,44 @@ STT-4300 — Régression II
 </section>
 <section id="mise-en-contexte" class="level2">
 <h2 class="anchored" data-anchor-id="mise-en-contexte">Mise en contexte</h2>
-<p>On utilise le jeu de données <code>College</code> (librairie <code>ISLR</code>), avec $Y = $ <code>Outstate</code> (frais de scolarité hors-État) et $X = $ <code>Expend</code> (dépenses par étudiant).</p>
+<p>On reprend le jeu de données <code>qualite_air</code> (<a href="../notes/Jeux de données/qualite_air.csv">télécharger</a>), mais à une autre station : Québec – Vieux-Limoilou. Comme aux labos 2 et 3, la réponse <span class="math inline">\(Y\)</span> est la concentration d’ozone (<code>O3</code>) et la variable explicative <span class="math inline">\(X\)</span> est l’heure de la journée ; on retient les mois de juin, juillet et août. Pour la partie multivariée, on utilisera l’année entière et les autres contaminants mesurés à la station : le monoxyde de carbone (<code>CO</code>), les particules fines (<code>PM2.5-T640</code>) et le carbone suie (<code>BC_880nm</code>).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(College)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>heure <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>mois  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">6</span>, <span class="dv">7</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>jour  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">1</span>, <span class="dv">10</span>)), <span class="st">"%j"</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>quebec <span class="ot">&lt;-</span> <span class="fu">subset</span>(air, Station <span class="sc">==</span> <span class="st">"03006 - Québec - Vieux-Limoilou"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>ete <span class="ot">&lt;-</span> <span class="fu">subset</span>(quebec, mois <span class="sc">%in%</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(O3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="consignes" class="level2">
 <h2 class="anchored" data-anchor-id="consignes">Consignes</h2>
 <ol type="1">
-<li>Partitionner les données en un ensemble d’entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à <span class="math inline">\(K=10\)</span> plis réutilisable pour toutes les méthodes suivantes.</li>
-<li>Ajuster, sur l’ensemble d’entraînement, chacun des modèles suivants pour prédire <code>Outstate</code> en fonction de <code>Expend</code> :
+<li>Partitionner les données en un ensemble d’entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à <span class="math inline">\(K=10\)</span> plis réutilisable pour toutes les méthodes suivantes. Réfléchir aux conséquences d’un tirage au hasard parmi des heures consécutives.</li>
+<li>Ajuster, sur l’ensemble d’entraînement, chacun des modèles suivants pour prédire <code>O3</code> en fonction de <code>heure</code> :
 <ul>
 <li>un modèle linéaire simple (référence) ;</li>
 <li>un estimateur kNN (<code>knn.reg</code>), avec <span class="math inline">\(k\)</span> choisi par validation croisée ;</li>
-<li>un estimateur de noyau (<code>locpoly</code>), avec <span class="math inline">\(h\)</span> choisi par validation croisée ;</li>
-<li>une spline de lissage (<code>smooth.spline</code>, <code>cv = TRUE</code>) ;</li>
-<li>un GAM univarié (<code>gam(Outstate ~ s(Expend))</code>).</li>
+<li>un estimateur de noyau (<code>locpoly</code> ou la formule des poids), avec <span class="math inline">\(h\)</span> choisi par validation croisée ;</li>
+<li>une spline de lissage (<code>smooth.spline</code>, en justifiant le choix entre GCV et <code>cv = TRUE</code>) ;</li>
+<li>un GAM univarié (<code>gam(O3 ~ s(heure))</code>).</li>
 </ul></li>
 <li>Pour chaque méthode, calculer l’erreur quadratique moyenne sur l’ensemble test (ou moyenne des erreurs de validation croisée). Présenter les résultats dans un tableau.</li>
-<li>Superposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points <code>Outstate</code> vs <code>Expend</code>. Commenter les ressemblances et différences.</li>
-<li><strong>Extension multivariée.</strong> Ajuster un GAM avec plusieurs prédicteurs, par exemple <code>gam(Outstate ~ s(Room.Board) + s(PhD) + s(perc.alumni) + s(Expend) + s(Grad.Rate), data = College)</code>. Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant. Quelles variables semblent avoir un effet non linéaire marqué ?</li>
-<li>Rédiger une conclusion (15-20 lignes) qui répond à la question : <em>dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM ?</em> Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d’interprétabilité.</li>
+<li>Superposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points. Commenter les ressemblances et différences.</li>
+<li>Extension multivariée. Sur l’année entière, ajuster un GAM avec plusieurs prédicteurs, par exemple <code>gam(O3 ~ s(heure) + s(jour) + s(CO) + s(PM25) + s(BC))</code>, après avoir renommé les colonnes <code>PM2.5-T640</code> et <code>BC_880nm</code> et retiré les heures où une mesure manque. Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant et à celle du GAM à deux cycles du labo 3. Quelles variables semblent avoir un effet non linéaire marqué? Comment ces effets s’interprètent-ils chimiquement?</li>
+<li>Rédiger une conclusion (15-20 lignes) qui répond à la question : <em>dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM?</em> Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d’interprétabilité.</li>
 </ol>
 </section>
 <section id="matériel" class="level2">
 <h2 class="anchored" data-anchor-id="matériel">Matériel</h2>
 <ul>
 <li>Notes de cours : <a href="../notes/07-knn-noyau.html">kNN et noyau</a>, <a href="../notes/08-splines.html">Splines</a>, <a href="../notes/09-gam.html">GAM</a></li>
-<li>Librairies R : <code>FNN</code>, <code>KernSmooth</code>, <code>splines</code>, <code>mgcv</code>, <code>ISLR</code></li>
+<li>Données : <a href="../notes/Jeux de données/qualite_air.csv"><code>qualite_air.csv</code></a></li>
+<li>Librairies R : <code>FNN</code>, <code>KernSmooth</code>, <code>splines</code>, <code>mgcv</code></li>
 </ul>
 
 

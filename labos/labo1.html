@@ -273,37 +273,37 @@ STT-4300 — Régression II
 <section id="objectifs" class="level2">
 <h2 class="anchored" data-anchor-id="objectifs">Objectifs</h2>
 <ul>
-<li>Implémenter et comparer l’estimateur des <span class="math inline">\(k\)</span> plus proches voisins (kNN) et l’estimateur de noyau de Nadaraya-Watson.</li>
+<li>Implémenter et comparer l’estimateur des <span class="math inline">\(k\)</span> plus proches voisins (<span class="math inline">\(k\)</span>NN) et l’estimateur de noyau de Nadaraya-Watson.</li>
 <li>Comprendre, de façon empirique, le compromis biais-variance associé au choix de <span class="math inline">\(k\)</span> et de la fenêtre <span class="math inline">\(h\)</span>.</li>
 <li>Sélectionner <span class="math inline">\(k\)</span> et <span class="math inline">\(h\)</span> par validation croisée et comparer les courbes ajustées obtenues.</li>
 </ul>
 </section>
 <section id="mise-en-contexte" class="level2">
-<h2 class="anchored" data-anchor-id="mise-en-contexte">Mise en contexte⁄</h2>
-<p>On utilise le jeu de données <code>Auto</code> (librairie <code>ISLR</code>), avec $Y = $ <code>mpg</code> et $X = $ <code>weight</code>, comme dans les notes de cours sur la régression non paramétrique.</p>
+<h2 class="anchored" data-anchor-id="mise-en-contexte">Mise en contexte</h2>
+<p>On utilise le jeu de données <code>arbres</code> (<a href="../notes/Jeux de données/arbres.csv">télécharger</a>), décrit dans les notes de cours : 200 arbres de l’inventaire forestier du Québec, tirés de <a href="https://donneesbleues.ca/">donneesbleues.ca</a>. La réponse <span class="math inline">\(Y\)</span> est la hauteur (<code>height_m</code>, en m) et la variable explicative <span class="math inline">\(X\)</span> est le diamètre à hauteur de poitrine (<code>diameter_cm</code>, en cm), comme dans le chapitre sur la régression non paramétrique.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"arbres.csv"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="consignes" class="level2">
 <h2 class="anchored" data-anchor-id="consignes">Consignes</h2>
 <ol type="1">
-<li>Produire un nuage de points <code>mpg</code> en fonction de <code>weight</code> et discuter brièvement pourquoi une relation linéaire semble inadéquate.</li>
-<li>À l’aide de <code>knn.reg</code> (librairie <code>FNN</code>), ajuster l’estimateur kNN pour plusieurs valeurs de <span class="math inline">\(k\)</span> (par exemple <span class="math inline">\(k = 5, 25, 45, 100, 300\)</span>). Superposer les courbes ajustées au nuage de points et commenter l’effet de <span class="math inline">\(k\)</span> sur la rugosité de la courbe.</li>
-<li>Utiliser le critère <code>PRESS</code> de <code>knn.reg</code> (LOOCV) pour sélectionner <span class="math inline">\(k_{\min}\)</span>. Comparer avec la valeur <span class="math inline">\(k_{\min}=45\)</span> mentionnée dans les notes.</li>
-<li>À l’aide de <code>locpoly</code> (librairie <code>KernSmooth</code>, <code>degree=0</code>), ajuster l’estimateur de Nadaraya-Watson pour plusieurs valeurs de la fenêtre <span class="math inline">\(h\)</span>. Encore une fois, illustrer l’effet de <span class="math inline">\(h\)</span> sur la courbe ajustée.</li>
-<li>Choisir <span class="math inline">\(h\)</span> par validation croisée (vous pouvez coder vous-même une boucle de LOOCV ou de <span class="math inline">\(K\)</span>-fold CV) et comparer la courbe obtenue à celle de kNN avec <span class="math inline">\(k_{\min}\)</span>.</li>
-<li>En une dizaine de lignes, comparer les deux approches : avantages, inconvénients, et situations où l’une serait préférable à l’autre (notamment en présence de plusieurs variables explicatives — voir la distance de Mahalanobis dans les notes).</li>
+<li>Produire un nuage de points de la hauteur en fonction du diamètre et discuter brièvement pourquoi une relation linéaire semble inadéquate. Noter aussi deux particularités du jeu de données : plusieurs arbres ont exactement le même diamètre, et les gros arbres sont rares.</li>
+<li>À l’aide de <code>knn.reg</code> (librairie <code>FNN</code>), ajuster l’estimateur kNN pour plusieurs valeurs de <span class="math inline">\(k\)</span> (par exemple <span class="math inline">\(k = 2, 5, 9, 25, 60\)</span>). Superposer les courbes ajustées au nuage de points et commenter l’effet de <span class="math inline">\(k\)</span> sur la rugosité de la courbe et sur son comportement pour les gros arbres.</li>
+<li>Utiliser le critère <code>PRESS</code> de <code>knn.reg</code> (LOOCV) pour sélectionner <span class="math inline">\(k_{\min}\)</span>. Comparer avec la valeur <span class="math inline">\(k_{\min} = 9\)</span> obtenue dans les notes. Que se passe-t-il pour les diamètres ex æquo?</li>
+<li>À l’aide de <code>locpoly</code> (librairie <code>KernSmooth</code>, <code>degree = 0</code>), ajuster l’estimateur de Nadaraya-Watson pour plusieurs valeurs de la fenêtre <span class="math inline">\(h\)</span> (en cm). Encore une fois, illustrer l’effet de <span class="math inline">\(h\)</span> sur la courbe ajustée.</li>
+<li>Choisir <span class="math inline">\(h\)</span> par validation croisée (vous pouvez coder vous-même une boucle de LOOCV ou de <span class="math inline">\(K\)</span>-fold CV, ou utiliser la formule explicite des notes) et comparer la courbe obtenue à celle de kNN avec <span class="math inline">\(k_{\min}\)</span>.</li>
+<li>En une dizaine de lignes, comparer les deux approches : avantages, inconvénients, et situations où l’une serait préférable à l’autre (notamment en présence de plusieurs variables explicatives, par exemple le diamètre et l’âge ; voir la distance de Mahalanobis dans les notes).</li>
 </ol>
 </section>
 <section id="matériel" class="level2">
 <h2 class="anchored" data-anchor-id="matériel">Matériel</h2>
 <ul>
 <li>Notes de cours : <a href="../notes/07-knn-noyau.html">Régression non paramétrique — kNN et noyau</a></li>
-<li>Librairies R : <code>FNN</code>, <code>KernSmooth</code>, <code>ISLR</code></li>
+<li>Données : <a href="../notes/Jeux de données/arbres.csv"><code>arbres.csv</code></a></li>
+<li>Librairies R : <code>FNN</code>, <code>KernSmooth</code></li>
 </ul>
 
 

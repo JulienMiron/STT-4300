@@ -280,22 +280,24 @@ STT-4300 — Régression II
 </section>
 <section id="mise-en-contexte" class="level2">
 <h2 class="anchored" data-anchor-id="mise-en-contexte">Mise en contexte</h2>
-<p>On reprend le jeu de données <code>Auto</code> (librairie <code>ISLR</code>), avec $Y = $ <code>mpg</code> et $X = $ <code>weight</code>.</p>
+<p>On utilise le jeu de données <code>qualite_air</code> (<a href="../notes/Jeux de données/qualite_air.csv">télécharger</a>, 28 Mo), décrit dans les notes de cours : mesures horaires 2025 des stations du Réseau de surveillance de la qualité de l’air du Québec, tirées de <a href="https://donneesbleues.ca/">donneesbleues.ca</a>. Comme dans le chapitre sur les splines, on retient les mesures d’ozone (<code>O3</code>, en ppb) de juin, juillet et août à la station de Longueuil ; la réponse <span class="math inline">\(Y\)</span> est la concentration d’ozone et la variable explicative <span class="math inline">\(X\)</span> est l’heure de la journée, de 0 à 23.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Auto)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>heure <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>mois  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">6</span>, <span class="dv">7</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ozone <span class="ot">&lt;-</span> <span class="fu">subset</span>(air, Station <span class="sc">==</span> <span class="st">"06600 - Longueuil"</span> <span class="sc">&amp;</span> mois <span class="sc">%in%</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(O3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="consignes" class="level2">
 <h2 class="anchored" data-anchor-id="consignes">Consignes</h2>
 <ol type="1">
-<li>Ajuster des régressions polynomiales de degré <span class="math inline">\(p = 1, 2, 3, 5, 10\)</span> (<code>lm(mpg ~ poly(weight, p, raw=TRUE))</code>). Superposer les courbes ajustées et commenter le comportement aux extrémités du domaine pour les degrés élevés.</li>
-<li>Sélectionner le degré <span class="math inline">\(p\)</span> à l’aide de l’AIC/BIC, puis à l’aide de la validation croisée (LOOCV ou 10-fold). Les deux critères mènent-ils à la même valeur de <span class="math inline">\(p\)</span> ?</li>
-<li>Ajuster un modèle à fonctions constantes par morceaux avec <code>cut(weight, K)</code> pour quelques valeurs de <span class="math inline">\(K\)</span>, et comparer visuellement à la régression polynomiale.</li>
-<li>Ajuster une spline de régression cubique avec <code>bs(weight, knots = ...)</code> pour un choix de nœuds que vous justifierez (par exemple les quartiles de <code>weight</code>), puis une spline naturelle avec <code>ns(weight, df = 4)</code>. Comparer les deux courbes, en particulier au-delà de la plage des données observées.</li>
-<li>Ajuster une spline de lissage avec <code>smooth.spline(Auto$weight, Auto$mpg, cv = TRUE)</code>. Rapporter les degrés de liberté effectifs sélectionnés et comparer la courbe obtenue aux splines de régression du point 4.</li>
-<li>Construire un intervalle de confiance ponctuel pour <span class="math inline">\(f(x)\)</span> autour d’une valeur de <span class="math inline">\(x\)</span> de votre choix, pour le modèle polynomial retenu au point 2.</li>
+<li>Ajuster des régressions polynomiales de degré <span class="math inline">\(p = 1, 2, 3, 5, 10\)</span> (<code>lm(O3 ~ poly(heure, p, raw = TRUE))</code>). Superposer les courbes ajustées au nuage de points et commenter : quel degré minimal faut-il pour représenter le cycle journalier? Que fait le degré 10 près de minuit?</li>
+<li>Sélectionner le degré <span class="math inline">\(p\)</span> à l’aide de l’AIC et du BIC, puis à l’aide de la validation croisée (LOOCV ou 10-fold). Les critères mènent-ils à la même valeur de <span class="math inline">\(p\)</span>? Pourquoi sont-ils si plats au-delà d’un certain degré?</li>
+<li>Ajuster un modèle à fonctions constantes par morceaux avec <code>cut(heure, K)</code> pour quelques valeurs de <span class="math inline">\(K\)</span>, dont <span class="math inline">\(K = 24\)</span>. Que représente <span class="math inline">\(\hat f\)</span> dans ce dernier cas? Comparer à la régression polynomiale, visuellement et par validation croisée.</li>
+<li>Ajuster une spline de régression cubique avec <code>bs(heure, knots = ...)</code> pour un choix de nœuds que vous justifierez, puis une spline naturelle avec <code>ns(heure, df = 4)</code>. Comparer les deux courbes, en particulier si on les prolonge au-delà de la plage des données.</li>
+<li>Ajuster une spline de lissage avec <code>smooth.spline(ozone$heure, ozone$O3)</code>. Rapporter les degrés de liberté effectifs sélectionnés et comparer la courbe obtenue aux splines de régression du point 4. Essayer ensuite <code>cv = TRUE</code> : que dit R, et pourquoi? Combien de nœuds la spline de lissage utilise-t-elle ici?</li>
+<li>Construire un intervalle de confiance ponctuel pour <span class="math inline">\(f(x)\)</span> à 16 h, pour le modèle polynomial retenu au point 2, et le comparer à l’intervalle de prédiction pour une nouvelle mesure. Pourquoi sont-ils si différents?</li>
 <li>Rédiger une courte conclusion (5-10 lignes) comparant l’ensemble des méthodes du labo selon : flexibilité, risque de surajustement, interprétabilité, et facilité d’implémentation.</li>
 </ol>
 </section>
@@ -303,7 +305,8 @@ STT-4300 — Régression II
 <h2 class="anchored" data-anchor-id="matériel">Matériel</h2>
 <ul>
 <li>Notes de cours : <a href="../notes/08-splines.html">Régression non linéaire — polynômes, fonctions par morceaux et splines</a></li>
-<li>Librairies R : <code>splines</code>, <code>ISLR</code></li>
+<li>Données : <a href="../notes/Jeux de données/qualite_air.csv"><code>qualite_air.csv</code></a></li>
+<li>Librairies R : <code>splines</code></li>
 </ul>
 
 

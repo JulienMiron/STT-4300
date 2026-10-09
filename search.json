@@ -46,28 +46,28 @@
     "href": "labos/labo3.html#objectifs",
     "title": "Labo 3",
     "section": "Objectifs",
-    "text": "Objectifs\n\nAjuster un modèle additif avec la librairie mgcv et interpréter les effets lissés de chaque variable.\nComprendre le rôle du paramètre de lissage et des degrés de liberté effectifs dans le compromis biais-variance.\nÉtendre les GAM au cas d’une réponse non gaussienne (GAM logistique)."
+    "text": "Objectifs\n\nAjuster un modèle additif avec la librairie mgcv et interpréter les effets lissés de chaque variable.\nComprendre le rôle du paramètre de lissage et des degrés de liberté effectifs dans le compromis biais-variance.\nVérifier l’hypothèse d’additivité et étendre les GAM au cas d’une réponse non gaussienne (GAM logistique)."
   },
   {
     "objectID": "labos/labo3.html#mise-en-contexte",
     "href": "labos/labo3.html#mise-en-contexte",
     "title": "Labo 3",
     "section": "Mise en contexte",
-    "text": "Mise en contexte\nOn reprend le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et deux variables explicatives, weight et horsepower.\n\nlibrary(ISLR)\nlibrary(mgcv)\ndata(Auto)"
+    "text": "Mise en contexte\nOn reprend le jeu de données qualite_air (télécharger) du labo 2, mais sur l’année entière : les mesures horaires d’ozone de 2025 à la station de Longueuil, soit environ 8 700 observations. La réponse \\(Y\\) est la concentration d’ozone (O3) et il y a deux variables explicatives, l’heure de la journée (heure) et le jour de l’année (jour, de 1 à 365). Pour le GAM logistique, on utilisera le jeu de données arbres (télécharger) du labo 1.\n\nlibrary(mgcv)\nair &lt;- read.csv(\"qualite_air.csv\", fileEncoding = \"UTF-8-BOM\")\nair$heure &lt;- as.integer(substr(air$Date_Heure, 12, 13))\nair$jour  &lt;- as.integer(format(as.Date(substr(air$Date_Heure, 1, 10)), \"%j\"))\nlongueuil &lt;- subset(air, Station == \"06600 - Longueuil\" & !is.na(O3))"
   },
   {
     "objectID": "labos/labo3.html#consignes",
     "href": "labos/labo3.html#consignes",
     "title": "Labo 3",
     "section": "Consignes",
-    "text": "Consignes\n\nAjuster le modèle additif mod1 &lt;- gam(mpg ~ s(weight) + s(horsepower), data = Auto). Afficher les effets partiels estimés (plot(mod1, pages = 1)) et commenter leur forme : sont-ils linéaires ? Justifient-ils l’usage d’un GAM plutôt que d’un modèle linéaire ?\nExaminer summary(mod1) : rapporter les degrés de liberté effectifs de chaque terme lissé et la déviance expliquée. Tester \\(H_0 : f_j \\equiv 0\\) pour chacune des deux variables.\nComparer le modèle additif à un modèle linéaire usuel (lm(mpg ~ weight + horsepower)) et à un modèle polynomial (par exemple degré 2 pour chaque variable) à l’aide de l’AIC et d’une estimation de l’erreur de prédiction par validation croisée.\nFaire varier artificiellement le paramètre de lissage d’un des termes (argument sp de gam) pour illustrer l’effet de \\(\\lambda \\to 0\\) et \\(\\lambda \\to \\infty\\) sur la courbe ajustée.\nAjuster un GAM avec interaction simple, par exemple s(weight, horsepower) (lissage bivarié), et discuter de ce que cela apporte (ou non) par rapport au modèle additif pur.\nGAM logistique. Construire une variable binaire à partir de mpg (par exemple \\(Y = \\mathbf{1}\\{\\texttt{mpg} &gt; \\text{médiane}\\}\\)) et ajuster gam(Y ~ s(weight), family = binomial, data = Auto). Représenter la probabilité ajustée en fonction de weight et comparer à une régression logistique usuelle."
+    "text": "Consignes\n\nAjuster le modèle additif mod1 &lt;- gam(O3 ~ s(heure) + s(jour), data = longueuil). Afficher les effets partiels estimés (plot(mod1, pages = 1)) et commenter leur forme : sont-ils linéaires? Que représente chacun des deux cycles? Justifient-ils l’usage d’un GAM plutôt que d’un modèle linéaire?\nExaminer summary(mod1) : rapporter les degrés de liberté effectifs de chaque terme lissé et la déviance expliquée. Tester \\(H_0 : f_j \\equiv 0\\) pour chacune des deux variables. L’un des deux termes utilise presque tous ses degrés de liberté disponibles : lequel, et qu’est-ce que cela suggère?\nComparer le modèle additif à un modèle linéaire usuel (lm(O3 ~ heure + jour)) et à un modèle polynomial (par exemple degré 5 pour chaque variable) à l’aide de l’AIC et d’une estimation de l’erreur de prédiction par validation croisée. Réfléchir à ce que vaut une validation croisée par blocs tirés au hasard quand les observations sont des heures consécutives.\nFaire varier artificiellement le paramètre de lissage du terme s(jour) (argument sp, en donnant au terme une base plus riche avec k = 30) pour illustrer l’effet de \\(\\lambda \\to 0\\) et \\(\\lambda \\to \\infty\\) sur la courbe ajustée. Que choisit le GCV avec cette base plus riche, et pourquoi?\nLe modèle additif suppose que le cycle journalier a la même forme toute l’année. Ajuster une surface te(heure, jour), puis un modèle avec effets principaux et interaction pure, s(heure) + s(jour) + ti(heure, jour). L’hypothèse d’additivité tient-elle? Discuter de ce que l’interaction apporte, et de ce qu’elle coûte.\nGAM logistique. Sur arbres, poser \\(Y = 1\\) si l’arbre est dans la strate inférieure du couvert (canopy_stratum égal à Intermédiaire ou Opprimé) et ajuster gam(Y ~ s(diameter_cm) + espece, family = binomial). Représenter la probabilité ajustée en fonction du diamètre et comparer à une régression logistique usuelle. Que valent les degrés de liberté effectifs, et qu’en conclure?"
   },
   {
     "objectID": "labos/labo3.html#matériel",
     "href": "labos/labo3.html#matériel",
     "title": "Labo 3",
     "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : Modèles additifs et modèles additifs généralisés (GAM)\nLibrairies R : mgcv, ISLR"
+    "text": "Matériel\n\nNotes de cours : Modèles additifs et modèles additifs généralisés (GAM)\nDonnées : qualite_air.csv, arbres.csv\nLibrairies R : mgcv"
   },
   {
     "objectID": "labos/labo1.html",
@@ -81,28 +81,28 @@
     "href": "labos/labo1.html#objectifs",
     "title": "Labo 1",
     "section": "Objectifs",
-    "text": "Objectifs\n\nImplémenter et comparer l’estimateur des \\(k\\) plus proches voisins (kNN) et l’estimateur de noyau de Nadaraya-Watson.\nComprendre, de façon empirique, le compromis biais-variance associé au choix de \\(k\\) et de la fenêtre \\(h\\).\nSélectionner \\(k\\) et \\(h\\) par validation croisée et comparer les courbes ajustées obtenues."
+    "text": "Objectifs\n\nImplémenter et comparer l’estimateur des \\(k\\) plus proches voisins (\\(k\\)NN) et l’estimateur de noyau de Nadaraya-Watson.\nComprendre, de façon empirique, le compromis biais-variance associé au choix de \\(k\\) et de la fenêtre \\(h\\).\nSélectionner \\(k\\) et \\(h\\) par validation croisée et comparer les courbes ajustées obtenues."
   },
   {
     "objectID": "labos/labo1.html#mise-en-contexte",
     "href": "labos/labo1.html#mise-en-contexte",
     "title": "Labo 1",
-    "section": "Mise en contexte⁄",
-    "text": "Mise en contexte⁄\nOn utilise le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et $X = $ weight, comme dans les notes de cours sur la régression non paramétrique.\n\nlibrary(ISLR)\nlibrary(FNN)\nlibrary(KernSmooth)\ndata(Auto)"
+    "section": "Mise en contexte",
+    "text": "Mise en contexte\nOn utilise le jeu de données arbres (télécharger), décrit dans les notes de cours : 200 arbres de l’inventaire forestier du Québec, tirés de donneesbleues.ca. La réponse \\(Y\\) est la hauteur (height_m, en m) et la variable explicative \\(X\\) est le diamètre à hauteur de poitrine (diameter_cm, en cm), comme dans le chapitre sur la régression non paramétrique.\n\nlibrary(FNN)\nlibrary(KernSmooth)\narbres &lt;- read.csv(\"arbres.csv\")"
   },
   {
     "objectID": "labos/labo1.html#consignes",
     "href": "labos/labo1.html#consignes",
     "title": "Labo 1",
     "section": "Consignes",
-    "text": "Consignes\n\nProduire un nuage de points mpg en fonction de weight et discuter brièvement pourquoi une relation linéaire semble inadéquate.\nÀ l’aide de knn.reg (librairie FNN), ajuster l’estimateur kNN pour plusieurs valeurs de \\(k\\) (par exemple \\(k = 5, 25, 45, 100, 300\\)). Superposer les courbes ajustées au nuage de points et commenter l’effet de \\(k\\) sur la rugosité de la courbe.\nUtiliser le critère PRESS de knn.reg (LOOCV) pour sélectionner \\(k_{\\min}\\). Comparer avec la valeur \\(k_{\\min}=45\\) mentionnée dans les notes.\nÀ l’aide de locpoly (librairie KernSmooth, degree=0), ajuster l’estimateur de Nadaraya-Watson pour plusieurs valeurs de la fenêtre \\(h\\). Encore une fois, illustrer l’effet de \\(h\\) sur la courbe ajustée.\nChoisir \\(h\\) par validation croisée (vous pouvez coder vous-même une boucle de LOOCV ou de \\(K\\)-fold CV) et comparer la courbe obtenue à celle de kNN avec \\(k_{\\min}\\).\nEn une dizaine de lignes, comparer les deux approches : avantages, inconvénients, et situations où l’une serait préférable à l’autre (notamment en présence de plusieurs variables explicatives — voir la distance de Mahalanobis dans les notes)."
+    "text": "Consignes\n\nProduire un nuage de points de la hauteur en fonction du diamètre et discuter brièvement pourquoi une relation linéaire semble inadéquate. Noter aussi deux particularités du jeu de données : plusieurs arbres ont exactement le même diamètre, et les gros arbres sont rares.\nÀ l’aide de knn.reg (librairie FNN), ajuster l’estimateur kNN pour plusieurs valeurs de \\(k\\) (par exemple \\(k = 2, 5, 9, 25, 60\\)). Superposer les courbes ajustées au nuage de points et commenter l’effet de \\(k\\) sur la rugosité de la courbe et sur son comportement pour les gros arbres.\nUtiliser le critère PRESS de knn.reg (LOOCV) pour sélectionner \\(k_{\\min}\\). Comparer avec la valeur \\(k_{\\min} = 9\\) obtenue dans les notes. Que se passe-t-il pour les diamètres ex æquo?\nÀ l’aide de locpoly (librairie KernSmooth, degree = 0), ajuster l’estimateur de Nadaraya-Watson pour plusieurs valeurs de la fenêtre \\(h\\) (en cm). Encore une fois, illustrer l’effet de \\(h\\) sur la courbe ajustée.\nChoisir \\(h\\) par validation croisée (vous pouvez coder vous-même une boucle de LOOCV ou de \\(K\\)-fold CV, ou utiliser la formule explicite des notes) et comparer la courbe obtenue à celle de kNN avec \\(k_{\\min}\\).\nEn une dizaine de lignes, comparer les deux approches : avantages, inconvénients, et situations où l’une serait préférable à l’autre (notamment en présence de plusieurs variables explicatives, par exemple le diamètre et l’âge ; voir la distance de Mahalanobis dans les notes)."
   },
   {
     "objectID": "labos/labo1.html#matériel",
     "href": "labos/labo1.html#matériel",
     "title": "Labo 1",
     "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : Régression non paramétrique — kNN et noyau\nLibrairies R : FNN, KernSmooth, ISLR"
+    "text": "Matériel\n\nNotes de cours : Régression non paramétrique — kNN et noyau\nDonnées : arbres.csv\nLibrairies R : FNN, KernSmooth"
   },
   {
     "objectID": "calendrier.html",
@@ -214,21 +214,21 @@
     "href": "labos/labo2.html#mise-en-contexte",
     "title": "Labo 2",
     "section": "Mise en contexte",
-    "text": "Mise en contexte\nOn reprend le jeu de données Auto (librairie ISLR), avec $Y = $ mpg et $X = $ weight.\n\nlibrary(ISLR)\nlibrary(splines)\ndata(Auto)"
+    "text": "Mise en contexte\nOn utilise le jeu de données qualite_air (télécharger, 28 Mo), décrit dans les notes de cours : mesures horaires 2025 des stations du Réseau de surveillance de la qualité de l’air du Québec, tirées de donneesbleues.ca. Comme dans le chapitre sur les splines, on retient les mesures d’ozone (O3, en ppb) de juin, juillet et août à la station de Longueuil ; la réponse \\(Y\\) est la concentration d’ozone et la variable explicative \\(X\\) est l’heure de la journée, de 0 à 23.\n\nlibrary(splines)\nair &lt;- read.csv(\"qualite_air.csv\", fileEncoding = \"UTF-8-BOM\")\nair$heure &lt;- as.integer(substr(air$Date_Heure, 12, 13))\nair$mois  &lt;- as.integer(substr(air$Date_Heure, 6, 7))\nozone &lt;- subset(air, Station == \"06600 - Longueuil\" & mois %in% 6:8 & !is.na(O3))"
   },
   {
     "objectID": "labos/labo2.html#consignes",
     "href": "labos/labo2.html#consignes",
     "title": "Labo 2",
     "section": "Consignes",
-    "text": "Consignes\n\nAjuster des régressions polynomiales de degré \\(p = 1, 2, 3, 5, 10\\) (lm(mpg ~ poly(weight, p, raw=TRUE))). Superposer les courbes ajustées et commenter le comportement aux extrémités du domaine pour les degrés élevés.\nSélectionner le degré \\(p\\) à l’aide de l’AIC/BIC, puis à l’aide de la validation croisée (LOOCV ou 10-fold). Les deux critères mènent-ils à la même valeur de \\(p\\) ?\nAjuster un modèle à fonctions constantes par morceaux avec cut(weight, K) pour quelques valeurs de \\(K\\), et comparer visuellement à la régression polynomiale.\nAjuster une spline de régression cubique avec bs(weight, knots = ...) pour un choix de nœuds que vous justifierez (par exemple les quartiles de weight), puis une spline naturelle avec ns(weight, df = 4). Comparer les deux courbes, en particulier au-delà de la plage des données observées.\nAjuster une spline de lissage avec smooth.spline(Auto$weight, Auto$mpg, cv = TRUE). Rapporter les degrés de liberté effectifs sélectionnés et comparer la courbe obtenue aux splines de régression du point 4.\nConstruire un intervalle de confiance ponctuel pour \\(f(x)\\) autour d’une valeur de \\(x\\) de votre choix, pour le modèle polynomial retenu au point 2.\nRédiger une courte conclusion (5-10 lignes) comparant l’ensemble des méthodes du labo selon : flexibilité, risque de surajustement, interprétabilité, et facilité d’implémentation."
+    "text": "Consignes\n\nAjuster des régressions polynomiales de degré \\(p = 1, 2, 3, 5, 10\\) (lm(O3 ~ poly(heure, p, raw = TRUE))). Superposer les courbes ajustées au nuage de points et commenter : quel degré minimal faut-il pour représenter le cycle journalier? Que fait le degré 10 près de minuit?\nSélectionner le degré \\(p\\) à l’aide de l’AIC et du BIC, puis à l’aide de la validation croisée (LOOCV ou 10-fold). Les critères mènent-ils à la même valeur de \\(p\\)? Pourquoi sont-ils si plats au-delà d’un certain degré?\nAjuster un modèle à fonctions constantes par morceaux avec cut(heure, K) pour quelques valeurs de \\(K\\), dont \\(K = 24\\). Que représente \\(\\hat f\\) dans ce dernier cas? Comparer à la régression polynomiale, visuellement et par validation croisée.\nAjuster une spline de régression cubique avec bs(heure, knots = ...) pour un choix de nœuds que vous justifierez, puis une spline naturelle avec ns(heure, df = 4). Comparer les deux courbes, en particulier si on les prolonge au-delà de la plage des données.\nAjuster une spline de lissage avec smooth.spline(ozone$heure, ozone$O3). Rapporter les degrés de liberté effectifs sélectionnés et comparer la courbe obtenue aux splines de régression du point 4. Essayer ensuite cv = TRUE : que dit R, et pourquoi? Combien de nœuds la spline de lissage utilise-t-elle ici?\nConstruire un intervalle de confiance ponctuel pour \\(f(x)\\) à 16 h, pour le modèle polynomial retenu au point 2, et le comparer à l’intervalle de prédiction pour une nouvelle mesure. Pourquoi sont-ils si différents?\nRédiger une courte conclusion (5-10 lignes) comparant l’ensemble des méthodes du labo selon : flexibilité, risque de surajustement, interprétabilité, et facilité d’implémentation."
   },
   {
     "objectID": "labos/labo2.html#matériel",
     "href": "labos/labo2.html#matériel",
     "title": "Labo 2",
     "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : Régression non linéaire — polynômes, fonctions par morceaux et splines\nLibrairies R : splines, ISLR"
+    "text": "Matériel\n\nNotes de cours : Régression non linéaire — polynômes, fonctions par morceaux et splines\nDonnées : qualite_air.csv\nLibrairies R : splines"
   },
   {
     "objectID": "labos/labo4.html",
@@ -249,20 +249,20 @@
     "href": "labos/labo4.html#mise-en-contexte",
     "title": "Labo 4",
     "section": "Mise en contexte",
-    "text": "Mise en contexte\nOn utilise le jeu de données College (librairie ISLR), avec $Y = $ Outstate (frais de scolarité hors-État) et $X = $ Expend (dépenses par étudiant).\n\nlibrary(ISLR)\nlibrary(FNN)\nlibrary(KernSmooth)\nlibrary(splines)\nlibrary(mgcv)\ndata(College)"
+    "text": "Mise en contexte\nOn reprend le jeu de données qualite_air (télécharger), mais à une autre station : Québec – Vieux-Limoilou. Comme aux labos 2 et 3, la réponse \\(Y\\) est la concentration d’ozone (O3) et la variable explicative \\(X\\) est l’heure de la journée ; on retient les mois de juin, juillet et août. Pour la partie multivariée, on utilisera l’année entière et les autres contaminants mesurés à la station : le monoxyde de carbone (CO), les particules fines (PM2.5-T640) et le carbone suie (BC_880nm).\n\nlibrary(FNN)\nlibrary(KernSmooth)\nlibrary(splines)\nlibrary(mgcv)\nair &lt;- read.csv(\"qualite_air.csv\", fileEncoding = \"UTF-8-BOM\")\nair$heure &lt;- as.integer(substr(air$Date_Heure, 12, 13))\nair$mois  &lt;- as.integer(substr(air$Date_Heure, 6, 7))\nair$jour  &lt;- as.integer(format(as.Date(substr(air$Date_Heure, 1, 10)), \"%j\"))\nquebec &lt;- subset(air, Station == \"03006 - Québec - Vieux-Limoilou\")\nete &lt;- subset(quebec, mois %in% 6:8 & !is.na(O3))"
   },
   {
     "objectID": "labos/labo4.html#consignes",
     "href": "labos/labo4.html#consignes",
     "title": "Labo 4",
     "section": "Consignes",
-    "text": "Consignes\n\nPartitionner les données en un ensemble d’entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à \\(K=10\\) plis réutilisable pour toutes les méthodes suivantes.\nAjuster, sur l’ensemble d’entraînement, chacun des modèles suivants pour prédire Outstate en fonction de Expend :\n\nun modèle linéaire simple (référence) ;\nun estimateur kNN (knn.reg), avec \\(k\\) choisi par validation croisée ;\nun estimateur de noyau (locpoly), avec \\(h\\) choisi par validation croisée ;\nune spline de lissage (smooth.spline, cv = TRUE) ;\nun GAM univarié (gam(Outstate ~ s(Expend))).\n\nPour chaque méthode, calculer l’erreur quadratique moyenne sur l’ensemble test (ou moyenne des erreurs de validation croisée). Présenter les résultats dans un tableau.\nSuperposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points Outstate vs Expend. Commenter les ressemblances et différences.\nExtension multivariée. Ajuster un GAM avec plusieurs prédicteurs, par exemple gam(Outstate ~ s(Room.Board) + s(PhD) + s(perc.alumni) + s(Expend) + s(Grad.Rate), data = College). Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant. Quelles variables semblent avoir un effet non linéaire marqué ?\nRédiger une conclusion (15-20 lignes) qui répond à la question : dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM ? Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d’interprétabilité."
+    "text": "Consignes\n\nPartitionner les données en un ensemble d’entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à \\(K=10\\) plis réutilisable pour toutes les méthodes suivantes. Réfléchir aux conséquences d’un tirage au hasard parmi des heures consécutives.\nAjuster, sur l’ensemble d’entraînement, chacun des modèles suivants pour prédire O3 en fonction de heure :\n\nun modèle linéaire simple (référence) ;\nun estimateur kNN (knn.reg), avec \\(k\\) choisi par validation croisée ;\nun estimateur de noyau (locpoly ou la formule des poids), avec \\(h\\) choisi par validation croisée ;\nune spline de lissage (smooth.spline, en justifiant le choix entre GCV et cv = TRUE) ;\nun GAM univarié (gam(O3 ~ s(heure))).\n\nPour chaque méthode, calculer l’erreur quadratique moyenne sur l’ensemble test (ou moyenne des erreurs de validation croisée). Présenter les résultats dans un tableau.\nSuperposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points. Commenter les ressemblances et différences.\nExtension multivariée. Sur l’année entière, ajuster un GAM avec plusieurs prédicteurs, par exemple gam(O3 ~ s(heure) + s(jour) + s(CO) + s(PM25) + s(BC)), après avoir renommé les colonnes PM2.5-T640 et BC_880nm et retiré les heures où une mesure manque. Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant et à celle du GAM à deux cycles du labo 3. Quelles variables semblent avoir un effet non linéaire marqué? Comment ces effets s’interprètent-ils chimiquement?\nRédiger une conclusion (15-20 lignes) qui répond à la question : dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM? Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d’interprétabilité."
   },
   {
     "objectID": "labos/labo4.html#matériel",
     "href": "labos/labo4.html#matériel",
     "title": "Labo 4",
     "section": "Matériel",
-    "text": "Matériel\n\nNotes de cours : kNN et noyau, Splines, GAM\nLibrairies R : FNN, KernSmooth, splines, mgcv, ISLR"
+    "text": "Matériel\n\nNotes de cours : kNN et noyau, Splines, GAM\nDonnées : qualite_air.csv\nLibrairies R : FNN, KernSmooth, splines, mgcv"
   }
 ]

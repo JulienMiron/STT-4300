@@ -651,7 +651,52 @@ R-sq.(adj) =  0.188   Deviance explained = 18.5%
 UBRE = 0.052107  Scale est. = 1         n = 200</code></pre>
 </div>
 </div>
-<p>La fonction lisse du diamètre a exactement un degré de liberté effectif : la pénalisation a ramené <span class="math inline">\(\hat f\)</span> à une droite, et le GAM se réduit à la régression logistique avec le diamètre comme variable linéaire sur l’échelle logit (même AIC, à <span class="math inline">\(10^{-4}\)</span> près). C’est l’usage diagnostique du GAM : lorsqu’on hésite sur la forme fonctionnelle, on laisse les données trancher, et si les degrés de liberté effectifs sont proches de 1, un MLG paramétrique suffit. Avec <span class="math inline">\(n = 200\)</span>, la courbe en escalier obtenue par <span class="math inline">\(k\)</span>NN au <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 6</span></a> ne contenait pas d’information que la droite ne capte déjà.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod2, <span class="at">shade =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-gam-arbres-f" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gam-arbres-f-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="09-gam_files/figure-html/fig-gam-arbres-f-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam-arbres-f-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.2: Fonction lisse <span class="math inline">\(\hat f\)</span> du diamètre sur l’échelle logit, centrée, avec bande de confiance à 95 %. Les traits au bas de la figure marquent les diamètres observés.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La fonction lisse du diamètre a exactement un degré de liberté effectif : la pénalisation a ramené <span class="math inline">\(\hat f\)</span> à une droite, et le GAM se réduit à la régression logistique avec le diamètre comme variable linéaire sur l’échelle logit (même AIC, à <span class="math inline">\(10^{-4}\)</span> près). La <a href="#fig-gam-arbres-f" class="quarto-xref">Figure&nbsp;<span>8.2</span></a> le montre sans ambiguïté : une droite décroissante, dont la bande de confiance s’évase là où les gros arbres se font rares. C’est l’usage diagnostique du GAM : lorsqu’on hésite sur la forme fonctionnelle, on laisse les données trancher, et si les degrés de liberté effectifs sont proches de 1, un MLG paramétrique suffit.</p>
+<p>Sur l’échelle des probabilités, le modèle donne une courbe par espèce, toutes de même forme (effet additif sur le logit) et décalées verticalement par les <span class="math inline">\(\hat\gamma_e\)</span> : à diamètre égal, le sapin baumier est l’espèce la plus souvent sous le couvert et le bouleau la moins souvent, mais aucun de ces écarts n’est significatif. La <a href="#fig-gam-arbres-p" class="quarto-xref">Figure&nbsp;<span>8.3</span></a> superpose l’estimateur <span class="math inline">\(k\)</span>NN du <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 6</span></a> avec <span class="math inline">\(k = 48\)</span>, la valeur choisie par l’AUC.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">diameter_cm =</span> <span class="fu">seq</span>(<span class="dv">9</span>, <span class="dv">42</span>, <span class="at">length.out =</span> <span class="dv">200</span>), <span class="at">espece =</span> <span class="fu">levels</span>(arbres<span class="sc">$</span>espece))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>grille<span class="sc">$</span>pi <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod2, <span class="at">newdata =</span> grille, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>knn <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter_cm =</span> <span class="fu">seq</span>(<span class="dv">9</span>, <span class="dv">42</span>, <span class="at">length.out =</span> <span class="dv">200</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>knn<span class="sc">$</span>pi <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="at">train =</span> arbres<span class="sc">$</span>diameter_cm, <span class="at">test =</span> <span class="fu">as.matrix</span>(knn<span class="sc">$</span>diameter_cm),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> arbres<span class="sc">$</span>inferieure, <span class="at">k =</span> <span class="dv">48</span>)<span class="sc">$</span>pred</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbres, <span class="fu">aes</span>(diameter_cm, inferieure)) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour =</span> espece), <span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.03</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> grille, <span class="fu">aes</span>(diameter_cm, pi, <span class="at">colour =</span> espece), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> knn, <span class="fu">aes</span>(diameter_cm, pi), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diamètre (cm)"</span>, <span class="at">y =</span> <span class="st">"P(strate inférieure)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-gam-arbres-p" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gam-arbres-p-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="09-gam_files/figure-html/fig-gam-arbres-p-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam-arbres-p-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.3: Probabilité estimée d’être dans la strate inférieure selon le diamètre et l’espèce (GAM logistique), observations (0 ou 1, légèrement décalées verticalement) et estimateur <span class="math inline">\(k\)</span>NN avec <span class="math inline">\(k = 48\)</span> (tirets), qui ignore l’espèce.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Les deux approches racontent la même histoire : la probabilité passe d’environ 0,5 à 0,7 (selon l’espèce) pour les plus petits arbres à presque 0 au-delà de 25 cm. Le <span class="math inline">\(k\)</span>NN, en escalier, plafonne à 0,06 pour les gros diamètres parce que ses 48 voisins incluent alors toujours quelques arbres moyens ; le GAM, lui, prolonge la décroissance. Avec <span class="math inline">\(n = 200\)</span>, l’estimateur non-paramétrique ne contenait pas d’information que la droite sur l’échelle logit ne capte déjà, et le GAM y ajoute l’espèce sans effort.</p>
 </div>
 <p>Dans les deux cas, <code>summary</code> rapporte, pour chaque fonction lisse, ses degrés de liberté effectifs et un test approximatif de nullité, et <code>plot</code> trace chaque <span class="math inline">\(\hat f_j\)</span> avec ses bandes de confiance. Pour un GAM Poisson, la syntaxe est la même avec <code>family = poisson</code> et, au besoin, un terme <code>offset(log(exposition))</code> dans la formule, comme pour <code>glm</code>.</p>
 </section>

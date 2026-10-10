@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>labo2 – STT-4300 Régression II</title>
+<title>labo5-solutions – STT-4300 Régression II</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,41 +25,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -142,7 +107,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -238,7 +203,18 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#grille-dévaluation" id="toc-grille-dévaluation" class="nav-link active" data-scroll-target="#grille-dévaluation">Grille d’évaluation</a></li>
+  <li><a href="#éléments-attendus-pour-les-quatre-questions-proposées" id="toc-éléments-attendus-pour-les-quatre-questions-proposées" class="nav-link" data-scroll-target="#éléments-attendus-pour-les-quatre-questions-proposées">Éléments attendus pour les quatre questions proposées</a></li>
+  <li><a href="#exemple-de-passage-corrigé" id="toc-exemple-de-passage-corrigé" class="nav-link" data-scroll-target="#exemple-de-passage-corrigé">Exemple de passage corrigé</a></li>
+  <li><a href="#sur-lutilité-et-les-limites-de-lassistant" id="toc-sur-lutilité-et-les-limites-de-lassistant" class="nav-link" data-scroll-target="#sur-lutilité-et-les-limites-de-lassistant">Sur l’utilité et les limites de l’assistant</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -266,67 +242,204 @@ window.Quarto = {
 </header>
 
 
-<!-- Coquille : le contenu du labo est dans labos/_contenu/labo2.qmd et n'est
-     inséré ici qu'à partir de la date fixée dans labos/disponibilite.json
+<!-- Coquille : le contenu des solutions est dans labos/_contenu/labo5-solutions.qmd
+     et n'est inséré ici qu'à partir de la date fixée dans labos/disponibilite.json
      (voir labos/_disponibilite.R). Modifiez le contenu, pas ce fichier. -->
 <div class="portal-hero">
 <p class="eyebrow">
 STT-4300 — Régression II
 </p>
-<section id="labo-2" class="level1">
-<h1>Labo 2</h1>
+<section id="solutions-du-labo-5" class="level1">
+<h1>Solutions du labo 5</h1>
 </section>
 </div>
 <!-- La date vient de labos/disponibilite.json (voir labos/_disponibilite.R). -->
 <div class="module-quick-facts two-facts">
 <div class="module-fact">
 <p>
-<span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value">18 mars 2026</span></span>
+<span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value">15 avril 2026</span></span>
 </p>
 </div>
 <div class="module-fact">
 <p>
-<span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Régression non linéaire : polynômes et splines</span></span>
+<span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Regard critique sur les réponses d’un assistant IA (Claude)</span></span>
 </p>
 </div>
 </div>
-<section id="objectifs" class="level2">
-<h2 class="anchored" data-anchor-id="objectifs">Objectifs</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Un corrigé sans réponse unique
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Chaque équipe pose une question différente et obtient une réponse différente : il n’existe pas de solution unique à ce labo. Ce document fournit plutôt (1) la grille avec laquelle les évaluations sont corrigées, (2) pour chacune des quatre questions proposées en exemple, les éléments qu’une réponse exacte et complète doit contenir et les erreurs ou raccourcis typiques à repérer, et (3) un exemple de passage corrigé. Il n’inclut volontairement aucun échange réel avec Claude : les réponses de l’assistant varient d’une fois à l’autre, et l’exercice consiste précisément à juger la réponse que <em>vous</em> avez obtenue.</p>
+</div>
+</div>
+<section id="grille-dévaluation" class="level2">
+<h2 class="anchored" data-anchor-id="grille-dévaluation">Grille d’évaluation</h2>
+<p>Ce qui est évalué, c’est la qualité de <strong>votre critique</strong>, et non la qualité de la réponse de Claude. Une réponse excellente de l’assistant, reconnue comme telle avec des arguments précis, vaut autant qu’une réponse erronée correctement démontée.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Critère</th>
+<th>Attentes</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Choix de la question</td>
+<td>Précise, technique, liée aux labos 1 à 4, dont la réponse peut être vérifiée dans les notes ou par un calcul.</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>Exactitude</td>
+<td>Chaque affirmation importante de la réponse est confrontée aux notes ou à un calcul ; les erreurs, imprécisions ou simplifications abusives sont identifiées <strong>précisément</strong> (citation du passage) et <strong>expliquées</strong>. Un simple « c’est correct » sans vérification ne suffit pas.</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>Complétude</td>
+<td>Les hypothèses et nuances omises sont nommées (conditions de régularité, cas particuliers, échelle sur laquelle un résultat vaut, ce qui se passe aux bords ou en grande dimension).</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Clarté et niveau</td>
+<td>Jugement argumenté sur l’adéquation au niveau du cours : jargon non défini, notation incohérente avec le cours, longueur, structure.</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>Verdict global</td>
+<td>Cohérent avec les trois points précédents et justifié en quelques phrases.</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Correction du passage</td>
+<td>Si nécessaire, la version corrigée est juste, concise et rédigée dans les notations du cours. Si la réponse était excellente, une reformulation plus proche du cours ou l’ajout d’une nuance remplace la correction.</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td>Réflexion sur l’outil</td>
+<td>Discussion nuancée et appuyée sur l’expérience vécue dans le labo, pas des généralités.</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>Remise</td>
+<td>Échange intégral et non modifié joint à l’évaluation.</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="éléments-attendus-pour-les-quatre-questions-proposées" class="level2">
+<h2 class="anchored" data-anchor-id="éléments-attendus-pour-les-quatre-questions-proposées">Éléments attendus pour les quatre questions proposées</h2>
+<section id="question-1-variance-de-lestimateur-knn" class="level3">
+<h3 class="anchored" data-anchor-id="question-1-variance-de-lestimateur-knn">Question 1 : variance de l’estimateur kNN</h3>
+<p><em>« Pourquoi la variance de l’estimateur kNN est-elle <span class="math inline">\(\sigma^2/k\)</span>, et pourquoi ce résultat suppose-t-il <span class="math inline">\(Var[\epsilon_i]\)</span> constante ? »</em></p>
+<p><strong>Une réponse exacte doit contenir :</strong></p>
 <ul>
-<li>Ajuster des modèles de régression polynomiale, par fonctions constantes par morceaux, et par splines de régression.</li>
-<li>Choisir le degré du polynôme (ou le nombre de nœuds) par un critère d’information (AIC/BIC) et par validation croisée.</li>
-<li>Comprendre l’intérêt des splines naturelles et des splines de lissage (<code>smooth.spline</code>) par rapport aux splines de régression classiques.</li>
+<li>l’écriture <span class="math inline">\(\hat f(x) = \frac{1}{k}\sum_{i \in N_k(x)} Y_i\)</span> avec <span class="math inline">\(Y_i = f(X_i) + \epsilon_i\)</span> ;</li>
+<li>le fait que, <strong>conditionnellement aux <span class="math inline">\(X_i\)</span></strong>, les <span class="math inline">\(f(X_i)\)</span> sont des constantes et la variance ne porte que sur les <span class="math inline">\(\epsilon_i\)</span> : <span class="math inline">\(Var[\hat f(x) \mid X] = \frac{1}{k^2}\sum_{i\in N_k(x)} Var[\epsilon_i]\)</span> ;</li>
+<li>l’hypothèse d’<strong>indépendance</strong> (ou au moins de non-corrélation) des <span class="math inline">\(\epsilon_i\)</span>, sans laquelle des termes de covariance apparaissent ;</li>
+<li>l’hypothèse d’<strong>homoscédasticité</strong> <span class="math inline">\(Var[\epsilon_i] = \sigma^2\)</span> : c’est elle qui permet de remplacer la somme par <span class="math inline">\(k\sigma^2\)</span> et d’obtenir <span class="math inline">\(\sigma^2/k\)</span>. Sans elle, la variance vaut <span class="math inline">\(\frac{1}{k^2}\sum_{i\in N_k(x)}\sigma^2(X_i)\)</span> et dépend de <span class="math inline">\(x\)</span> par le niveau local de la variance ;</li>
+<li>idéalement, le lien avec le compromis biais-variance : la variance décroît en <span class="math inline">\(1/k\)</span> alors que le biais, de l’ordre de <span class="math inline">\(\frac{1}{2k}f''(x)\sum_{i\in N_k(x)}(E[X_i]-x)^2\)</span>, croît avec <span class="math inline">\(k\)</span>.</li>
+</ul>
+<p><strong>Erreurs et lacunes fréquentes :</strong></p>
+<ul>
+<li>oublier de conditionner sur les <span class="math inline">\(X_i\)</span> et traiter <span class="math inline">\(f(X_i)\)</span> comme aléatoire, ce qui change le résultat ;</li>
+<li>confondre <span class="math inline">\(Var[\hat f(x)]\)</span> et <span class="math inline">\(Var[Y]\)</span> ;</li>
+<li>affirmer que le résultat exige la normalité des erreurs (elle n’est pas nécessaire : seules l’indépendance et l’homoscédasticité le sont) ;</li>
+<li>présenter <span class="math inline">\(\sigma^2/k\)</span> comme exact pour l’erreur quadratique moyenne, en oubliant le biais ;</li>
+<li>oublier que l’ensemble <span class="math inline">\(N_k(x)\)</span> est lui-même déterminé par les <span class="math inline">\(X_i\)</span>, donc fixé une fois qu’on conditionne.</li>
 </ul>
 </section>
-<section id="mise-en-contexte" class="level2">
-<h2 class="anchored" data-anchor-id="mise-en-contexte">Mise en contexte</h2>
-<p>On utilise le jeu de données <code>meteo_quebec</code> (<a href="../notes/Jeux de données/meteo_quebec.csv">télécharger</a>, 2 Mo), tiré de <a href="https://donneesbleues.ca/datasets/meteo-quebec/fiche.html">donneesbleues.ca</a> : les observations météorologiques quotidiennes de la station Québec/Jean-Lesage (Environnement et Changement climatique Canada) du 1<sup>er</sup> janvier 1970 au 22 janvier 2025. Chaque ligne est une journée ; on y trouve la date (<code>date</code>), l’année (<code>annee</code>), le mois (<code>mois_num</code>) et les températures maximale, moyenne et minimale de la journée (<code>max_temp</code>, <code>mean_temp</code>, <code>min_temp</code>, en °C), ainsi que les précipitations.</p>
-<p>La réponse <span class="math inline">\(Y\)</span> est la température moyenne de la journée (<code>mean_temp</code>) et la variable explicative <span class="math inline">\(X\)</span> est le jour de l’année (<code>jour_annee</code>, de 1 pour le 1<sup>er</sup> janvier à 365 ou 366 pour le 31 décembre). On retient les années 2015 à 2024, soit environ 3 600 journées.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>meteo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"meteo_quebec.csv"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>meteo<span class="sc">$</span>jour_annee <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(meteo<span class="sc">$</span>date), <span class="st">"%j"</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">subset</span>(meteo, annee <span class="sc">%in%</span> <span class="dv">2015</span><span class="sc">:</span><span class="dv">2024</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(mean_temp))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="consignes" class="level2">
-<h2 class="anchored" data-anchor-id="consignes">Consignes</h2>
-<ol type="1">
-<li>Ajuster des régressions polynomiales de degré <span class="math inline">\(p = 1, 2, 3, 5, 10\)</span> (<code>lm(mean_temp ~ poly(jour_annee, p, raw = TRUE))</code>). Superposer les courbes ajustées au nuage de points et commenter : quel degré minimal faut-il pour représenter le cycle annuel? Un cycle annuel devrait se refermer : comparer <span class="math inline">\(\hat f(1)\)</span> et <span class="math inline">\(\hat f(366)\)</span> pour chaque degré. Que fait le degré 10 près du jour de l’An?</li>
-<li>Sélectionner le degré <span class="math inline">\(p\)</span> à l’aide de l’AIC et du BIC, puis à l’aide de la validation croisée (LOOCV ou 10-fold). Les critères mènent-ils à la même valeur de <span class="math inline">\(p\)</span>? Pourquoi sont-ils si plats au-delà d’un certain degré?</li>
-<li>Ajuster un modèle à fonctions constantes par morceaux avec <code>cut(jour_annee, K)</code> pour quelques valeurs de <span class="math inline">\(K\)</span>, dont <span class="math inline">\(K = 12\)</span>. À quoi correspond <span class="math inline">\(\hat f\)</span> dans ce dernier cas? Comparer à la régression polynomiale, visuellement et par validation croisée.</li>
-<li>Ajuster une spline de régression cubique avec <code>bs(jour_annee, knots = ...)</code> pour un choix de nœuds que vous justifierez, puis une spline naturelle avec <code>ns(jour_annee, df = 4)</code>. Comparer les deux courbes, en particulier si on les prolonge au-delà de la plage des données (jours négatifs, ou supérieurs à 366).</li>
-<li>Ajuster une spline de lissage avec <code>smooth.spline(temp$jour_annee, temp$mean_temp)</code>. Rapporter les degrés de liberté effectifs sélectionnés : sont-ils comparables à ceux des modèles précédents? Si non, qu’est-ce qui explique l’écart, et la courbe obtenue vous paraît-elle raisonnable? Essayer ensuite <code>cv = TRUE</code> : que dit R, et pourquoi? Combien de nœuds la spline de lissage utilise-t-elle ici?</li>
-<li>Construire un intervalle de confiance ponctuel pour <span class="math inline">\(f(x)\)</span> au jour 200 (le 19 juillet), pour le modèle polynomial retenu au point 2, et le comparer à l’intervalle de prédiction pour la température d’un 19 juillet futur. Pourquoi sont-ils si différents?</li>
-<li>Rédiger une courte conclusion (5-10 lignes) comparant l’ensemble des méthodes du labo selon : flexibilité, risque de surajustement, interprétabilité, et facilité d’implémentation.</li>
-</ol>
-</section>
-<section id="matériel" class="level2">
-<h2 class="anchored" data-anchor-id="matériel">Matériel</h2>
+<section id="question-2-splines-naturelles-et-variance-aux-bords" class="level3">
+<h3 class="anchored" data-anchor-id="question-2-splines-naturelles-et-variance-aux-bords">Question 2 : splines naturelles et variance aux bords</h3>
+<p><em>« Pourquoi les splines naturelles imposent-elles la linéarité de <span class="math inline">\(f\)</span> aux extrémités, et en quoi cela réduit-il la variance de <span class="math inline">\(\hat f(x)\)</span> près des bords ? »</em></p>
+<p><strong>Une réponse exacte doit contenir :</strong></p>
 <ul>
-<li>Notes de cours : <a href="../notes/08-splines.html">Régression non linéaire — polynômes, fonctions par morceaux et splines</a></li>
-<li>Données : <a href="../notes/Jeux de données/meteo_quebec.csv"><code>meteo_quebec.csv</code></a> (<a href="https://donneesbleues.ca/datasets/meteo-quebec/fiche.html">fiche sur donneesbleues.ca</a>)</li>
-<li>Librairies R : <code>splines</code></li>
+<li>le constat de départ : une spline cubique de régression est un polynôme cubique sur les intervalles extrêmes <span class="math inline">\([c_0, c_1)\)</span> et <span class="math inline">\([c_{K-1}, c_K)\)</span>, estimé sur peu de points, et les polynômes cubiques sont très instables là où les données sont rares ; l’extrapolation au-delà des nœuds frontières est encore pire ;</li>
+<li>la définition : une spline naturelle est une spline cubique à laquelle on impose <span class="math inline">\(f'' = f''' = 0\)</span> sur les intervalles extrêmes, donc <span class="math inline">\(f\)</span> linéaire au-delà des nœuds frontières ;</li>
+<li>le décompte des degrés de liberté : 2 contraintes à chaque bord, soit 4 au total ; une spline naturelle à <span class="math inline">\(K-1\)</span> nœuds intérieurs a <span class="math inline">\(K + 3 - 4 = K - 1\)</span> degrés de liberté de moins qu’une spline cubique ordinaire ; ces degrés de liberté peuvent être réinvestis en nœuds intérieurs (c’est ce que fait <code>ns(x, df = 4)</code>) ;</li>
+<li>le mécanisme de réduction de la variance : moins de paramètres libres dans une région où les données sont rares, donc <span class="math inline">\(x_*\,Var[\hat\beta]\,x_*^\top\)</span> plus petit pour <span class="math inline">\(x\)</span> près des bords ; une droite est l’objet le plus rigide qu’on puisse ajuster, elle ne peut pas « partir dans le décor » ;</li>
+<li>la contrepartie : un <strong>biais</strong> possible si la vraie fonction est courbe près des bords (on échange de la variance contre du biais).</li>
+</ul>
+<p><strong>Erreurs et lacunes fréquentes :</strong></p>
+<ul>
+<li>affirmer que la spline naturelle est linéaire « partout » ou « entre les nœuds » ;</li>
+<li>mélanger splines naturelles et splines de lissage (pénalisation) : la spline naturelle est contrainte, pas pénalisée, même si la spline de lissage optimale se trouve être une spline cubique naturelle ;</li>
+<li>oublier la contrepartie en biais, ou présenter la réduction de variance comme gratuite ;</li>
+<li>erreur de décompte des degrés de liberté (par exemple 2 au lieu de 4 contraintes) ;</li>
+<li>ne pas distinguer la plage observée et l’extrapolation.</li>
+</ul>
+</section>
+<section id="question-3-ocv-et-gcv-pour-le-paramètre-de-lissage-dun-gam" class="level3">
+<h3 class="anchored" data-anchor-id="question-3-ocv-et-gcv-pour-le-paramètre-de-lissage-dun-gam">Question 3 : OCV et GCV pour le paramètre de lissage d’un GAM</h3>
+<p><em>« Quelle est la différence entre la validation croisée ordinaire (OCV) et la validation croisée généralisée (GCV) pour choisir le paramètre de lissage d’un GAM ? »</em></p>
+<p><strong>Une réponse exacte doit contenir :</strong></p>
+<ul>
+<li>le point de départ : pour un lisseur linéaire <span class="math inline">\(\hat Y = A_\lambda Y\)</span>, le critère LOOCV (= OCV) s’écrit sans réajustement <span class="math inline">\(OCV(\lambda) = \frac{1}{n}\sum_i \left(\frac{y_i - \hat f_\lambda(x_i)}{1 - A_{ii}}\right)^2\)</span>, où <span class="math inline">\(A_{ii}\)</span> est le levier de l’observation <span class="math inline">\(i\)</span> (exactement comme la formule explicite du LOOCV en régression linéaire, avec <span class="math inline">\(h_i\)</span>) ;</li>
+<li>la définition du GCV : on remplace chaque <span class="math inline">\(A_{ii}\)</span> par la moyenne <span class="math inline">\(\mathrm{Tr}(A)/n\)</span>, ce qui donne <span class="math inline">\(GCV(\lambda) = \frac{n\sum_i (y_i - \hat f_\lambda(x_i))^2}{(n - \mathrm{Tr}(A))^2}\)</span> ;</li>
+<li>les raisons de ce remplacement : (i) <strong>invariance</strong> par rotation orthogonale des données, que l’OCV n’a pas ; (ii) <strong>coût de calcul</strong> : il suffit de la trace de <span class="math inline">\(A\)</span>, pas de sa diagonale complète, ce qui compte quand il y a plusieurs <span class="math inline">\(\lambda_j\)</span> à optimiser ; (iii) <strong>stabilité</strong> : l’OCV peut être dominée par quelques observations à fort levier dont <span class="math inline">\(1 - A_{ii}\)</span> est proche de 0 ;</li>
+<li>le lien avec les degrés de liberté effectifs : <span class="math inline">\(\mathrm{Tr}(A)\)</span> est le nombre de degrés de liberté effectifs du modèle, et le GCV ressemble à une somme des carrés résiduels pénalisée par la complexité ;</li>
+<li>la nuance pour les GAM non gaussiens : le GCV utilise la déviance au lieu de la somme des carrés, et quand <span class="math inline">\(\phi\)</span> est connu (logistique, Poisson) <code>mgcv</code> utilise plutôt le critère UBRE ; les versions récentes de <code>mgcv</code> utilisent par défaut le REML, qui n’est ni l’un ni l’autre.</li>
+</ul>
+<p><strong>Erreurs et lacunes fréquentes :</strong></p>
+<ul>
+<li>présenter le GCV comme une « validation croisée à <span class="math inline">\(K\)</span> blocs » ou comme une méthode qui réajuste le modèle ;</li>
+<li>confondre <span class="math inline">\(A_{ii}\)</span> et le résidu, ou écrire le GCV sans le facteur <span class="math inline">\(n\)</span> au numérateur ;</li>
+<li>affirmer que le GCV est toujours meilleur que l’OCV, sans mentionner qu’il s’agit d’une approximation ;</li>
+<li>ignorer le fait qu’en pratique <code>mgcv::gam</code> utilise souvent le REML et non le GCV, ou prétendre le contraire sans nuance ;</li>
+<li>omettre le rôle de <span class="math inline">\(\mathrm{Tr}(A)\)</span> comme degrés de liberté effectifs.</li>
+</ul>
+</section>
+<section id="question-4-modèles-additifs-et-fléau-de-la-dimension" class="level3">
+<h3 class="anchored" data-anchor-id="question-4-modèles-additifs-et-fléau-de-la-dimension">Question 4 : modèles additifs et fléau de la dimension</h3>
+<p><em>« Pourquoi dit-on que les modèles additifs permettent d’éviter le fléau de la dimension auquel se heurtent les estimateurs à noyau ? »</em></p>
+<p><strong>Une réponse exacte doit contenir :</strong></p>
+<ul>
+<li>une description concrète du fléau de la dimension pour les méthodes locales : pour que le voisinage d’un point contienne une fraction donnée des observations en dimension <span class="math inline">\(p\)</span>, il faut une fenêtre dont le rayon croît très vite avec <span class="math inline">\(p\)</span> (par exemple, en dimension 10, capturer 10 % des observations uniformes sur l’hypercube demande un côté de <span class="math inline">\(0{,}1^{1/10} \approx 0{,}8\)</span>, soit presque tout le domaine) ; les voisins ne sont plus « locaux », le biais explose, ou alors le voisinage est vide et la variance explose ; l’erreur d’estimation d’une fonction lisse générale de <span class="math inline">\(p\)</span> variables décroît à un taux en <span class="math inline">\(n^{-4/(4+p)}\)</span> qui devient dérisoire quand <span class="math inline">\(p\)</span> grandit ;</li>
+<li>le mécanisme du modèle additif : on remplace la fonction générale <span class="math inline">\(f(x_1, \ldots, x_p)\)</span> par <span class="math inline">\(\alpha + f_1(x_1) + \cdots + f_p(x_p)\)</span> ; chaque <span class="math inline">\(f_j\)</span> est une fonction <strong>univariée</strong> estimée à partir de <strong>toutes</strong> les <span class="math inline">\(n\)</span> observations, et le taux d’estimation redevient celui d’un problème unidimensionnel, <span class="math inline">\(n^{-4/5}\)</span>, quel que soit <span class="math inline">\(p\)</span> ;</li>
+<li>le prix à payer : c’est une <strong>hypothèse structurelle</strong>, pas un tour de magie. Si la vraie fonction comporte des interactions, le modèle additif est biaisé ; on peut relâcher l’hypothèse localement (<code>ti</code>, <code>s(x1, x2)</code>) au prix d’un retour partiel du fléau ;</li>
+<li>le gain en interprétabilité (un graphique par variable) qui vient en prime.</li>
+</ul>
+<p><strong>Erreurs et lacunes fréquentes :</strong></p>
+<ul>
+<li>dire que les modèles additifs « éliminent » le fléau sans mentionner l’hypothèse d’additivité et le biais qu’elle peut induire ;</li>
+<li>confondre fléau de la dimension et simple coût de calcul ;</li>
+<li>confondre modèle additif et modèle linéaire (l’additivité porte sur la structure, pas sur la forme de chaque <span class="math inline">\(f_j\)</span>) ;</li>
+<li>donner le taux de convergence sans dire ce qu’il mesure, ou le donner faux ;</li>
+<li>affirmer que kNN n’est pas touché par le fléau (il l’est, même si son voisinage adaptatif l’atténue légèrement).</li>
+</ul>
+</section>
+</section>
+<section id="exemple-de-passage-corrigé" class="level2">
+<h2 class="anchored" data-anchor-id="exemple-de-passage-corrigé">Exemple de passage corrigé</h2>
+<p>Supposons que la réponse obtenue à la question 2 contienne le passage suivant :</p>
+<blockquote class="blockquote">
+<p>« Les splines naturelles réduisent la variance en imposant que la fonction soit linéaire entre les nœuds, ce qui diminue le nombre de paramètres partout sur le domaine. »</p>
+</blockquote>
+<p>Une correction attendue :</p>
+<blockquote class="blockquote">
+<p>Ce passage est inexact. Une spline naturelle est <strong>cubique</strong> entre les nœuds intérieurs, exactement comme une spline de régression ordinaire ; la linéarité n’est imposée que sur les deux intervalles <strong>extrêmes</strong>, au-delà des nœuds frontières, par les contraintes <span class="math inline">\(f'' = f''' = 0\)</span>. Ces quatre contraintes retirent quatre paramètres, mais uniquement là où les données sont rares : c’est pour cela que la réduction de variance se manifeste <strong>près des bords</strong> et non partout. Au centre du domaine, les deux splines sont pratiquement identiques (voir la figure du point 4 du labo 2, où les courbes <code>bs</code> et <code>ns</code> se superposent à l’intérieur de la plage observée et ne divergent qu’au-delà). En contrepartie, si la vraie fonction est courbe près des bords, la spline naturelle y est biaisée.</p>
+</blockquote>
+<p>Ce qui fait la qualité de cette correction : elle cite le passage fautif, dit précisément ce qui est faux, donne l’énoncé juste dans les notations du cours, renvoie à une vérification concrète (figure du labo 2) et mentionne la nuance omise (biais).</p>
+</section>
+<section id="sur-lutilité-et-les-limites-de-lassistant" class="level2">
+<h2 class="anchored" data-anchor-id="sur-lutilité-et-les-limites-de-lassistant">Sur l’utilité et les limites de l’assistant</h2>
+<p>Les réflexions attendues au point 5 tournent généralement autour des constats suivants, que l’expérience du labo illustre bien :</p>
+<ul>
+<li>Un assistant est <strong>utile</strong> pour se faire expliquer une définition ou une idée sous un autre angle, obtenir un exemple de code R, retrouver le nom d’une fonction ou d’un argument, ou se faire proposer des pistes de vérification. Il est souvent exact sur les résultats standards très répandus (formules du LOOCV, définition des splines).</li>
+<li>Il faut <strong>se méfier</strong> quand la question porte sur une nuance (hypothèses exactes d’un résultat, ce qui se passe aux bords, ce que fait réellement une fonction R par défaut), sur une convention propre au cours (notations, choix pédagogiques), ou quand la réponse est très assurée et très fluide : l’assurance du ton n’est pas un indice de justesse. Les réponses mélangent parfois des méthodes voisines (spline naturelle et spline de lissage, GCV et validation croisée à <span class="math inline">\(K\)</span> blocs) ou citent des comportements de logiciels dépassés.</li>
+<li>La bonne pratique est celle du labo : poser des questions précises, confronter systématiquement la réponse aux notes ou à un petit calcul, demander les hypothèses et les sources, et traiter l’assistant comme un collègue brillant mais faillible plutôt que comme une référence.</li>
 </ul>
 
 
@@ -769,7 +882,7 @@ STT-4300 — Régression II
 </div>   
     <div class="nav-footer-center">
 <p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
-<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>Généré avec Quarto</p>
 </div>

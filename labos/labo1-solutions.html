@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>labo1-solutions – STT-4300 Régression II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d879eba7f9f7abf158eeecada124be5f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">STT-4300 Régression II</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Recherche"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Accueil</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../plan-de-cours.html"> 
+<span class="menu-text">Plan de cours</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../calendrier.html"> 
+<span class="menu-text">Calendrier</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Projet/projet.html"> 
+<span class="menu-text">Projet de session</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Labos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labos">    
+        <li>
+    <a class="dropdown-item" href="../labos/labo1.html">
+ <span class="dropdown-text">Labo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo1-solutions.html">
+ <span class="dropdown-text">Solutions du labo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo2.html">
+ <span class="dropdown-text">Labo 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo2-solutions.html">
+ <span class="dropdown-text">Solutions du labo 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo3.html">
+ <span class="dropdown-text">Labo 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo3-solutions.html">
+ <span class="dropdown-text">Solutions du labo 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo4.html">
+ <span class="dropdown-text">Labo 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo4-solutions.html">
+ <span class="dropdown-text">Solutions du labo 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo5.html">
+ <span class="dropdown-text">Labo 5</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo5-solutions.html">
+ <span class="dropdown-text">Solutions du labo 5</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../notes/index.html" target="_blank"> 
+<span class="menu-text">Notes de cours</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="../cahier.pdf" title="Télécharger le calendrier, le projet et les labos (PDF)" class="quarto-navigation-tool px-1" aria-label="Télécharger le calendrier, le projet et les labos (PDF)"><i class="bi bi-download"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#nuage-de-points" id="toc-nuage-de-points" class="nav-link active" data-scroll-target="#nuage-de-points">1. Nuage de points</a></li>
+  <li><a href="#estimateur-knn-pour-plusieurs-valeurs-de-k" id="toc-estimateur-knn-pour-plusieurs-valeurs-de-k" class="nav-link" data-scroll-target="#estimateur-knn-pour-plusieurs-valeurs-de-k">2. Estimateur kNN pour plusieurs valeurs de <span class="math inline">\(k\)</span></a></li>
+  <li><a href="#choix-de-k-par-le-critère-press-loocv" id="toc-choix-de-k-par-le-critère-press-loocv" class="nav-link" data-scroll-target="#choix-de-k-par-le-critère-press-loocv">3. Choix de <span class="math inline">\(k\)</span> par le critère PRESS (LOOCV)</a></li>
+  <li><a href="#estimateur-de-nadaraya-watson-pour-plusieurs-fenêtres-h" id="toc-estimateur-de-nadaraya-watson-pour-plusieurs-fenêtres-h" class="nav-link" data-scroll-target="#estimateur-de-nadaraya-watson-pour-plusieurs-fenêtres-h">4. Estimateur de Nadaraya-Watson pour plusieurs fenêtres <span class="math inline">\(h\)</span></a></li>
+  <li><a href="#choix-de-h-par-validation-croisée" id="toc-choix-de-h-par-validation-croisée" class="nav-link" data-scroll-target="#choix-de-h-par-validation-croisée">5. Choix de <span class="math inline">\(h\)</span> par validation croisée</a></li>
+  <li><a href="#comparaison-des-deux-approches" id="toc-comparaison-des-deux-approches" class="nav-link" data-scroll-target="#comparaison-des-deux-approches">6. Comparaison des deux approches</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">10 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Coquille : le contenu des solutions est dans labos/_contenu/labo1-solutions.qmd
+     et n'est inséré ici qu'à partir de la date fixée dans labos/disponibilite.json
+     (voir labos/_disponibilite.R). Modifiez le contenu, pas ce fichier. -->
+<div class="portal-hero">
+<p class="eyebrow">
+STT-4300 — Régression II
+</p>
+<section id="solutions-du-labo-1" class="level1">
+<h1>Solutions du labo 1</h1>
+</section>
+</div>
+<!-- La date vient de labos/disponibilite.json (voir labos/_disponibilite.R). -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact">
+<p>
+<span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value">18 mars 2026</span></span>
+</p>
+</div>
+<div class="module-fact">
+<p>
+<span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Régression non paramétrique : kNN et estimateur de noyau</span></span>
+</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>À propos de ces solutions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Les réponses ci-dessous sont une proposition de solution, pas la seule possible : d’autres valeurs de <span class="math inline">\(k\)</span> et de <span class="math inline">\(h\)</span>, d’autres grilles et d’autres façons de coder la validation croisée sont acceptables tant que la démarche est justifiée. Les commentaires attendus sont résumés après chaque bloc de code.</p>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>hydro <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../notes/Jeux de données/demande_temperature_horaire.csv"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>hydro <span class="ot">&lt;-</span> <span class="fu">subset</span>(hydro, annee <span class="sc">&lt;=</span> <span class="dv">2024</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(demande_mw) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(temp_ponderee))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>jours <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(<span class="fu">cbind</span>(demande_mw, temp_ponderee) <span class="sc">~</span> date_locale, <span class="at">data =</span> hydro, <span class="at">FUN =</span> mean)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>jours<span class="sc">$</span>demande <span class="ot">&lt;-</span> jours<span class="sc">$</span>demande_mw <span class="sc">/</span> <span class="dv">1000</span>   <span class="co"># en GW</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> jours<span class="sc">$</span>temp_ponderee</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> jours<span class="sc">$</span>demande</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(y)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>xg <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(x), <span class="fu">max</span>(x), <span class="at">length.out =</span> <span class="dv">300</span>)   <span class="co"># grille pour tracer les courbes</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>n</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2191</code></pre>
+</div>
+</div>
+<p>Chaque ligne de <code>jours</code> est une journée de 2019 à 2024 : la demande moyenne de la journée (<code>demande</code>, en GW) et la température moyenne de la journée (<code>temp_ponderee</code>, en °C), obtenues en faisant la moyenne des 24 valeurs horaires. Les heures sans demande ou sans température (une cinquantaine sur six ans) sont écartées avant l’agrégation.</p>
+<section id="nuage-de-points" class="level2">
+<h2 class="anchored" data-anchor-id="nuage-de-points">1. Nuage de points</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"grey40"</span>, <span class="fl">0.5</span>), <span class="at">xlab =</span> <span class="st">"Température moyenne (°C)"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Demande moyenne (GW)"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg, <span class="fu">predict</span>(<span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">2</span>)), <span class="fu">data.frame</span>(<span class="at">x =</span> xg)), <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"droite"</span>, <span class="st">"parabole"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo1-solutions_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La relation a la forme d’une crosse de hockey : sous 15 °C environ, la demande augmente à peu près linéairement quand la température baisse (chauffage électrique, environ 0,5 GW par degré), puis elle atteint un plancher autour de 17-18 GW entre 15 et 22 °C, et remonte légèrement pour les journées les plus chaudes (climatisation). La droite est inadéquate : elle sous-estime la demande des journées très froides et très chaudes et la surestime autour de 15 °C. La parabole fait mieux mais reste symétrique par construction, alors que la relation est à peu près linéaire d’un côté et presque plate de l’autre : elle surestime la demande des journées très froides et déforme le plancher. On ne connaît pas a priori la forme fonctionnelle qui conviendrait, d’où l’intérêt d’une approche non paramétrique.</p>
+<p>Deux particularités méritent d’être notées. Les journées très froides sont rares (8 journées sous <span class="math inline">\(-20\)</span> °C et 41 sous <span class="math inline">\(-15\)</span> °C, sur 2191), alors que les températures entre <span class="math inline">\(-5\)</span> et 20 °C sont très denses. Ensuite, bien que la température soit une moyenne de 24 valeurs, 22 journées partagent exactement la même température qu’une autre (22 ex æquo) : c’est négligeable ici, contrairement au cas d’une variable fortement discrétisée.</p>
+</section>
+<section id="estimateur-knn-pour-plusieurs-valeurs-de-k" class="level2">
+<h2 class="anchored" data-anchor-id="estimateur-knn-pour-plusieurs-valeurs-de-k">2. Estimateur kNN pour plusieurs valeurs de <span class="math inline">\(k\)</span></h2>
+<p><code>knn.reg</code> attend des matrices (ou des data frames) pour <code>train</code> et <code>test</code>, d’où l’usage de <code>matrix</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">100</span>, <span class="dv">400</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>couleurs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"darkgreen"</span>, <span class="st">"blue"</span>, <span class="st">"purple"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"grey40"</span>, <span class="fl">0.3</span>), <span class="at">xlab =</span> <span class="st">"Température moyenne (°C)"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Demande moyenne (GW)"</span>, <span class="at">main =</span> <span class="st">"Estimateur kNN"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(ks)) {</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  fk <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="at">train =</span> <span class="fu">matrix</span>(x), <span class="at">test =</span> <span class="fu">matrix</span>(xg), <span class="at">y =</span> y, <span class="at">k =</span> ks[j])</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(xg, fk<span class="sc">$</span>pred, <span class="at">col =</span> couleurs[j], <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">paste</span>(<span class="st">"k ="</span>, ks), <span class="at">col =</span> couleurs, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo1-solutions_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Plus <span class="math inline">\(k\)</span> est petit, plus la courbe est rugueuse : avec <span class="math inline">\(k = 2\)</span>, <span class="math inline">\(\hat f\)</span> suit les fluctuations d’une journée à l’autre (variance élevée). Plus <span class="math inline">\(k\)</span> est grand, plus la courbe est lisse, mais elle finit par écraser la structure : avec <span class="math inline">\(k = 400\)</span> (sur <span class="math inline">\(n = 2191\)</span> observations), le voisinage couvre près d’un cinquième des journées et la courbe sous-estime nettement la demande des journées les plus froides, dont les voisins sont presque tous plus chauds qu’elles (biais élevé) ; le plancher estival est lui aussi relevé. C’est le compromis biais-variance : le biais croît avec <span class="math inline">\(k\)</span> et la variance, égale à <span class="math inline">\(\sigma^2/k\)</span>, décroît avec <span class="math inline">\(k\)</span>. Les valeurs intermédiaires (<span class="math inline">\(k = 10\)</span> à <span class="math inline">\(100\)</span>) donnent des courbes raisonnables. Aux températures extrêmes, le voisinage kNN s’élargit automatiquement : pour <span class="math inline">\(x = -24\)</span> °C, les 25 plus proches voisins vont jusqu’à <span class="math inline">\(-17\)</span> °C environ, et la courbe y est plate alors que la relation continue probablement de monter.</p>
+</section>
+<section id="choix-de-k-par-le-critère-press-loocv" class="level2">
+<h2 class="anchored" data-anchor-id="choix-de-k-par-le-critère-press-loocv">3. Choix de <span class="math inline">\(k\)</span> par le critère PRESS (LOOCV)</h2>
+<p>Le critère <code>PRESS</code> retourné par <code>knn.reg</code> est la somme des carrés des erreurs de prédiction obtenues en excluant une observation à la fois : c’est <span class="math inline">\(n\)</span> fois le <span class="math inline">\(VC_{(n)}\)</span> des notes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ks.grille <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">200</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>press <span class="ot">&lt;-</span> <span class="fu">sapply</span>(ks.grille, <span class="cf">function</span>(k) <span class="fu">knn.reg</span>(<span class="at">train =</span> <span class="fu">matrix</span>(x), <span class="at">y =</span> y, <span class="at">k =</span> k)<span class="sc">$</span>PRESS)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>k.min <span class="ot">&lt;-</span> ks.grille[<span class="fu">which.min</span>(press)]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ks.grille, press <span class="sc">/</span> n, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">"k"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"PRESS / n  (LOOCV, GW²)"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> k.min, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo1-solutions_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>k.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>loocv.lm <span class="ot">&lt;-</span> <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">kNN =</span> <span class="fu">min</span>(press) <span class="sc">/</span> n,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">droite =</span> <span class="fu">loocv.lm</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x)),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">parabole =</span> <span class="fu">loocv.lm</span>(<span class="fu">lm</span>(y <span class="sc">~</span> <span class="fu">poly</span>(x, <span class="dv">2</span>))))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     kNN   droite parabole 
+1.193503 3.693630 2.072062 </code></pre>
+</div>
+</div>
+<p>On obtient <span class="math inline">\(k_{\min} = 25\)</span>, avec une erreur LOOCV de 1.19 GW². L’erreur est très élevée pour <span class="math inline">\(k = 1\)</span> (variance maximale), chute rapidement, puis remonte très lentement : la courbe est encore plus plate que dans les notes, et toute valeur entre 16 et 90 environ donne une erreur à moins de 2 % du minimum. Avec <span class="math inline">\(n = 2191\)</span>, un grand <span class="math inline">\(k\)</span> coûte peu en biais tant que le voisinage reste étroit en température, et le choix exact de <span class="math inline">\(k\)</span> importe peu. L’erreur LOOCV de l’estimateur kNN est 3.1 fois plus petite que celle de la droite et 1.7 fois plus petite que celle de la parabole : la non-linéarité de la relation est réelle et importante, et aucun des deux modèles paramétriques simples ne la capte.</p>
+</section>
+<section id="estimateur-de-nadaraya-watson-pour-plusieurs-fenêtres-h" class="level2">
+<h2 class="anchored" data-anchor-id="estimateur-de-nadaraya-watson-pour-plusieurs-fenêtres-h">4. Estimateur de Nadaraya-Watson pour plusieurs fenêtres <span class="math inline">\(h\)</span></h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>hs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">8</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"grey40"</span>, <span class="fl">0.3</span>), <span class="at">xlab =</span> <span class="st">"Température moyenne (°C)"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Demande moyenne (GW)"</span>, <span class="at">main =</span> <span class="st">"Estimateur de Nadaraya-Watson (noyau gaussien)"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(hs)) {</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  fh <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">0</span>, <span class="at">bandwidth =</span> hs[j], <span class="at">gridsize =</span> <span class="dv">401</span>, <span class="at">range.x =</span> <span class="fu">range</span>(x))</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(fh<span class="sc">$</span>x, fh<span class="sc">$</span>y, <span class="at">col =</span> couleurs[j], <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">paste</span>(<span class="st">"h ="</span>, hs), <span class="at">col =</span> couleurs, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo1-solutions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La fenêtre <span class="math inline">\(h\)</span> joue exactement le rôle de <span class="math inline">\(k\)</span> : <span class="math inline">\(h\)</span> petit donne une courbe oscillante (variance), <span class="math inline">\(h\)</span> grand une courbe trop lisse qui tend vers <span class="math inline">\(\bar y\)</span> (biais) ; avec <span class="math inline">\(h = 8\)</span> °C, la crosse de hockey devient une courbe molle qui sous-estime les journées froides de plusieurs GW. La différence avec kNN est que les poids <span class="math inline">\(w_i(x)\)</span> décroissent continûment avec la distance <span class="math inline">\(|X_i - x|\)</span>, de sorte que les courbes sont continues et lisses même pour un petit <span class="math inline">\(h\)</span>, alors que les courbes kNN sont en escalier. Autre différence : la fenêtre est fixe alors que le voisinage kNN s’adapte à la densité des <span class="math inline">\(X_i\)</span>. Pour les journées les plus froides, un noyau de fenêtre 0,2 ou 0,5 °C ne s’appuie que sur une poignée de journées et devient très instable : la courbe y zigzague d’une journée à l’autre.</p>
+</section>
+<section id="choix-de-h-par-validation-croisée" class="level2">
+<h2 class="anchored" data-anchor-id="choix-de-h-par-validation-croisée">5. Choix de <span class="math inline">\(h\)</span> par validation croisée</h2>
+<section id="loocv-par-la-formule-explicite" class="level3">
+<h3 class="anchored" data-anchor-id="loocv-par-la-formule-explicite">LOOCV par la formule explicite</h3>
+<p>L’estimateur de Nadaraya-Watson est linéaire en <span class="math inline">\(Y\)</span> : <span class="math inline">\(\hat f(x) = \sum_i w_i(x) Y_i\)</span>. Le critère LOOCV s’écrit donc sans réajuster le modèle <span class="math inline">\(n\)</span> fois : <span class="math display">\[
+cv.n(h) = \frac{1}{n}\sum_{i=1}^n\left(\frac{Y_i - \hat f(X_i)}{1 - w_i(X_i)}\right)^2 .
+\]</span> La fonction ci-dessous calcule la matrice des poids <span class="math inline">\(W\)</span> (dont la ligne <span class="math inline">\(i\)</span> contient les <span class="math inline">\(w_j(X_i)\)</span>), puis le critère. <code>locpoly</code> utilise le noyau gaussien avec <code>bandwidth</code> comme écart-type, d’où <code>dnorm</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cv.n <span class="ot">&lt;-</span> <span class="cf">function</span>(h, x, y) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x, <span class="st">"-"</span>) <span class="sc">/</span> h)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> W <span class="sc">/</span> <span class="fu">rowSums</span>(W)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  f.hat <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(W <span class="sc">%*%</span> y)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(((y <span class="sc">-</span> f.hat) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">diag</span>(W)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>hs.grille <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.2</span>, <span class="dv">6</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>cv.loo <span class="ot">&lt;-</span> <span class="fu">sapply</span>(hs.grille, cv.n, <span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>h.min <span class="ot">&lt;-</span> hs.grille[<span class="fu">which.min</span>(cv.loo)]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>h.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+</section>
+<section id="validation-croisée-à-10-blocs-variante" class="level3">
+<h3 class="anchored" data-anchor-id="validation-croisée-à-10-blocs-variante">Validation croisée à 10 blocs (variante)</h3>
+<p>Une alternative, plus coûteuse mais plus générale, consiste à réajuster <code>locpoly</code> sur 9 blocs et à prédire le dixième par interpolation sur la grille retournée.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>blocs <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">length.out =</span> n))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>cv<span class="fl">.10</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(h) {</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  err <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="cf">function</span>(b) {</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    ent <span class="ot">&lt;-</span> blocs <span class="sc">!=</span> b</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    fh <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x[ent], y[ent], <span class="at">degree =</span> <span class="dv">0</span>, <span class="at">bandwidth =</span> h,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">gridsize =</span> <span class="dv">801</span>, <span class="at">range.x =</span> <span class="fu">range</span>(x))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    pred <span class="ot">&lt;-</span> <span class="fu">approx</span>(fh<span class="sc">$</span>x, fh<span class="sc">$</span>y, <span class="at">xout =</span> x[<span class="sc">!</span>ent], <span class="at">rule =</span> <span class="dv">2</span>)<span class="sc">$</span>y</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>((y[<span class="sc">!</span>ent] <span class="sc">-</span> pred)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(err)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>cv.k10 <span class="ot">&lt;-</span> <span class="fu">sapply</span>(hs.grille, cv<span class="fl">.10</span>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>h.min10 <span class="ot">&lt;-</span> hs.grille[<span class="fu">which.min</span>(cv.k10)]</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hs.grille, cv.loo, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">"h (°C)"</span>, <span class="at">ylab =</span> <span class="st">"erreur de validation croisée (GW²)"</span>,</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">range</span>(<span class="fu">c</span>(cv.loo, cv.k10)))</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(hs.grille, cv.k10, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(h.min, h.min10), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>))</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"LOOCV"</span>, <span class="st">"10 blocs"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"blue"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo1-solutions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">LOOCV =</span> h.min, <span class="st">`</span><span class="at">10 blocs</span><span class="st">`</span> <span class="ot">=</span> h.min10)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   LOOCV 10 blocs 
+       1        1 </code></pre>
+</div>
+</div>
+<p>Le LOOCV donne <span class="math inline">\(h_{\min} = 1\)</span> °C et la validation croisée à 10 blocs une valeur voisine (<span class="math inline">\(1\)</span> °C). Comme pour <span class="math inline">\(k\)</span>, la courbe est plate autour du minimum : entre 0,3 et 2 °C, l’erreur varie de moins de 3 %. L’erreur LOOCV minimale, 1.15 GW², est légèrement inférieure à celle de kNN.</p>
+</section>
+<section id="comparaison-des-deux-courbes-sélectionnées" class="level3">
+<h3 class="anchored" data-anchor-id="comparaison-des-deux-courbes-sélectionnées">Comparaison des deux courbes sélectionnées</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>f.knn <span class="ot">&lt;-</span> <span class="fu">knn.reg</span>(<span class="at">train =</span> <span class="fu">matrix</span>(x), <span class="at">test =</span> <span class="fu">matrix</span>(xg), <span class="at">y =</span> y, <span class="at">k =</span> k.min)<span class="sc">$</span>pred</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>f.nw  <span class="ot">&lt;-</span> <span class="fu">locpoly</span>(x, y, <span class="at">degree =</span> <span class="dv">0</span>, <span class="at">bandwidth =</span> h.min, <span class="at">gridsize =</span> <span class="dv">401</span>, <span class="at">range.x =</span> <span class="fu">range</span>(x))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"grey40"</span>, <span class="fl">0.3</span>), <span class="at">xlab =</span> <span class="st">"Température moyenne (°C)"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Demande moyenne (GW)"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg, f.knn, <span class="at">col =</span> <span class="st">"darkgreen"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(f.nw<span class="sc">$</span>x, f.nw<span class="sc">$</span>y, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="fu">paste</span>(<span class="st">"kNN, k ="</span>, k.min), <span class="fu">paste</span>(<span class="st">"Nadaraya-Watson, h ="</span>, h.min)),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"darkgreen"</span>, <span class="st">"red"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo1-solutions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>xg[<span class="fu">which.min</span>(f.knn)]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16.75809</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>f.nw<span class="sc">$</span>x[<span class="fu">which.min</span>(f.nw<span class="sc">$</span>y)]</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16.35355</code></pre>
+</div>
+</div>
+<p>Les deux courbes captent la même crosse de hockey et leurs erreurs LOOCV sont du même ordre (1.19 GW² pour kNN, 1.15 GW² pour le noyau). La courbe kNN est en escalier et la courbe à noyau est lisse. Le minimum de la demande est atteint vers 16 °C, à environ 17 GW ; au-delà, la demande remonte d’environ 2 GW pour les journées les plus chaudes, ce que les deux estimateurs reproduisent (la climatisation prend le relais du chauffage). Aux températures extrêmes, kNN est un peu plus stable parce que son voisinage s’élargit automatiquement là où les données sont rares, alors que le noyau à fenêtre fixe s’appuie sur une poignée de journées sous <span class="math inline">\(-20\)</span> °C et que sa courbe y est irrégulière.</p>
+</section>
+</section>
+<section id="comparaison-des-deux-approches" class="level2">
+<h2 class="anchored" data-anchor-id="comparaison-des-deux-approches">6. Comparaison des deux approches</h2>
+<p>Les deux estimateurs sont des moyennes locales pondérées de <span class="math inline">\(Y\)</span> et partagent le même compromis biais-variance, réglé par un seul paramètre (<span class="math inline">\(k\)</span> ou <span class="math inline">\(h\)</span>) choisi par validation croisée. Ils ne postulent aucune forme fonctionnelle et sont simples à comprendre et à implémenter ; sur ces données, ils font beaucoup mieux que la droite ou la parabole.</p>
+<ul>
+<li>kNN : le voisinage s’adapte à la densité des <span class="math inline">\(X_i\)</span> (plus large là où les données sont rares), ce qui le rend robuste aux zones peu denses et aux extrémités, et la variance <span class="math inline">\(\sigma^2/k\)</span> est la même partout. En revanche, la courbe est discontinue (en escalier), l’ajout d’une seule observation peut la faire sauter, et les ex æquo sont traités arbitrairement. Aux extrémités, le voisinage élargi produit un plateau artificiel : la demande estimée cesse de croître sous <span class="math inline">\(-20\)</span> °C alors qu’elle continue vraisemblablement de monter.</li>
+<li>Noyau : la courbe est continue et lisse, ce qui est plus agréable pour l’interprétation et pour estimer des dérivées (ici, la sensibilité de la demande à la température, en GW par degré). En revanche, une fenêtre fixe devient instable dans les zones peu denses (variance élevée là où il y a peu de journées), et les deux estimateurs sont biaisés aux bords (le voisinage y est asymétrique ; les polynômes locaux de degré 1, <code>degree = 1</code> dans <code>locpoly</code>, corrigent ce biais de bord et extrapolent la pente plutôt qu’un plateau).</li>
+<li>Plusieurs variables explicatives : les deux méthodes se généralisent en remplaçant <span class="math inline">\(|X_i - x|\)</span> par une distance multivariée. La distance euclidienne est dominée par la variable de plus grande amplitude (le jour de l’année, de 1 à 366, face à la température, de <span class="math inline">\(-25\)</span> à 29 °C) ; il faut standardiser ou utiliser la distance de Mahalanobis, qui pondère par l’inverse de la matrice de variance-covariance. Dans les deux cas, les méthodes locales se heurtent au fléau de la dimension : en dimension <span class="math inline">\(p\)</span> élevée, les voisinages deviennent vides et il faut <span class="math inline">\(k\)</span> ou <span class="math inline">\(h\)</span> très grands, donc un biais important. kNN s’en tire un peu mieux grâce à son voisinage adaptatif, mais au-delà de deux ou trois variables, des approches structurées comme les modèles additifs (labo 3) sont préférables.</li>
+<li>Interprétabilité : aucune des deux approches ne fournit de paramètre interprétable (pas de « pente ») ; on ne peut qu’inspecter la courbe. C’est le prix de la flexibilité.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script>
+// Déplace le bloc « Dernière modification » (généré par Quarto en haut de page)
+// vers le bas du contenu. N'a aucun effet sur la page d'accueil, dont le
+// bloc de titre est déjà masqué.
+(function () {
+  if (document.body.classList.contains('page-home')) return;
+  var meta = document.querySelector('.quarto-title-meta');
+  var content = document.getElementById('quarto-document-content');
+  if (meta && content) {
+    content.appendChild(meta);
+  }
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/julienmiron\.github\.io\/STT-4300\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Site de cours STT-4300</p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>labo3-solutions – STT-4300 Régression II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d879eba7f9f7abf158eeecada124be5f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">STT-4300 Régression II</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Recherche"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Accueil</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../plan-de-cours.html"> 
+<span class="menu-text">Plan de cours</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../calendrier.html"> 
+<span class="menu-text">Calendrier</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Projet/projet.html"> 
+<span class="menu-text">Projet de session</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Labos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labos">    
+        <li>
+    <a class="dropdown-item" href="../labos/labo1.html">
+ <span class="dropdown-text">Labo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo1-solutions.html">
+ <span class="dropdown-text">Solutions du labo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo2.html">
+ <span class="dropdown-text">Labo 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo2-solutions.html">
+ <span class="dropdown-text">Solutions du labo 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo3.html">
+ <span class="dropdown-text">Labo 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo3-solutions.html">
+ <span class="dropdown-text">Solutions du labo 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo4.html">
+ <span class="dropdown-text">Labo 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo4-solutions.html">
+ <span class="dropdown-text">Solutions du labo 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo5.html">
+ <span class="dropdown-text">Labo 5</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo5-solutions.html">
+ <span class="dropdown-text">Solutions du labo 5</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../notes/index.html" target="_blank"> 
+<span class="menu-text">Notes de cours</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="../cahier.pdf" title="Télécharger le calendrier, le projet et les labos (PDF)" class="quarto-navigation-tool px-1" aria-label="Télécharger le calendrier, le projet et les labos (PDF)"><i class="bi bi-download"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#modèle-additif-à-deux-cycles" id="toc-modèle-additif-à-deux-cycles" class="nav-link active" data-scroll-target="#modèle-additif-à-deux-cycles">1. Modèle additif à deux cycles</a></li>
+  <li><a href="#degrés-de-liberté-effectifs-déviance-expliquée-et-tests" id="toc-degrés-de-liberté-effectifs-déviance-expliquée-et-tests" class="nav-link" data-scroll-target="#degrés-de-liberté-effectifs-déviance-expliquée-et-tests">2. Degrés de liberté effectifs, déviance expliquée et tests</a></li>
+  <li><a href="#comparaison-avec-des-modèles-paramétriques" id="toc-comparaison-avec-des-modèles-paramétriques" class="nav-link" data-scroll-target="#comparaison-avec-des-modèles-paramétriques">3. Comparaison avec des modèles paramétriques</a></li>
+  <li><a href="#rôle-du-paramètre-de-lissage" id="toc-rôle-du-paramètre-de-lissage" class="nav-link" data-scroll-target="#rôle-du-paramètre-de-lissage">4. Rôle du paramètre de lissage</a></li>
+  <li><a href="#interaction-entre-lheure-et-le-jour" id="toc-interaction-entre-lheure-et-le-jour" class="nav-link" data-scroll-target="#interaction-entre-lheure-et-le-jour">5. Interaction entre l’heure et le jour</a></li>
+  <li><a href="#ajout-de-la-température" id="toc-ajout-de-la-température" class="nav-link" data-scroll-target="#ajout-de-la-température">6. Ajout de la température</a></li>
+  <li><a href="#gam-logistique-maisons-détachées-ou-non" id="toc-gam-logistique-maisons-détachées-ou-non" class="nav-link" data-scroll-target="#gam-logistique-maisons-détachées-ou-non">7. GAM logistique : maisons détachées ou non</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">10 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Coquille : le contenu des solutions est dans labos/_contenu/labo3-solutions.qmd
+     et n'est inséré ici qu'à partir de la date fixée dans labos/disponibilite.json
+     (voir labos/_disponibilite.R). Modifiez le contenu, pas ce fichier. -->
+<div class="portal-hero">
+<p class="eyebrow">
+STT-4300 — Régression II
+</p>
+<section id="solutions-du-labo-3" class="level1">
+<h1>Solutions du labo 3</h1>
+</section>
+</div>
+<!-- La date vient de labos/disponibilite.json (voir labos/_disponibilite.R). -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact">
+<p>
+<span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value">1er avril 2026</span></span>
+</p>
+</div>
+<div class="module-fact">
+<p>
+<span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Modèles additifs généralisés (GAM)</span></span>
+</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>À propos de ces solutions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Les réponses ci-dessous sont une proposition de solution. Les valeurs numériques issues de la validation croisée dépendent de la partition tirée ; des écarts mineurs avec vos résultats sont normaux.</p>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>hydro <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../notes/Jeux de données/demande_temperature_horaire.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>hydro<span class="sc">$</span>jour <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(hydro<span class="sc">$</span>date_locale), <span class="st">"%j"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>h2023 <span class="ot">&lt;-</span> <span class="fu">subset</span>(hydro, annee <span class="sc">==</span> <span class="dv">2023</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(demande_mw) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(temp_ponderee))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>h2023<span class="sc">$</span>demande <span class="ot">&lt;-</span> h2023<span class="sc">$</span>demande_mw <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(h2023)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>n</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8759</code></pre>
+</div>
+</div>
+<p>Les 8759 observations sont les heures de 2023 (une heure sans demande a été écartée). La demande va de 14.1 à 42.5 GW.</p>
+<section id="modèle-additif-à-deux-cycles" class="level2">
+<h2 class="anchored" data-anchor-id="modèle-additif-à-deux-cycles">1. Modèle additif à deux cycles</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">gam</span>(demande <span class="sc">~</span> <span class="fu">s</span>(heure_locale) <span class="sc">+</span> <span class="fu">s</span>(jour), <span class="at">data =</span> h2023)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod1, <span class="at">pages =</span> <span class="dv">1</span>, <span class="at">shade =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo3-solutions_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Aucun des deux effets n’est linéaire. L’effet de l’heure est le cycle journalier de la consommation : creux vers 3 h du matin, montée rapide au réveil jusqu’à une première pointe vers 8-9 h, légère baisse en milieu de journée, puis une seconde pointe vers 18 h (retour à la maison, souper, éclairage) et une descente en soirée ; l’amplitude est d’environ 4 GW. L’effet du jour de l’année est le cycle saisonnier : la demande est maximale en janvier-février (chauffage électrique, qui domine au Québec), descend d’une douzaine de GW jusqu’en juin, reste basse tout l’été avec une légère remontée en juillet-août (climatisation), puis remonte à l’automne. Ces deux courbes ont chacune plusieurs changements de direction : un modèle linéaire en <code>heure_locale</code> et <code>jour</code> ne pourrait représenter ni l’un ni l’autre, et il faudrait des polynômes de degré élevé pour s’en approcher. Le GAM estime la forme de chaque effet sans qu’on ait à la spécifier.</p>
+</section>
+<section id="degrés-de-liberté-effectifs-déviance-expliquée-et-tests" class="level2">
+<h2 class="anchored" data-anchor-id="degrés-de-liberté-effectifs-déviance-expliquée-et-tests">2. Degrés de liberté effectifs, déviance expliquée et tests</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod1)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: gaussian 
+Link function: identity 
+
+Formula:
+demande ~ s(heure_locale) + s(jour)
+
+Parametric coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 21.65904    0.02039    1062   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Approximate significance of smooth terms:
+                  edf Ref.df      F p-value    
+s(heure_locale) 8.826  8.991  447.4  &lt;2e-16 ***
+s(jour)         8.991  9.000 5238.9  &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+R-sq.(adj) =  0.854   Deviance explained = 85.4%
+GCV = 3.6511  Scale est. = 3.6433    n = 8759</code></pre>
+</div>
+</div>
+<p>Chaque terme est construit avec <span class="math inline">\(k = 10\)</span> fonctions de base, soit 9 degrés de liberté après la contrainte d’identifiabilité. Les deux termes en utilisent presque la totalité (8.83 pour l’heure et 8.99 pour le jour) : la pénalisation n’a presque rien lissé, ce qui signifie que les données réclament plus de flexibilité que la base n’en offre. La déviance expliquée est de 85.4 %. Les tests approximatifs de <span class="math inline">\(H_0 : f_j \equiv 0\)</span> rejettent sans ambiguïté pour les deux variables (valeurs-p nulles à la précision de l’affichage), avec une statistique <span class="math inline">\(F\)</span> dix fois plus grande pour le jour de l’année, dont l’effet a la plus grande amplitude.</p>
+<p>Quand un terme sature sa base, il faut augmenter <span class="math inline">\(k\)</span> (par exemple <code>s(jour, k = 30)</code>) et vérifier que les degrés de liberté effectifs choisis par le GCV se stabilisent nettement sous la nouvelle limite ; <code>gam.check(mod1)</code> fait ce diagnostic. C’est l’objet du point 4.</p>
+</section>
+<section id="comparaison-avec-des-modèles-paramétriques" class="level2">
+<h2 class="anchored" data-anchor-id="comparaison-avec-des-modèles-paramétriques">3. Comparaison avec des modèles paramétriques</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod.lm   <span class="ot">&lt;-</span> <span class="fu">lm</span>(demande <span class="sc">~</span> heure_locale <span class="sc">+</span> jour, <span class="at">data =</span> h2023)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mod.poly <span class="ot">&lt;-</span> <span class="fu">lm</span>(demande <span class="sc">~</span> <span class="fu">poly</span>(heure_locale, <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">poly</span>(jour, <span class="dv">5</span>), <span class="at">data =</span> h2023)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod1, mod.lm, mod.poly)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               df      AIC
+mod1     19.81672 36202.19
+mod.lm    4.00000 51845.03
+mod.poly 12.00000 39125.33</code></pre>
+</div>
+</div>
+<p>Pour la validation croisée, on écrit une fonction générique qui prend une partition en blocs et une fonction d’ajustement, et on l’applique d’abord à des blocs tirés au hasard, puis à des blocs temporels d’environ cinq semaines consécutives (10 blocs sur l’année).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cv.blocs <span class="ot">&lt;-</span> <span class="cf">function</span>(blocs, ajuster) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">sapply</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(blocs)), <span class="cf">function</span>(b) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">ajuster</span>(h2023[blocs <span class="sc">!=</span> b, ])</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>((h2023<span class="sc">$</span>demande[blocs <span class="sc">==</span> b] <span class="sc">-</span> <span class="fu">predict</span>(m, h2023[blocs <span class="sc">==</span> b, ]))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  }))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>ajusteurs <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">gam  =</span> <span class="cf">function</span>(d) <span class="fu">gam</span>(demande <span class="sc">~</span> <span class="fu">s</span>(heure_locale) <span class="sc">+</span> <span class="fu">s</span>(jour), <span class="at">data =</span> d),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">lm   =</span> <span class="cf">function</span>(d) <span class="fu">lm</span>(demande <span class="sc">~</span> heure_locale <span class="sc">+</span> jour, <span class="at">data =</span> d),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">poly =</span> <span class="cf">function</span>(d) <span class="fu">lm</span>(demande <span class="sc">~</span> <span class="fu">poly</span>(heure_locale, <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">poly</span>(jour, <span class="dv">5</span>), <span class="at">data =</span> d)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>blocs.alea <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">length.out =</span> n))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>blocs.temp <span class="ot">&lt;-</span> (h2023<span class="sc">$</span>jour <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%/%</span> <span class="dv">37</span> <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">sapply</span>(ajusteurs, <span class="cf">function</span>(f) <span class="fu">c</span>(<span class="at">aleatoire =</span> <span class="fu">cv.blocs</span>(blocs.alea, f), <span class="at">temporel =</span> <span class="fu">cv.blocs</span>(blocs.temp, f)))</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(cv, <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           gam    lm  poly
+aleatoire 3.65 21.78  5.10
+temporel  8.99 34.53 35.58</code></pre>
+</div>
+</div>
+<p>Avec des blocs aléatoires, le GAM l’emporte très largement : son erreur de validation croisée (3.65 GW²) est 6 fois plus petite que celle du modèle linéaire et 1.4 fois plus petite que celle du polynôme ; l’AIC donne le même classement.</p>
+<p>Mais ces chiffres répondent à une question étrange : « sachant la demande de toutes les autres heures de l’année, y compris l’heure d’avant et l’heure d’après, à quel point peut-on deviner celle-ci? » Les heures consécutives sont très corrélées (même météo, même journée), et chaque bloc test est entouré d’heures d’entraînement qui lui ressemblent. Avec des blocs de cinq semaines consécutives, on retire tout un morceau de l’année, et le modèle doit prédire une saison qu’il n’a jamais vue : l’erreur du GAM passe de 3.65 à 8.99 GW², et celle du polynôme explose (de 5.1 à 35.6 GW²), parce qu’un polynôme de degré 5 en <code>jour</code> extrapole très mal sur un trou de cinq semaines. L’écart entre les deux estimations n’est donc pas le même pour tous les modèles : il est d’autant plus grand que le modèle est flexible dans la direction du temps. La validation croisée par blocs temporels est celle qui répond à la question « comment ce modèle prédirait-il la demande d’une période future? », et même elle reste optimiste, puisque les blocs retirés sont encadrés par des données des deux côtés. Pour prédire l’année 2024, il faudrait entraîner sur 2019-2023 et tester sur 2024.</p>
+</section>
+<section id="rôle-du-paramètre-de-lissage" class="level2">
+<h2 class="anchored" data-anchor-id="rôle-du-paramètre-de-lissage">4. Rôle du paramètre de lissage</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mod.k30 <span class="ot">&lt;-</span> <span class="fu">gam</span>(demande <span class="sc">~</span> <span class="fu">s</span>(heure_locale) <span class="sc">+</span> <span class="fu">s</span>(jour, <span class="at">k =</span> <span class="dv">30</span>), <span class="at">data =</span> h2023)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">edf.jour =</span> <span class="fu">summary</span>(mod.k30)<span class="sc">$</span>edf[<span class="dv">2</span>], <span class="at">sp.jour =</span> mod.k30<span class="sc">$</span>sp[<span class="dv">2</span>])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       edf.jour sp.jour.s(jour) 
+   2.893663e+01    2.816263e-05 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lambdas <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1e-6</span>, <span class="fl">1e-2</span>, <span class="dv">1</span>, <span class="fl">1e4</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>xg <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">heure_locale =</span> <span class="dv">12</span>, <span class="at">jour =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">365</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(demande <span class="sc">~</span> jour, <span class="at">data =</span> <span class="fu">subset</span>(h2023, heure_locale <span class="sc">==</span> <span class="dv">12</span>), <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"grey50"</span>, <span class="fl">0.3</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Jour de l'année"</span>, <span class="at">ylab =</span> <span class="st">"Demande à midi (GW)"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>couleurs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"darkgreen"</span>, <span class="st">"blue"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="fu">seq_along</span>(lambdas)) {</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">gam</span>(demande <span class="sc">~</span> <span class="fu">s</span>(heure_locale) <span class="sc">+</span> <span class="fu">s</span>(jour, <span class="at">k =</span> <span class="dv">30</span>), <span class="at">sp =</span> <span class="fu">c</span>(mod.k30<span class="sc">$</span>sp[<span class="dv">1</span>], lambdas[j]), <span class="at">data =</span> h2023)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(xg<span class="sc">$</span>jour, <span class="fu">predict</span>(m, xg), <span class="at">col =</span> couleurs[j], <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg<span class="sc">$</span>jour, <span class="fu">predict</span>(mod.k30, xg), <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="fu">c</span>(<span class="fu">paste</span>(<span class="st">"lambda ="</span>, lambdas), <span class="st">"GCV"</span>), <span class="at">col =</span> <span class="fu">c</span>(couleurs, <span class="st">"black"</span>), <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo3-solutions_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(lambdas, <span class="cf">function</span>(l)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="fu">gam</span>(demande <span class="sc">~</span> <span class="fu">s</span>(heure_locale) <span class="sc">+</span> <span class="fu">s</span>(jour, <span class="at">k =</span> <span class="dv">30</span>), <span class="at">sp =</span> <span class="fu">c</span>(mod.k30<span class="sc">$</span>sp[<span class="dv">1</span>], l), <span class="at">data =</span> h2023))<span class="sc">$</span>edf[<span class="dv">2</span>])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 28.997737 20.671829  7.220751  1.040778</code></pre>
+</div>
+</div>
+<p>Le paramètre <span class="math inline">\(\lambda\)</span> multiplie la pénalité <span class="math inline">\(\int f''(t)^2\,dt\)</span>. Avec <span class="math inline">\(\lambda \to 0\)</span>, la pénalité disparaît et la courbe utilise tous ses degrés de liberté (29 avec <span class="math inline">\(k = 30\)</span>) : elle suit les fluctuations de la demande d’une semaine à l’autre (vagues de froid de février, canicule de juillet). Avec <span class="math inline">\(\lambda \to \infty\)</span>, la pénalité interdit toute courbure et <span class="math inline">\(f\)</span> est ramenée à une droite (un degré de liberté effectif) : la saisonnalité disparaît. Entre les deux, <span class="math inline">\(\lambda\)</span> règle continûment la complexité, et les degrés de liberté effectifs passent de 29 à 1.</p>
+<p>Avec la base enrichie, le GCV retient 28.9 degrés de liberté effectifs, encore presque la totalité des 29 disponibles. Ce n’est pas une anomalie : avec 8759 observations très peu bruitées (les heures voisines se ressemblent), chaque degré de liberté supplémentaire réduit l’erreur de prédiction plus qu’il n’augmente la variance, et le GCV voit un signal réel dans les vagues de froid et les canicules. La courbe est « rugueuse » parce que la demande l’est vraiment : le vrai facteur explicatif n’est pas le jour de l’année mais la température, qui fluctue d’un jour à l’autre. Il faudrait <span class="math inline">\(k\)</span> encore plus grand pour que le GCV se stabilise, ou, mieux, remplacer ce terme par ce qu’il essaie d’imiter (point 6).</p>
+</section>
+<section id="interaction-entre-lheure-et-le-jour" class="level2">
+<h2 class="anchored" data-anchor-id="interaction-entre-lheure-et-le-jour">5. Interaction entre l’heure et le jour</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mod.te <span class="ot">&lt;-</span> <span class="fu">gam</span>(demande <span class="sc">~</span> <span class="fu">te</span>(heure_locale, jour), <span class="at">data =</span> h2023)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>mod.ti <span class="ot">&lt;-</span> <span class="fu">gam</span>(demande <span class="sc">~</span> <span class="fu">s</span>(heure_locale) <span class="sc">+</span> <span class="fu">s</span>(jour) <span class="sc">+</span> <span class="fu">ti</span>(heure_locale, jour), <span class="at">data =</span> h2023)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod1, mod.te, mod.ti)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             df      AIC
+mod1   19.81672 36202.19
+mod.te 25.28746 40158.19
+mod.ti 35.30938 35455.77</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.ti)<span class="sc">$</span>s.table</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            edf    Ref.df          F p-value
+s(heure_locale)        8.840859  8.992454  488.03012       0
+s(jour)                8.991488  8.999978 5715.22897       0
+ti(heure_locale,jour) 15.477037 15.962263   49.80922       0</code></pre>
+</div>
+</div>
+<p>Dans <code>mod.ti</code>, le terme <code>ti(heure_locale, jour)</code> est l’interaction pure, orthogonale aux effets principaux : son test répond directement à la question de l’additivité. Il est très significatif, avec une quinzaine de degrés de liberté effectifs, et l’AIC baisse de 746 par rapport au modèle additif. L’hypothèse d’additivité ne tient donc pas : la forme du cycle journalier change au fil de l’année. Le modèle <code>te</code> est moins bon ici que <code>mod.ti</code> (AIC plus élevé) simplement parce que sa base par défaut (5 × 5) est trop pauvre pour les effets principaux, qui réclamaient déjà 9 degrés de liberté chacun ; avec <code>te(heure_locale, jour, k = c(10, 10))</code>, on retrouverait un ajustement équivalent.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>xg <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">heure_locale =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>, <span class="dv">2</span>), <span class="at">jour =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">200</span>), <span class="at">each =</span> <span class="dv">24</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>pred.add <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod1, xg)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>pred.int <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod.ti, xg)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>, pred.int[<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">ylim =</span> <span class="fu">range</span>(<span class="fu">c</span>(pred.add, pred.int)),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Heure"</span>, <span class="at">ylab =</span> <span class="st">"Demande prédite (GW)"</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>, pred.add[<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>], <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>, pred.int[<span class="dv">25</span><span class="sc">:</span><span class="dv">48</span>], <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">23</span>, pred.add[<span class="dv">25</span><span class="sc">:</span><span class="dv">48</span>], <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"right"</span>, <span class="fu">c</span>(<span class="st">"15 janvier, avec interaction"</span>, <span class="st">"15 janvier, additif"</span>, <span class="st">"19 juillet, avec interaction"</span>, <span class="st">"19 juillet, additif"</span>),</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"red"</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo3-solutions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Le modèle additif impose le même profil journalier décalé verticalement. Le modèle avec interaction montre qu’en janvier, la pointe du matin est presque aussi haute que celle du soir et le creux de l’après-midi est marqué (le chauffage domine, avec des pointes au réveil et au retour à la maison), alors qu’en juillet le creux nocturne est plus profond, la montée du matin plus tardive, le milieu de journée reste sur un plateau (la climatisation suit la chaleur de l’après-midi) et seule la pointe du soir subsiste. Le modèle additif, qui décale le même profil, invente un creux d’après-midi en été et sous-estime la pointe du matin en hiver. L’interaction apporte donc une description plus fidèle, au prix d’une quinzaine de paramètres effectifs supplémentaires et, surtout, de la perte de l’interprétation séparée des deux effets : on ne peut plus parler de « l’effet de l’heure » sans préciser la saison, et il faut lire une surface plutôt que deux courbes.</p>
+</section>
+<section id="ajout-de-la-température" class="level2">
+<h2 class="anchored" data-anchor-id="ajout-de-la-température">6. Ajout de la température</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mod.temp <span class="ot">&lt;-</span> <span class="fu">gam</span>(demande <span class="sc">~</span> <span class="fu">s</span>(heure_locale) <span class="sc">+</span> <span class="fu">s</span>(jour) <span class="sc">+</span> <span class="fu">s</span>(temp_ponderee), <span class="at">data =</span> h2023)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">dev.expl.mod1 =</span> <span class="fu">summary</span>(mod1)<span class="sc">$</span>dev.expl, <span class="at">dev.expl.temp =</span> <span class="fu">summary</span>(mod.temp)<span class="sc">$</span>dev.expl)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dev.expl.mod1 dev.expl.temp 
+    0.8541607     0.9597354 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod1, mod.temp)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               df      AIC
+mod1     19.81672 36202.19
+mod.temp 28.34751 24946.13</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.temp)<span class="sc">$</span>s.table</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      edf   Ref.df         F p-value
+s(heure_locale)  8.953006 8.999331 1777.2202       0
+s(jour)          8.983136 8.999850  379.0098       0
+s(temp_ponderee) 8.411370 8.905865 2572.1967       0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod.temp, <span class="at">pages =</span> <span class="dv">1</span>, <span class="at">shade =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo3-solutions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>L’ajout de la température fait passer la déviance expliquée de 85.4 à 96 % et fait chuter l’AIC de plus de 11 000. L’effet de la température a la forme de crosse de hockey du labo 1 : décroissance à peu près linéaire d’environ 0,5 GW par degré jusqu’à 20 °C, plancher entre 20 et 27 °C, légère remontée pour les heures les plus chaudes (climatisation). La courbe est ici un effet partiel, à heure et à jour fixés, alors que la courbe du labo 1 mélangeait l’effet de la température et tout ce qui varie avec elle au fil de l’année ; les deux se ressemblent beaucoup parce que la température est, de loin, le principal facteur saisonnier.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>xg <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">heure_locale =</span> <span class="dv">12</span>, <span class="at">jour =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">365</span>, <span class="at">temp_ponderee =</span> <span class="dv">10</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(xg<span class="sc">$</span>jour, <span class="fu">predict</span>(mod1, xg, <span class="at">type =</span> <span class="st">"terms"</span>)[, <span class="st">"s(jour)"</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Jour de l'année"</span>, <span class="at">ylab =</span> <span class="st">"Effet partiel du jour (GW)"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg<span class="sc">$</span>jour, <span class="fu">predict</span>(mod.temp, xg, <span class="at">type =</span> <span class="st">"terms"</span>)[, <span class="st">"s(jour)"</span>], <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="fu">c</span>(<span class="st">"sans la température"</span>, <span class="st">"avec la température"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo3-solutions_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Une fois la température prise en compte, l’effet du jour de l’année conserve sa forme mais son amplitude est divisée par trois ou quatre (de 12 à environ 4 GW entre l’hiver et l’été) et sa statistique <span class="math inline">\(F\)</span> est divisée par plus de dix. Le cycle saisonnier était surtout un effet de la température ; ce qui reste mesure tout ce qui varie avec la saison à température égale : la durée du jour (éclairage), les habitudes et le calendrier, la demande industrielle, et aussi les effets retardés de la température (une maison met du temps à se refroidir). C’est le sens d’un effet partiel dans un modèle additif : chaque courbe décrit l’effet d’une variable, les autres étant fixées.</p>
+<p>Remarque : l’heure et le jour sont des variables cycliques (23 h est voisine de 0 h, le 31 décembre du 1<sup>er</sup> janvier), ce qu’aucun des modèles ci-dessus n’impose ; <code>mgcv</code> offre pour cela la base de splines cycliques <code>s(heure_locale, bs = "cc")</code>, qui force la continuité de la courbe et de ses dérivées aux deux bouts.</p>
+</section>
+<section id="gam-logistique-maisons-détachées-ou-non" class="level2">
+<h2 class="anchored" data-anchor-id="gam-logistique-maisons-détachées-ou-non">7. GAM logistique : maisons détachées ou non</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>maisons <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../notes/Jeux de données/maisons_quebec.csv"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>maisons<span class="sc">$</span>non_detachee <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(maisons<span class="sc">$</span>lien_physique <span class="sc">!=</span> <span class="st">"Détaché"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(maisons<span class="sc">$</span>lien_physique)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+                   Détaché En rangée, plusieurs côtés 
+                       463                         28 
+        En rangée, un côté                     Jumelé 
+                        15                         94 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gam.log <span class="ot">&lt;-</span> <span class="fu">gam</span>(non_detachee <span class="sc">~</span> <span class="fu">s</span>(superficie_terrain_m2) <span class="sc">+</span> <span class="fu">s</span>(annee_construction),</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> binomial, <span class="at">data =</span> maisons)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>glm.log <span class="ot">&lt;-</span> <span class="fu">glm</span>(non_detachee <span class="sc">~</span> superficie_terrain_m2 <span class="sc">+</span> annee_construction,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> binomial, <span class="at">data =</span> maisons)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(gam.log)<span class="sc">$</span>s.table</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                              edf   Ref.df   Chi.sq p-value
+s(superficie_terrain_m2) 3.737531 4.137536 99.64658       0
+s(annee_construction)    7.134495 7.975743 49.28175       0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(gam.log, glm.log)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              df      AIC
+gam.log 11.87203 270.9667
+glm.log  3.00000 361.9490</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gam.log, <span class="at">pages =</span> <span class="dv">1</span>, <span class="at">shade =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo3-solutions_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>xg1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">superficie_terrain_m2 =</span> <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">1500</span>, <span class="at">length.out =</span> <span class="dv">200</span>), <span class="at">annee_construction =</span> <span class="dv">1985</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(xg1<span class="sc">$</span>superficie_terrain_m2, <span class="fu">predict</span>(gam.log, xg1, <span class="at">type =</span> <span class="st">"response"</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Superficie du terrain (m²), construction 1985"</span>, <span class="at">ylab =</span> <span class="st">"P(non détachée)"</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg1<span class="sc">$</span>superficie_terrain_m2, <span class="fu">predict</span>(glm.log, xg1, <span class="at">type =</span> <span class="st">"response"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rug</span>(maisons<span class="sc">$</span>superficie_terrain_m2[maisons<span class="sc">$</span>superficie_terrain_m2 <span class="sc">&lt;=</span> <span class="dv">1500</span>], <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"grey30"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>xg2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">superficie_terrain_m2 =</span> <span class="dv">400</span>, <span class="at">annee_construction =</span> <span class="fu">seq</span>(<span class="dv">1900</span>, <span class="dv">2024</span>, <span class="at">length.out =</span> <span class="dv">200</span>))</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(xg2<span class="sc">$</span>annee_construction, <span class="fu">predict</span>(gam.log, xg2, <span class="at">type =</span> <span class="st">"response"</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Année de construction, terrain de 400 m²"</span>, <span class="at">ylab =</span> <span class="st">"P(non détachée)"</span>)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg2<span class="sc">$</span>annee_construction, <span class="fu">predict</span>(glm.log, xg2, <span class="at">type =</span> <span class="st">"response"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rug</span>(maisons<span class="sc">$</span>annee_construction, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"grey30"</span>, <span class="fl">0.3</span>))</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"GAM"</span>, <span class="st">"régression logistique"</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo3-solutions_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Les deux fonctions lisses ont des degrés de liberté effectifs nettement supérieurs à 1 (3.7 pour la superficie du terrain et 7.1 pour l’année de construction) : la pénalisation n’a pas ramené les effets à des droites sur l’échelle logit, et l’AIC du GAM est inférieur de 91 à celui de la régression logistique. Les effets ne sont pas linéaires, et la régression logistique usuelle est inadéquate.</p>
+<p>Les formes s’interprètent bien. Pour le terrain, la probabilité d’une maison jumelée ou en rangée est presque 1 sous 250 m², passe de 0,9 à 0,1 entre 300 et 500 m² et devient presque nulle au-delà de 600 m² : un terrain exigu est la signature d’une maison mitoyenne (la superficie médiane est de 330 m² pour les maisons non détachées contre 604 m² pour les détachées). Sur l’échelle logit, l’effet est presque linéaire jusqu’à 500 m² puis s’aplatit, ce qui explique le nombre modeste de degrés de liberté effectifs. C’est l’année de construction qui s’écarte le plus de la linéarité : l’effet est non monotone, très faible pour les maisons construites entre 1900 et 1955 (une seule maison non détachée sur 77 construites dans les années 1940-1950, l’époque des bungalows de banlieue), en hausse rapide durant les années 1960-1970 (l’arrivée des jumelés), avec un léger creux dans les années 1990, puis en hausse jusqu’aux constructions récentes, où les maisons de ville en rangée sont fréquentes (55 des 138 maisons construites depuis 2000). Avant 1900, l’effet remonte (six des dix maisons de cet âge sont en rangée, dans les quartiers anciens), mais la bande de confiance y est très large. Une droite sur l’échelle logit ne peut rendre ni le creux ni les plateaux ; d’où le gain d’AIC.</p>
+<p>C’est l’inverse de l’exemple des notes, où la fonction lisse du diamètre avait exactement un degré de liberté et où le GAM se réduisait à la régression logistique. Le GAM joue dans les deux cas le même rôle diagnostique : on laisse les données choisir la forme fonctionnelle, et les degrés de liberté effectifs disent si un MLG paramétrique suffit (un degré de liberté) ou si la relation est réellement non linéaire (plusieurs, comme ici). Dans ce dernier cas, le GAM n’est pas qu’un diagnostic ; c’est le modèle à retenir, quitte à chercher ensuite une transformation ou des termes paramétriques qui en reproduisent la forme.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script>
+// Déplace le bloc « Dernière modification » (généré par Quarto en haut de page)
+// vers le bas du contenu. N'a aucun effet sur la page d'accueil, dont le
+// bloc de titre est déjà masqué.
+(function () {
+  if (document.body.classList.contains('page-home')) return;
+  var meta = document.querySelector('.quarto-title-meta');
+  var content = document.getElementById('quarto-document-content');
+  if (meta && content) {
+    content.appendChild(meta);
+  }
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/julienmiron\.github\.io\/STT-4300\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Site de cours STT-4300</p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

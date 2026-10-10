@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>labo4-solutions – STT-4300 Régression II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d879eba7f9f7abf158eeecada124be5f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">STT-4300 Régression II</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Recherche"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Basculer la navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Accueil</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../plan-de-cours.html"> 
+<span class="menu-text">Plan de cours</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../calendrier.html"> 
+<span class="menu-text">Calendrier</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Projet/projet.html"> 
+<span class="menu-text">Projet de session</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labos" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Labos</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labos">    
+        <li>
+    <a class="dropdown-item" href="../labos/labo1.html">
+ <span class="dropdown-text">Labo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo1-solutions.html">
+ <span class="dropdown-text">Solutions du labo 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo2.html">
+ <span class="dropdown-text">Labo 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo2-solutions.html">
+ <span class="dropdown-text">Solutions du labo 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo3.html">
+ <span class="dropdown-text">Labo 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo3-solutions.html">
+ <span class="dropdown-text">Solutions du labo 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo4.html">
+ <span class="dropdown-text">Labo 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo4-solutions.html">
+ <span class="dropdown-text">Solutions du labo 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo5.html">
+ <span class="dropdown-text">Labo 5</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../labos/labo5-solutions.html">
+ <span class="dropdown-text">Solutions du labo 5</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../notes/index.html" target="_blank"> 
+<span class="menu-text">Notes de cours</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="../cahier.pdf" title="Télécharger le calendrier, le projet et les labos (PDF)" class="quarto-navigation-tool px-1" aria-label="Télécharger le calendrier, le projet et les labos (PDF)"><i class="bi bi-download"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Sur cette page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#deux-partitions-pour-la-validation-croisée" id="toc-deux-partitions-pour-la-validation-croisée" class="nav-link active" data-scroll-target="#deux-partitions-pour-la-validation-croisée">1. Deux partitions pour la validation croisée</a></li>
+  <li><a href="#ajustement-des-cinq-modèles" id="toc-ajustement-des-cinq-modèles" class="nav-link" data-scroll-target="#ajustement-des-cinq-modèles">2. Ajustement des cinq modèles</a></li>
+  <li><a href="#erreurs-de-validation-croisée" id="toc-erreurs-de-validation-croisée" class="nav-link" data-scroll-target="#erreurs-de-validation-croisée">3. Erreurs de validation croisée</a></li>
+  <li><a href="#les-cinq-courbes-ajustées" id="toc-les-cinq-courbes-ajustées" class="nav-link" data-scroll-target="#les-cinq-courbes-ajustées">4. Les cinq courbes ajustées</a></li>
+  <li><a href="#extension-multivariée" id="toc-extension-multivariée" class="nav-link" data-scroll-target="#extension-multivariée">5. Extension multivariée</a></li>
+  <li><a href="#conclusion-quelle-méthode-choisir" id="toc-conclusion-quelle-méthode-choisir" class="nav-link" data-scroll-target="#conclusion-quelle-méthode-choisir">6. Conclusion : quelle méthode choisir?</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">10 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Coquille : le contenu des solutions est dans labos/_contenu/labo4-solutions.qmd
+     et n'est inséré ici qu'à partir de la date fixée dans labos/disponibilite.json
+     (voir labos/_disponibilite.R). Modifiez le contenu, pas ce fichier. -->
+<div class="portal-hero">
+<p class="eyebrow">
+STT-4300 — Régression II
+</p>
+<section id="solutions-du-labo-4" class="level1">
+<h1>Solutions du labo 4</h1>
+</section>
+</div>
+<!-- La date vient de labos/disponibilite.json (voir labos/_disponibilite.R). -->
+<div class="module-quick-facts two-facts">
+<div class="module-fact">
+<p>
+<span class="resource-icon">🗓️</span><span><span class="fact-label">Date</span><span class="fact-value">8 avril 2026</span></span>
+</p>
+</div>
+<div class="module-fact">
+<p>
+<span class="resource-icon">📘</span><span><span class="fact-label">Sujet</span><span class="fact-value">Synthèse : kNN, noyau, splines et GAM en compétition</span></span>
+</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>À propos de ces solutions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Les réponses ci-dessous sont une proposition de solution. Les erreurs de validation croisée dépendent de la partition tirée ; des écarts de quelques pour cent avec vos résultats sont normaux et ne changent pas les conclusions.</p>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>maisons <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../notes/Jeux de données/maisons_quebec.csv"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>maisons<span class="sc">$</span>valeur  <span class="ot">&lt;-</span> maisons<span class="sc">$</span>valeur_fonciere_cad <span class="sc">/</span> <span class="dv">1000</span>     <span class="co"># en k$</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>maisons<span class="sc">$</span>terrain <span class="ot">&lt;-</span> <span class="fu">log</span>(maisons<span class="sc">$</span>superficie_terrain_m2)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>maisons<span class="sc">$</span>lien    <span class="ot">&lt;-</span> <span class="fu">factor</span>(maisons<span class="sc">$</span>lien_physique)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(maisons)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> maisons<span class="sc">$</span>aire_etages_m2</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> maisons<span class="sc">$</span>valeur</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(maisons[, <span class="fu">c</span>(<span class="st">"valeur"</span>, <span class="st">"aire_etages_m2"</span>, <span class="st">"superficie_terrain_m2"</span>, <span class="st">"annee_construction"</span>)])</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     valeur       aire_etages_m2   superficie_terrain_m2 annee_construction
+ Min.   : 170.0   Min.   : 42.60   Min.   :  101.2       Min.   :1820      
+ 1st Qu.: 318.0   1st Qu.: 90.97   1st Qu.:  427.2       1st Qu.:1967      
+ Median : 366.0   Median :107.65   Median :  557.4       Median :1979      
+ Mean   : 410.6   Mean   :117.24   Mean   :  686.2       Mean   :1980      
+ 3rd Qu.: 455.0   3rd Qu.:135.32   3rd Qu.:  705.7       3rd Qu.:1997      
+ Max.   :1580.0   Max.   :390.80   Max.   :15351.4       Max.   :2024      </code></pre>
+</div>
+</div>
+<p>Les valeurs vont de 170 k$ à 1,58 M<span class="math inline">\(, avec une médiane de 366 k\)</span>. L’aire des étages va de 43 à 391 m², mais seulement 25 maisons dépassent 200 m² : les grandes maisons sont rares, comme les journées très froides du labo 1. La superficie du terrain est très asymétrique (de 100 m² à 1,5 ha), d’où l’échelle logarithmique.</p>
+<section id="deux-partitions-pour-la-validation-croisée" class="level2">
+<h2 class="anchored" data-anchor-id="deux-partitions-pour-la-validation-croisée">1. Deux partitions pour la validation croisée</h2>
+<p>On écrit une fonction qui prend une partition en blocs et une fonction de prédiction (entraînée sur les données d’un bloc, appliquée aux autres), de façon que toutes les méthodes soient évaluées sur les mêmes blocs. La première partition tire les blocs au hasard. La seconde tire au hasard des voisinages entiers (<code>voisinage_code</code>, 336 codes pour 600 maisons) et les répartit en 10 blocs : toutes les maisons d’un même voisinage sont alors dans le même bloc.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>blocs.alea <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">length.out =</span> n))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>voisinages <span class="ot">&lt;-</span> <span class="fu">unique</span>(maisons<span class="sc">$</span>voisinage_code)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>blocs.vois <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">length.out =</span> <span class="fu">length</span>(voisinages)))[<span class="fu">match</span>(maisons<span class="sc">$</span>voisinage_code, voisinages)]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(blocs.vois)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>blocs.vois
+ 1  2  3  4  5  6  7  8  9 10 
+65 69 58 59 54 59 56 69 55 56 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cv.blocs <span class="ot">&lt;-</span> <span class="cf">function</span>(blocs, predire) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="cf">function</span>(b) {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    ent <span class="ot">&lt;-</span> blocs <span class="sc">!=</span> b</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>((y[<span class="sc">!</span>ent] <span class="sc">-</span> <span class="fu">predire</span>(maisons[ent, ], maisons[<span class="sc">!</span>ent, ]))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  }))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Deux maisons du même voisinage se ressemblent : même époque de construction, mêmes dimensions de terrain, même marché local, et surtout une valeur foncière établie par le même évaluateur avec les mêmes comparables. Dans la partition aléatoire, une maison test a presque toujours une voisine de quartier dans l’ensemble d’entraînement, et les méthodes flexibles peuvent en profiter. La partition par voisinages retire cette aide : elle répond à la question « comment ce modèle prédirait-il la valeur d’une maison dans un quartier qu’il n’a jamais vu? », ce qui est plus exigeant et plus proche de l’usage réel d’un modèle d’évaluation. Avec 336 voisinages pour 600 maisons, la plupart ne comptent qu’une ou deux maisons dans l’échantillon, et l’écart entre les deux partitions restera modeste ; il serait beaucoup plus grand avec un échantillon dense.</p>
+</section>
+<section id="ajustement-des-cinq-modèles" class="level2">
+<h2 class="anchored" data-anchor-id="ajustement-des-cinq-modèles">2. Ajustement des cinq modèles</h2>
+<p>Chaque modèle est écrit sous la forme d’une fonction <code>predire(ent, test)</code> qui l’ajuste sur <code>ent</code> et prédit <code>test</code>, ce qui servira à la validation croisée ; les paramètres de lissage (<span class="math inline">\(k\)</span>, <span class="math inline">\(h\)</span>) sont choisis une fois pour toutes sur l’ensemble des données.</p>
+<section id="modèle-linéaire-simple" class="level3">
+<h3 class="anchored" data-anchor-id="modèle-linéaire-simple">Modèle linéaire simple</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pred.lin <span class="ot">&lt;-</span> <span class="cf">function</span>(ent, test) <span class="fu">predict</span>(<span class="fu">lm</span>(valeur <span class="sc">~</span> aire_etages_m2, <span class="at">data =</span> ent), test)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="knn-k-choisi-par-loocv-critère-press" class="level3">
+<h3 class="anchored" data-anchor-id="knn-k-choisi-par-loocv-critère-press">kNN, <span class="math inline">\(k\)</span> choisi par LOOCV (critère PRESS)</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ks <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">150</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>press <span class="ot">&lt;-</span> <span class="fu">sapply</span>(ks, <span class="cf">function</span>(k) <span class="fu">knn.reg</span>(<span class="at">train =</span> <span class="fu">matrix</span>(x), <span class="at">y =</span> y, <span class="at">k =</span> k)<span class="sc">$</span>PRESS)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>k.min <span class="ot">&lt;-</span> ks[<span class="fu">which.min</span>(press)]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>k.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pred.knn <span class="ot">&lt;-</span> <span class="cf">function</span>(ent, test)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">knn.reg</span>(<span class="at">train =</span> <span class="fu">matrix</span>(ent<span class="sc">$</span>aire_etages_m2), <span class="at">test =</span> <span class="fu">matrix</span>(test<span class="sc">$</span>aire_etages_m2), <span class="at">y =</span> ent<span class="sc">$</span>valeur, <span class="at">k =</span> k.min)<span class="sc">$</span>pred</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="noyau-gaussien-h-choisi-par-loocv" class="level3">
+<h3 class="anchored" data-anchor-id="noyau-gaussien-h-choisi-par-loocv">Noyau gaussien, <span class="math inline">\(h\)</span> choisi par LOOCV</h3>
+<p>L’estimateur de Nadaraya-Watson est linéaire en <span class="math inline">\(Y\)</span> : on calcule le LOOCV par la formule explicite des notes (voir le labo 1), puis on prédit directement à partir des poids gaussiens, ce qui évite d’interpoler la grille de <code>locpoly</code>. <code>locpoly</code> avec <code>degree = 0</code> et le même <code>bandwidth</code> donne la même courbe.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cv.n <span class="ot">&lt;-</span> <span class="cf">function</span>(h, x, y) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(<span class="fu">outer</span>(x, x, <span class="st">"-"</span>) <span class="sc">/</span> h)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> W <span class="sc">/</span> <span class="fu">rowSums</span>(W)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  f.hat <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(W <span class="sc">%*%</span> y)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(((y <span class="sc">-</span> f.hat) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">diag</span>(W)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>hs <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">2</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="fl">0.5</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>cv.h <span class="ot">&lt;-</span> <span class="fu">sapply</span>(hs, cv.n, <span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>h.min <span class="ot">&lt;-</span> hs[<span class="fu">which.min</span>(cv.h)]</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>h.min</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>nw <span class="ot">&lt;-</span> <span class="cf">function</span>(x.ent, y.ent, x.new, <span class="at">h =</span> h.min)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sapply</span>(x.new, <span class="cf">function</span>(x0) { w <span class="ot">&lt;-</span> <span class="fu">dnorm</span>((x.ent <span class="sc">-</span> x0) <span class="sc">/</span> h); <span class="fu">sum</span>(w <span class="sc">*</span> y.ent) <span class="sc">/</span> <span class="fu">sum</span>(w) })</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>pred.nw <span class="ot">&lt;-</span> <span class="cf">function</span>(ent, test) <span class="fu">nw</span>(ent<span class="sc">$</span>aire_etages_m2, ent<span class="sc">$</span>valeur, test<span class="sc">$</span>aire_etages_m2)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="spline-de-lissage-et-gam-univarié" class="level3">
+<h3 class="anchored" data-anchor-id="spline-de-lissage-et-gam-univarié">Spline de lissage et GAM univarié</h3>
+<p>L’aire des étages est mesurée au dixième de mètre carré et 183 maisons partagent leur valeur avec une autre. Les ex æquo sont assez nombreux pour que <code>cv = TRUE</code> déclenche l’avertissement de <code>smooth.spline</code> (il regrouperait les maisons de même aire avant d’exclure un groupe à la fois) ; on laisse donc le GCV choisir <span class="math inline">\(\lambda\)</span>, comme au labo 2.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod.sp  <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(x, y)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mod.gam <span class="ot">&lt;-</span> <span class="fu">gam</span>(valeur <span class="sc">~</span> <span class="fu">s</span>(aire_etages_m2), <span class="at">data =</span> maisons)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">ddl.smooth.spline =</span> mod.sp<span class="sc">$</span>df, <span class="at">ddl.gam =</span> <span class="fu">sum</span>(mod.gam<span class="sc">$</span>edf))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ddl.smooth.spline           ddl.gam 
+         4.343042          4.321444 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pred.sp  <span class="ot">&lt;-</span> <span class="cf">function</span>(ent, test) <span class="fu">predict</span>(<span class="fu">smooth.spline</span>(ent<span class="sc">$</span>aire_etages_m2, ent<span class="sc">$</span>valeur), test<span class="sc">$</span>aire_etages_m2)<span class="sc">$</span>y</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pred.gam <span class="ot">&lt;-</span> <span class="cf">function</span>(ent, test) <span class="fu">predict</span>(<span class="fu">gam</span>(valeur <span class="sc">~</span> <span class="fu">s</span>(aire_etages_m2), <span class="at">data =</span> ent), test)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="erreurs-de-validation-croisée" class="level2">
+<h2 class="anchored" data-anchor-id="erreurs-de-validation-croisée">3. Erreurs de validation croisée</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>predicteurs <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"linéaire"</span> <span class="ot">=</span> pred.lin, <span class="st">"kNN"</span> <span class="ot">=</span> pred.knn, <span class="st">"noyau (Nadaraya-Watson)"</span> <span class="ot">=</span> pred.nw,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"spline de lissage"</span> <span class="ot">=</span> pred.sp, <span class="st">"GAM  s(aire)"</span> <span class="ot">=</span> pred.gam)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>erreurs <span class="ot">&lt;-</span> <span class="fu">sapply</span>(predicteurs, <span class="cf">function</span>(p) <span class="fu">c</span>(<span class="at">aleatoire =</span> <span class="fu">cv.blocs</span>(blocs.alea, p), <span class="at">voisinages =</span> <span class="fu">cv.blocs</span>(blocs.vois, p)))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>param <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"—"</span>, <span class="fu">paste</span>(<span class="st">"k ="</span>, k.min), <span class="fu">paste</span>(<span class="st">"h ="</span>, h.min),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>           <span class="fu">paste</span>(<span class="st">"ddl ="</span>, <span class="fu">round</span>(mod.sp<span class="sc">$</span>df, <span class="dv">1</span>)), <span class="fu">paste</span>(<span class="st">"ddl ="</span>, <span class="fu">round</span>(<span class="fu">sum</span>(mod.gam<span class="sc">$</span>edf), <span class="dv">1</span>)))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>tableau <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(paramètre <span class="ot">=</span> param, <span class="at">EQM.aleatoire =</span> <span class="fu">round</span>(erreurs[<span class="st">"aleatoire"</span>, ]),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">EQM.voisinages =</span> <span class="fu">round</span>(erreurs[<span class="st">"voisinages"</span>, ]),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">racine.EQM =</span> <span class="fu">round</span>(<span class="fu">sqrt</span>(erreurs[<span class="st">"aleatoire"</span>, ])))</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>tableau</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        paramètre EQM.aleatoire EQM.voisinages racine.EQM
+linéaire                        —          8003           8145         89
+kNN                         k = 9          8616           8854         93
+noyau (Nadaraya-Watson)     h = 8          7629           7911         87
+spline de lissage       ddl = 4.3          7247           7257         85
+GAM  s(aire)            ddl = 4.3          7214           7254         85</code></pre>
+</div>
+</div>
+<p>Les erreurs sont en (k$)² ; leur racine, d’environ 85 k$, est l’ordre de grandeur de l’erreur de prédiction, soit près du quart de la valeur médiane. Trois constats :</p>
+<ul>
+<li>Les méthodes flexibles font mieux que la droite, mais de peu : le gain est d’environ 10 % pour la meilleure (le GAM), contre un facteur 3 au labo 1. La relation entre la valeur et l’aire est convexe (le prix du mètre carré de plancher croît avec la taille, d’environ 2,5 k$ pour une petite maison à près de 4 k$ pour une grande), mais la courbure est douce et c’est le bruit qui domine, pas le biais de la droite. Deux maisons de même aire peuvent différer du simple au double selon le quartier, le terrain et l’état du bâtiment, variables que ce modèle ignore.</li>
+<li>kNN fait même moins bien que la droite. Avec <span class="math inline">\(k = 9\)</span> voisins, sa variance est élevée dans une relation très bruitée, et son escalier ne gagne rien en biais par rapport à une courbe lisse. C’est le cas typique où la flexibilité coûte plus qu’elle ne rapporte.</li>
+<li>La partition par voisinages donne des erreurs un peu plus élevées pour toutes les méthodes, de l’ordre de 2 % : la ressemblance entre maisons d’un même quartier aide un peu toutes les méthodes, mais, l’échantillon étant très dispersé (une ou deux maisons par voisinage), l’effet est modeste et le classement des méthodes ne change pas.</li>
+</ul>
+</section>
+<section id="les-cinq-courbes-ajustées" class="level2">
+<h2 class="anchored" data-anchor-id="les-cinq-courbes-ajustées">4. Les cinq courbes ajustées</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>xg <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(x), <span class="fu">max</span>(x), <span class="at">length.out =</span> <span class="dv">400</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">aire_etages_m2 =</span> xg)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"grey50"</span>, <span class="fl">0.4</span>), <span class="at">xlab =</span> <span class="st">"Aire des étages (m²)"</span>, <span class="at">ylab =</span> <span class="st">"Valeur foncière (k$)"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg, <span class="fu">pred.lin</span>(maisons, grille), <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg, <span class="fu">pred.knn</span>(maisons, grille), <span class="at">col =</span> <span class="st">"darkgreen"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg, <span class="fu">pred.nw</span>(maisons, grille), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg, <span class="fu">predict</span>(mod.sp, xg)<span class="sc">$</span>y, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(xg, <span class="fu">predict</span>(mod.gam, grille), <span class="at">col =</span> <span class="st">"purple"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"linéaire"</span>, <span class="fu">paste0</span>(<span class="st">"kNN (k = "</span>, k.min, <span class="st">")"</span>), <span class="fu">paste0</span>(<span class="st">"noyau (h = "</span>, h.min, <span class="st">")"</span>),</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"spline de lissage"</span>, <span class="st">"GAM"</span>),</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"darkgreen"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"purple"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo4-solutions_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Jusqu’à 200 m², là où se trouvent 96 % des maisons, les cinq courbes sont presque confondues : une courbe douce, de 240 k$ pour 50 m² à 350 k$ pour 100 m² et 500 k$ pour 150 m², dont la droite s’écarte peu. Les différences apparaissent pour les grandes maisons, où les observations sont rares et dispersées :</p>
+<ul>
+<li>la droite continue tout droit et sous-estime les plus grandes maisons, dont la valeur croît plus vite que l’aire ;</li>
+<li>la spline de lissage et le GAM, presque identiques (même pénalité, bases et critères voisins), se courbent vers le haut de façon régulière : c’est la convexité qui vaut à ces deux méthodes le meilleur score ;</li>
+<li>la courbe à noyau suit les mêmes grandes lignes, mais avec <span class="math inline">\(h = 8\)</span> m² elle forme des bosses autour des quelques maisons isolées de 250 à 390 m², chacune tirant la courbe à elle ;</li>
+<li>la courbe kNN est en escalier et, pour les plus grandes maisons, ses 9 voisins s’étendent loin vers la gauche : elle plafonne là où les autres courbes montent, le défaut de bord déjà vu au labo 1.</li>
+</ul>
+<p>Contrairement au labo 2, où toutes les heures avaient le même effectif, il y a ici une zone peu dense à droite, et c’est elle qui départage les méthodes.</p>
+</section>
+<section id="extension-multivariée" class="level2">
+<h2 class="anchored" data-anchor-id="extension-multivariée">5. Extension multivariée</h2>
+<p>On ajoute la superficie du terrain (en log), l’année de construction et le type de bâtiment. Le GAM additif est comparé au modèle linéaire multiple, au GAM univarié et à un kNN à trois variables, sur les mêmes blocs qu’au point 3. Pour kNN, les trois variables explicatives sont standardisées pour que la distance euclidienne ne soit pas dominée par l’année (de 1820 à 2024) ; c’est une version simplifiée de la distance de Mahalanobis des notes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>f.gam <span class="ot">&lt;-</span> valeur <span class="sc">~</span> <span class="fu">s</span>(aire_etages_m2) <span class="sc">+</span> <span class="fu">s</span>(terrain) <span class="sc">+</span> <span class="fu">s</span>(annee_construction) <span class="sc">+</span> lien</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>f.lin <span class="ot">&lt;-</span> valeur <span class="sc">~</span> aire_etages_m2 <span class="sc">+</span> terrain <span class="sc">+</span> annee_construction <span class="sc">+</span> lien</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>pred.gam3 <span class="ot">&lt;-</span> <span class="cf">function</span>(ent, test) <span class="fu">predict</span>(<span class="fu">gam</span>(f.gam, <span class="at">data =</span> ent), test)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>pred.lin3 <span class="ot">&lt;-</span> <span class="cf">function</span>(ent, test) <span class="fu">predict</span>(<span class="fu">lm</span>(f.lin, <span class="at">data =</span> ent), test)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"aire_etages_m2"</span>, <span class="st">"terrain"</span>, <span class="st">"annee_construction"</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>pred.knn3 <span class="ot">&lt;-</span> <span class="cf">function</span>(ent, test) {</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(ent[, vars]); s <span class="ot">&lt;-</span> <span class="fu">apply</span>(ent[, vars], <span class="dv">2</span>, sd)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">knn.reg</span>(<span class="at">train =</span> <span class="fu">scale</span>(ent[, vars], mu, s), <span class="at">test =</span> <span class="fu">scale</span>(test[, vars], mu, s), <span class="at">y =</span> ent<span class="sc">$</span>valeur, <span class="at">k =</span> <span class="dv">10</span>)<span class="sc">$</span>pred</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>erreurs5 <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">list</span>(<span class="st">"GAM 3 variables + lien"</span> <span class="ot">=</span> pred.gam3, <span class="st">"linéaire 3 variables + lien"</span> <span class="ot">=</span> pred.lin3,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"kNN 3 variables (k = 10)"</span> <span class="ot">=</span> pred.knn3, <span class="st">"GAM s(aire)"</span> <span class="ot">=</span> pred.gam),</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>                   <span class="cf">function</span>(p) <span class="fu">c</span>(<span class="at">aleatoire =</span> <span class="fu">cv.blocs</span>(blocs.alea, p), <span class="at">voisinages =</span> <span class="fu">cv.blocs</span>(blocs.vois, p)))</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(erreurs5)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           GAM 3 variables + lien linéaire 3 variables + lien
+aleatoire                    6303                        7324
+voisinages                   6844                        7533
+           kNN 3 variables (k = 10) GAM s(aire)
+aleatoire                      8327        7214
+voisinages                     8819        7254</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mod.gam3 <span class="ot">&lt;-</span> <span class="fu">gam</span>(f.gam, <span class="at">data =</span> maisons)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.gam3)<span class="sc">$</span>s.table</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                           edf   Ref.df          F      p-value
+s(aire_etages_m2)     5.856397 7.040688 219.654073 0.0000000000
+s(terrain)            6.896154 8.014612   3.558618 0.0004799195
+s(annee_construction) 5.949840 7.091394  10.730273 0.0000000000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod.gam3)<span class="sc">$</span>p.table</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                Estimate Std. Error     t value     Pr(&gt;|t|)
+(Intercept)                    419.78980   4.097221 102.4571911 0.000000e+00
+lienEn rangée, plusieurs côtés -33.22779  20.428088  -1.6265738 1.043733e-01
+lienEn rangée, un côté          16.50439  22.762326   0.7250748 4.686999e-01
+lienJumelé                     -51.52201  12.287638  -4.1929953 3.185398e-05</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod.gam3, <span class="at">pages =</span> <span class="dv">1</span>, <span class="at">shade =</span> <span class="cn">TRUE</span>, <span class="at">scale =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="labo4-solutions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Avec les trois variables supplémentaires, l’erreur du GAM baisse d’environ 13 % par rapport au GAM univarié, et le GAM additif bat le modèle linéaire multiple d’environ 14 %. Les degrés de liberté effectifs et les graphiques disent où se trouve la non-linéarité :</p>
+<ul>
+<li><code>aire_etages_m2</code> : effet convexe, le même qu’au point 4, encore plus marqué une fois les autres variables prises en compte : la pente passe d’environ 1,5 k$ par mètre carré pour les petites maisons à plus de 5 k$ pour les grandes ;</li>
+<li><code>annee_construction</code> : effet non linéaire et non monotone. À aire, terrain et type égaux, les maisons d’avant 1920 valent nettement moins (environ 80 k$ sous la moyenne), la courbe monte jusqu’aux années 1940, forme un plateau avec un léger creux dans les années 1970, puis remonte régulièrement pour les constructions récentes (environ 65 k$ au-dessus de la moyenne en 2024). Une droite, qui ne peut rendre que la tendance générale, manque le plateau et surestime les maisons centenaires ;</li>
+<li><code>terrain</code> : c’est le terme à regarder avec méfiance. Ses degrés de liberté effectifs sont élevés, mais sa statistique <span class="math inline">\(F\)</span> est faible, et la courbe oscille entre <span class="math inline">\(-50\)</span> et <span class="math inline">\(+15\)</span> k$ sans forme interprétable. Avec une base plus petite (<code>s(terrain, k = 4)</code>), l’effet devient plat et non significatif, et retirer la variable n’augmente l’erreur de validation croisée que de 1 à 2 %. Dans cet échantillon, à aire et année de construction égales, la superficie du terrain ne vaut à peu près rien, sans doute parce que les grands terrains sont en périphérie, où le sol est moins cher ; la courbe ondulée est un ajustement du bruit, et un bon réflexe est de réduire <span class="math inline">\(k\)</span> ou d’abandonner le terme ;</li>
+<li><code>lien</code> : à aire, terrain et année égaux, une maison jumelée vaut environ 50 k$ de moins qu’une maison détachée ; les maisons en rangée sont trop peu nombreuses (43) pour que leurs coefficients soient précis.</li>
+</ul>
+<p>kNN à trois variables fait moins bien que tous les autres modèles, y compris la droite à une variable : c’est le fléau de la dimension. En trois dimensions, les 10 plus proches voisins d’une maison sont déjà éloignés dans au moins une direction, et la moyenne locale mélange des maisons qui ne se ressemblent pas ; de plus, la distance euclidienne traite les trois variables comme équivalentes alors que l’aire explique l’essentiel de la valeur. Le GAM contourne le problème en estimant trois courbes univariées, chacune sur les 600 maisons, et en les additionnant.</p>
+<p>La partition par voisinages pénalise un peu plus les modèles à plusieurs variables que le GAM univarié : le terrain et l’année sont justement les variables qui caractérisent un quartier, et prédire un voisinage inconnu les rend un peu moins utiles. Le classement ne change pas.</p>
+</section>
+<section id="conclusion-quelle-méthode-choisir" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-quelle-méthode-choisir">6. Conclusion : quelle méthode choisir?</h2>
+<p>Les résultats numériques donnent une première leçon, différente de celle du labo 1 : avec une seule variable explicative dont l’effet est presque linéaire et un bruit important, les méthodes flexibles n’apportent presque rien, et la plus flexible d’entre elles (kNN) fait même moins bien que la droite. La flexibilité ne paie que s’il y a de la non-linéarité à capter, et son coût en variance est réel quand <span class="math inline">\(n\)</span> est modeste. La seconde leçon vient de la partie multivariée : le vrai gain est venu des variables ajoutées, et c’est le GAM qui a su les exploiter, là où kNN s’est effondré. Il a aussi signalé lui-même, par un terme oscillant à faible statistique <span class="math inline">\(F\)</span>, qu’une des variables n’apportait rien.</p>
+<ul>
+<li>kNN est le choix le plus simple à comprendre et à implémenter, robuste dans les zones peu denses grâce à son voisinage adaptatif, et il s’étend sans effort à la classification. Ses défauts : courbe en escalier, aucun paramètre interprétable, traitement arbitraire des ex æquo, variance élevée quand le bruit est fort, et surtout une dégradation rapide quand le nombre de variables augmente (fléau de la dimension), ce que le point 5 illustre sans ambiguïté.</li>
+<li>Le noyau donne une courbe lisse et continue, préférable pour visualiser une tendance ou estimer une dérivée (ici, le prix marginal du mètre carré). Il souffre de la fenêtre fixe dans les zones peu denses (bosses autour des grandes maisons isolées, biais de bord) et du même fléau de la dimension que kNN. Les polynômes locaux (<code>degree = 1</code>) corrigent le biais de bord.</li>
+<li>Les splines (de régression, naturelles ou de lissage) sont des modèles linéaires en <span class="math inline">\(\boldsymbol\beta\)</span> : on dispose des moindres carrés, des intervalles de confiance et des tests usuels, et le lissage est contrôlé par un seul paramètre <span class="math inline">\(\lambda\)</span> choisi automatiquement. C’est la méthode de choix pour une ou deux variables lorsqu’on veut une courbe lisse avec une inférence propre ; c’est elle qui a donné la meilleure courbe univariée ici. Elles ne se généralisent cependant pas directement à plusieurs variables : le nombre de fonctions de base explose avec la dimension.</li>
+<li>Le GAM est la méthode à privilégier dès qu’il y a plusieurs variables explicatives. En imposant l’additivité, il contourne le fléau de la dimension (chaque <span class="math inline">\(f_j\)</span> est une courbe univariée estimée sur toutes les données), il reste interprétable (un graphique par variable, des degrés de liberté effectifs qui disent quels effets sont linéaires, des coefficients ordinaires pour les facteurs comme le type de bâtiment), il offre des tests et des bandes de confiance, et il s’étend aux réponses binaires et de dénombrement par la fonction de lien (labo 3). Son coût est l’hypothèse d’additivité elle-même, qui ne tient pas toujours (au labo 3, la forme du cycle journalier dépendait de la saison) et que l’on peut relâcher localement par des termes d’interaction <code>ti</code> ou <code>te</code> quand les données le justifient.</li>
+</ul>
+<p>En pratique : kNN ou noyau pour une exploration rapide en une ou deux dimensions ou pour la classification ; splines pour une courbe univariée avec inférence ; GAM pour tout problème à plusieurs variables où l’on veut à la fois flexibilité et interprétabilité. Dans tous les cas, le fil conducteur est le même : la complexité (<span class="math inline">\(k\)</span>, <span class="math inline">\(h\)</span>, <span class="math inline">\(\lambda\)</span>) se choisit par validation croisée, et la comparaison entre méthodes se fait sur une erreur de validation croisée calculée sur les mêmes blocs, avec des blocs qui respectent la structure des données (quartiers entiers ici, blocs de temps pour des données chronologiques) si l’on veut une estimation honnête de l’erreur sur de nouvelles observations.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+// Couleur du logo dérivée de la date du jour (même couleur toute la journée, change le lendemain).
+(function () {
+  var d = new Date();
+  var cle = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script>
+// Déplace le bloc « Dernière modification » (généré par Quarto en haut de page)
+// vers le bas du contenu. N'a aucun effet sur la page d'accueil, dont le
+// bloc de titre est déjà masqué.
+(function () {
+  if (document.body.classList.contains('page-home')) return;
+  var meta = document.querySelector('.quarto-title-meta');
+  var content = document.getElementById('quarto-document-content');
+  if (meta && content) {
+    content.appendChild(meta);
+  }
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/julienmiron\.github\.io\/STT-4300\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Site de cours STT-4300</p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

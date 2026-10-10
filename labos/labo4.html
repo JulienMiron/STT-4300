@@ -280,35 +280,46 @@ STT-4300 — Régression II
 </section>
 <section id="mise-en-contexte" class="level2">
 <h2 class="anchored" data-anchor-id="mise-en-contexte">Mise en contexte</h2>
-<p>On reprend le jeu de données <code>qualite_air</code> (<a href="../notes/Jeux de données/qualite_air.csv">télécharger</a>), mais à une autre station : Québec – Vieux-Limoilou. Comme aux labos 2 et 3, la réponse <span class="math inline">\(Y\)</span> est la concentration d’ozone (<code>O3</code>) et la variable explicative <span class="math inline">\(X\)</span> est l’heure de la journée ; on retient les mois de juin, juillet et août. Pour la partie multivariée, on utilisera l’année entière et les autres contaminants mesurés à la station : le monoxyde de carbone (<code>CO</code>), les particules fines (<code>PM2.5-T640</code>) et le carbone suie (<code>BC_880nm</code>).</p>
+<p>On reprend le jeu de données <code>maisons_quebec</code> (<a href="../notes/Jeux de données/maisons_quebec.csv">télécharger</a>) du labo 3 : 600 maisons unifamiliales de la ville de Québec tirées au hasard du rôle d’évaluation foncière 2025 (valeurs au 1<sup>er</sup> juillet 2023), préparé par <a href="https://donneesbleues.ca/datasets/maisons-quebec/fiche.html">donneesbleues.ca</a>. La réponse <span class="math inline">\(Y\)</span> est la valeur foncière (<code>valeur_fonciere_cad</code>, qu’on exprime en milliers de dollars) et, pour la partie univariée, la variable explicative <span class="math inline">\(X\)</span> est l’aire des étages (<code>aire_etages_m2</code>, la surface brute de plancher). Pour la partie multivariée, on ajoute la superficie du terrain (<code>superficie_terrain_m2</code>), l’année de construction (<code>annee_construction</code>) et le type de bâtiment (<code>lien_physique</code>).</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Avertissement</span>Fuite de cible
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>La valeur foncière est la somme de <code>valeur_terrain_cad</code> et <code>valeur_batiment_cad</code>. Ces deux colonnes ne doivent servir à aucun modèle : les utiliser pour prédire le total revient à copier la réponse.</p>
+</div>
+</div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FNN)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(KernSmooth)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>heure <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>))</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>mois  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">6</span>, <span class="dv">7</span>))</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>air<span class="sc">$</span>jour  <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(<span class="fu">substr</span>(air<span class="sc">$</span>Date_Heure, <span class="dv">1</span>, <span class="dv">10</span>)), <span class="st">"%j"</span>))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>quebec <span class="ot">&lt;-</span> <span class="fu">subset</span>(air, Station <span class="sc">==</span> <span class="st">"03006 - Québec - Vieux-Limoilou"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>ete <span class="ot">&lt;-</span> <span class="fu">subset</span>(quebec, mois <span class="sc">%in%</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(O3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>maisons <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"maisons_quebec.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>maisons<span class="sc">$</span>valeur  <span class="ot">&lt;-</span> maisons<span class="sc">$</span>valeur_fonciere_cad <span class="sc">/</span> <span class="dv">1000</span>     <span class="co"># en k$</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>maisons<span class="sc">$</span>terrain <span class="ot">&lt;-</span> <span class="fu">log</span>(maisons<span class="sc">$</span>superficie_terrain_m2)     <span class="co"># très asymétrique : échelle log</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>maisons<span class="sc">$</span>lien    <span class="ot">&lt;-</span> <span class="fu">factor</span>(maisons<span class="sc">$</span>lien_physique)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="consignes" class="level2">
 <h2 class="anchored" data-anchor-id="consignes">Consignes</h2>
 <ol type="1">
-<li>Partitionner les données en un ensemble d’entraînement (70 %) et un ensemble test (30 %), ou prévoir une procédure de validation croisée à <span class="math inline">\(K=10\)</span> plis réutilisable pour toutes les méthodes suivantes. Réfléchir aux conséquences d’un tirage au hasard parmi des heures consécutives.</li>
-<li>Ajuster, sur l’ensemble d’entraînement, chacun des modèles suivants pour prédire <code>O3</code> en fonction de <code>heure</code> :
+<li>Prévoir une procédure de validation croisée à <span class="math inline">\(K = 10\)</span> blocs réutilisable pour toutes les méthodes suivantes, avec des blocs tirés au hasard. Prévoir aussi une seconde partition où les blocs regroupent des voisinages entiers (<code>voisinage_code</code>, un code administratif de quartier), de sorte qu’une maison test n’ait jamais de voisine de son quartier dans l’ensemble d’entraînement. Pourquoi cette seconde partition est-elle plus exigeante, et à quelle question répond-elle?</li>
+<li>Ajuster chacun des modèles suivants pour prédire <code>valeur</code> en fonction de <code>aire_etages_m2</code> :
 <ul>
 <li>un modèle linéaire simple (référence) ;</li>
 <li>un estimateur kNN (<code>knn.reg</code>), avec <span class="math inline">\(k\)</span> choisi par validation croisée ;</li>
 <li>un estimateur de noyau (<code>locpoly</code> ou la formule des poids), avec <span class="math inline">\(h\)</span> choisi par validation croisée ;</li>
 <li>une spline de lissage (<code>smooth.spline</code>, en justifiant le choix entre GCV et <code>cv = TRUE</code>) ;</li>
-<li>un GAM univarié (<code>gam(O3 ~ s(heure))</code>).</li>
+<li>un GAM univarié (<code>gam(valeur ~ s(aire_etages_m2))</code>).</li>
 </ul></li>
-<li>Pour chaque méthode, calculer l’erreur quadratique moyenne sur l’ensemble test (ou moyenne des erreurs de validation croisée). Présenter les résultats dans un tableau.</li>
-<li>Superposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points. Commenter les ressemblances et différences.</li>
-<li>Extension multivariée. Sur l’année entière, ajuster un GAM avec plusieurs prédicteurs, par exemple <code>gam(O3 ~ s(heure) + s(jour) + s(CO) + s(PM25) + s(BC))</code>, après avoir renommé les colonnes <code>PM2.5-T640</code> et <code>BC_880nm</code> et retiré les heures où une mesure manque. Comparer son erreur de prédiction test à celle du modèle linéaire multiple correspondant et à celle du GAM à deux cycles du labo 3. Quelles variables semblent avoir un effet non linéaire marqué? Comment ces effets s’interprètent-ils chimiquement?</li>
+<li>Pour chaque méthode, calculer l’erreur quadratique moyenne de validation croisée avec les deux partitions. Présenter les résultats dans un tableau. Les méthodes flexibles font-elles beaucoup mieux que la droite? Qu’est-ce qui limite ici le gain?</li>
+<li>Superposer, sur un même graphique, les cinq courbes ajustées par rapport au nuage de points. Commenter les ressemblances et différences, en particulier pour les grandes maisons.</li>
+<li>Extension multivariée. Ajuster un GAM avec plusieurs prédicteurs, <code>gam(valeur ~ s(aire_etages_m2) + s(terrain) + s(annee_construction) + lien)</code>, et comparer son erreur de validation croisée à celle du modèle linéaire multiple correspondant, du GAM univarié du point 2 et d’un estimateur kNN à trois variables explicatives (<code>aire_etages_m2</code>, <code>terrain</code> et <code>annee_construction</code> standardisées). Quelles variables semblent avoir un effet non linéaire marqué? Comment ces effets s’interprètent-ils en termes de marché immobilier? Tous les termes lissés méritent-ils d’être conservés (regarder à la fois les degrés de liberté effectifs, la statistique <span class="math inline">\(F\)</span> et la forme de la courbe)? Pourquoi kNN se comporte-t-il moins bien à trois variables?</li>
 <li>Rédiger une conclusion (15-20 lignes) qui répond à la question : <em>dans quelles circonstances choisiriez-vous kNN, le noyau, les splines, ou un GAM?</em> Appuyez votre réponse sur vos résultats numériques et sur des arguments de flexibilité, de fléau de la dimension, et d’interprétabilité.</li>
 </ol>
 </section>
@@ -316,7 +327,7 @@ STT-4300 — Régression II
 <h2 class="anchored" data-anchor-id="matériel">Matériel</h2>
 <ul>
 <li>Notes de cours : <a href="../notes/07-knn-noyau.html">kNN et noyau</a>, <a href="../notes/08-splines.html">Splines</a>, <a href="../notes/09-gam.html">GAM</a></li>
-<li>Données : <a href="../notes/Jeux de données/qualite_air.csv"><code>qualite_air.csv</code></a></li>
+<li>Données : <a href="../notes/Jeux de données/maisons_quebec.csv"><code>maisons_quebec.csv</code></a> (<a href="https://donneesbleues.ca/datasets/maisons-quebec/fiche.html">fiche sur donneesbleues.ca</a>)</li>
 <li>Librairies R : <code>FNN</code>, <code>KernSmooth</code>, <code>splines</code>, <code>mgcv</code></li>
 </ul>
 

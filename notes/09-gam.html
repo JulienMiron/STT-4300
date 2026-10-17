@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>9&nbsp; Modèles additifs et modèles additifs généralisés (GAM) – Au-delà de la régression linéaire</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./10-donnees-correlees.html" rel="next">
+<link href="./08-splines.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-cb416c3c68f001892fd433de5bb87006.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-376fa577758f5eb38fdab71fe95b3eec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-cb416c3c68f001892fd433de5bb87006.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+ <script>
+          window.MathJax = {
+            chtml: {
+              linebreaks: { inline: false }
+            },
+            tex: {
+              macros: {
+                bb: "\\boldsymbol\\beta",
+                hb: "\\hat{\\boldsymbol\\beta}",
+                hv: ["\\hat{\\text V}(#1)", 1],
+                hvar: ["\\widehat{\\text{Var}}(#1)", 1],
+                hbj: ["\\hat\\beta_{#1}", 1],
+                hpi: ["\\hat\\pi_{#1}", 1],
+                heta: ["\\hat\\eta_{#1}", 1],
+                hmu: ["\\hat\\mu_{#1}", 1]
+              }
+            }
+          };
+          </script>  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./09-gam.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Au-delà de la régression linéaire</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./../index.html" title="Retour au site du cours" class="quarto-navigation-tool px-1" aria-label="Retour au site du cours"><i class="bi bi-house-door"></i></a>
+    <a href="https://github.com/JulienMiron/STT-4300/tree/main/notes/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-regression-lineaire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">0&nbsp;Rappels de régression linéaire</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-extensions-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions des GLM : réponses catégorielles et excès de zéros</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur à noyau</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-donnees-correlees.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Données corrélées : modèles mixtes et GEE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-autres-modeles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Au-delà des modèles de ce livre</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-robustesse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Ouverture sur la statistique robuste</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Solutions des exercices</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./exercices-en-classe.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exemples interactifs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references-complementaires.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Références complémentaires</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation"><span class="header-section-number">9.1</span> Motivation</a></li>
+  <li><a href="#estimation-par-moindres-carrés-pénalisés" id="toc-estimation-par-moindres-carrés-pénalisés" class="nav-link" data-scroll-target="#estimation-par-moindres-carrés-pénalisés"><span class="header-section-number">9.2</span> Estimation par moindres carrés pénalisés</a>
+  <ul class="collapse">
+  <li><a href="#matrice-dinfluence-et-degrés-de-liberté-effectifs" id="toc-matrice-dinfluence-et-degrés-de-liberté-effectifs" class="nav-link" data-scroll-target="#matrice-dinfluence-et-degrés-de-liberté-effectifs"><span class="header-section-number">9.2.1</span> Matrice d’influence et degrés de liberté effectifs</a></li>
+  <li><a href="#choix-des-paramètres-de-lissage" id="toc-choix-des-paramètres-de-lissage" class="nav-link" data-scroll-target="#choix-des-paramètres-de-lissage"><span class="header-section-number">9.2.2</span> Choix des paramètres de lissage</a></li>
+  <li><a href="#inférence" id="toc-inférence" class="nav-link" data-scroll-target="#inférence"><span class="header-section-number">9.2.3</span> Inférence</a></li>
+  </ul></li>
+  <li><a href="#modèles-additifs-généralisés" id="toc-modèles-additifs-généralisés" class="nav-link" data-scroll-target="#modèles-additifs-généralisés"><span class="header-section-number">9.3</span> Modèles additifs généralisés</a>
+  <ul class="collapse">
+  <li><a href="#algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" id="toc-algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" class="nav-link" data-scroll-target="#algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés"><span class="header-section-number">9.3.1</span> Algorithme d’ajustement (moindres carrés pondérés itératifs pénalisés)</a></li>
+  <li><a href="#choix-des-paramètres-de-lissage-et-comparaison-de-modèles" id="toc-choix-des-paramètres-de-lissage-et-comparaison-de-modèles" class="nav-link" data-scroll-target="#choix-des-paramètres-de-lissage-et-comparaison-de-modèles"><span class="header-section-number">9.3.2</span> Choix des paramètres de lissage et comparaison de modèles</a></li>
+  <li><a href="#en-pratique-avec-r" id="toc-en-pratique-avec-r" class="nav-link" data-scroll-target="#en-pratique-avec-r"><span class="header-section-number">9.3.3</span> En pratique avec R</a></li>
+  </ul></li>
+  <li><a href="#exo-gam" id="toc-exo-gam" class="nav-link" data-scroll-target="#exo-gam"><span class="header-section-number">9.4</span> Exercices</a>
+  <ul class="collapse">
+  <li><a href="#exercices-appliqués" id="toc-exercices-appliqués" class="nav-link" data-scroll-target="#exercices-appliqués"><span class="header-section-number">9.4.1</span> Exercices appliqués</a></li>
+  <li><a href="#exercices-théoriques" id="toc-exercices-théoriques" class="nav-link" data-scroll-target="#exercices-théoriques"><span class="header-section-number">9.4.2</span> Exercices théoriques</a></li>
+  </ul></li>
+  <li><a href="#références-complémentaires" id="toc-références-complémentaires" class="nav-link" data-scroll-target="#références-complémentaires">Références complémentaires</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-gam" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">17 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Les modèles additifs, que présente ce chapitre, gardent la structure d’un modèle linéaire, mais on y remplace chaque terme <span class="math inline">\(\beta_j x_{ij}\)</span> par une fonction lisse <span class="math inline">\(f_j(x_{ij})\)</span>, estimée par splines pénalisées. Le cas gaussien vient d’abord, puis les GAM (réponse de la famille exponentielle) et leur ajustement avec <code>mgcv</code>.</p>
+<section id="motivation" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="motivation"><span class="header-section-number">9.1</span> Motivation</h2>
+<p>Les méthodes non paramétriques des <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a> et <a href="08-splines.html" class="quarto-xref"><span>Chapitre 8</span></a> fonctionnent bien avec une ou deux variables explicatives, mais elles se heurtent au fléau de la dimension quand <span class="math inline">\(p\)</span> est grand. Les voisinages se vident alors et le nombre de fonctions de base explose. Les modèles additifs sont un compromis entre la flexibilité des méthodes non paramétriques et l’interprétabilité des modèles linéaires : on remplace la partie linéaire par une somme de fonctions univariées, <span class="math display">\[Y_i = \alpha + f_1(x_{i1}) + f_2(x_{i2}) + \cdots + f_p(x_{ip}) + \epsilon_i,\]</span> où chaque <span class="math inline">\(f_j\)</span> est une fonction lisse inconnue.</p>
+<p><em>Laissons les données montrer la forme fonctionnelle appropriée, plutôt que de la fixer d’avance.</em></p>
+<p>Chaque <span class="math inline">\(f_j\)</span> est représentée par une base de splines (<a href="08-splines.html" class="quarto-xref"><span>Chapitre 8</span></a>) : <span class="math inline">\(f_j(x) = \sum_{k=1}^{K_j} b_{jk}(x)\,\beta_{jk}\)</span>. Tel quel, le modèle n’est pas identifiable, puisqu’une constante peut passer librement de <span class="math inline">\(\alpha\)</span> aux <span class="math inline">\(f_j\)</span>. On impose donc la contrainte de centrage <span class="math display">\[\sum_{i=1}^n f_j(x_{ij}) = 0, \qquad j = 1,\ldots,p.\]</span></p>
+</section>
+<section id="estimation-par-moindres-carrés-pénalisés" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="estimation-par-moindres-carrés-pénalisés"><span class="header-section-number">9.2</span> Estimation par moindres carrés pénalisés</h2>
+<p>Les <span class="math inline">\(f_j\)</span> ne sont pas estimées en choisissant avec soin le nombre de nœuds de chaque base. On prend plutôt des bases « suffisamment riches » et on pénalise la rugosité de chaque fonction, ce qui revient à minimiser <span class="math display">\[\left\|\boldsymbol Y - \boldsymbol X\boldsymbol\beta\right\|^2 + \sum_{j=1}^p\lambda_j\,\boldsymbol\beta^\top \boldsymbol S_j\,\boldsymbol\beta,\]</span> où <span class="math inline">\(\boldsymbol X\)</span> regroupe toutes les fonctions de base évaluées aux observations et où <span class="math inline">\(\boldsymbol S_j\)</span> est la matrice de pénalité de la <span class="math inline">\(j^{\text{e}}\)</span> fonction (<span class="math inline">\(\boldsymbol\beta^\top \boldsymbol S_j\boldsymbol\beta = \int f_j''(t)^2dt\)</span>). La solution est explicite : <span class="math display">\[\hat{\boldsymbol\beta} = \Bigl(\boldsymbol X^\top \boldsymbol X + \sum_{j=1}^p\lambda_j \boldsymbol S_j\Bigr)^{-1}\boldsymbol X^\top \boldsymbol Y.\]</span> Chaque paramètre de lissage <span class="math inline">\(\lambda_j\)</span> règle le compromis entre régularité et fidélité aux données pour la fonction <span class="math inline">\(f_j\)</span>. Si <span class="math inline">\(\lambda_j\to\infty\)</span>, on force <span class="math inline">\(f_j\)</span> à être linéaire, alors que <span class="math inline">\(\lambda_j = 0\)</span> laisse <span class="math inline">\(f_j\)</span> libre, avec un risque de surajustement.</p>
+<section id="matrice-dinfluence-et-degrés-de-liberté-effectifs" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="matrice-dinfluence-et-degrés-de-liberté-effectifs"><span class="header-section-number">9.2.1</span> Matrice d’influence et degrés de liberté effectifs</h3>
+<p>Les valeurs ajustées s’écrivent <span class="math inline">\(\hat{\boldsymbol Y} = \boldsymbol A\boldsymbol Y\)</span> avec <span class="math inline">\(\boldsymbol A = \boldsymbol X(\boldsymbol X^\top \boldsymbol X + \sum_j\lambda_j \boldsymbol S_j)^{-1}\boldsymbol X^\top\)</span>. Les degrés de liberté effectifs du modèle sont <span class="math inline">\(\mathrm{Tr}(\boldsymbol A)\)</span>, et leur décomposition par fonction <span class="math inline">\(f_j\)</span> donne une mesure interprétable de la complexité de chaque effet. Notez que la pénalisation induit un biais, <span class="math inline">\(E[\hat{\boldsymbol\beta}]\neq\boldsymbol\beta\)</span>, exactement comme pour ridge.</p>
+</section>
+<section id="choix-des-paramètres-de-lissage" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="choix-des-paramètres-de-lissage"><span class="header-section-number">9.2.2</span> Choix des paramètres de lissage</h3>
+<p>Les paramètres de lissage <span class="math inline">\(\boldsymbol\lambda = (\lambda_1,\ldots,\lambda_p)\)</span> sont choisis en minimisant un estimateur de l’erreur de prédiction. Dans les deux critères suivants, <span class="math inline">\(\hat y_i\)</span> est la <span class="math inline">\(i^{\text{e}}\)</span> valeur ajustée et <span class="math inline">\(\boldsymbol A\)</span> dépend de <span class="math inline">\(\boldsymbol\lambda\)</span> :</p>
+<ul>
+<li><p>validation croisée par exclusion d’une observation (LOOCV), dite validation croisée ordinaire (OCV) : <span class="math display">\[VC_{(n)}(\boldsymbol\lambda) = \frac{1}{n}\sum_{i=1}^n\left(\frac{y_i - \hat y_i}{1 - A_{ii}}\right)^2\,;\]</span></p></li>
+<li><p>validation croisée généralisée (GCV), qui remplace les <span class="math inline">\(A_{ii}\)</span> par leur moyenne : <span class="math display">\[GCV(\boldsymbol\lambda) = \frac{n\sum_i(y_i - \hat y_i)^2}{\left(n - \mathrm{Tr}(\boldsymbol A)\right)^2}.\]</span></p></li>
+</ul>
+</section>
+<section id="inférence" class="level3" data-number="9.2.3">
+<h3 data-number="9.2.3" class="anchored" data-anchor-id="inférence"><span class="header-section-number">9.2.3</span> Inférence</h3>
+<p>L’inférence repose sur la forme ridge de l’estimateur. Si les erreurs sont normales et en traitant les <span class="math inline">\(\lambda_j\)</span> comme fixés, elle donne <span class="math inline">\(\hat{\boldsymbol\beta}\sim\mathcal{N}(E[\hat{\boldsymbol\beta}],\, \boldsymbol V_\beta)\)</span> avec <span class="math inline">\(\boldsymbol V_\beta = \sigma^2(\boldsymbol X^\top \boldsymbol X + \sum_j\lambda_j \boldsymbol S_j)^{-1}\boldsymbol X^\top \boldsymbol X(\boldsymbol X^\top \boldsymbol X + \sum_j\lambda_j \boldsymbol S_j)^{-1}\)</span>. Comme les <span class="math inline">\(\lambda_j\)</span> sont en fait estimés, ce résultat n’est qu’approximatif. L’approche bayésienne, où la pénalité devient une loi a priori gaussienne sur <span class="math inline">\(\boldsymbol\beta\)</span>, mène à la forme plus simple <span class="math inline">\(\boldsymbol V_\beta = \sigma^2(\boldsymbol X^\top \boldsymbol X + \sum_j\lambda_j \boldsymbol S_j)^{-1}\)</span>. Les intervalles de crédibilité de niveau 95 % qui en découlent, <span class="math display">\[\hat f_j(x) \pm 1{,}96\sqrt{\hv{\hat f_j(x)}},\]</span> ont une bonne couverture fréquentiste en moyenne sur l’ensemble des valeurs de <span class="math inline">\(x\)</span>, mais pas nécessairement en chaque point.</p>
+<p>Pour tester <span class="math inline">\(H_0: f_j = 0\)</span>, on utilise une statistique de type Wald, <span class="math display">\[T_j = \hat{\boldsymbol\beta}_j^\top \boldsymbol V_{\beta_j}^{r-}\hat{\boldsymbol\beta}_j,\]</span> où <span class="math inline">\(\hat{\boldsymbol\beta}_j\)</span> regroupe les coefficients de <span class="math inline">\(f_j\)</span>, <span class="math inline">\(\boldsymbol V_{\beta_j}\)</span> est le bloc correspondant de <span class="math inline">\(\boldsymbol V_\beta\)</span> et <span class="math inline">\(\boldsymbol V_{\beta_j}^{r-}\)</span> en est un pseudo-inverse de rang <span class="math inline">\(r\)</span>, proche des degrés de liberté effectifs de <span class="math inline">\(f_j\)</span>. La pénalisation rend <span class="math inline">\(\boldsymbol V_{\beta_j}\)</span> presque singulière, d’où ce pseudo-inverse plutôt que l’inverse. On compare <span class="math inline">\(T_j\)</span> à une loi <span class="math inline">\(\chi^2\)</span> si <span class="math inline">\(\sigma^2\)</span> est connue, ou à une loi <span class="math inline">\(F\)</span> si <span class="math inline">\(\sigma^2\)</span> est estimée, avec un nombre de degrés de liberté proche de <span class="math inline">\(r\)</span> (colonne <code>Ref.df</code> de <code>summary</code>). Pour un GAM, la même statistique s’utilise avec le paramètre de dispersion <span class="math inline">\(\phi\)</span> défini plus bas à la place de <span class="math inline">\(\sigma^2\)</span>.</p>
+<div class="env-remarque" data-titre="Portée de l'inférence d'un modèle additif">
+<p><span class="env-titre">Remarque — Portée de l’inférence d’un modèle additif</span></p>
+<p>Les erreurs-types, les intervalles et les valeurs-p que donne <code>summary</code> traitent les paramètres de lissage <span class="math inline">\(\lambda_j\)</span> comme fixés. Or ils sont choisis à partir des mêmes données. L’incertitude liée à ce choix n’est donc pas prise en compte, et les intervalles tendent à être trop étroits.</p>
+<p>Le test de <span class="math inline">\(H_0: f_j = 0\)</span> ne s’interprète pas non plus exactement comme le test d’un coefficient en régression linéaire. Ses degrés de liberté (<code>Ref.df</code>) sont eux-mêmes approximatifs et dépendent du lissage retenu. Je vous conseille de lire ces valeurs-p comme des indications : une valeur-p de <span class="math inline">\(0{,}04\)</span> et une de <span class="math inline">\(0{,}06\)</span> ne racontent pas des histoires différentes.</p>
+<p>Avec <code>method = "REML"</code>, <code>mgcv</code> peut corriger en partie le premier problème : <code>vcov(modele, unconditional = TRUE)</code> et <code>plot(modele, unconditional = TRUE)</code> ajoutent l’incertitude sur les <span class="math inline">\(\lambda_j\)</span>.</p>
+</div>
+</section>
+</section>
+<section id="modèles-additifs-généralisés" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="modèles-additifs-généralisés"><span class="header-section-number">9.3</span> Modèles additifs généralisés</h2>
+<p>Les GAM combinent la structure additive avec les lois de la famille exponentielle, comme les GLM. Le modèle suppose que <span class="math inline">\(Y_i\)</span> suit une loi de la famille exponentielle avec <span class="math inline">\(E[Y_i] = \mu_i\)</span> et <span class="math display">\[g(\mu_i) = \alpha + f_1(x_{i1}) + \cdots + f_p(x_{ip}),\]</span> où <span class="math inline">\(g\)</span> est une fonction de lien. Deux cas particuliers sont le GAM logistique (réponse binaire) et le GAM Poisson (dénombrements, avec un <em>offset</em> au besoin).</p>
+<p>Les paramètres sont estimés en minimisant la déviance pénalisée : <span class="math display">\[\hat{\boldsymbol\beta} = \arg\min_{\boldsymbol\beta}\left\{D(\boldsymbol y,\boldsymbol\mu) + \sum_{j=1}^p\lambda_j\,\boldsymbol\beta^\top \boldsymbol S_j\,\boldsymbol\beta\right\},\]</span> où <span class="math inline">\(D(\boldsymbol y,\boldsymbol\mu)\)</span> est la déviance du <a href="03-modeles-lineaires-generalises.html" class="quarto-xref"><span>Chapitre 3</span></a>.</p>
+<section id="algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="algorithme-dajustement-moindres-carrés-pondérés-itératifs-pénalisés"><span class="header-section-number">9.3.1</span> Algorithme d’ajustement (moindres carrés pondérés itératifs pénalisés)</h3>
+<p>L’ajustement combine l’algorithme des moindres carrés pondérés itératifs des GLM et le lissage pénalisé. À l’itération <span class="math inline">\(m\)</span> :</p>
+<ol type="1">
+<li><p>construire la réponse de travail (<em>working response</em>) <span class="math display">\[z_i^{(m)} = \eta_i^{(m)} + (y_i - \mu_i^{(m)})\left(\frac{\partial\eta_i}{\partial\mu_i}\right)^{(m)}\,;\]</span></p></li>
+<li><p>construire les poids <span class="math display">\[w_i^{(m)} = \frac{1}{V(\mu_i^{(m)})}\left[\left(\frac{\partial\mu_i}{\partial\eta_i}\right)^{(m)}\right]^2\,;\]</span></p></li>
+<li><p>ajuster un modèle additif pénalisé pondéré à <span class="math inline">\(\boldsymbol z^{(m)}\)</span> ;</p></li>
+<li><p>répéter jusqu’à convergence.</p></li>
+</ol>
+</section>
+<section id="choix-des-paramètres-de-lissage-et-comparaison-de-modèles" class="level3" data-number="9.3.2">
+<h3 data-number="9.3.2" class="anchored" data-anchor-id="choix-des-paramètres-de-lissage-et-comparaison-de-modèles"><span class="header-section-number">9.3.2</span> Choix des paramètres de lissage et comparaison de modèles</h3>
+<p>Le critère de choix des paramètres de lissage dépend de ce qu’on sait du paramètre de dispersion <span class="math inline">\(\phi\)</span> :</p>
+<ul>
+<li><p>si <span class="math inline">\(\phi\)</span> est connu (logistique, Poisson) : critère UBRE (<em>unbiased risk estimator</em>, équivalent au <span class="math inline">\(C_p\)</span> de Mallows) <span class="math display">\[UBRE(\boldsymbol\lambda) = \frac{D(\boldsymbol y,\hat{\boldsymbol\mu})}{n} - \phi + \frac{2\phi\,\mathrm{Tr}(\boldsymbol A)}{n}\,;\]</span> le terme <span class="math inline">\(-\phi\)</span> ne change pas le <span class="math inline">\(\boldsymbol\lambda\)</span> choisi, mais c’est cette valeur que rapporte <code>summary</code> ;</p></li>
+<li><p>si <span class="math inline">\(\phi\)</span> est inconnu : GCV <span class="math display">\[GCV(\boldsymbol\lambda) = \frac{n\,D(\boldsymbol y,\hat{\boldsymbol\mu})}{\left(n - \mathrm{Tr}(\boldsymbol A)\right)^2}.\]</span></p></li>
+</ul>
+<p>Pour comparer des modèles, on utilise l’<span class="math inline">\(AIC = -2\,\ell(\hat{\boldsymbol\beta};\boldsymbol y) + 2\,\mathrm{Tr}(\boldsymbol A)\)</span>, où les degrés de liberté effectifs remplacent le nombre de paramètres. La GCV peut aussi servir, et on préfère le modèle qui a le plus petit <span class="math inline">\(AIC\)</span> ou la plus petite <span class="math inline">\(GCV\)</span>. La proportion de déviance expliquée <span class="math inline">\((D_{null} - D)/D_{null}\)</span> décrit la qualité de l’ajustement, mais elle ne pénalise pas la complexité (elle augmente toujours avec un modèle plus riche) et ne permet donc pas, seule, de choisir un modèle.</p>
+</section>
+<section id="en-pratique-avec-r" class="level3" data-number="9.3.3">
+<h3 data-number="9.3.3" class="anchored" data-anchor-id="en-pratique-avec-r"><span class="header-section-number">9.3.3</span> En pratique avec R</h3>
+<p>La librairie <code>mgcv</code> ajuste les GAM et choisit les paramètres de lissage automatiquement. Dans la formule, <code>s(x)</code> déclare une fonction lisse de <code>x</code>. Par défaut, c’est une spline de régression en plaques minces (<em>thin plate regression spline</em>, <code>bs = "tp"</code>) à <code>k = 10</code> fonctions de base <span class="citation" data-cites="wood2003thin">(<a href="#ref-wood2003thin" role="doc-biblioref">Wood 2003</a>)</span>. Contrairement aux B-splines et aux splines cubiques de régression (<code>bs = "cr"</code>) du <a href="08-splines.html" class="quarto-xref"><span>Chapitre 8</span></a>, cette base ne demande pas de choisir le nombre ni la position des nœuds : elle est construite à partir de toutes les valeurs observées de <code>x</code>, puis réduite aux <code>k</code> directions les plus utiles. Les termes sans <code>s()</code> restent paramétriques, et <code>family</code> joue le même rôle que dans <code>glm</code>.</p>
+<div class="env-exemple" data-titre="Modèle additif gaussien : cycles journalier et saisonnier de l'ozone sur [`qualite_air`](08-splines.qmd#data-qualite-air)">
+<p><span class="env-titre">Exemple — Modèle additif gaussien : cycles journalier et saisonnier de l’ozone sur <a href="./08-splines.html#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>Au <a href="08-splines.html" class="quarto-xref"><span>Chapitre 8</span></a>, la concentration d’ozone à Longueuil a été modélisée en fonction de l’heure, pour les seuls mois d’été. Cet exemple reprend l’année entière (<span class="math inline">\(n = 8\,727\)</span> heures) avec deux variables explicatives, l’heure et le jour de l’année. Le modèle additif <span class="math display">\[O_3 = \alpha + f_1(\mbox{heure}) + f_2(\mbox{jour}) + \epsilon\]</span> suppose que le cycle journalier a la même forme toute l’année et que le cycle saisonnier est le même à toute heure.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>longueuil <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">heure =</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>)),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">jour  =</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(<span class="fu">substr</span>(Date_Heure, <span class="dv">1</span>, <span class="dv">10</span>)), <span class="st">"%j"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Station <span class="sc">==</span> <span class="st">"06600 - Longueuil"</span>, <span class="sc">!</span><span class="fu">is.na</span>(O3))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">gam</span>(O3 <span class="sc">~</span> <span class="fu">s</span>(heure) <span class="sc">+</span> <span class="fu">s</span>(jour), <span class="at">data =</span> longueuil)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod1)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: gaussian 
+Link function: identity 
+
+Formula:
+O3 ~ s(heure) + s(jour)
+
+Parametric coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 27.83688    0.09997   278.4   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Approximate significance of smooth terms:
+           edf Ref.df     F p-value    
+s(heure) 7.813  8.635 269.2  &lt;2e-16 ***
+s(jour)  8.952  8.999 257.1  &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+R-sq.(adj) =  0.347   Deviance explained = 34.8%
+GCV = 87.402  Scale est. = 87.224    n = 8727</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod1, <span class="at">shade =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-gam-ozone" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gam-ozone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="09-gam_files/figure-html/fig-gam-ozone-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam-ozone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.1: Fonctions <span class="math inline">\(\hat f_1\)</span> (heure) et <span class="math inline">\(\hat f_2\)</span> (jour de l’année) du modèle additif pour l’ozone à Longueuil, avec bandes de crédibilité ponctuelles à 95 % pour ces fonctions (et non pour une observation future). Chaque fonction est centrée : elle représente l’écart à la moyenne <span class="math inline">\(\hat\alpha\)</span>. Comme les mesures horaires d’une même journée sont corrélées, ces bandes sont trop étroites (voir le <a href="10-donnees-correlees.html" class="quarto-xref"><span>Chapitre 10</span></a>).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La sortie de <code>summary</code> donne, pour chaque fonction lisse, ses degrés de liberté effectifs (<code>edf</code>) et un test approximatif de <span class="math inline">\(H_0 : f_j = 0\)</span>. Les deux fonctions sont non nulles et non linéaires. La fonction <span class="math inline">\(\hat f_1\)</span> décrit ici le cycle journalier sur l’année entière. Elle a la même forme que la bosse estivale du <a href="08-splines.html" class="quarto-xref"><span>Chapitre 8</span></a> (minimum vers 6 h, maximum vers 15 h). La fonction <span class="math inline">\(\hat f_2\)</span> montre le maximum printanier de l’ozone (vers le jour 88, à la fin de mars), suivi d’un second sommet en juillet, d’un creux en novembre (vers le jour 319) et d’une remontée en décembre. Le modèle explique 35 % de la variance, contre 14 % pour le modèle linéaire en <code>heure</code> et <code>jour</code>.</p>
+<p>Ce modèle appelle trois remarques. D’abord, <code>s(jour)</code> utilise presque tous ses 9 degrés de liberté disponibles, et si on augmente <code>k</code>, la courbe se met à suivre les épisodes météorologiques de quelques jours. En fait, les heures consécutives sont corrélées, ce qui fait sous-lisser la GCV, puisqu’elle suppose des erreurs indépendantes. Pour la même raison, les bandes de la <a href="#fig-gam-ozone" class="quarto-xref">Figure&nbsp;<span>9.1</span></a> et les valeurs-p de <code>summary</code> sont trop optimistes (voir la remarque « Bande de confiance ou bande de prédiction? » du <a href="08-splines.html" class="quarto-xref"><span>Chapitre 8</span></a>, qui discute la même corrélation, et le <a href="10-donnees-correlees.html" class="quarto-xref"><span>Chapitre 10</span></a>, qui présente des modèles qui en tiennent compte). Ensuite, <code>s(jour)</code> n’est pas cyclique : rien n’oblige <span class="math inline">\(\hat f_2\)</span> à se raccorder entre le 31 décembre et le 1<sup>er</sup> janvier, et la figure montre en effet un saut entre les deux extrémités. Une spline cyclique, <code>s(jour, bs = "cc")</code>, impose ce raccord. Enfin, l’hypothèse d’additivité est discutable, puisque l’amplitude du cycle journalier est plus grande en été qu’en hiver. Dans <code>mgcv</code>, on peut ajuster une surface <span class="math inline">\(f(\mbox{heure}, \mbox{jour})\)</span> avec <code>te(heure, jour)</code>, mais on perd alors l’interprétation séparée des deux effets.</p>
+</div>
+<div class="env-remarque" data-titre="Concurvité">
+<p><span class="env-titre">Remarque — Concurvité</span></p>
+<p>Dans un modèle additif, deux fonctions lisses peuvent se substituer l’une à l’autre si leurs variables sont liées de façon non linéaire, par exemple si <span class="math inline">\(f_2(x_2)\)</span> est presque une fonction de <span class="math inline">\(x_1\)</span>. C’est l’analogue non linéaire de la colinéarité, appelé concurvité. Les fonctions estimées deviennent alors instables, et leurs bandes de crédibilité trompeuses. La fonction <code>concurvity</code> de <code>mgcv</code> mesure, pour chaque terme lisse, la part qui peut être reproduite par les autres termes : 0 signifie aucun problème, et une valeur proche de 1 signale un terme mal identifié.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">concurvity</span>(mod1), <span class="dv">3</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         para s(heure) s(jour)
+worst       0        0       0
+observed    0        0       0
+estimate    0        0       0</code></pre>
+</div>
+</div>
+<p>Ici, les valeurs sont nulles à trois décimales près, parce que l’heure et le jour de l’année varient indépendamment l’une de l’autre dans les données.</p>
+</div>
+<div class="env-exemple" data-titre="GAM logistique : strate du couvert sur [`arbres`](05-prediction-validation-croisee.qmd#data-arbres)">
+<p><span class="env-titre">Exemple — GAM logistique : strate du couvert sur <a href="./05-prediction-validation-croisee.html#data-arbres"><code>arbres</code></a></span></p>
+<p>Au <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a>, on a estimé par <span class="math inline">\(k\)</span>NN la probabilité qu’un arbre soit dans la strate inférieure du couvert en fonction de son diamètre, sans forme paramétrique. Le GAM logistique fait de même et ajoute l’espèce comme terme paramétrique. Notons <span class="math inline">\(Y_i = 1\)</span> si l’arbre <span class="math inline">\(i\)</span> est dans la strate inférieure (intermédiaire ou opprimé) et <span class="math inline">\(Y_i = 0\)</span> sinon, <span class="math inline">\(d_i\)</span> son diamètre (en cm) et <span class="math inline">\(e(i) \in \{\mbox{bouleau}, \mbox{épinette}, \mbox{érable}, \mbox{sapin}\}\)</span> son espèce. On suppose <span class="math inline">\(Y_i \sim \mbox{Bernoulli}(\pi_i)\)</span>, indépendants, avec <span class="math display">\[\mbox{logit}\,\pi_i = \log\frac{\pi_i}{1 - \pi_i} = \alpha + f(d_i) + \gamma_{e(i)},\]</span> où</p>
+<ul>
+<li><p><span class="math inline">\(f\)</span> est une fonction lisse inconnue du diamètre, représentée par une spline de régression pénalisée à 10 fonctions de base (<code>s(diameter_cm)</code>) et centrée, <span class="math inline">\(\sum_i f(d_i) = 0\)</span>, pour être identifiable séparément de <span class="math inline">\(\alpha\)</span> ;</p></li>
+<li><p><span class="math inline">\(\gamma_{e}\)</span> est l’effet de l’espèce, un terme paramétrique ordinaire. Comme le bouleau à papier est le niveau de référence (<span class="math inline">\(\gamma_{\text{bouleau}} = 0\)</span>), <span class="math inline">\(e^{\gamma_e}\)</span> est le rapport de cotes de la strate inférieure entre l’espèce <span class="math inline">\(e\)</span> et le bouleau, à diamètre égal ;</p></li>
+<li><p><span class="math inline">\(\alpha\)</span> est le logit de la probabilité pour un bouleau de diamètre « moyen », au sens de la contrainte de centrage.</p></li>
+</ul>
+<p>C’est la régression logistique du <a href="02-regression-logistique.html" class="quarto-xref"><span>Chapitre 2</span></a>, à ceci près que l’effet du diamètre n’est pas contraint à être linéaire sur l’échelle logit. Le paramètre de lissage de <span class="math inline">\(f\)</span>, choisi par UBRE, décide au vu des données du degré de courbure nécessaire.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/arbres.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">inferieure =</span> <span class="fu">as.integer</span>(canopy_stratum <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Intermédiaire"</span>, <span class="st">"Opprimé"</span>)),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">espece =</span> <span class="fu">factor</span>(species_fr))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">gam</span>(inferieure <span class="sc">~</span> <span class="fu">s</span>(diameter_cm) <span class="sc">+</span> espece, <span class="at">family =</span> binomial, <span class="at">data =</span> arbres)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod2)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Family: binomial 
+Link function: logit 
+
+Formula:
+inferieure ~ s(diameter_cm) + espece
+
+Parametric coefficients:
+                     Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)           -1.7527     0.4148  -4.225 2.39e-05 ***
+especeÉpinette noire   0.5016     0.4954   1.012   0.3113    
+especeÉrable rouge     0.1757     0.5265   0.334   0.7386    
+especeSapin baumier    0.7950     0.4830   1.646   0.0998 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Approximate significance of smooth terms:
+               edf Ref.df Chi.sq  p-value    
+s(diameter_cm)   1      1  21.01 5.11e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+R-sq.(adj) =  0.188   Deviance explained = 18.5%
+UBRE = 0.052107  Scale est. = 1         n = 200</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod2, <span class="at">shade =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-gam-arbres-f" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gam-arbres-f-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="09-gam_files/figure-html/fig-gam-arbres-f-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam-arbres-f-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.2: Fonction lisse <span class="math inline">\(\hat f\)</span> du diamètre sur l’échelle logit, centrée, avec bande de crédibilité ponctuelle à 95 % pour <span class="math inline">\(f\)</span> (et non une bande de prédiction). Les traits au bas de la figure marquent les diamètres observés.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La fonction lisse du diamètre a un degré de liberté effectif (1,0001), parce que la pénalisation a ramené <span class="math inline">\(\hat f\)</span> à une droite. Le GAM se réduit donc à la régression logistique avec le diamètre comme variable linéaire sur l’échelle logit (même AIC, à <span class="math inline">\(10^{-4}\)</span> près). La <a href="#fig-gam-arbres-f" class="quarto-xref">Figure&nbsp;<span>9.2</span></a> le montre : une droite décroissante, dont la bande de crédibilité s’évase là où les gros arbres se font rares. Cet exemple illustre l’usage diagnostique du GAM : quand on hésite sur la forme fonctionnelle, on laisse les données trancher. Si les degrés de liberté effectifs sont proches de 1, un GLM paramétrique suffit.</p>
+<p>Sur l’échelle des probabilités, le modèle donne une courbe par espèce. Ces courbes ont toutes la même forme (effet additif sur le logit) et sont décalées verticalement par les <span class="math inline">\(\hat\gamma_e\)</span>. À diamètre égal, le sapin baumier est l’espèce la plus souvent sous le couvert et le bouleau la moins souvent, mais aucun écart avec le bouleau n’est significatif au seuil de 5 %. La <a href="#fig-gam-arbres-p" class="quarto-xref">Figure&nbsp;<span>9.3</span></a> superpose l’estimateur <span class="math inline">\(k\)</span>NN du <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a> avec <span class="math inline">\(k = 64\)</span>, la valeur choisie par l’AUC.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">diameter_cm =</span> <span class="fu">seq</span>(<span class="dv">9</span>, <span class="dv">42</span>, <span class="at">length.out =</span> <span class="dv">200</span>), <span class="at">espece =</span> <span class="fu">levels</span>(arbres<span class="sc">$</span>espece))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(grille, <span class="at">pi =</span> <span class="fu">predict</span>(mod2, <span class="at">newdata =</span> grille, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># kNN du chapitre kNN : moyenne des Y_i tels que d_i(x) &lt;= d_(k)(x), ex æquo compris</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>knn.moy <span class="ot">&lt;-</span> <span class="cf">function</span>(x, X, Y, k) {</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">abs</span>(X <span class="sc">-</span> x)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(Y[d <span class="sc">&lt;=</span> <span class="fu">sort</span>(d)[k] <span class="sc">+</span> <span class="fl">1e-8</span>])</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>knn <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter_cm =</span> <span class="fu">seq</span>(<span class="dv">9</span>, <span class="dv">42</span>, <span class="at">length.out =</span> <span class="dv">200</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">pi =</span> <span class="fu">sapply</span>(diameter_cm, <span class="cf">function</span>(x)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">knn.moy</span>(x, arbres<span class="sc">$</span>diameter_cm, arbres<span class="sc">$</span>inferieure, k.auc)))</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)   <span class="co"># pour le décalage aléatoire des points</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbres, <span class="fu">aes</span>(diameter_cm, inferieure)) <span class="sc">+</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour =</span> espece), <span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.03</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> grille, <span class="fu">aes</span>(diameter_cm, pi, <span class="at">colour =</span> espece), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> knn, <span class="fu">aes</span>(diameter_cm, pi), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diamètre (cm)"</span>, <span class="at">y =</span> <span class="st">"P(strate inférieure)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-gam-arbres-p" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gam-arbres-p-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="09-gam_files/figure-html/fig-gam-arbres-p-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gam-arbres-p-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.3: Probabilité estimée d’être dans la strate inférieure selon le diamètre et l’espèce (GAM logistique), observations (0 ou 1, légèrement décalées verticalement) et estimateur <span class="math inline">\(k\)</span>NN avec le <span class="math inline">\(k\)</span> choisi par l’AUC au <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a> (tirets), qui ignore l’espèce.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Les deux approches donnent le même portrait : pour les plus petits arbres, la probabilité est d’environ 0,5 à 0,7 (selon l’espèce), puis elle tombe à presque 0 au-delà de 25 cm. Le <span class="math inline">\(k\)</span>NN, en escalier, ne descend pas sous 0,08 pour les gros diamètres. Ses 64 voisins (65 avec les ex æquo) sont alors les plus gros arbres de l’échantillon, et 5 d’entre eux sont dans la strate inférieure, d’où le plancher <span class="math inline">\(5/65 \approx 0{,}08\)</span>. Le GAM, lui, prolonge la décroissance. Avec <span class="math inline">\(n = 200\)</span>, l’estimateur non paramétrique ne contenait pas d’information que la droite sur l’échelle logit ne capte déjà, et le GAM ajoute en plus l’espèce sans effort.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># réajustement par glm, puisque f est linéaire</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mod2.glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(inferieure <span class="sc">~</span> diameter_cm <span class="sc">+</span> espece, <span class="at">family =</span> binomial, <span class="at">data =</span> arbres)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mod2.glm)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         (Intercept)          diameter_cm especeÉpinette noire 
+           2.4994863           -0.2748570            0.5015752 
+  especeÉrable rouge  especeSapin baumier 
+           0.1756944            0.7949903 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rapports de cotes et IC de Wald à 95 %</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">cbind</span>(<span class="at">RC =</span> <span class="fu">coef</span>(mod2.glm), <span class="fu">confint.default</span>(mod2.glm)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                             RC     2.5 %     97.5 %
+(Intercept)          12.1762374 2.4016684 61.7324009
+diameter_cm           0.7596807 0.6754517  0.8544131
+especeÉpinette noire  1.6513204 0.6254029  4.3601635
+especeÉrable rouge    1.1920737 0.4247947  3.3452389
+especeSapin baumier   2.2144196 0.8592494  5.7069046</code></pre>
+</div>
+</div>
+<p>Contrairement aux splines du <a href="08-splines.html" class="quarto-xref"><span>Chapitre 8</span></a>, cet exemple comporte des paramètres qui s’interprètent. La partie paramétrique du modèle, les <span class="math inline">\(\gamma_e\)</span>, se lit exactement comme en régression logistique. Par exemple, <span class="math inline">\(e^{\hat\gamma_{\text{sapin}}} = e^{0{,}795} \approx 2{,}2\)</span> est le rapport de cotes estimé de la strate inférieure entre un sapin baumier et un bouleau à papier de même diamètre. Son intervalle de confiance de Wald à 95 %, d’environ <span class="math inline">\([0{,}9;\ 5{,}7]\)</span>, contient 1. C’est le propre des modèles additifs : les effets dont on veut une interprétation restent paramétriques, et seuls ceux dont la forme est incertaine passent par une fonction lisse. Ici, comme <span class="math inline">\(\hat f\)</span> s’est révélée linéaire, on peut aller plus loin et réajuster le modèle avec <code>glm</code>. La pente du diamètre vaut alors <span class="math inline">\(-0{,}275\)</span> par cm. Il s’agit d’un rapport de cotes de <span class="math inline">\(e^{-0{,}275} \approx 0{,}76\)</span> par centimètre de diamètre supplémentaire (IC de Wald à 95 % : <span class="math inline">\([0{,}68;\ 0{,}85]\)</span>), c’est-à-dire que les cotes sont divisées par environ 4 pour 5 cm de plus. Notez que cette interprétation n’aurait pas été disponible si les degrés de liberté effectifs de <span class="math inline">\(\hat f\)</span> avaient été nettement supérieurs à 1.</p>
+</div>
+<p>Dans les deux exemples, <code>summary</code> rapporte, pour chaque fonction lisse, ses degrés de liberté effectifs et un test approximatif de nullité. La fonction <code>plot</code> trace chaque <span class="math inline">\(\hat f_j\)</span> avec ses bandes de crédibilité. Un GAM Poisson s’ajuste avec la même syntaxe et <code>family = poisson</code>. Au besoin, on ajoute un terme <code>offset(log(exposition))</code> dans la formule, comme pour <code>glm</code>.</p>
+<div class="env-remarque" data-titre="À retenir">
+<p><span class="env-titre">Remarque — À retenir</span></p>
+<ul>
+<li>Modèle additif : chaque terme <span class="math inline">\(\beta_j x_{ij}\)</span> est remplacé par une fonction lisse <span class="math inline">\(f_j(x_{ij})\)</span>, centrée pour être identifiable, et un GAM relie <span class="math inline">\(g(\mu_i)\)</span> à <span class="math inline">\(\alpha + f_1(x_{i1}) + \cdots + f_p(x_{ip})\)</span>. C’est un compromis entre la flexibilité des méthodes non paramétriques et l’interprétabilité des modèles linéaires ;</li>
+<li>Lissage : chaque <span class="math inline">\(f_j\)</span> est représentée dans une base riche, pénalisée par <span class="math inline">\(\lambda_j\boldsymbol{\beta}^\top\boldsymbol{S}_j\boldsymbol{\beta}\)</span>, et les <span class="math inline">\(\lambda_j\)</span> sont choisis par UBRE si <span class="math inline">\(\phi\)</span> est connu (logistique, Poisson) ou par GCV sinon. Des degrés de liberté effectifs (<code>edf</code>) proches de 1 indiquent une fonction linéaire, et un GLM paramétrique suffit alors ;</li>
+<li>En R : <code>gam</code> de <code>mgcv</code>, où <code>s(x)</code> déclare une fonction lisse (par défaut une spline en plaques minces à <code>k = 10</code> fonctions de base), les termes sans <code>s()</code> restent paramétriques et <code>family</code> joue le même rôle que dans <code>glm</code>. <code>summary</code> donne les <code>edf</code> et un test approximatif de <span class="math inline">\(H_0 : f_j = 0\)</span>, et <code>plot</code> trace chaque <span class="math inline">\(\hat f_j\)</span> avec sa bande de crédibilité ;</li>
+<li>Inférence approximative : les erreurs-types, intervalles et valeurs-p de <code>summary</code> traitent les <span class="math inline">\(\lambda_j\)</span> comme fixés, alors qu’ils sont choisis à partir des mêmes données, de sorte que les intervalles tendent à être trop étroits et que les valeurs-p sont des indications. Avec <code>method = "REML"</code>, l’argument <code>unconditional = TRUE</code> corrige en partie ce problème ;</li>
+<li>Comparaison et limites : les modèles se comparent par l’<span class="math inline">\(AIC\)</span> (calculé avec les degrés de liberté effectifs) ou la GCV, et non par la seule proportion de déviance expliquée, qui augmente toujours avec la complexité. Des erreurs corrélées font sous-lisser la GCV, et <code>te(heure, jour)</code> relâche l’additivité au prix de l’interprétation séparée des effets.</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="exo-gam" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="exo-gam"><span class="header-section-number">9.4</span> Exercices</h2>
+<p>Les exercices sont classés par niveau de difficulté. Leurs solutions sont regroupées dans l’annexe <a href="./solutions.html#sol-gam">Solutions des exercices</a> ; le lien « Voir la solution » sous chaque énoncé y mène directement.</p>
+<p>Comme ceux du chapitre précédent, ces exercices sont surtout appliqués. Ils reprennent les jeux de données <a href="./05-prediction-validation-croisee.html#data-arbres"><code>arbres</code></a> et <a href="./08-splines.html#data-qualite-air"><code>qualite_air</code></a>, chargés comme suit.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/arbres.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">espece =</span> <span class="fu">factor</span>(species_fr))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>longueuil <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">heure =</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>)),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">jour  =</span> <span class="fu">as.integer</span>(<span class="fu">format</span>(<span class="fu">as.Date</span>(<span class="fu">substr</span>(Date_Heure, <span class="dv">1</span>, <span class="dv">10</span>)), <span class="st">"%j"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Station <span class="sc">==</span> <span class="st">"06600 - Longueuil"</span>, <span class="sc">!</span><span class="fu">is.na</span>(O3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="exercices-appliqués" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="exercices-appliqués"><span class="header-section-number">9.4.1</span> Exercices appliqués</h3>
+<p><span id="exo-gam-app-1"></span><strong>Exercice 1 (facile).</strong> Hauteur des arbres.</p>
+<ol type="a">
+<li><p>Ajustez le modèle additif <code>height_m ~ s(diameter_cm) + espece</code>. Combien de degrés de liberté effectifs la fonction du diamètre utilise-t-elle? Tracez <span class="math inline">\(\hat f\)</span> et décrivez-la.</p></li>
+<li><p>Comparez ce modèle, par l’AIC, au modèle linéaire <code>lm(height_m ~ diameter_cm + espece)</code>. Quelle conclusion en tirez-vous sur la forme de la relation?</p></li>
+<li><p>Au <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 5</span></a>, la hauteur était modélisée sur l’échelle log-log. Expliquez pourquoi on ne peut pas comparer directement l’AIC du modèle <code>lm(log(height_m) ~ log(diameter_cm) + espece)</code> à celui du modèle additif. Montrez qu’il faut lui ajouter <span class="math inline">\(2\sum_i\log H_i\)</span> pour l’exprimer sur l’échelle de <span class="math inline">\(H\)</span>, puis faites la comparaison.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-app-1">Voir la solution</a></p>
+<p><span id="exo-gam-app-2"></span><strong>Exercice 2 (moyen).</strong> Une courbe par espèce?</p>
+<ol type="a">
+<li><p>Ajustez le modèle <code>height_m ~ s(diameter_cm, by = espece) + espece</code>, qui estime une fonction lisse distincte pour chaque espèce. Quels sont les degrés de liberté effectifs de chaque fonction? Tracez-les.</p></li>
+<li><p>Comparez ce modèle à celui de l’exercice précédent par l’AIC et par le test approximatif de <code>anova(..., test = "F")</code>.</p></li>
+<li><p>Comparez maintenant les deux modèles, ainsi que le modèle linéaire, par validation croisée à 10 blocs (mêmes blocs pour les trois modèles). Les conclusions concordent-elles? Comment l’expliquez-vous?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-app-2">Voir la solution</a></p>
+<p><span id="exo-gam-app-3"></span><strong>Exercice 3 (moyen).</strong> Splines cycliques pour l’ozone.</p>
+<p>Le <a href="#sec-gam" class="quarto-xref"><span>Chapitre 9</span></a> a ajusté le modèle <code>O3 ~ s(heure) + s(jour)</code> aux données de Longueuil et noté que <span class="math inline">\(\hat f_2\)</span> ne se raccorde pas entre le 31 décembre et le 1<sup>er</sup> janvier.</p>
+<ol type="a">
+<li><p>Ajustez ce modèle et prédisez la concentration à midi le 1<sup>er</sup> janvier (<code>jour = 1</code>) et le 31 décembre (<code>jour = 365</code>).</p></li>
+<li><p>Ajustez le même modèle avec des splines cycliques, <code>s(heure, bs = "cc", k = 12)</code> et <code>s(jour, bs = "cc", k = 20)</code>, en précisant les bornes du cycle avec l’argument <code>knots = list(heure = c(-0.5, 23.5), jour = c(0.5, 365.5))</code>. Refaites les prédictions de a) et comparez les AIC.</p></li>
+<li><p>Utilisez <code>gam.check</code> pour vérifier si la dimension de base <code>k</code> est suffisante. Que se passe-t-il si vous prenez <code>k = 40</code> pour le jour? Interprétez, en lien avec la corrélation entre les heures consécutives.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-app-3">Voir la solution</a></p>
+<p><span id="exo-gam-app-4"></span><strong>Exercice 4 (difficile).</strong> Interaction entre l’heure et la saison.</p>
+<p>Le <a href="#sec-gam" class="quarto-xref"><span>Chapitre 9</span></a> note que l’hypothèse d’additivité est discutable, puisque l’amplitude du cycle journalier de l’ozone semble plus grande en été qu’en hiver.</p>
+<ol type="a">
+<li><p>Ajoutez au modèle cyclique de l’exercice précédent un terme d’interaction <code>ti(heure, jour, bs = c("cc", "cc"), k = c(10, 12))</code>. Comparez les AIC et commentez les degrés de liberté effectifs de l’interaction.</p></li>
+<li><p>Tracez le cycle journalier prédit pour quatre jours de l’année (15 janvier, 15 avril, 15 juillet et 15 octobre). Calculez l’amplitude du cycle (maximum moins minimum) en janvier et en juillet.</p></li>
+<li><p>Que vaut la valeur-p du test de l’interaction? Pourquoi faut-il l’interpréter avec prudence?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-app-4">Voir la solution</a></p>
+<p><span id="exo-gam-app-5"></span><strong>Exercice 5 (difficile).</strong> GAM binomial pour les dépassements d’ozone.</p>
+<p>Pour chaque jour de l’année, comptez le nombre d’heures où la concentration d’ozone à Longueuil dépasse 40 ppb, ainsi que le nombre d’heures mesurées.</p>
+<ol type="a">
+<li><p>Ajustez un GAM binomial du nombre d’heures de dépassement, avec une spline cyclique du jour (<code>k = 20</code>). Décrivez la courbe sur l’échelle des probabilités.</p></li>
+<li><p>Estimez le paramètre de dispersion par la statistique de Pearson divisée par les degrés de liberté résiduels. Qu’en concluez-vous? D’où vient le problème?</p></li>
+<li><p>Réajustez le modèle avec <code>family = quasibinomial</code>. Comment changent les degrés de liberté effectifs et la largeur des bandes? Pourquoi?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-app-5">Voir la solution</a></p>
+<p><span id="exo-gam-app-6"></span><strong>Exercice 6 (difficile).</strong> Ce que calcule <code>gam</code>.</p>
+<p>On reprend le modèle <code>g.arbres</code> de l’exercice 1. Les objets <code>gam</code> contiennent la matrice de design (<code>model.matrix(g.arbres)</code>), les paramètres de lissage (<code>g.arbres$sp</code>) et, pour chaque fonction lisse, la matrice de pénalité (<code>g.arbres$smooth[[1]]$S[[1]]</code>), dont les colonnes correspondent aux coefficients <code>g.arbres$smooth[[1]]$first.para</code> à <code>last.para</code>.</p>
+<ol type="a">
+<li><p>Construisez la matrice de pénalité complète <span class="math inline">\(\lambda\boldsymbol S\)</span>, de la taille de <span class="math inline">\(\boldsymbol\beta\)</span>, et vérifiez numériquement que <span class="math inline">\(\hb = (\boldsymbol X^\top\boldsymbol X+\lambda\boldsymbol S)^{-1}\boldsymbol X^\top\boldsymbol Y\)</span> redonne les coefficients de <code>coef(g.arbres)</code>.</p></li>
+<li><p>Calculez la matrice d’influence <span class="math inline">\(\boldsymbol A\)</span> et vérifiez que <span class="math inline">\(\mathrm{Tr}(\boldsymbol A)\)</span> est la somme des degrés de liberté effectifs (<code>sum(g.arbres$edf)</code>).</p></li>
+<li><p>Calculez le critère GCV à partir de sa définition et comparez-le à <code>g.arbres$gcv.ubre</code>. Calculez aussi le critère OCV.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-app-6">Voir la solution</a></p>
+</section>
+<section id="exercices-théoriques" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="exercices-théoriques"><span class="header-section-number">9.4.2</span> Exercices théoriques</h3>
+<p><span id="exo-gam-theo-1"></span><strong>Exercice 1 (facile).</strong> Considérez le modèle additif <span class="math inline">\(Y_i = \alpha + f_1(x_{i1}) + f_2(x_{i2}) + \epsilon_i\)</span>.</p>
+<ol type="a">
+<li><p>Montrez que, sans contrainte, le modèle n’est pas identifiable : pour toute constante <span class="math inline">\(c\)</span>, <span class="math inline">\((\alpha, f_1+c, f_2-c)\)</span> et <span class="math inline">\((\alpha-c, f_1+c, f_2)\)</span> donnent les mêmes valeurs de <span class="math inline">\(E[Y_i]\)</span>.</p></li>
+<li><p>Montrez que, sous la contrainte de centrage <span class="math inline">\(\sum_i f_j(x_{ij}) = 0\)</span> pour <span class="math inline">\(j = 1, 2\)</span>, l’ordonnée à l’origine est déterminée par <span class="math inline">\(\alpha = \frac1n\sum_i E[Y_i]\)</span>, et que <span class="math inline">\(\hat\alpha = \bar Y\)</span> lorsque les valeurs ajustées somment à <span class="math inline">\(\sum_iY_i\)</span>.</p></li>
+<li><p>Comment interprète-t-on alors le graphique de <span class="math inline">\(\hat f_j\)</span> produit par <code>plot</code> pour un objet <code>gam</code>?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-theo-1">Voir la solution</a></p>
+<p><span id="exo-gam-theo-2"></span><strong>Exercice 2 (moyen).</strong> L’algorithme des moindres carrés pondérés itératifs pénalisés du <a href="#sec-gam" class="quarto-xref"><span>Chapitre 9</span></a> utilise une réponse de travail <span class="math inline">\(z_i\)</span> et des poids <span class="math inline">\(w_i\)</span>.</p>
+<ol type="a">
+<li><p>Calculez <span class="math inline">\(z_i\)</span> et <span class="math inline">\(w_i\)</span> pour un GAM logistique (<span class="math inline">\(Y_i\sim\mathrm{Bernoulli}(\pi_i)\)</span>, lien logit).</p></li>
+<li><p>Calculez <span class="math inline">\(z_i\)</span> et <span class="math inline">\(w_i\)</span> pour un GAM Poisson (lien log).</p></li>
+<li><p>Montrez que, pour un modèle additif gaussien avec lien identité et des <span class="math inline">\(\lambda_j\)</span> fixés, l’algorithme converge en une seule itération, quelle que soit la valeur de départ.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-theo-2">Voir la solution</a></p>
+<p><span id="exo-gam-theo-3"></span><strong>Exercice 3 (moyen).</strong> Soit un lisseur linéaire <span class="math inline">\(\hat{\boldsymbol Y} = \boldsymbol A\boldsymbol Y\)</span>, de critères <span class="math display">\[VC_{(n)} = \frac1n\sum_{i=1}^n\left(\frac{y_i-\hat y_i}{1-A_{ii}}\right)^2 \qquad\text{et}\qquad GCV = \frac{n\sum_i(y_i-\hat y_i)^2}{\{n-\mathrm{Tr}(\boldsymbol A)\}^2}.\]</span></p>
+<ol type="a">
+<li><p>Montrez que la GCV s’obtient en remplaçant chaque <span class="math inline">\(A_{ii}\)</span> de <span class="math inline">\(VC_{(n)}\)</span> par leur moyenne <span class="math inline">\(\mathrm{Tr}(\boldsymbol A)/n\)</span>.</p></li>
+<li><p>Montrez que, lorsque <span class="math inline">\(\mathrm{Tr}(\boldsymbol A)/n\)</span> est petit, <span class="math display">\[GCV\approx\frac{RSS}{n} + \frac{2\,\mathrm{Tr}(\boldsymbol A)}{n}\cdot\frac{RSS}{n},\]</span> où <span class="math inline">\(RSS = \sum_i(y_i-\hat y_i)^2\)</span>. Comparez avec le critère UBRE du <a href="#sec-gam" class="quarto-xref"><span>Chapitre 9</span></a> pour <span class="math inline">\(\phi = \sigma^2\)</span> connu.</p></li>
+<li><p>Donnez une raison de préférer la GCV à <span class="math inline">\(VC_{(n)}\)</span> en pratique.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-theo-3">Voir la solution</a></p>
+<p><span id="exo-gam-theo-4"></span><strong>Exercice 4 (difficile).</strong> Interprétation bayésienne de la pénalité.</p>
+<p>Considérez le modèle <span class="math inline">\(\boldsymbol Y\mid\boldsymbol\beta\sim\mathcal N(\boldsymbol X\boldsymbol\beta,\sigma^2\boldsymbol I)\)</span> et la loi a priori <span class="math inline">\(\boldsymbol\beta\sim\mathcal N(\boldsymbol 0,\sigma^2\boldsymbol P^{-1})\)</span>, où <span class="math inline">\(\boldsymbol P = \sum_j\lambda_j\boldsymbol S_j\)</span> est supposée définie positive (en pratique, <span class="math inline">\(\boldsymbol P\)</span> est singulière et la loi a priori est impropre dans les directions non pénalisées, mais le calcul est le même).</p>
+<ol type="a">
+<li><p>Montrez que la densité a posteriori de <span class="math inline">\(\boldsymbol\beta\)</span> est proportionnelle à <span class="math display">\[\exp\left\{-\frac{1}{2\sigma^2}\left(\|\boldsymbol Y-\boldsymbol X\boldsymbol\beta\|^2 + \boldsymbol\beta^\top\boldsymbol P\boldsymbol\beta\right)\right\}.\]</span></p></li>
+<li><p>En complétant le carré, montrez que la loi a posteriori est normale, de moyenne <span class="math inline">\(\hb = (\boldsymbol X^\top\boldsymbol X+\boldsymbol P)^{-1}\boldsymbol X^\top\boldsymbol Y\)</span> et de matrice de variance-covariance <span class="math inline">\(\sigma^2(\boldsymbol X^\top\boldsymbol X+\boldsymbol P)^{-1}\)</span>.</p></li>
+<li><p>Faites le lien avec les intervalles de crédibilité du <a href="#sec-gam" class="quarto-xref"><span>Chapitre 9</span></a> et avec l’exercice 3 du niveau moyen du <a href="./06-selection-regularisation.html#exo-regularisation">chapitre 6</a>.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-gam-theo-4">Voir la solution</a></p>
+</section>
+</section>
+<section id="références-complémentaires" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="références-complémentaires">Références complémentaires</h2>
+<p>La page <a href="./references-complementaires.html">Références complémentaires</a> décrit chacun de ces ouvrages.</p>
+<ul>
+<li><a href="./references-complementaires.html#cpl-faraway2016extending">Faraway (2016). <em>Extending the Linear Model with R</em></a></li>
+<li><a href="./references-complementaires.html#cpl-james2021">James, Witten, Hastie et Tibshirani (2021). <em>An Introduction to Statistical Learning: with Applications in R</em></a></li>
+<li><a href="./references-complementaires.html#cpl-wood2017gam">Wood (2017). <em>Generalized Additive Models: An Introduction with R</em></a></li>
+<li><a href="./references-complementaires.html#cpl-hastie2009esl">Hastie, Tibshirani et Friedman (2009). <em>The Elements of Statistical Learning</em></a></li>
+<li><a href="./references-complementaires.html#cpl-ruppert2003semiparametric">Ruppert, Wand et Carroll (2003). <em>Semiparametric Regression</em></a></li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-wood2003thin" class="csl-entry" role="listitem">
+Wood, Simon N. 2003. <span>«&nbsp;Thin Plate Regression Splines&nbsp;»</span>. <em>Journal of the Royal Statistical Society: Series B</em> 65 (1): 95‑114.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const gifs = {
+    "index":                              "index_plot.gif",
+    "00-regression-lineaire":             "lineaire_plot.gif",
+    "01-monte-carlo":                     "monte_carlo_plot.gif",
+    "02-regression-logistique":           "logit_plot.gif",
+    "03-modeles-lineaires-generalises":   "glm_plot.gif",
+    "04-extensions-glm":                  "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "10-donnees-correlees":               "lineaire_plot.gif",
+    "11-autres-modeles":                  "glm_plot.gif",
+    "12-robustesse":                      "lineaire_plot.gif",
+    "exercices-theoriques":               "exercices_plot.gif",
+    "exercices-en-classe":                "exercices_plot.gif",
+    "references-complementaires":         "balles_plot.gif"
+  };
+
+  let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
+  if (page === "") page = "index";
+
+  const gif = gifs[page];
+  if (gif) {
+    // Date.now() change à chaque chargement de page → force le rechargement du gif
+    logo.src = logo.src.replace(/[^/]+$/, gif) + "?v=" + Date.now();
+  }
+});
+</script>
+<script>
+// Couleur du logo dérivée de la date et de l'heure, recalculée chaque minute.
+(function () {
+  var d = new Date();
+  var cle = (d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()) * 10000 + d.getHours() * 100 + d.getMinutes();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./08-splines.html" class="pagination-link" aria-label="Régression non linéaire : polynômes, fonctions par morceaux et splines">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non linéaire : polynômes, fonctions par morceaux et splines</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./10-donnees-correlees.html" class="pagination-link" aria-label="Données corrélées : modèles mixtes et GEE">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Données corrélées : modèles mixtes et GEE</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="../index.html">Retour au site du cours</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

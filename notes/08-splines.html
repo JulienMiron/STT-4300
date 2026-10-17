@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>8&nbsp; Régression non linéaire : polynômes, fonctions par morceaux et splines – Au-delà de la régression linéaire</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./09-gam.html" rel="next">
+<link href="./07-knn-noyau.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-cb416c3c68f001892fd433de5bb87006.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-376fa577758f5eb38fdab71fe95b3eec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-cb416c3c68f001892fd433de5bb87006.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/fontawesome6-6.7.2/all.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/fontawesome6-6.7.2/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+ <script>
+          window.MathJax = {
+            chtml: {
+              linebreaks: { inline: false }
+            },
+            tex: {
+              macros: {
+                bb: "\\boldsymbol\\beta",
+                hb: "\\hat{\\boldsymbol\\beta}",
+                hv: ["\\hat{\\text V}(#1)", 1],
+                hvar: ["\\widehat{\\text{Var}}(#1)", 1],
+                hbj: ["\\hat\\beta_{#1}", 1],
+                hpi: ["\\hat\\pi_{#1}", 1],
+                heta: ["\\hat\\eta_{#1}", 1],
+                hmu: ["\\hat\\mu_{#1}", 1]
+              }
+            }
+          };
+          </script>  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-splines.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non linéaire : polynômes, fonctions par morceaux et splines</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Au-delà de la régression linéaire</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./../index.html" title="Retour au site du cours" class="quarto-navigation-tool px-1" aria-label="Retour au site du cours"><i class="bi bi-house-door"></i></a>
+    <a href="https://github.com/JulienMiron/STT-4300/tree/main/notes/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-regression-lineaire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">0&nbsp;Rappels de régression linéaire</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-extensions-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions des GLM : réponses catégorielles et excès de zéros</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur à noyau</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-donnees-correlees.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Données corrélées : modèles mixtes et GEE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-autres-modeles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Au-delà des modèles de ce livre</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-robustesse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Ouverture sur la statistique robuste</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Solutions des exercices</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./exercices-en-classe.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exemples interactifs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references-complementaires.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Références complémentaires</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#régression-polynomiale" id="toc-régression-polynomiale" class="nav-link active" data-scroll-target="#régression-polynomiale"><span class="header-section-number">8.1</span> Régression polynomiale</a></li>
+  <li><a href="#régression-avec-des-fonctions-constantes-par-morceaux" id="toc-régression-avec-des-fonctions-constantes-par-morceaux" class="nav-link" data-scroll-target="#régression-avec-des-fonctions-constantes-par-morceaux"><span class="header-section-number">8.2</span> Régression avec des fonctions constantes par morceaux</a></li>
+  <li><a href="#régression-avec-des-splines" id="toc-régression-avec-des-splines" class="nav-link" data-scroll-target="#régression-avec-des-splines"><span class="header-section-number">8.3</span> Régression avec des splines</a>
+  <ul class="collapse">
+  <li><a href="#splines-de-régression" id="toc-splines-de-régression" class="nav-link" data-scroll-target="#splines-de-régression"><span class="header-section-number">8.3.1</span> Splines de régression</a></li>
+  <li><a href="#base-des-puissances-tronquées" id="toc-base-des-puissances-tronquées" class="nav-link" data-scroll-target="#base-des-puissances-tronquées"><span class="header-section-number">8.3.2</span> Base des puissances tronquées</a></li>
+  <li><a href="#sec-bsplines" id="toc-sec-bsplines" class="nav-link" data-scroll-target="#sec-bsplines"><span class="header-section-number">8.3.3</span> B-splines</a></li>
+  <li><a href="#sec-splines-naturelles" id="toc-sec-splines-naturelles" class="nav-link" data-scroll-target="#sec-splines-naturelles"><span class="header-section-number">8.3.4</span> Splines naturelles</a></li>
+  <li><a href="#splines-de-lissage-splines-pénalisées" id="toc-splines-de-lissage-splines-pénalisées" class="nav-link" data-scroll-target="#splines-de-lissage-splines-pénalisées"><span class="header-section-number">8.3.5</span> Splines de lissage (splines pénalisées)</a></li>
+  </ul></li>
+  <li><a href="#exo-splines" id="toc-exo-splines" class="nav-link" data-scroll-target="#exo-splines"><span class="header-section-number">8.4</span> Exercices</a>
+  <ul class="collapse">
+  <li><a href="#exercices-appliqués" id="toc-exercices-appliqués" class="nav-link" data-scroll-target="#exercices-appliqués"><span class="header-section-number">8.4.1</span> Exercices appliqués</a></li>
+  <li><a href="#exercices-théoriques" id="toc-exercices-théoriques" class="nav-link" data-scroll-target="#exercices-théoriques"><span class="header-section-number">8.4.2</span> Exercices théoriques</a></li>
+  </ul></li>
+  <li><a href="#références-complémentaires" id="toc-références-complémentaires" class="nav-link" data-scroll-target="#références-complémentaires">Références complémentaires</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-splines" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non linéaire : polynômes, fonctions par morceaux et splines</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">17 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Ce chapitre utilise les librairies R suivantes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Le chapitre précédent a présenté deux estimateurs locaux de <span class="math inline">\(f(x) = E[Y\mid X=x]\)</span> : l’estimateur <span class="math inline">\(k\)</span>NN et l’estimateur à noyau (<a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a>). Ce chapitre présente une autre approche, fondée sur des bases de fonctions, où le modèle s’écrit <span class="math display">\[Y_i = \beta_1\, b_1(X_i) + \beta_2\, b_2(X_i) + \cdots + \beta_q\, b_q(X_i) + \epsilon_i,\]</span> où les <span class="math inline">\(b_k(\cdot)\)</span> sont des transformations connues de la variable explicative. Comme le modèle reste linéaire en <span class="math inline">\(\boldsymbol\beta\)</span>, tout ce qui découle des moindres carrés (estimation, intervalles de confiance, tests) s’applique tel quel.</p>
+<section id="régression-polynomiale" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="régression-polynomiale"><span class="header-section-number">8.1</span> Régression polynomiale</h2>
+<p>La régression polynomiale approxime <span class="math inline">\(f(x)\)</span> par un polynôme de degré <span class="math inline">\(p\)</span> : <span class="math display">\[f(x) = \beta_0 + \beta_1 x + \cdots + \beta_p x^p,\]</span> ce qui donne le modèle linéaire <span class="math inline">\(Y_i = \beta_0 + \beta_1 X_i + \cdots + \beta_p X_i^p + \epsilon_i\)</span>. On estime <span class="math inline">\(\boldsymbol\beta\)</span> par <span class="math display">\[\hat{\boldsymbol\beta} = (\boldsymbol X^\top \boldsymbol X)^{-1}\boldsymbol X^\top \boldsymbol Y, \qquad
+\boldsymbol X = \begin{pmatrix} 1 &amp; X_1 &amp; \cdots &amp; X_1^p\\ \vdots &amp; \vdots &amp; &amp; \vdots\\ 1 &amp; X_n &amp; \cdots &amp; X_n^p \end{pmatrix}.\]</span> Comme <span class="math inline">\(\boldsymbol\beta\)</span> contient <span class="math inline">\(p+1\)</span> éléments, le modèle a <span class="math inline">\(p+1\)</span> degrés de liberté.</p>
+<p>Pour choisir <span class="math inline">\(p\)</span>, on peut utiliser l’<span class="math inline">\(AIC\)</span>, le <span class="math inline">\(BIC\)</span> ou des tests <span class="math inline">\(F\)</span>. On peut aussi procéder comme au <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 5</span></a> et retenir la valeur qui minimise le taux d’erreur test estimé par validation croisée (la LOOCV admet une expression explicite).</p>
+<p>Notons <span class="math inline">\(\boldsymbol x_* = (1,\ x,\ x^2,\ \ldots,\ x^p)\)</span> le vecteur des puissances de <span class="math inline">\(x\)</span>. Une fois <span class="math inline">\(p\)</span> choisi, on a <span class="math inline">\(\hat f(x) = \boldsymbol x_*\hat{\boldsymbol\beta}\)</span> et <span class="math display">\[Var[\hat f(x)] = \boldsymbol x_*\, Var[\hat{\boldsymbol\beta}]\, \boldsymbol x_*^\top,\]</span> ce qui donne des bandes de confiance autour de <span class="math inline">\(\hat f(x)\)</span>. En R : <code>lm(Y ~ poly(X, 2, raw = TRUE), data = data)</code>.</p>
+<div class="env-exemple" data-titre="Régression polynomiale sur [`arbres`](05-prediction-validation-croisee.qmd#data-arbres)">
+<p><span class="env-titre">Exemple — Régression polynomiale sur <a href="./05-prediction-validation-croisee.html#data-arbres"><code>arbres</code></a></span></p>
+<p>Reprenons la hauteur en fonction du diamètre du <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a>. On ajuste des polynômes de degré 1 à 6 et on choisit <span class="math inline">\(p\)</span> par LOOCV. La formule explicite du <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 5</span></a> s’applique : <span class="math inline">\(VC_{(n)} = \frac{1}{n}\sum_i \left(\frac{e_i}{1 - h_i}\right)^2\)</span>, où <span class="math inline">\(e_i\)</span> est le résidu et <span class="math inline">\(h_i\)</span> le levier de l’observation <span class="math inline">\(i\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/arbres.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>degres <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>modeles <span class="ot">&lt;-</span> <span class="fu">lapply</span>(degres, <span class="cf">function</span>(p) {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(height_m <span class="sc">~</span> <span class="fu">poly</span>(diameter_cm, p, <span class="at">raw =</span> <span class="cn">TRUE</span>), <span class="at">data =</span> arbres)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>vc.n <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modeles, <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">degre =</span> degres, <span class="at">vc.n =</span> <span class="fu">round</span>(vc.n, <span class="dv">3</span>),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">AIC =</span> <span class="fu">round</span>(<span class="fu">sapply</span>(modeles, AIC), <span class="dv">1</span>), <span class="at">BIC =</span> <span class="fu">round</span>(<span class="fu">sapply</span>(modeles, BIC), <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]    [,2]    [,3]    [,4]    [,5]    [,6]
+degre   1.000   2.000   3.000   4.000   5.000   6.000
+vc.n    6.241   6.217   6.306   6.641   6.949   6.367
+AIC   934.400 932.300 933.400 934.700 936.500 933.700
+BIC   944.300 945.500 949.900 954.500 959.600 960.100</code></pre>
+</div>
+</div>
+<p>La LOOCV et l’AIC retiennent le degré 2 et le BIC la droite, mais les écarts entre les degrés 1, 2 et 3 sont minces. Le polynôme de degré 2 a un coefficient négatif sur <span class="math inline">\(x^2\)</span>, ce qui traduit la concavité de la relation. Au-delà du degré 3, l’erreur de validation croisée est plus élevée, parce que les termes supplémentaires suivent le bruit des observations. Le degré 2 donne <span class="math inline">\(VC_{(n)} \approx 6{,}2\)</span>, du même ordre que l’estimateur à noyau du <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a> (<span class="math inline">\(VC_{(n)}(h) \approx 6{,}7\)</span> pour <span class="math inline">\(h = 2\)</span> cm).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">diameter_cm =</span> <span class="fu">seq</span>(<span class="fu">min</span>(arbres<span class="sc">$</span>diameter_cm), <span class="fu">max</span>(arbres<span class="sc">$</span>diameter_cm), <span class="at">length.out =</span> <span class="dv">300</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ajust <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>), <span class="cf">function</span>(p) {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p =</span> <span class="fu">paste</span>(<span class="st">"p ="</span>, p), grille, <span class="at">f =</span> <span class="fu">predict</span>(modeles[[p]], <span class="at">newdata =</span> grille))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>bande <span class="ot">&lt;-</span> <span class="fu">cbind</span>(grille, <span class="fu">predict</span>(modeles[[<span class="dv">2</span>]], <span class="at">newdata =</span> grille, <span class="at">interval =</span> <span class="st">"confidence"</span>))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(arbres, <span class="fu">aes</span>(diameter_cm, height_m)) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> bande, <span class="fu">aes</span>(<span class="at">x =</span> diameter_cm, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> ajust, <span class="fu">aes</span>(diameter_cm, f, <span class="at">colour =</span> p), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diamètre (cm)"</span>, <span class="at">y =</span> <span class="st">"Hauteur (m)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-arbres-poly" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbres-poly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-arbres-poly-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbres-poly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.1: Régression polynomiale de la hauteur sur le diamètre pour <span class="math inline">\(p = 1\)</span>, <span class="math inline">\(2\)</span> et <span class="math inline">\(5\)</span>. Pour <span class="math inline">\(p = 2\)</span>, la bande grise est l’intervalle de confiance ponctuel à 95 % de la moyenne conditionnelle <span class="math inline">\(f(x)\)</span> ; ce n’est pas un intervalle de prédiction pour la hauteur d’un nouvel arbre.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La bande de confiance, obtenue avec <code>predict(..., interval = "confidence")</code>, s’élargit au-delà de 30 cm, là où les arbres sont rares, parce que <span class="math inline">\(Var[\hat f(x)] = \boldsymbol x_*\, Var[\hat{\boldsymbol\beta}]\, \boldsymbol x_*^\top\)</span> croît avec les puissances de <span class="math inline">\(x\)</span>. Le polynôme de degré 5 s’écarte légèrement des autres aux extrémités du domaine, là où les données sont rares. Avec un degré plus élevé, cet écart deviendrait erratique. Ce comportement des polynômes de degré élevé aux bords est un défaut, sur lequel nous reviendrons avec les splines naturelles (<a href="#sec-splines-naturelles" class="quarto-xref"><span>Section 8.3.4</span></a>).</p>
+<p>Il faut reconnaître que ce jeu de données n’est pas idéal pour la régression polynomiale. Comme la relation est monotone et que sa courbure est modérée, la droite fait déjà l’essentiel du travail, et les critères peinent d’ailleurs à départager les degrés 1 à 3. Les polynômes sont à leur avantage lorsque la courbe change de direction à l’intérieur du domaine, comme dans l’exemple suivant.</p>
+</div>
+<div class="env-exemple" data-titre="Jeu de données qualite_air">
+<p><span class="env-titre">Exemple — Jeu de données qualite_air</span></p>
+<p>Le jeu de données <span id="data-qualite-air"><code>qualite_air</code></span> (<a href="Jeux de données/qualite_air.csv"><i class="fa-solid fa-download" aria-label="download"></i></a>) contient les mesures horaires de 2025 des 42 stations du Réseau de surveillance de la qualité de l’air du Québec (RSQAQ). Ces mesures sont diffusées par Données Québec et préparées par <a href="https://donneesbleues.ca/datasets/qualite-air-horaire/fiche.html">donneesbleues.ca</a>. Chaque ligne correspond à une station (<code>Station</code>) et à une heure (<code>Date_Heure</code>, en heure normale de l’Est), l’heure indiquée marquant la fin de l’intervalle mesuré. Les colonnes donnent la concentration de différents contaminants, notamment l’ozone (<code>O3</code>, en ppb), le dioxyde d’azote (<code>NO2</code>, en ppb) et les particules fines (<code>PM2.5-T640</code>, en µg/m³). Le nombre de stations qui mesurent un contaminant varie de 2 à 40, d’où de nombreuses valeurs manquantes.</p>
+</div>
+<div class="env-exemple" data-titre="Cycle journalier de l'ozone sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Cycle journalier de l’ozone sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>L’ozone troposphérique se forme par photochimie à partir des oxydes d’azote, sous l’effet du rayonnement solaire. Sa concentration suit donc un cycle journalier marqué, surtout en été. On retient les heures de juin, juillet et août à la station de Longueuil, soit <span class="math inline">\(n = 2\,204\)</span> mesures, et on modélise la concentration d’ozone <span class="math inline">\(Y\)</span> en fonction de l’heure <span class="math inline">\(X \in \{0, 1, \ldots, 23\}\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">heure =</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>)),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">mois  =</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(Date_Heure, <span class="dv">6</span>, <span class="dv">7</span>)))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ozone <span class="ot">&lt;-</span> air <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Station <span class="sc">==</span> <span class="st">"06600 - Longueuil"</span>, mois <span class="sc">%in%</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span>, <span class="sc">!</span><span class="fu">is.na</span>(O3))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-nuage" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-nuage-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-nuage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.2: Concentration horaire d’ozone à Longueuil, juin à août 2025, en fonction de l’heure. Les points sont légèrement décalés horizontalement pour la lisibilité.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Le nuage de points montre une bosse nette : la concentration est minimale au petit matin, monte rapidement en avant-midi, culmine en fin d’après-midi, puis redescend plus lentement en soirée. Comme pour les arbres, on ajuste des polynômes de degré 1 à 8 et on choisit <span class="math inline">\(p\)</span> par LOOCV.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>degres <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>modeles.o3 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(degres, <span class="cf">function</span>(p) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">poly</span>(heure, p, <span class="at">raw =</span> <span class="cn">TRUE</span>), <span class="at">data =</span> ozone)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>vc.o3 <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modeles.o3, <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">degre =</span> degres, <span class="at">vc.n =</span> <span class="fu">round</span>(vc.o3, <span class="dv">1</span>), <span class="at">BIC =</span> <span class="fu">round</span>(<span class="fu">sapply</span>(modeles.o3, BIC), <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]    [,2]    [,3]    [,4]    [,5]    [,6]    [,7]    [,8]
+degre     1.0     2.0     3.0     4.0     5.0     6.0     7.0     8.0
+vc.n    145.1   135.6   112.2   111.4   109.4   109.3   109.4   109.3
+BIC   17244.5 17101.4 16688.6 16679.5 16645.9 16649.1 16656.8 16659.8</code></pre>
+</div>
+</div>
+<p>Le contraste avec <a href="./05-prediction-validation-croisee.html#data-arbres"><code>arbres</code></a> est net. La droite est inadéquate (la courbe a un minimum vers 5 h et un maximum vers 16 h). Le degré 2 ne suffit pas non plus, parce que la bosse est asymétrique (montée rapide le matin, descente plus lente en soirée). Entre les degrés 1 et 3, <span class="math inline">\(VC_{(n)}\)</span> chute d’environ 23 %, puis le critère devient pratiquement plat. Le BIC retient <span class="math inline">\(p = 5\)</span>, mais les degrés 3 à 8 donnent des courbes presque identiques. Avec <span class="math inline">\(n = 2\,204\)</span>, chaque paramètre supplémentaire coûte peu en variance : c’est le biais qui décide.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">heure =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">23</span>, <span class="at">length.out =</span> <span class="dv">300</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ajust <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>), <span class="cf">function</span>(p) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p =</span> <span class="fu">paste</span>(<span class="st">"p ="</span>, p), grille, <span class="at">f =</span> <span class="fu">predict</span>(modeles.o3[[p]], <span class="at">newdata =</span> grille))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>bande <span class="ot">&lt;-</span> <span class="fu">cbind</span>(grille, <span class="fu">predict</span>(modeles.o3[[<span class="dv">5</span>]], <span class="at">newdata =</span> grille, <span class="at">interval =</span> <span class="st">"confidence"</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>pred  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(grille, <span class="fu">predict</span>(modeles.o3[[<span class="dv">5</span>]], <span class="at">newdata =</span> grille, <span class="at">interval =</span> <span class="st">"prediction"</span>))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> bande, <span class="fu">aes</span>(<span class="at">x =</span> heure, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> ajust, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> p), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> pred, <span class="fu">aes</span>(heure, lwr), <span class="at">linetype =</span> <span class="st">"dotted"</span>) <span class="sc">+</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> pred, <span class="fu">aes</span>(heure, upr), <span class="at">linetype =</span> <span class="st">"dotted"</span>) <span class="sc">+</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-poly" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-poly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-poly-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-poly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.3: Concentration horaire d’ozone à Longueuil (juin à août 2025) et régression polynomiale pour <span class="math inline">\(p = 1\)</span>, <span class="math inline">\(3\)</span> et <span class="math inline">\(5\)</span>. Pour <span class="math inline">\(p = 5\)</span>, la bande grise est l’intervalle de confiance ponctuel à 95 % de la moyenne conditionnelle <span class="math inline">\(f(x)\)</span> et les pointillés délimitent l’intervalle de prédiction à 95 % d’une observation future. Les deux supposent des erreurs indépendantes, alors que les mesures horaires d’une même journée sont corrélées (voir la remarque plus bas). Les points sont légèrement décalés horizontalement pour la lisibilité.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Cet exemple est un cas favorable à la régression polynomiale, pour trois raisons. D’abord, la courbe est lisse et change deux fois de direction à l’intérieur du domaine, de sorte qu’un polynôme de degré modéré la décrit avec une poignée de paramètres. Ensuite, la variable explicative ne prend que 24 valeurs distinctes, chacune répétée une centaine de fois. L’estimateur <span class="math inline">\(k\)</span>NN du <a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a> s’en accommode mal (les voisins sont tous ex æquo), alors qu’un modèle linéaire en <span class="math inline">\(\boldsymbol\beta\)</span> n’y voit aucune difficulté. Enfin, la bande de confiance reste étroite sur tout le domaine (demi-largeur d’au plus 1,9 ppb), même si elle s’élargit un peu aux bords, parce que les observations y sont aussi nombreuses qu’ailleurs.</p>
+</div>
+<div class="env-remarque" data-titre="Bande de confiance ou bande de prédiction?">
+<p><span class="env-titre">Remarque — Bande de confiance ou bande de prédiction?</span></p>
+<p>La bande grise de la <a href="#fig-ozone-poly" class="quarto-xref">Figure&nbsp;<span>8.3</span></a> peut sembler étroite par rapport à la dispersion des points. Il ne faut pas la voir comme une bande qui contient les observations. Elle porte sur la courbe <span class="math inline">\(f(x) = E[Y\mid X = x]\)</span>, c’est-à-dire qu’elle répond à la question « où se trouve la concentration moyenne à cette heure? ». Sa demi-largeur est d’environ 0,8 ppb au centre du domaine. C’est moins que <span class="math inline">\(2\hat\sigma/\sqrt{n_x} \approx 2\)</span> ppb, où <span class="math inline">\(n_x\)</span> est le nombre d’observations à l’heure <span class="math inline">\(x\)</span> (avec <span class="math inline">\(\hat\sigma \approx 10{,}4\)</span> ppb et <span class="math inline">\(n_x \approx 92\)</span>), parce que la courbe combine l’information de toutes les heures. Une nouvelle mesure <span class="math inline">\(Y_0\)</span> s’encadre plutôt par l’intervalle de prédiction, obtenu avec <code>predict(..., interval = "prediction")</code>. Sa demi-largeur est d’environ <span class="math inline">\(2\hat\sigma\)</span>, soit une vingtaine de ppb, et il contient l’essentiel du nuage (pointillés). Le cycle journalier n’explique qu’une partie de la variabilité de l’ozone ; le reste tient à la météo et aux émissions de chaque jour.</p>
+<p>Les deux intervalles supposent des erreurs indépendantes, alors que les mesures d’heures consécutives d’une même journée sont fortement corrélées. Par exemple, une journée chaude et ensoleillée reste au-dessus de la courbe du matin au soir. Le nombre effectif d’observations indépendantes est donc bien inférieur à <span class="math inline">\(n = 2\,204\)</span>, plus proche du nombre de jours (92), et la bande de confiance sous-estime l’incertitude réelle sur <span class="math inline">\(f\)</span>. Le <a href="10-donnees-correlees.html" class="quarto-xref"><span>Chapitre 10</span></a> présente des modèles qui tiennent compte de ce type de dépendance, et il reprend cet exemple avec des erreurs autorégressives à l’intérieur de chaque jour : la bande de confiance s’en trouve nettement élargie. D’ici là, gardez cette limite en tête lorsque vous appliquez une méthode de régression à une série chronologique.</p>
+</div>
+<div class="env-theo" data-titre="Interprétation des coefficients $\beta_1$, $\beta_2$, $\ldots$">
+<p><span class="env-titre">Pour aller plus loin avec la théorie — Interprétation des coefficients <span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\ldots\)</span></span></p>
+<p>Dans la régression linéaire simple, <span class="math inline">\(\beta_1\)</span> s’interprète directement : une augmentation d’une unité de <span class="math inline">\(x\)</span> fait varier <span class="math inline">\(E[Y \mid X = x]\)</span> de <span class="math inline">\(\beta_1\)</span>. Dès que <span class="math inline">\(p \geq 2\)</span>, cette lecture ne tient plus. On ne peut pas augmenter <span class="math inline">\(x\)</span> d’une unité « en maintenant <span class="math inline">\(x^2\)</span> constant », parce que les termes <span class="math inline">\(x, x^2, \ldots, x^p\)</span> varient ensemble. L’effet d’une variation de <span class="math inline">\(x\)</span> se lit plutôt sur la dérivée de la courbe, <span class="math display">\[f'(x) = \beta_1 + 2\beta_2\, x + 3\beta_3\, x^2 + \cdots + p\,\beta_p\, x^{p-1},\]</span> une pente <em>locale</em> qui dépend de l’endroit où l’on se trouve.</p>
+<ul>
+<li><span class="math inline">\(\beta_1\)</span> est la pente de la courbe en <span class="math inline">\(x = 0\)</span>, puisque <span class="math inline">\(f'(0) = \beta_1\)</span>. Cette interprétation n’est utile que si <span class="math inline">\(x = 0\)</span> appartient au domaine des données ; sinon, on peut centrer la variable (remplacer <span class="math inline">\(x\)</span> par <span class="math inline">\(x - \bar x\)</span>) pour que <span class="math inline">\(\beta_1\)</span> devienne la pente au point moyen.</li>
+<li><span class="math inline">\(\beta_2\)</span> gouverne la courbure : <span class="math inline">\(f''(0) = 2\beta_2\)</span>. Pour <span class="math inline">\(p = 2\)</span>, la courbure <span class="math inline">\(2\beta_2\)</span> est la même partout. Si <span class="math inline">\(\beta_2 &lt; 0\)</span>, la parabole est concave et culmine en <span class="math inline">\(x^* = -\beta_1/(2\beta_2)\)</span>, comme pour la hauteur des arbres, dont la croissance ralentit avec le diamètre. Si <span class="math inline">\(\beta_2 &gt; 0\)</span>, la parabole est convexe et atteint son minimum au même point.</li>
+<li>En général, <span class="math inline">\(\beta_k = f^{(k)}(0)/k!\)</span> : les coefficients sont ceux du développement de Taylor de <span class="math inline">\(f\)</span> autour de <span class="math inline">\(0\)</span>. Au-delà de <span class="math inline">\(k = 2\)</span>, ils n’ont pas d’interprétation pratique isolée, puisque leur valeur change du tout au tout si on recentre <span class="math inline">\(x\)</span> ou si on passe du degré <span class="math inline">\(p\)</span> au degré <span class="math inline">\(p + 1\)</span>. On interprète donc le modèle par la courbe ajustée dans son ensemble, plutôt que coefficient par coefficient, en regardant son tracé, l’emplacement de ses extremums ou sa pente <span class="math inline">\(\hat f'(x)\)</span> en un point d’intérêt.</li>
+</ul>
+</div>
+</section>
+<section id="régression-avec-des-fonctions-constantes-par-morceaux" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="régression-avec-des-fonctions-constantes-par-morceaux"><span class="header-section-number">8.2</span> Régression avec des fonctions constantes par morceaux</h2>
+<p>Notons <span class="math inline">\([A,B]\)</span> le domaine de <span class="math inline">\(X\)</span> (en pratique <span class="math inline">\(A = \min_i X_i - \delta\)</span> et <span class="math inline">\(B = \max_i X_i + \delta\)</span> pour un petit <span class="math inline">\(\delta &gt; 0\)</span>). On choisit une partition <span class="math inline">\(A = c_0 &lt; c_1 &lt; \cdots &lt; c_K = B\)</span> et on définit, pour <span class="math inline">\(k = 1,\ldots,K\)</span>, <span class="math display">\[b_k(x) = \begin{cases} 1 &amp; \mbox{si } x\in[c_{k-1},c_k),\\ 0 &amp; \mbox{sinon}.\end{cases}\]</span> On approxime alors <span class="math inline">\(f\)</span> par une fonction en escalier, <span class="math inline">\(f(x) = \beta_1 b_1(x) + \cdots + \beta_K b_K(x)\)</span>, ce qui revient à discrétiser <span class="math inline">\(X\)</span> : on retrouve un modèle d’ANOVA à un facteur à <span class="math inline">\(K\)</span> modalités. L’estimateur des moindres carrés est <span class="math display">\[\hat\beta_k = \frac{\sum_{i=1}^n b_k(X_i)Y_i}{n_k}, \qquad n_k = \sum_{i=1}^n b_k(X_i),\]</span> c’est-à-dire la moyenne des <span class="math inline">\(Y_i\)</span> dans l’intervalle <span class="math inline">\(k\)</span>, et <span class="math inline">\(Var[\hat\beta_k] = \sigma^2/n_k\)</span>. En R : <code>lm(O3 ~ cut(heure, breaks = c(0, 6, 12, 18, 24), right = FALSE), data = ozone)</code>, où <code>right = FALSE</code> donne les intervalles <span class="math inline">\([0, 6)\)</span>, <span class="math inline">\([6, 12)\)</span>, <span class="math inline">\([12, 18)\)</span> et <span class="math inline">\([18, 24)\)</span>, fermés à gauche comme dans la définition.</p>
+<div class="env-exemple" data-titre="Fonctions constantes par morceaux sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Fonctions constantes par morceaux sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>Découpons les 24 heures en <span class="math inline">\(K\)</span> intervalles de même largeur et comparons les valeurs de <span class="math inline">\(K\)</span> par LOOCV. Avec <span class="math inline">\(K = 24\)</span>, chaque intervalle contient une seule heure : <span class="math inline">\(\hat f\)</span> est simplement la moyenne horaire.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Ks <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">24</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>modeles.cut <span class="ot">&lt;-</span> <span class="fu">lapply</span>(Ks, <span class="cf">function</span>(K) {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># bornes fixes : predict() réutilise les mêmes intervalles sur une autre grille</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># right = FALSE : intervalles [c_{k-1}, c_k), comme dans la définition</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  bornes <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">24</span>, <span class="at">length.out =</span> K <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">cut</span>(heure, bornes, <span class="at">right =</span> <span class="cn">FALSE</span>), <span class="at">data =</span> ozone)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>vc.cut <span class="ot">&lt;-</span> <span class="fu">sapply</span>(modeles.cut, <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">K =</span> Ks, <span class="at">vc.n =</span> <span class="fu">round</span>(vc.cut, <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      [,1] [,2]  [,3]  [,4]  [,5]  [,6]  [,7]
+K      2.0    3   4.0   6.0   8.0  12.0  24.0
+vc.n 131.7  133 123.5 114.7 112.3 110.6 110.7</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>escalier <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>), <span class="cf">function</span>(j) {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">K =</span> <span class="fu">paste</span>(<span class="st">"K ="</span>, Ks[j]), grille, <span class="at">f =</span> <span class="fu">predict</span>(modeles.cut[[j]], <span class="at">newdata =</span> grille))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_step</span>(<span class="at">data =</span> escalier, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> K), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-cut" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-cut-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-cut-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-cut-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.4: Fonctions constantes par morceaux ajustées au cycle journalier de l’ozone pour <span class="math inline">\(K = 3\)</span> et <span class="math inline">\(K = 8\)</span> intervalles.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>L’erreur de validation croisée diminue globalement jusqu’à <span class="math inline">\(K = 12\)</span>, puis stagne : les moyennes horaires (<span class="math inline">\(K = 24\)</span>) ne font pas mieux que <span class="math inline">\(K = 12\)</span> (110,7 contre 110,6), pour deux fois plus de paramètres. Même au mieux, l’approche reste en retrait du polynôme de degré 5 (<span class="math inline">\(VC_{(n)} \approx 109{,}4\)</span> avec 6 paramètres), parce qu’une fonction en escalier remplace la courbe lisse par une suite de plateaux. À l’intérieur de chaque intervalle, elle ignore la pente, et les sauts entre intervalles n’ont aucun sens physique. L’intérêt de la méthode est ailleurs. Elle montre que discrétiser <span class="math inline">\(X\)</span> revient à un modèle linéaire, ce qui ouvre la voie aux splines.</p>
+</div>
+</section>
+<section id="régression-avec-des-splines" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="régression-avec-des-splines"><span class="header-section-number">8.3</span> Régression avec des splines</h2>
+<div class="env-remarque" data-titre="Modéliser plutôt qu'interpréter">
+<p><span class="env-titre">Remarque — Modéliser plutôt qu’interpréter</span></p>
+<p>Dans les chapitres précédents, les coefficients avaient un sens : une pente, un rapport de cotes, l’effet d’une classe. Ce n’est plus le cas ici. Les paramètres <span class="math inline">\(\beta_k\)</span> d’une spline multiplient des fonctions de base qui n’ont pas d’interprétation propre, de sorte qu’il est inutile de les tester un à un ou de les commenter. L’objectif est de décrire le mieux possible la relation entre <span class="math inline">\(x\)</span> et <span class="math inline">\(y\)</span>, c’est-à-dire d’estimer la courbe <span class="math inline">\(f(x) = E[Y\mid X = x]\)</span> et de prédire avec précision. Les questions pertinentes portent sur la forme de <span class="math inline">\(\hat f\)</span>, sur l’erreur de prédiction estimée par validation croisée et sur le nombre de degrés de liberté qu’on accorde à la courbe. La valeur de tel ou tel coefficient n’en fait pas partie.</p>
+<p>Le même état d’esprit vaut pour la lecture de cette section. Je donne les détails techniques (récurrence de Cox-de Boor, conditionnement des bases, calcul de la matrice de pénalité) pour montrer comment les logiciels procèdent, mais il n’est pas nécessaire de les maîtriser pour utiliser ces méthodes. L’essentiel est de savoir ce que fait chaque méthode et ce qui la distingue des autres, quel paramètre contrôle sa flexibilité (le degré, le nombre et la position des nœuds, le paramètre <span class="math inline">\(\lambda\)</span>) et comment comparer par validation croisée les ajustements obtenus sur un même jeu de données.</p>
+</div>
+<section id="splines-de-régression" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="splines-de-régression"><span class="header-section-number">8.3.1</span> Splines de régression</h3>
+<p>Les splines sont des polynômes définis par intervalles, avec des contraintes de régularité aux points de jonction (les nœuds, <em>knots</em>).</p>
+<p>Prenons d’abord le cas simple de <span class="math inline">\(K=2\)</span> intervalles et du degré <span class="math inline">\(p=3\)</span>. Le domaine <span class="math inline">\([A,B]\)</span> est divisé en <span class="math inline">\([c_0,c_1)\)</span> et <span class="math inline">\([c_1,c_2)\)</span>, et <span class="math inline">\(f\)</span> est approximée par <span class="math display">\[f(x) = \begin{cases}\beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 &amp; \mbox{si } x\in[c_0,c_1),\\ \gamma_0 + \gamma_1 x + \gamma_2 x^2 + \gamma_3 x^3 &amp; \mbox{si } x\in[c_1,c_2).\end{cases}\]</span> Ce modèle a <span class="math inline">\(4+4 = 8\)</span> degrés de liberté. Si on impose que <span class="math inline">\(f\)</span>, <span class="math inline">\(f'\)</span> et <span class="math inline">\(f''\)</span> soient continues en <span class="math inline">\(c_1\)</span> (<span class="math inline">\(f\)</span> deux fois continûment dérivable, 3 contraintes), il en reste <span class="math inline">\(8-3 = 5\)</span>.</p>
+<p>Dans le cas général, avec <span class="math inline">\(K\)</span> intervalles et un degré <span class="math inline">\(p\)</span>, il y a <span class="math inline">\(K(p+1)\)</span> paramètres et <span class="math inline">\(p(K-1)\)</span> contraintes (continuité de <span class="math inline">\(f, f',\ldots,f^{(p-1)}\)</span> aux <span class="math inline">\(K-1\)</span> nœuds intérieurs), d’où <span class="math display">\[K(p+1) - p(K-1) = K + p \ \mbox{ degrés de liberté}.\]</span></p>
+<div class="env-exemple" data-titre="Deux cubiques, avec ou sans contraintes, sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Deux cubiques, avec ou sans contraintes, sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>Coupons la journée à midi (<span class="math inline">\(c_1 = 12\)</span>) et comparons deux ajustements. Le premier est formé de deux polynômes cubiques estimés séparément sur <span class="math inline">\([0, 12)\)</span> et <span class="math inline">\([12, 23]\)</span>, soit 8 paramètres. Le second est la spline cubique à un nœud, qui impose la continuité de <span class="math inline">\(f\)</span>, <span class="math inline">\(f'\)</span> et <span class="math inline">\(f''\)</span> à midi et ne compte que 5 paramètres. Elle s’obtient avec <code>lm</code>, en ajoutant au polynôme cubique la seule fonction <span class="math inline">\((x - 12)_+^3\)</span> (voir la section suivante).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ozone  <span class="ot">&lt;-</span> <span class="fu">mutate</span>(ozone,  <span class="at">apres =</span> heure <span class="sc">&gt;=</span> <span class="dv">12</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>grille <span class="ot">&lt;-</span> <span class="fu">mutate</span>(grille, <span class="at">apres =</span> heure <span class="sc">&gt;=</span> <span class="dv">12</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>m.libre  <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> apres <span class="sc">*</span> <span class="fu">poly</span>(heure, <span class="dv">3</span>, <span class="at">raw =</span> <span class="cn">TRUE</span>), <span class="at">data =</span> ozone)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>m.spline <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> heure <span class="sc">+</span> <span class="fu">I</span>(heure<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(heure<span class="sc">^</span><span class="dv">3</span>) <span class="sc">+</span> <span class="fu">I</span>(<span class="fu">pmax</span>(heure <span class="sc">-</span> <span class="dv">12</span>, <span class="dv">0</span>)<span class="sc">^</span><span class="dv">3</span>), <span class="at">data =</span> ozone)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">libre =</span> <span class="fu">length</span>(<span class="fu">coef</span>(m.libre)), <span class="at">spline =</span> <span class="fu">length</span>(<span class="fu">coef</span>(m.spline)))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> libre spline 
+     8      5 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>vc.cub <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="fu">list</span>(<span class="at">libre =</span> m.libre, <span class="at">spline =</span> m.spline),</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>vc.cub</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   libre   spline 
+109.4167 111.1680 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>morceaux <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"Deux cubiques libres (8 paramètres)"</span>, grille,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">f =</span> <span class="fu">predict</span>(m.libre, <span class="at">newdata =</span> grille)),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"Spline cubique, nœud à 12 h (5 paramètres)"</span>, grille,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">f =</span> <span class="fu">predict</span>(m.spline, <span class="at">newdata =</span> grille))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> morceaux, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> m, <span class="at">group =</span> <span class="fu">interaction</span>(m, apres)),</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">12</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-deux-cubiques" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-deux-cubiques-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-deux-cubiques-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-deux-cubiques-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.5: Deux cubiques ajustées séparément de part et d’autre de midi (8 paramètres) et spline cubique à un nœud en 12 h (5 paramètres).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Les deux cubiques libres présentent un saut d’environ 5,7 ppb à midi, sans justification physique, puisque rien ne se passe à midi qui ne se passe pas à 11 h 59. Les trois contraintes de régularité suppriment ce défaut au prix d’une légère hausse de <span class="math inline">\(VC_{(n)}\)</span> (111 contre 109), et la courbe obtenue a l’allure attendue. C’est l’intérêt des splines : des polynômes par morceaux, mais raccordés.</p>
+</div>
+</section>
+<section id="base-des-puissances-tronquées" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="base-des-puissances-tronquées"><span class="header-section-number">8.3.2</span> Base des puissances tronquées</h3>
+<p>Pour <span class="math inline">\(p\)</span> et <span class="math inline">\(K\)</span> donnés, un choix commode de base de <span class="math inline">\(K+p\)</span> splines est <span class="math display">\[b_1(x) = 1,\quad b_2(x) = x,\ \ldots,\ b_{p+1}(x) = x^p,\quad b_{p+1+k}(x) = h(x, c_k),\ k=1,\ldots,K-1,\]</span> où <span class="math display">\[h(x,c) = (x - c)_+^p = \begin{cases}(x-c)^p &amp; \mbox{si } x\geq c,\\ 0 &amp; \mbox{sinon}.\end{cases}\]</span> Il existe une infinité de bases équivalentes, puisque n’importe quelles <span class="math inline">\(K+p\)</span> combinaisons linéaires indépendantes de cette base forment encore une base de splines.</p>
+<p>Le modèle s’écrit alors <span class="math display">\[Y_i = \beta_1 b_1(X_i) + \cdots + \beta_{K+p}\, b_{K+p}(X_i) + \epsilon_i,\]</span> et l’estimateur des moindres carrés est <span class="math inline">\(\hat{\boldsymbol\beta} = (\boldsymbol X^\top \boldsymbol X)^{-1}\boldsymbol X^\top \boldsymbol Y\)</span>, avec <span class="math inline">\(X_{ik} = b_k(X_i)\)</span>, ce qui donne <span class="math inline">\(\hat f(x) = \sum_k\hat\beta_k b_k(x)\)</span>.</p>
+<div class="env-exemple" data-titre="Base des puissances tronquées sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Base des puissances tronquées sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>Prenons <span class="math inline">\(p = 3\)</span> et des nœuds intérieurs à 6 h, 12 h et 18 h (<span class="math inline">\(K = 4\)</span>). La base compte alors <span class="math inline">\(K + p = 7\)</span> fonctions : <span class="math inline">\(1\)</span>, <span class="math inline">\(x\)</span>, <span class="math inline">\(x^2\)</span>, <span class="math inline">\(x^3\)</span>, <span class="math inline">\((x - 6)_+^3\)</span>, <span class="math inline">\((x - 12)_+^3\)</span> et <span class="math inline">\((x - 18)_+^3\)</span>. On construit la matrice <span class="math inline">\(\boldsymbol X\)</span> à la main et on ajuste le modèle par <code>lm</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="cf">function</span>(x, c) <span class="fu">pmax</span>(x <span class="sc">-</span> c, <span class="dv">0</span>)<span class="sc">^</span><span class="dv">3</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>X.pt <span class="ot">&lt;-</span> <span class="fu">with</span>(ozone, <span class="fu">cbind</span>(<span class="dv">1</span>, heure, heure<span class="sc">^</span><span class="dv">2</span>, heure<span class="sc">^</span><span class="dv">3</span>, <span class="fu">h</span>(heure, <span class="dv">6</span>), <span class="fu">h</span>(heure, <span class="dv">12</span>), <span class="fu">h</span>(heure, <span class="dv">18</span>)))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>m.pt <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> X.pt <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> ozone)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(m.pt), <span class="dv">4</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     X.pt X.ptheure      X.pt      X.pt      X.pt      X.pt      X.pt 
+  24.4590    0.2275   -0.6356    0.0761   -0.1399    0.0662    0.0457 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((<span class="fu">residuals</span>(m.pt) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m.pt)))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 109.1377</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>kappa.pt <span class="ot">&lt;-</span> <span class="fu">kappa</span>(<span class="fu">crossprod</span>(X.pt), <span class="at">exact =</span> <span class="cn">TRUE</span>)   <span class="co"># nombre de condition de X'X</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>kappa.pt</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 982328687</code></pre>
+</div>
+</div>
+<p>Les coefficients de <span class="math inline">\((x - c_k)_+^3\)</span> se lisent comme des changements du coefficient cubique à chaque nœud, ce qui est peu parlant. Leurs ordres de grandeur sont aussi disparates : la colonne <span class="math inline">\(x^3\)</span> dépasse <span class="math inline">\(10^4\)</span>, alors que la première vaut 1. Le nombre de condition de <span class="math inline">\(\boldsymbol X^\top\boldsymbol X\)</span> (rapport de la plus grande à la plus petite valeur propre) est ici d’environ <span class="math inline">\(9{,}8 \times 10^8\)</span>, soit de l’ordre de <span class="math inline">\(10^9\)</span>. La base est mathématiquement correcte, mais numériquement fragile, et elle le devient davantage à mesure qu’on ajoute des nœuds. C’est ce qui motive la base de la section suivante, qui engendre le même espace de fonctions, donc le même <span class="math inline">\(\hat f\)</span>, avec une matrice bien conditionnée.</p>
+</div>
+</section>
+<section id="sec-bsplines" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="sec-bsplines"><span class="header-section-number">8.3.3</span> B-splines</h3>
+<p>La base des puissances tronquées est simple, mais numériquement instable (<span class="math inline">\(\boldsymbol X^\top \boldsymbol X\)</span> mal conditionnée, comme l’exemple précédent l’a montré). En pratique, les logiciels utilisent plutôt la base des B-splines, une base équivalente dont les fonctions sont à support compact. Chaque <span class="math inline">\(B\)</span>-spline de degré <span class="math inline">\(p\)</span> est non nulle sur au plus <span class="math inline">\(p+1\)</span> intervalles consécutifs.</p>
+<p>Les B-splines se définissent par la récurrence de Cox-de Boor. Sur une suite de nœuds augmentée <span class="math inline">\(\{t_j\}\)</span>, les B-splines de degré 0 sont <span class="math display">\[B_{j,0}(x) = \mathbf{1}_{\{t_j \leq x &lt; t_{j+1}\}},\]</span> et pour <span class="math inline">\(d = 1,\ldots,p\)</span> : <span class="math display">\[B_{j,d}(x) = \frac{x - t_j}{t_{j+d} - t_j}\,B_{j,d-1}(x) + \frac{t_{j+d+1} - x}{t_{j+d+1} - t_{j+1}}\,B_{j+1,d-1}(x),\]</span> avec la convention <span class="math inline">\(0/0 = 0\)</span>, puisque les nœuds frontières sont répétés dans la suite augmentée. Ces fonctions ont les propriétés suivantes :</p>
+<ul>
+<li>positivité : chaque <span class="math inline">\(B_{j,p}(x) \geq 0\)</span> ;</li>
+<li>partition de l’unité : <span class="math inline">\(\sum_j B_{j,p}(x) = 1\)</span> pour tout <span class="math inline">\(x \in [A,B]\)</span> ;</li>
+<li>structure creuse : la matrice de design est creuse par bandes, ce qui rend les calculs stables et rapides.</li>
+</ul>
+<p>En R, la fonction <code>bs</code> de la librairie <code>splines</code> construit la base de B-splines cubiques.</p>
+<div class="env-exemple" data-titre="B-splines cubiques sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — B-splines cubiques sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>Les trois nœuds intérieurs placés à 6 h, 12 h et 18 h donnent <span class="math inline">\(K = 4\)</span> intervalles et <span class="math inline">\(K + p = 7\)</span> degrés de liberté (ordonnée à l’origine comprise). La <a href="#fig-ozone-bsplines" class="quarto-xref">Figure&nbsp;<span>8.6</span></a> montre les six fonctions de base produites par <code>bs</code>, chacune non nulle sur au plus quatre intervalles consécutifs. Remarquez que <code>bs</code> omet par défaut la première B-spline, que l’ordonnée à l’origine du modèle remplace. La somme des sept B-splines complètes vaut 1 partout, alors que celle des six colonnes de <code>bs</code> vaut <span class="math inline">\(1 - B_1(x)\)</span>, qui est inférieure à 1 sur le premier intervalle <span class="math inline">\([0, 6)\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">bs</span>(grille<span class="sc">$</span>heure, <span class="at">knots =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">12</span>, <span class="dv">18</span>))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(B)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 300   6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">heure =</span> grille<span class="sc">$</span>heure, <span class="at">k =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(B), <span class="at">each =</span> <span class="fu">nrow</span>(B))),</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">b =</span> <span class="fu">as.vector</span>(B))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(base, <span class="fu">aes</span>(heure, b, <span class="at">colour =</span> k)) <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">12</span>, <span class="dv">18</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="fu">expression</span>(b[k](x)), <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-bsplines" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-bsplines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-bsplines-1.png" class="img-fluid figure-img" width="576">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-bsplines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.6: Base de B-splines cubiques sur <span class="math inline">\([0, 23]\)</span> avec nœuds intérieurs à 6, 12 et 18 h (tirets).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Le modèle s’ajuste avec <code>lm</code> comme n’importe quel modèle linéaire :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>modele.bs <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">bs</span>(heure, <span class="at">knots =</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">12</span>, <span class="dv">18</span>)), <span class="at">data =</span> ozone)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modele.bs)<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                    Estimate Std. Error    t value
+(Intercept)                       24.4589975  0.9926665 24.6396932
+bs(heure, knots = c(6, 12, 18))1   0.4549517  2.0147284  0.2258129
+bs(heure, knots = c(6, 12, 18))2 -13.8897033  1.5748454 -8.8197250
+bs(heure, knots = c(6, 12, 18))3  17.4597645  1.7217356 10.1407932
+bs(heure, knots = c(6, 12, 18))4  18.8803791  1.6895631 11.1747109
+bs(heure, knots = c(6, 12, 18))5   4.8291070  1.7470414  2.7641629
+bs(heure, knots = c(6, 12, 18))6   1.3632836  1.4136373  0.9643801
+                                      Pr(&gt;|t|)
+(Intercept)                      1.442856e-118
+bs(heure, knots = c(6, 12, 18))1  8.213679e-01
+bs(heure, knots = c(6, 12, 18))2  2.287619e-18
+bs(heure, knots = c(6, 12, 18))3  1.196750e-23
+bs(heure, knots = c(6, 12, 18))4  3.081624e-28
+bs(heure, knots = c(6, 12, 18))5  5.754533e-03
+bs(heure, knots = c(6, 12, 18))6  3.349615e-01</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>vc.bs7 <span class="ot">&lt;-</span> <span class="fu">mean</span>((<span class="fu">residuals</span>(modele.bs) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(modele.bs)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>vc.bs7</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 109.1377</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>kappa.bs <span class="ot">&lt;-</span> <span class="fu">kappa</span>(<span class="fu">crossprod</span>(<span class="fu">model.matrix</span>(modele.bs)), <span class="at">exact =</span> <span class="cn">TRUE</span>)   <span class="co"># nombre de condition de X'X</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>kappa.bs</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 211.7128</code></pre>
+</div>
+</div>
+<p>Les coefficients individuels ne s’interprètent pas, parce que chaque <span class="math inline">\(b_k\)</span> n’agit que localement. Les valeurs ajustées et <span class="math inline">\(VC_{(n)}\)</span> sont exactement celles de la base des puissances tronquées avec les mêmes nœuds, ce qui est normal puisque les deux bases engendrent le même espace. En revanche, le nombre de condition de <span class="math inline">\(\boldsymbol X^\top\boldsymbol X\)</span> est passé d’environ <span class="math inline">\(10^9\)</span> à environ 210. La courbe, tracée plus loin à la <a href="#fig-ozone-splines" class="quarto-xref">Figure&nbsp;<span>8.8</span></a>, est pratiquement confondue avec le polynôme de degré 5, et la LOOCV est du même ordre (<span class="math inline">\(VC_{(n)} \approx 109{,}1\)</span>). Sur une courbe aussi régulière, les deux bases décrivent la même fonction. La spline a quand même deux avantages : elle reste sage aux extrémités, et elle permet d’ajouter des nœuds là où la courbe change vite sans augmenter le degré partout.</p>
+</div>
+</section>
+<section id="sec-splines-naturelles" class="level3" data-number="8.3.4">
+<h3 data-number="8.3.4" class="anchored" data-anchor-id="sec-splines-naturelles"><span class="header-section-number">8.3.4</span> Splines naturelles</h3>
+<p>L’estimateur par splines peut être instable aux extrémités du domaine de <span class="math inline">\(X\)</span>, à cause du comportement erratique des polynômes au-delà des nœuds extrêmes. Les splines naturelles corrigent ce défaut. Elles sont définies exactement comme les splines cubiques, avec la contrainte supplémentaire que la fonction soit linéaire au-delà des nœuds frontières <span class="math inline">\(c_0\)</span> et <span class="math inline">\(c_K\)</span>. Par continuité de <span class="math inline">\(f''\)</span>, cela revient à imposer <span class="math inline">\(f''(c_0) = f''(c_K) = 0\)</span>, soit 2 contraintes, et une spline naturelle cubique compte donc <span class="math inline">\(K + 3 - 2 = K + 1\)</span> degrés de liberté. Ces 2 degrés de liberté libérés peuvent être réinvestis en nœuds intérieurs. En R : <code>lm(O3 ~ ns(heure, df = 4), data = ozone)</code>. L’argument <code>df</code> fixe le nombre de degrés de liberté, sans compter l’ordonnée à l’origine, et <code>ns</code> place les nœuds intérieurs aux quantiles de <span class="math inline">\(X\)</span>. Les nœuds frontières de <code>ns</code> sont par défaut le minimum et le maximum de <span class="math inline">\(X\)</span>. Sur l’étendue des données, la fonction ajustée reste donc cubique dans les intervalles extrêmes, mais avec une dérivée seconde nulle aux deux bords.</p>
+<div class="env-exemple" data-titre="Splines de régression et splines naturelles sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Splines de régression et splines naturelles sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<p>Comparons par LOOCV la spline cubique (<code>bs</code>) et la spline naturelle (<code>ns</code>), pour un même nombre de degrés de liberté.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">&lt;-</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>vc.bs <span class="ot">&lt;-</span> <span class="fu">sapply</span>(dfs, <span class="cf">function</span>(d) {</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">bs</span>(heure, <span class="at">df =</span> d), <span class="at">data =</span> ozone)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>vc.ns <span class="ot">&lt;-</span> <span class="fu">sapply</span>(dfs, <span class="cf">function</span>(d) {</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">ns</span>(heure, <span class="at">df =</span> d), <span class="at">data =</span> ozone)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">df =</span> dfs, <span class="at">bs =</span> <span class="fu">round</span>(vc.bs, <span class="dv">1</span>), <span class="at">ns =</span> <span class="fu">round</span>(vc.ns, <span class="dv">1</span>))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]
+df   3.0   4.0   5.0   6.0   7.0   8.0   9.0  10.0
+bs 112.2 111.4 109.6 109.2 109.5 109.2 109.3 109.4
+ns 110.0 109.8 109.5 109.1 109.2 109.2 109.3 109.4</code></pre>
+</div>
+</div>
+<p>Comme pour <code>ns</code>, l’argument <code>df</code> de <code>bs</code> ne compte pas l’ordonnée à l’origine : <code>df = 6</code> correspond à 7 paramètres. À degrés de liberté égaux, la spline naturelle fait un peu mieux pour les petites valeurs de <code>df</code>. En fait, les deux degrés de liberté que <code>bs</code> consacre à la courbure aux deux bords (<span class="math inline">\(f''(c_0)\)</span> et <span class="math inline">\(f''(c_K)\)</span> libres), <code>ns</code> les investit en nœuds intérieurs. À partir de six degrés de liberté, les deux se valent et rejoignent le polynôme de degré 5 et les B-splines à nœuds fixes. Avec <span class="math inline">\(n = 2\,204\)</span> et une courbe sans comportement erratique aux bords, l’avantage des splines naturelles est modeste. Il devient important lorsque les observations sont rares aux extrémités, comme pour les gros arbres d’<a href="./05-prediction-validation-croisee.html#data-arbres"><code>arbres</code></a>.</p>
+</div>
+</section>
+<section id="splines-de-lissage-splines-pénalisées" class="level3" data-number="8.3.5">
+<h3 data-number="8.3.5" class="anchored" data-anchor-id="splines-de-lissage-splines-pénalisées"><span class="header-section-number">8.3.5</span> Splines de lissage (splines pénalisées)</h3>
+<p>Un autre défaut des splines de régression est qu’elles peuvent avoir tendance à « aller chercher » le maximum de points (surajustement). Pour y remédier, il suffit d’imposer une pénalité sur la rugosité de <span class="math inline">\(f\)</span>, c’est-à-dire d’estimer <span class="math inline">\(\boldsymbol\beta\)</span> en minimisant <span class="math display">\[\sum_{i=1}^n\left\{Y_i - \sum_{k}\beta_k b_k(X_i)\right\}^2 + \lambda\int_A^B f''(t)^2\,dt.\]</span> Comme <span class="math inline">\(f = \sum_k \beta_k b_k\)</span>, la pénalité s’écrit <span class="math inline">\(\lambda\,\boldsymbol\beta^\top \boldsymbol M\boldsymbol\beta\)</span>, avec <span class="math inline">\(M_{lq} = \int_A^B b''_l(t)\,b''_q(t)\,dt\)</span>. L’estimateur qui en résulte est explicite : <span class="math display">\[\boxed{\hat{\boldsymbol\beta}_\lambda = (\boldsymbol X^\top \boldsymbol X + \lambda \boldsymbol M)^{-1}\boldsymbol X^\top \boldsymbol Y}\]</span> Le paramètre <span class="math inline">\(\lambda\)</span> contrôle la régularité de <span class="math inline">\(\hat f\)</span> :</p>
+<ul>
+<li><p><span class="math inline">\(\lambda = 0\)</span> : aucune pénalité, risque de surajustement ;</p></li>
+<li><p><span class="math inline">\(\lambda\to\infty\)</span> : <span class="math inline">\(f''\equiv 0\)</span>, ce qui redonne la droite des moindres carrés.</p></li>
+</ul>
+<p>L’analogie avec la régression ridge du <a href="06-selection-regularisation.html" class="quarto-xref"><span>Chapitre 6</span></a> est directe : l’estimateur a la même forme et le paramètre de pénalité joue le même rôle. En pratique, on choisit <span class="math inline">\(\lambda\)</span> par validation croisée. En R, la fonction <code>smooth.spline(x, y)</code> place un nœud à chaque valeur distincte de <span class="math inline">\(x\)</span>. Elle choisit <span class="math inline">\(\lambda\)</span> par validation croisée généralisée (GCV), une approximation de la LOOCV ; l’option <code>cv = TRUE</code> demande la LOOCV exacte.</p>
+<div class="env-exemple" data-titre="Spline de lissage sur [`qualite_air`](#data-qualite-air)">
+<p><span class="env-titre">Exemple — Spline de lissage sur <a href="#data-qualite-air"><code>qualite_air</code></a></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>modele.sp <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(ozone<span class="sc">$</span>heure, ozone<span class="sc">$</span>O3)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>modele.sp</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+smooth.spline(x = ozone$heure, y = ozone$O3)
+
+Smoothing Parameter  spar= 0.4916719  lambda= 0.01890238 (14 iterations)
+Equivalent Degrees of Freedom (Df): 7.685062
+Penalized Criterion (RSS): 405.0395
+GCV: 109.2475</code></pre>
+</div>
+</div>
+<p>Les 24 heures distinctes donnent 24 nœuds, donc 24 degrés de liberté avant pénalisation, soit un paramètre par heure, comme pour les moyennes horaires de la <a href="#fig-ozone-cut" class="quarto-xref">Figure&nbsp;<span>8.4</span></a>. La pénalité les ramène à 7,7 degrés de liberté effectifs, et le critère GCV (109,2) rejoint la LOOCV des meilleurs modèles précédents. La LOOCV exacte (<code>cv = TRUE</code>) n’est pas recommandée ici. Avec des valeurs de <span class="math inline">\(x\)</span> répétées, exclure une observation à la fois ne change presque rien à l’ajustement en ce point. D’ailleurs, <code>smooth.spline</code> émet un avertissement.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>lissage <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"df = 3"</span>, <span class="dv">3</span>), <span class="fu">c</span>(<span class="st">"GCV"</span>, <span class="cn">NA</span>), <span class="fu">c</span>(<span class="st">"df = 20"</span>, <span class="dv">20</span>)), <span class="cf">function</span>(z) {</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  sp <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.na</span>(z[<span class="dv">2</span>])) modele.sp <span class="cf">else</span> <span class="fu">smooth.spline</span>(ozone<span class="sc">$</span>heure, ozone<span class="sc">$</span>O3, <span class="at">df =</span> <span class="fu">as.numeric</span>(z[<span class="dv">2</span>]))</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="fu">sprintf</span>(<span class="st">"%s (df = %.1f, lambda = %.2g)"</span>, z[<span class="dv">1</span>], sp<span class="sc">$</span>df, sp<span class="sc">$</span>lambda),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">heure =</span> grille<span class="sc">$</span>heure, <span class="at">f =</span> <span class="fu">predict</span>(sp, grille<span class="sc">$</span>heure)<span class="sc">$</span>y)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> lissage, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> m), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-lissage" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-lissage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-lissage-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-lissage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.7: Splines de lissage pour trois valeurs de <span class="math inline">\(\lambda\)</span> : forte pénalisation (3 degrés de liberté effectifs), valeur choisie par GCV et faible pénalisation (20 degrés de liberté effectifs).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Avec trois degrés de liberté, la pénalité écrase la bosse. Avec vingt, la courbe est libre de suivre les moyennes horaires, mais comme celles-ci sont régulières, elle reste lisse et presque confondue avec la solution GCV. C’est l’avantage de la pénalisation : on part d’une base riche (un nœud par valeur de <span class="math inline">\(x\)</span>) et on laisse <span class="math inline">\(\lambda\)</span> décider de la complexité. Il n’est pas nécessaire de choisir le nombre ni la position des nœuds.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>modele.ns <span class="ot">&lt;-</span> <span class="fu">lm</span>(O3 <span class="sc">~</span> <span class="fu">ns</span>(heure, <span class="at">df =</span> <span class="dv">4</span>), <span class="at">data =</span> ozone)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>courbes <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"Polynôme, p = 5"</span>, <span class="at">heure =</span> grille<span class="sc">$</span>heure,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">f =</span> <span class="fu">predict</span>(modeles.o3[[<span class="dv">5</span>]], <span class="at">newdata =</span> grille)),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"B-splines, nœuds 6, 12, 18"</span>, <span class="at">heure =</span> grille<span class="sc">$</span>heure,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">f =</span> <span class="fu">predict</span>(modele.bs, <span class="at">newdata =</span> grille)),</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"Spline naturelle, df = 4"</span>, <span class="at">heure =</span> grille<span class="sc">$</span>heure,</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">f =</span> <span class="fu">predict</span>(modele.ns, <span class="at">newdata =</span> grille)),</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">m =</span> <span class="st">"Spline de lissage (GCV)"</span>, <span class="at">heure =</span> grille<span class="sc">$</span>heure,</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">f =</span> <span class="fu">predict</span>(modele.sp, grille<span class="sc">$</span>heure)<span class="sc">$</span>y)</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ozone, <span class="fu">aes</span>(heure, O3)) <span class="sc">+</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.08</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> courbes, <span class="fu">aes</span>(heure, f, <span class="at">colour =</span> m), <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Heure (HNE)"</span>, <span class="at">y =</span> <span class="st">"Ozone (ppb)"</span>, <span class="at">colour =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-ozone-splines" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ozone-splines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="08-splines_files/figure-html/fig-ozone-splines-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ozone-splines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.8: Cycle journalier de l’ozone estimé par le polynôme de degré 5, les B-splines cubiques à nœuds 6, 12 et 18 h, la spline naturelle à 4 degrés de liberté et la spline de lissage (GCV).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Les quatre estimateurs sont pratiquement indiscernables. Lorsque <span class="math inline">\(n\)</span> est grand et que <span class="math inline">\(f\)</span> est lisse, le choix de la base importe peu : ce qui compte, c’est le nombre de degrés de liberté effectifs. Ici, tous les critères de validation croisée s’accordent sur une complexité de 6 à 8 degrés de liberté, ordonnée à l’origine comprise.</p>
+</div>
+<div class="env-remarque" data-titre="Degrés de liberté effectifs">
+<p><span class="env-titre">Remarque — Degrés de liberté effectifs</span></p>
+<p>Pour un estimateur linéaire <span class="math inline">\(\hat{\boldsymbol Y} = \boldsymbol A_\lambda \boldsymbol Y\)</span>, avec <span class="math inline">\(\boldsymbol A_\lambda = \boldsymbol X(\boldsymbol X^\top \boldsymbol X + \lambda \boldsymbol M)^{-1}\boldsymbol X^\top\)</span>, les degrés de liberté effectifs sont <span class="math inline">\(\mathrm{Tr}(\boldsymbol A_\lambda)\)</span>. Ils décroissent de <span class="math inline">\(K+p\)</span> (pour <span class="math inline">\(\lambda = 0\)</span>) vers 2 (pour <span class="math inline">\(\lambda\to\infty\)</span>) et donnent ainsi une échelle interprétable pour calibrer le lissage.</p>
+</div>
+<div class="env-remarque" data-titre="À retenir">
+<p><span class="env-titre">Remarque — À retenir</span></p>
+<ul>
+<li>Bases de fonctions : polynômes, fonctions constantes par morceaux et splines de régression s’écrivent <span class="math inline">\(\sum_k\beta_k b_k(X_i)\)</span> et s’ajustent comme des modèles linéaires, avec <code>lm</code>. Les coefficients des splines ne s’interprètent pas un à un, et ce sont la courbe <span class="math inline">\(\hat f\)</span>, son erreur de validation croisée et ses degrés de liberté qui comptent ;</li>
+<li>Splines de régression : polynômes de degré <span class="math inline">\(p\)</span> par morceaux, raccordés aux nœuds par la continuité de <span class="math inline">\(f, f', \ldots, f^{(p-1)}\)</span>, soit <span class="math inline">\(K + p\)</span> degrés de liberté pour <span class="math inline">\(K\)</span> intervalles. La base des B-splines (<code>bs</code>) donne le même <span class="math inline">\(\hat f\)</span> que la base des puissances tronquées avec les mêmes nœuds, mais avec une matrice <span class="math inline">\(\boldsymbol{X}^\top\boldsymbol{X}\)</span> bien conditionnée ;</li>
+<li>Bords du domaine : les polynômes de degré élevé et les splines peuvent être instables aux extrémités, et les splines naturelles, linéaires au-delà des nœuds frontières, corrigent ce défaut (<span class="math inline">\(K+1\)</span> degrés de liberté pour une spline naturelle cubique). Avec <code>ns(heure, df = 4)</code>, les nœuds intérieurs sont placés aux quantiles de <span class="math inline">\(X\)</span>, et <code>df</code> (comme pour <code>bs</code>) ne compte pas l’ordonnée à l’origine ;</li>
+<li>Splines de lissage : la pénalité <span class="math inline">\(\lambda\int_A^B f''(t)^2\,dt\)</span> donne <span class="math inline">\(\hat{\boldsymbol{\beta}}_\lambda = (\boldsymbol{X}^\top\boldsymbol{X} + \lambda\boldsymbol{M})^{-1}\boldsymbol{X}^\top\boldsymbol{Y}\)</span>, de la même forme que ridge. <code>smooth.spline</code> place un nœud à chaque valeur distincte de <span class="math inline">\(x\)</span> et choisit <span class="math inline">\(\lambda\)</span> par GCV, et la complexité se lit sur les degrés de liberté effectifs <span class="math inline">\(\mathrm{Tr}(\boldsymbol{A}_\lambda)\)</span> ;</li>
+<li>Confiance ou prédiction : <code>predict(..., interval = "confidence")</code> donne une bande pour la moyenne conditionnelle <span class="math inline">\(f(x)\)</span>, et <code>interval = "prediction"</code> un intervalle, plus large, pour une nouvelle observation. Les deux supposent des erreurs indépendantes, et des mesures corrélées (les heures d’une même journée) rendent la bande de confiance trop étroite.</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="exo-splines" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="exo-splines"><span class="header-section-number">8.4</span> Exercices</h2>
+<p>Les exercices sont classés par niveau de difficulté. Leurs solutions sont regroupées dans l’annexe <a href="./solutions.html#sol-splines">Solutions des exercices</a> ; le lien « Voir la solution » sous chaque énoncé y mène directement.</p>
+<p>Les exercices de ce chapitre sont surtout appliqués : ils demandent d’ajuster et de comparer des modèles en R. Ils utilisent trois jeux de données :</p>
+<ul>
+<li>les concentrations horaires de dioxyde d’azote (<code>NO2</code>, en ppb) mesurées à la station de Longueuil, du lundi au vendredi, tirées de <a href="./08-splines.html#data-qualite-air"><code>qualite_air</code></a> ;</li>
+<li>le jeu de données <a href="./05-prediction-validation-croisee.html#data-arbres"><code>arbres</code></a> ;</li>
+<li>le jeu de données <code>mcycle</code> de la librairie <code>MASS</code>, qui donne l’accélération de la tête d’un mannequin (<code>accel</code>, en multiples de <span class="math inline">\(g\)</span>) en fonction du temps écoulé depuis l’impact (<code>times</code>, en millisecondes) lors de 133 essais simulés d’accidents de moto.</li>
+</ul>
+<p>Le code suivant charge les données et définit la fonction <code>vc.n</code>, qui calcule <span class="math inline">\(VC_{(n)}\)</span> par la formule explicite du <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 5</span></a>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)   <span class="co"># jeu de données mcycle</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/qualite_air.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"UTF-8-BOM"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">heure =</span> <span class="fu">as.integer</span>(<span class="fu">substr</span>(Date_Heure, <span class="dv">12</span>, <span class="dv">13</span>)),</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">date  =</span> <span class="fu">as.Date</span>(<span class="fu">substr</span>(Date_Heure, <span class="dv">1</span>, <span class="dv">10</span>)))</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co"># jours de semaine seulement (%u : 1 = lundi, ..., 7 = dimanche)</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>no2 <span class="ot">&lt;-</span> air <span class="sc">|&gt;</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Station <span class="sc">==</span> <span class="st">"06600 - Longueuil"</span>, <span class="sc">!</span><span class="fu">is.na</span>(NO2), <span class="fu">as.integer</span>(<span class="fu">format</span>(date, <span class="st">"%u"</span>)) <span class="sc">&lt;=</span> <span class="dv">5</span>)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>arbres <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Jeux de données/arbres.csv"</span>)</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>vc.n <span class="ot">&lt;-</span> <span class="cf">function</span>(m) <span class="fu">mean</span>((<span class="fu">residuals</span>(m) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">hatvalues</span>(m)))<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="exercices-appliqués" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="exercices-appliqués"><span class="header-section-number">8.4.1</span> Exercices appliqués</h3>
+<p><span id="exo-splines-app-1"></span><strong>Exercice 1 (facile).</strong> Cycle journalier du dioxyde d’azote.</p>
+<ol type="a">
+<li><p>Calculez la concentration moyenne de NO2 à chaque heure et tracez-la. Décrivez le cycle journalier et proposez une explication.</p></li>
+<li><p>Ajustez des régressions polynomiales de degré 1 à 12 de <code>NO2</code> sur <code>heure</code> et comparez-les par <span class="math inline">\(VC_{(n)}\)</span> et par le BIC. Quel degré retenez-vous?</p></li>
+<li><p>Pourquoi faut-il ici un degré nettement plus élevé que pour l’ozone au <a href="#sec-splines" class="quarto-xref"><span>Chapitre 8</span></a>? Pourquoi est-il préférable d’utiliser <code>poly(heure, p)</code> plutôt que <code>poly(heure, p, raw = TRUE)</code> pour les degrés élevés?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-app-1">Voir la solution</a></p>
+<p><span id="exo-splines-app-2"></span><strong>Exercice 2 (facile).</strong> Fonctions constantes par morceaux pour le NO2.</p>
+<ol type="a">
+<li><p>Découpez la journée en <span class="math inline">\(K = 2, 3, 4, 6, 8, 12\)</span> et <span class="math inline">\(24\)</span> intervalles de même largeur et comparez les ajustements par <span class="math inline">\(VC_{(n)}\)</span>.</p></li>
+<li><p>Proposez plutôt un découpage en cinq intervalles qui suit le cycle observé à l’exercice précédent, par exemple la nuit, la pointe du matin, la journée, la pointe du soir et la soirée. Comparez-le aux découpages réguliers.</p></li>
+<li><p>Ajustez votre modèle sans ordonnée à l’origine (<code>- 1</code> dans la formule) et vérifiez numériquement que les coefficients sont les moyennes de <code>NO2</code> dans chaque intervalle, comme l’annonce le <a href="#sec-splines" class="quarto-xref"><span>Chapitre 8</span></a>.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-app-2">Voir la solution</a></p>
+<p><span id="exo-splines-app-3"></span><strong>Exercice 3 (moyen).</strong> Extrapolation de la hauteur des arbres.</p>
+<p>Le plus gros arbre du jeu de données <a href="./05-prediction-validation-croisee.html#data-arbres"><code>arbres</code></a> a un diamètre de 41,5 cm.</p>
+<ol type="a">
+<li><p>Ajustez la hauteur en fonction du diamètre par des polynômes de degré 1 à 5, des splines cubiques <code>bs(diameter_cm, df = d)</code> pour <span class="math inline">\(d = 3,\ldots,6\)</span> et des splines naturelles <code>ns(diameter_cm, df = d)</code> pour <span class="math inline">\(d = 1,\ldots,6\)</span>. Comparez-les par <span class="math inline">\(VC_{(n)}\)</span>.</p></li>
+<li><p>Pour chaque modèle, prédisez la hauteur d’arbres de 40, 45, 50 et 60 cm de diamètre. Commentez.</p></li>
+<li><p>Pourquoi les splines naturelles se comportent-elles mieux au-delà des données? Leur prédiction à 60 cm est-elle pour autant fiable?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-app-3">Voir la solution</a></p>
+<p><span id="exo-splines-app-4"></span><strong>Exercice 4 (moyen).</strong> Accélération lors d’un impact (<code>mcycle</code>).</p>
+<ol type="a">
+<li><p>Tracez <code>accel</code> en fonction de <code>times</code>. Pourquoi la régression polynomiale est-elle mal adaptée à ces données? Vérifiez-le en calculant <span class="math inline">\(VC_{(n)}\)</span> pour les degrés 1 à 12.</p></li>
+<li><p>Comparez par <span class="math inline">\(VC_{(n)}\)</span> les splines cubiques <code>bs(times, df = d)</code> et les splines naturelles <code>ns(times, df = d)</code> pour <span class="math inline">\(d = 3,\ldots,15\)</span>. Quel modèle retenez-vous?</p></li>
+<li><p>Superposez au nuage de points le meilleur polynôme et la spline retenue.</p></li>
+<li><p>Prédisez l’accélération à 60 et 65 ms avec le polynôme de degré 8, la spline cubique et la spline naturelle à 8 degrés de liberté. Laquelle est la plus plausible physiquement?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-app-4">Voir la solution</a></p>
+<p><span id="exo-splines-app-5"></span><strong>Exercice 5 (moyen).</strong> Spline de lissage pour <code>mcycle</code>.</p>
+<ol type="a">
+<li><p>Ajustez une spline de lissage avec <code>smooth.spline</code>, en laissant la GCV choisir <span class="math inline">\(\lambda\)</span>. Combien de degrés de liberté effectifs obtenez-vous? Comparez avec la spline naturelle retenue à l’exercice précédent.</p></li>
+<li><p>Tracez sur un même graphique les splines de lissage à 5 degrés de liberté, à la valeur choisie par la GCV et à 30 degrés de liberté. Décrivez le compromis biais-variance.</p></li>
+<li><p>Calculez l’écart-type des résidus de la spline choisie par la GCV avant 14 ms, entre 14 et 40 ms, et après 40 ms. Qu’en concluez-vous sur les hypothèses du modèle? Quelle conséquence cela a-t-il sur le choix de <span class="math inline">\(\lambda\)</span> et sur les intervalles de confiance?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-app-5">Voir la solution</a></p>
+<p><span id="exo-splines-app-6"></span><strong>Exercice 6 (difficile).</strong> Simulation : splines cubiques et splines naturelles aux bords.</p>
+<p>On veut vérifier par simulation (<a href="01-monte-carlo.html" class="quarto-xref"><span>Chapitre 1</span></a>) l’affirmation du <a href="#sec-splines" class="quarto-xref"><span>Chapitre 8</span></a> selon laquelle les splines naturelles sont plus stables aux extrémités du domaine. Considérez le modèle <span class="math inline">\(Y_i = \sin(2\pi X_i) + \epsilon_i\)</span>, avec <span class="math inline">\(X_i\sim\mathcal U(0,1)\)</span>, <span class="math inline">\(\epsilon_i\sim\mathcal N(0, 0{,}3^2)\)</span> et <span class="math inline">\(n = 50\)</span>.</p>
+<ol type="a">
+<li><p>Pour <span class="math inline">\(B = 500\)</span> jeux de données, ajustez <code>bs(x, df = 6)</code> et <code>ns(x, df = 6)</code> et conservez les prédictions <span class="math inline">\(\hat f(x_0)\)</span> en <span class="math inline">\(x_0 = 0{,}02\)</span>, <span class="math inline">\(0{,}5\)</span> et <span class="math inline">\(0{,}98\)</span>. Pour que les deux bases aient les mêmes nœuds frontières d’un jeu de données à l’autre, fixez-les à <span class="math inline">\(0\)</span> et <span class="math inline">\(1\)</span> (argument <code>Boundary.knots</code>).</p></li>
+<li><p>Estimez le biais, la variance et l’erreur quadratique moyenne de chaque estimateur en chaque point. Commentez.</p></li>
+<li><p>Les deux modèles ont-ils le même nombre de paramètres? Comment <code>ns</code> utilise-t-elle les deux degrés de liberté que <code>bs</code> consacre aux bords?</p></li>
+<li><p>La fonction <span class="math inline">\(\sin(2\pi x)\)</span> vérifie <span class="math inline">\(f''(0) = f''(1) = 0\)</span>, exactement la contrainte qu’impose une spline naturelle. Reprenez la simulation avec <span class="math inline">\(f(x) = \cos(2\pi x)\)</span>, dont la dérivée seconde ne s’annule pas aux bords. Vos conclusions changent-elles?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-app-6">Voir la solution</a></p>
+<p><span id="exo-splines-app-7"></span><strong>Exercice 7 (difficile).</strong> Base des puissances tronquées et B-splines.</p>
+<ol type="a">
+<li><p>Écrivez une fonction qui construit la base des puissances tronquées cubique pour un vecteur de nœuds donné.</p></li>
+<li><p>Pour les données <code>mcycle</code>, placez <span class="math inline">\(K = 3\)</span>, <span class="math inline">\(6\)</span>, <span class="math inline">\(10\)</span> et <span class="math inline">\(15\)</span> nœuds intérieurs aux quantiles de <code>times</code>. Pour chaque <span class="math inline">\(K\)</span>, ajustez le modèle avec la base des puissances tronquées et avec <code>bs(times, knots = ...)</code>, puis comparez les valeurs ajustées et le nombre de condition de <span class="math inline">\(\boldsymbol X^\top\boldsymbol X\)</span> (fonction <code>kappa(..., exact = TRUE)</code>).</p></li>
+<li><p>Expliquez les résultats.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-app-7">Voir la solution</a></p>
+</section>
+<section id="exercices-théoriques" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="exercices-théoriques"><span class="header-section-number">8.4.2</span> Exercices théoriques</h3>
+<p><span id="exo-splines-theo-1"></span><strong>Exercice 1 (facile).</strong> Soit le modèle constant par morceaux <span class="math inline">\(Y_i = \sum_{k=1}^K\beta_kb_k(X_i) + \epsilon_i\)</span>, où <span class="math inline">\(b_k(x) = \mathbf 1\{x\in[c_{k-1},c_k)\}\)</span> et où chaque intervalle contient <span class="math inline">\(n_k\geq 1\)</span> observations.</p>
+<ol type="a">
+<li><p>Montrez que <span class="math inline">\(\boldsymbol X^\top\boldsymbol X = \mathrm{diag}(n_1,\ldots,n_K)\)</span> et déduisez-en que <span class="math inline">\(\hat\beta_k\)</span> est la moyenne des <span class="math inline">\(Y_i\)</span> de l’intervalle <span class="math inline">\(k\)</span>.</p></li>
+<li><p>Montrez que <span class="math inline">\(Var[\hat\beta_k] = \sigma^2/n_k\)</span> et que les <span class="math inline">\(\hat\beta_k\)</span> sont non corrélés. Pourquoi un intervalle qui contient peu d’observations pose-t-il problème?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-theo-1">Voir la solution</a></p>
+<p><span id="exo-splines-theo-2"></span><strong>Exercice 2 (facile).</strong> Soit <span class="math inline">\(h(x,c) = (x-c)_+^3\)</span>.</p>
+<ol type="a">
+<li><p>Calculez <span class="math inline">\(h'(x,c)\)</span>, <span class="math inline">\(h''(x,c)\)</span> et <span class="math inline">\(h'''(x,c)\)</span> (dérivées par rapport à <span class="math inline">\(x\)</span>) pour <span class="math inline">\(x&lt;c\)</span> et pour <span class="math inline">\(x&gt;c\)</span>. Montrez que <span class="math inline">\(h\)</span>, <span class="math inline">\(h'\)</span> et <span class="math inline">\(h''\)</span> sont continues en <span class="math inline">\(x = c\)</span>, mais que <span class="math inline">\(h'''\)</span> ne l’est pas.</p></li>
+<li><p>Déduisez-en que toute fonction <span class="math inline">\(f(x) = \beta_0+\beta_1x+\beta_2x^2+\beta_3x^3+\sum_{k=1}^{K-1}\theta_k(x-c_k)_+^3\)</span> est une spline cubique de nœuds <span class="math inline">\(c_1,\ldots,c_{K-1}\)</span>, et vérifiez qu’on retrouve <span class="math inline">\(K+3\)</span> degrés de liberté.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-theo-2">Voir la solution</a></p>
+<p><span id="exo-splines-theo-3"></span><strong>Exercice 3 (moyen).</strong> On représente une spline cubique de nœuds <span class="math inline">\(\xi_1&lt;\cdots&lt;\xi_m\)</span> dans la base des puissances tronquées : <span class="math display">\[f(x) = \beta_0+\beta_1x+\beta_2x^2+\beta_3x^3+\sum_{k=1}^m\theta_k(x-\xi_k)_+^3.\]</span></p>
+<ol type="a">
+<li><p>Montrez que <span class="math inline">\(f\)</span> est linéaire sur <span class="math inline">\((-\infty,\xi_1]\)</span> si et seulement si <span class="math inline">\(\beta_2 = \beta_3 = 0\)</span>.</p></li>
+<li><p>Montrez que <span class="math inline">\(f\)</span> est alors linéaire sur <span class="math inline">\([\xi_m,\infty)\)</span> si et seulement si <span class="math inline">\(\sum_k\theta_k = 0\)</span> et <span class="math inline">\(\sum_k\theta_k\xi_k = 0\)</span>.</p></li>
+<li><p>Déduisez-en qu’une spline cubique naturelle à <span class="math inline">\(m\)</span> nœuds, linéaire au-delà de <span class="math inline">\(\xi_1\)</span> et de <span class="math inline">\(\xi_m\)</span>, a <span class="math inline">\(m\)</span> degrés de liberté. Faites le lien avec le compte <span class="math inline">\(K+1\)</span> du <a href="#sec-splines" class="quarto-xref"><span>Chapitre 8</span></a>, où les nœuds sont <span class="math inline">\(c_0&lt;c_1&lt;\cdots&lt;c_K\)</span>.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-theo-3">Voir la solution</a></p>
+<p><span id="exo-splines-theo-4"></span><strong>Exercice 4 (moyen).</strong> Pour une régression quadratique <span class="math inline">\(f(x) = \beta_0+\beta_1x+\beta_2x^2\)</span> avec <span class="math inline">\(\beta_2\neq 0\)</span>, l’extremum de la courbe est atteint en <span class="math inline">\(x^* = -\beta_1/(2\beta_2)\)</span> (<a href="#sec-splines" class="quarto-xref"><span>Chapitre 8</span></a>).</p>
+<ol type="a">
+<li><p>Montrez, par la méthode du delta, que la variance approximative de <span class="math inline">\(\hat x^* = -\hat\beta_1/(2\hat\beta_2)\)</span> est <span class="math display">\[Var[\hat x^*] \approx \frac{1}{4\beta_2^2}\left\{Var[\hat\beta_1] + 4x^{*}\,Cov[\hat\beta_1,\hat\beta_2] + 4x^{*2}\,Var[\hat\beta_2]\right\}.\]</span></p></li>
+<li><p>Pourquoi cette approximation est-elle mauvaise lorsque <span class="math inline">\(\hat\beta_2\)</span> est proche de 0? Que représente alors <span class="math inline">\(x^*\)</span>?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-theo-4">Voir la solution</a></p>
+<p><span id="exo-splines-theo-5"></span><strong>Exercice 5 (difficile).</strong> Soit l’estimateur pénalisé <span class="math inline">\(\hb_\lambda = (\boldsymbol X^\top\boldsymbol X+\lambda\boldsymbol M)^{-1}\boldsymbol X^\top\boldsymbol Y\)</span> et la matrice d’influence <span class="math inline">\(\boldsymbol A_\lambda = \boldsymbol X(\boldsymbol X^\top\boldsymbol X+\lambda\boldsymbol M)^{-1}\boldsymbol X^\top\)</span>, avec <span class="math inline">\(\boldsymbol X^\top\boldsymbol X+\lambda\boldsymbol M\)</span> définie positive. Notons <span class="math inline">\(\hb_{\lambda,(-i)}\)</span> l’estimateur calculé sans l’observation <span class="math inline">\(i\)</span>, avec la même pénalité et le même <span class="math inline">\(\lambda\)</span>.</p>
+<ol type="a">
+<li><p>À l’aide de la formule de Sherman-Morrison (exercice 1 du niveau difficile du <a href="./05-prediction-validation-croisee.html#exo-cv">chapitre 5</a>), montrez que <span class="math display">\[Y_i - \boldsymbol X_i^\top\hb_{\lambda,(-i)} = \frac{Y_i-\hat Y_i}{1-A_{ii}}.\]</span></p></li>
+<li><p>Concluez que la formule de <span class="math inline">\(VC_{(n)}\)</span> utilisée pour les splines de lissage et les modèles additifs (<a href="09-gam.html" class="quarto-xref"><span>Chapitre 9</span></a>) est exacte, et non une approximation.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-theo-5">Voir la solution</a></p>
+<p><span id="exo-splines-theo-6"></span><strong>Exercice 6 (difficile).</strong> On reprend l’estimateur de l’exercice précédent, où <span class="math inline">\(\boldsymbol M\)</span> est la matrice de pénalité d’une spline de lissage cubique (<span class="math inline">\(M_{lq} = \int b_l''b_q''\)</span>) et où <span class="math inline">\(\boldsymbol X^\top\boldsymbol X\)</span> est inversible.</p>
+<ol type="a">
+<li><p>Soit <span class="math inline">\(\boldsymbol X^\top\boldsymbol X = \boldsymbol R^\top\boldsymbol R\)</span> une factorisation (de Cholesky, par exemple) et <span class="math inline">\(\boldsymbol R^{-\top}\boldsymbol M\boldsymbol R^{-1} = \boldsymbol U\boldsymbol D\boldsymbol U^\top\)</span> la décomposition spectrale, avec <span class="math inline">\(\boldsymbol D = \mathrm{diag}(d_1,\ldots,d_q)\)</span> et <span class="math inline">\(d_k\geq 0\)</span>. Montrez que <span class="math display">\[\mathrm{Tr}(\boldsymbol A_\lambda) = \sum_{k=1}^q\frac{1}{1+\lambda d_k}.\]</span></p></li>
+<li><p>Montrez que le nombre de valeurs propres <span class="math inline">\(d_k\)</span> nulles est la dimension de l’ensemble des fonctions de la base qui ne sont pas pénalisées, c’est-à-dire telles que <span class="math inline">\(\int f''(t)^2dt = 0\)</span>, et que cette dimension vaut 2.</p></li>
+<li><p>Déduisez-en que les degrés de liberté effectifs décroissent de <span class="math inline">\(q\)</span> (pour <span class="math inline">\(\lambda = 0\)</span>) vers 2 (quand <span class="math inline">\(\lambda\to\infty\)</span>), comme l’affirme le <a href="#sec-splines" class="quarto-xref"><span>Chapitre 8</span></a>.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-splines-theo-6">Voir la solution</a></p>
+</section>
+</section>
+<section id="références-complémentaires" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="références-complémentaires">Références complémentaires</h2>
+<p>La page <a href="./references-complementaires.html">Références complémentaires</a> décrit chacun de ces ouvrages.</p>
+<ul>
+<li><a href="./references-complementaires.html#cpl-cornillon2023regression">Cornillon, Hengartner, Matzner-Løber et Rouvière (2023). <em>Régression avec R</em></a></li>
+<li><a href="./references-complementaires.html#cpl-faraway2016extending">Faraway (2016). <em>Extending the Linear Model with R</em></a></li>
+<li><a href="./references-complementaires.html#cpl-james2021">James, Witten, Hastie et Tibshirani (2021). <em>An Introduction to Statistical Learning: with Applications in R</em></a></li>
+<li><a href="./references-complementaires.html#cpl-wood2017gam">Wood (2017). <em>Generalized Additive Models: An Introduction with R</em></a></li>
+<li><a href="./references-complementaires.html#cpl-hastie2009esl">Hastie, Tibshirani et Friedman (2009). <em>The Elements of Statistical Learning</em></a></li>
+<li><a href="./references-complementaires.html#cpl-wasserman2006nonparametric">Wasserman (2006). <em>All of Nonparametric Statistics</em></a></li>
+<li><a href="./references-complementaires.html#cpl-ruppert2003semiparametric">Ruppert, Wand et Carroll (2003). <em>Semiparametric Regression</em></a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const gifs = {
+    "index":                              "index_plot.gif",
+    "00-regression-lineaire":             "lineaire_plot.gif",
+    "01-monte-carlo":                     "monte_carlo_plot.gif",
+    "02-regression-logistique":           "logit_plot.gif",
+    "03-modeles-lineaires-generalises":   "glm_plot.gif",
+    "04-extensions-glm":                  "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "10-donnees-correlees":               "lineaire_plot.gif",
+    "11-autres-modeles":                  "glm_plot.gif",
+    "12-robustesse":                      "lineaire_plot.gif",
+    "exercices-theoriques":               "exercices_plot.gif",
+    "exercices-en-classe":                "exercices_plot.gif",
+    "references-complementaires":         "balles_plot.gif"
+  };
+
+  let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
+  if (page === "") page = "index";
+
+  const gif = gifs[page];
+  if (gif) {
+    // Date.now() change à chaque chargement de page → force le rechargement du gif
+    logo.src = logo.src.replace(/[^/]+$/, gif) + "?v=" + Date.now();
+  }
+});
+</script>
+<script>
+// Couleur du logo dérivée de la date et de l'heure, recalculée chaque minute.
+(function () {
+  var d = new Date();
+  var cle = (d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()) * 10000 + d.getHours() * 100 + d.getMinutes();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./07-knn-noyau.html" class="pagination-link" aria-label="Régression non paramétrique : $k$ plus proches voisins et estimateur à noyau">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur à noyau</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./09-gam.html" class="pagination-link" aria-label="Modèles additifs et modèles additifs généralisés (GAM)">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="../index.html">Retour au site du cours</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

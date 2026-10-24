@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Simulations de Monte Carlo – Au-delà de la régression linéaire</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./02-regression-logistique.html" rel="next">
+<link href="./00-regression-lineaire.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b626d73c4c936ccc3cb08be7d45d1df6.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-cb416c3c68f001892fd433de5bb87006.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-376fa577758f5eb38fdab71fe95b3eec.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-cb416c3c68f001892fd433de5bb87006.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+ <script>
+          window.MathJax = {
+            chtml: {
+              linebreaks: { inline: false }
+            },
+            tex: {
+              macros: {
+                bb: "\\boldsymbol\\beta",
+                hb: "\\hat{\\boldsymbol\\beta}",
+                hv: ["\\hat{\\text V}(#1)", 1],
+                hvar: ["\\widehat{\\text{Var}}(#1)", 1],
+                hbj: ["\\hat\\beta_{#1}", 1],
+                hpi: ["\\hat\\pi_{#1}", 1],
+                heta: ["\\hat\\eta_{#1}", 1],
+                hmu: ["\\hat\\mu_{#1}", 1]
+              }
+            }
+          };
+          </script>  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-monte-carlo.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Au-delà de la régression linéaire</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./../index.html" title="Retour au site du cours" class="quarto-navigation-tool px-1" aria-label="Retour au site du cours"><i class="bi bi-house-door"></i></a>
+    <a href="https://github.com/JulienMiron/STT-4300/tree/main/notes/" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-regression-lineaire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">0&nbsp;Rappels de régression linéaire</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-monte-carlo.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-extensions-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions des GLM : réponses catégorielles et excès de zéros</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur à noyau</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-donnees-correlees.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Données corrélées : modèles mixtes et GEE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-autres-modeles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Au-delà des modèles de ce livre</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-robustesse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Ouverture sur la statistique robuste</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Solutions des exercices</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./exercices-en-classe.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exemples interactifs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references-complementaires.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Références complémentaires</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#principe" id="toc-principe" class="nav-link active" data-scroll-target="#principe"><span class="header-section-number">1.1</span> Principe</a></li>
+  <li><a href="#la-recette" id="toc-la-recette" class="nav-link" data-scroll-target="#la-recette"><span class="header-section-number">1.2</span> La recette</a></li>
+  <li><a href="#exemple-couverture-dun-intervalle-de-confiance" id="toc-exemple-couverture-dun-intervalle-de-confiance" class="nav-link" data-scroll-target="#exemple-couverture-dun-intervalle-de-confiance"><span class="header-section-number">1.3</span> Exemple : couverture d’un intervalle de confiance</a></li>
+  <li><a href="#précautions" id="toc-précautions" class="nav-link" data-scroll-target="#précautions"><span class="header-section-number">1.4</span> Précautions</a></li>
+  <li><a href="#exo-monte-carlo" id="toc-exo-monte-carlo" class="nav-link" data-scroll-target="#exo-monte-carlo"><span class="header-section-number">1.5</span> Exercices</a>
+  <ul class="collapse">
+  <li><a href="#niveau-facile" id="toc-niveau-facile" class="nav-link" data-scroll-target="#niveau-facile"><span class="header-section-number">1.5.1</span> Niveau facile</a></li>
+  <li><a href="#niveau-moyen" id="toc-niveau-moyen" class="nav-link" data-scroll-target="#niveau-moyen"><span class="header-section-number">1.5.2</span> Niveau moyen</a></li>
+  <li><a href="#niveau-difficile" id="toc-niveau-difficile" class="nav-link" data-scroll-target="#niveau-difficile"><span class="header-section-number">1.5.3</span> Niveau difficile</a></li>
+  <li><a href="#exercices-appliqués" id="toc-exercices-appliqués" class="nav-link" data-scroll-target="#exercices-appliqués"><span class="header-section-number">1.5.4</span> Exercices appliqués</a></li>
+  </ul></li>
+  <li><a href="#références-complémentaires" id="toc-références-complémentaires" class="nav-link" data-scroll-target="#références-complémentaires">Références complémentaires</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-monte-carlo" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">24 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Ce chapitre utilise les librairies R suivantes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Ce chapitre présente la simulation de Monte Carlo. Il s’agit de fabriquer des jeux de données dont le vrai modèle est connu, d’y appliquer la méthode étudiée, puis de regarder ce qu’elle fait sur un grand nombre de répétitions. Cet outil est nécessaire parce que plusieurs résultats de ce livre ne sont connus que de façon asymptotique. C’est le cas de la loi de <span class="math inline">\(\hb\)</span> dans un modèle linéaire généralisé (GLM, <a href="03-modeles-lineaires-generalises.html" class="quarto-xref"><span>Chapitre 3</span></a>), de la validité des intervalles de Wald et du niveau d’un test du rapport de vraisemblance. Ces résultats disent ce qui se passe quand <span class="math inline">\(n \to \infty\)</span>, mais pas si l’approximation est bonne pour le <span class="math inline">\(n\)</span> dont on dispose.</p>
+<p>J’illustre d’abord l’outil sur le modèle linéaire, où les résultats exacts sont connus, ce qui permet de vérifier que la simulation fonctionne. On s’en servira ensuite en régression logistique (<a href="02-regression-logistique.html" class="quarto-xref"><span>Chapitre 2</span></a>).</p>
+<section id="principe" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="principe"><span class="header-section-number">1.1</span> Principe</h2>
+<p>On cherche une quantité de la forme <span class="math inline">\(\theta = E[g(\boldsymbol Y)]\)</span>, où <span class="math inline">\(\boldsymbol Y\)</span> est un jeu de données généré par un modèle entièrement spécifié. La fonction <span class="math inline">\(g\)</span> s’applique à ce jeu de données : un estimateur, l’indicatrice qu’un intervalle contient la vraie valeur, l’indicatrice qu’un test rejette <span class="math inline">\(H_0\)</span>, etc. Cette espérance est rarement calculable explicitement.</p>
+<div class="env-definition" data-titre="Simulation de Monte Carlo">
+<p><span class="env-titre">Définition — Simulation de Monte Carlo</span></p>
+<p>On génère <span class="math inline">\(B\)</span> jeux de données indépendants <span class="math inline">\(\boldsymbol Y^{(1)},\ldots,\boldsymbol Y^{(B)}\)</span> à partir du modèle spécifié, puis on estime <span class="math inline">\(\theta\)</span> par la moyenne</p>
+<p><span class="math display">\[
+\hat\theta_B = \frac{1}{B}\sum_{b=1}^{B} g\left(\boldsymbol Y^{(b)}\right).
+\]</span></p>
+<p>Si <span class="math inline">\(E|g(\boldsymbol Y)|&lt;\infty\)</span>, la loi des grands nombres donne <span class="math inline">\(\hat\theta_B \to \theta\)</span> quand <span class="math inline">\(B \to \infty\)</span>.</p>
+</div>
+<p>Il ne faut pas voir <span class="math inline">\(\hat\theta_B\)</span> comme la valeur exacte de <span class="math inline">\(\theta\)</span>. Comme <span class="math inline">\(\hat\theta_B\)</span> est lui-même aléatoire, il comporte une erreur, appelée erreur de Monte Carlo.</p>
+<div class="env-propriete" data-titre="Erreur de Monte Carlo">
+<p><span class="env-titre">Propriété — Erreur de Monte Carlo</span></p>
+<p>L’estimateur <span class="math inline">\(\hat\theta_B\)</span> est sans biais pour <span class="math inline">\(\theta\)</span> et, si <span class="math inline">\(Var[g(\boldsymbol Y)]&lt;\infty\)</span>,</p>
+<p><span class="math display">\[
+Var\left[\hat\theta_B\right] = \frac{Var\left[g(\boldsymbol Y)\right]}{B}.
+\]</span></p>
+<p>Quand <span class="math inline">\(g\)</span> est une indicatrice, <span class="math inline">\(\theta\)</span> est une probabilité (par exemple, la couverture réelle d’un intervalle), <span class="math inline">\(Var[g(\boldsymbol Y)]=\theta(1-\theta)\)</span>, et l’erreur-type de Monte Carlo s’estime alors par</p>
+<p><span class="math display">\[
+\sqrt{\frac{\hat\theta_B\,(1-\hat\theta_B)}{B}}.
+\]</span></p>
+</div>
+<p>Prenons <span class="math inline">\(B = 1000\)</span> répétitions et une couverture réelle de <span class="math inline">\(0{,}95\)</span> : l’erreur-type de Monte Carlo vaut alors <span class="math inline">\(\sqrt{0{,}95\times 0{,}05/1000}\approx 0{,}007\)</span>. Un résultat de <span class="math inline">\(0{,}94\)</span> est donc compatible avec <span class="math inline">\(0{,}95\)</span>, alors qu’un résultat de <span class="math inline">\(0{,}91\)</span> ne l’est pas. Notez que pour diviser l’erreur par deux, il faut multiplier <span class="math inline">\(B\)</span> par quatre, parce que l’erreur-type décroît comme <span class="math inline">\(1/\sqrt{B}\)</span>.</p>
+<p>Un intervalle de confiance pour <span class="math inline">\(\theta\)</span> rend cette comparaison explicite. Comme <span class="math inline">\(\hat\theta_B\)</span> est une moyenne de <span class="math inline">\(B\)</span> variables indépendantes, il est approximativement normal quand <span class="math inline">\(B\)</span> est grand, et un intervalle de confiance à 95 % pour la couverture réelle est</p>
+<p><span class="math display">\[
+\hat\theta_B \pm 1{,}96\sqrt{\frac{\hat\theta_B\,(1-\hat\theta_B)}{B}}.
+\]</span></p>
+<p>Avec <span class="math inline">\(B = 1000\)</span>, un résultat de <span class="math inline">\(0{,}94\)</span> donne l’intervalle <span class="math inline">\([0{,}925\,;\ 0{,}955]\)</span>, qui contient <span class="math inline">\(0{,}95\)</span>. Un résultat de <span class="math inline">\(0{,}91\)</span> donne <span class="math inline">\([0{,}892\,;\ 0{,}928]\)</span>, qui ne le contient pas.</p>
+<div class="env-remarque" data-titre="Erreur de Monte Carlo et erreur statistique">
+<p><span class="env-titre">Remarque — Erreur de Monte Carlo et erreur statistique</span></p>
+<p>Le nombre de répétitions <span class="math inline">\(B\)</span> contrôle la précision de la simulation, et rien d’autre : l’erreur de Monte Carlo peut être rendue aussi petite qu’on veut. La performance de la méthode étudiée, elle, dépend de la taille d’échantillon <span class="math inline">\(n\)</span> de chaque jeu de données simulé, et <span class="math inline">\(B\)</span> n’y change rien. Il ne faut pas confondre les deux. On augmente <span class="math inline">\(B\)</span> pour mieux estimer la performance d’une méthode à <span class="math inline">\(n\)</span> fixé, et on fait varier <span class="math inline">\(n\)</span> pour voir comment cette performance change.</p>
+</div>
+</section>
+<section id="la-recette" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="la-recette"><span class="header-section-number">1.2</span> La recette</h2>
+<p>Une étude par simulation suit presque toujours les mêmes étapes :</p>
+<ol type="1">
+<li><p>fixer le vrai modèle : valeurs des paramètres, taille d’échantillon <span class="math inline">\(n\)</span>, valeurs des variables explicatives et loi des erreurs ;</p></li>
+<li><p>écrire une fonction qui génère un jeu de données à partir de ce modèle ;</p></li>
+<li><p>répéter <span class="math inline">\(B\)</span> fois : générer un jeu de données, appliquer la méthode étudiée (ajuster le modèle, construire un intervalle, faire un test) et conserver le résultat ;</p></li>
+<li><p>résumer les <span class="math inline">\(B\)</span> résultats par une moyenne, avec son erreur de Monte Carlo.</p></li>
+</ol>
+<p>En R, on fixe la graine du générateur de nombres pseudo-aléatoires avec <code>set.seed()</code> avant la simulation, pour que les résultats soient reproductibles. La fonction <code>replicate()</code> répète une expression <span class="math inline">\(B\)</span> fois.</p>
+<div class="env-definition" data-titre="Résumés usuels">
+<p><span class="env-titre">Définition — Résumés usuels</span></p>
+<p>Notons <span class="math inline">\(\hat\beta^{(b)}\)</span> l’estimation obtenue sur le <span class="math inline">\(b^{\text{e}}\)</span> jeu de données et <span class="math inline">\([L^{(b)}, U^{(b)}]\)</span> l’intervalle de confiance correspondant. Pour un paramètre dont la vraie valeur est <span class="math inline">\(\beta\)</span>, on estime</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{le biais} &amp;: \quad \frac{1}{B}\sum_{b=1}^B \left(\hat\beta^{(b)}-\beta\right),\\
+\text{l'erreur quadratique moyenne} &amp;: \quad \frac{1}{B}\sum_{b=1}^B \left(\hat\beta^{(b)}-\beta\right)^2,\\
+\text{la couverture} &amp;: \quad \frac{1}{B}\sum_{b=1}^B \mathbf{1}\left\{L^{(b)} \leq \beta \leq U^{(b)}\right\}.
+\end{aligned}
+\]</span></p>
+<p>Un test se résume de la même façon par son taux de rejet. Calculé sur des données générées sous <span class="math inline">\(H_0\)</span>, il estime le niveau réel du test, et sous une alternative, sa puissance.</p>
+</div>
+</section>
+<section id="exemple-couverture-dun-intervalle-de-confiance" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="exemple-couverture-dun-intervalle-de-confiance"><span class="header-section-number">1.3</span> Exemple : couverture d’un intervalle de confiance</h2>
+<p>Considérons le modèle <span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i + \epsilon_i\)</span> avec <span class="math inline">\(\epsilon_i \sim \mathcal{N}(0,\sigma^2)\)</span>, où <span class="math inline">\(\beta_0 = 1\)</span>, <span class="math inline">\(\beta_1 = 2\)</span> et <span class="math inline">\(\sigma = 3\)</span>, et où les <span class="math inline">\(x_i\)</span> sont <span class="math inline">\(n\)</span> valeurs également espacées entre 0 et 1. Dans ce modèle, l’intervalle de confiance du <a href="./00-regression-lineaire.html#ic-coefficients">chapitre 0</a>, basé sur le quantile de la loi de Student, a une couverture exactement égale à <span class="math inline">\(1-\alpha\)</span>. On le vérifie par simulation, puis on le compare à l’intervalle où le quantile de Student est remplacé par celui de la loi normale, qui n’est valable qu’asymptotiquement.</p>
+<div class="env-exemple" data-titre="Distribution de $\hat\beta_1$ et couverture avec $n = 10$">
+<p><span class="env-titre">Exemple — Distribution de <span class="math inline">\(\hat\beta_1\)</span> et couverture avec <span class="math inline">\(n = 10\)</span></span></p>
+<p>On commence par définir la fonction qui génère un jeu de données, puis on répète <span class="math inline">\(B = 2000\)</span> fois l’ajustement du modèle, en conservant <span class="math inline">\(\hat\beta_1\)</span> et son erreur-type.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simuler_lineaire <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">beta0 =</span> <span class="dv">1</span>, <span class="at">beta1 =</span> <span class="dv">2</span>, <span class="at">sigma =</span> <span class="dv">3</span>) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> n)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> beta0 <span class="sc">+</span> beta1 <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sigma)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>resultats <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">simuler_lineaire</span>(n, <span class="at">beta1 =</span> beta1)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  coefs <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)))[<span class="st">"x"</span>, ]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">estimation =</span> coefs[[<span class="st">"Estimate"</span>]], <span class="at">erreur_type =</span> coefs[[<span class="st">"Std. Error"</span>]])</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>resultats <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(resultats))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>On estime ensuite le biais de <span class="math inline">\(\hat\beta_1\)</span> :</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(resultats<span class="sc">$</span>estimation) <span class="sc">-</span> beta1</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.0657941</code></pre>
+</div>
+</div>
+<p>Le biais estimé, <span class="math inline">\(-0{,}066\)</span>, est compatible avec zéro, comme le prévoit la théorie. En effet, l’écart-type de <span class="math inline">\(\hat\beta_1\)</span> vaut ici <span class="math inline">\(\sigma/\sqrt{\sum_{i=1}^n(x_i-\bar x)^2}\approx 2{,}97\)</span>, de sorte que l’erreur-type de Monte Carlo du biais est d’environ <span class="math inline">\(2{,}97/\sqrt{2000}\approx 0{,}066\)</span>.</p>
+<p>L’histogramme ci-dessous regroupe les estimations de <span class="math inline">\(\beta_1\)</span>, une par jeu de données simulé. La distribution est centrée sur la vraie valeur et a la forme d’une loi normale, ce qui correspond à la loi théorique <span class="math inline">\(\hat\beta_1 \sim \mathcal{N}\left\{\beta_1, \sigma^2\left[(\boldsymbol X^\top\boldsymbol X)^{-1}\right]_{2,2}\right\}\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(resultats, <span class="fu">aes</span>(<span class="at">x =</span> estimation)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">bins =</span> <span class="dv">30</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill =</span> <span class="st">"grey80"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> beta1, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(beta)[<span class="dv">1</span>]), <span class="at">y =</span> <span class="st">"Densité"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="01-monte-carlo_files/figure-html/mc-histogramme-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Distribution de <span class="math inline">\(\hat\beta_1\)</span> sur 2000 jeux de données simulés (<span class="math inline">\(n = 10\)</span>). La droite verticale indique la vraie valeur <span class="math inline">\(\beta_1 = 2\)</span>.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Pour la couverture, on construit sur chaque jeu de données deux intervalles <span class="math inline">\(\hat\beta_1 \pm q\,se(\hat\beta_1)\)</span>, où <span class="math inline">\(q\)</span> est le quantile d’ordre <span class="math inline">\(0{,}975\)</span>, soit de la loi de Student à <span class="math inline">\(n-2\)</span> degrés de liberté, soit de la loi normale. La couverture estimée est la proportion des intervalles qui contiennent <span class="math inline">\(\beta_1 = 2\)</span>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>couverture <span class="ot">&lt;-</span> <span class="cf">function</span>(res, beta, quantile) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(<span class="fu">abs</span>(res<span class="sc">$</span>estimation <span class="sc">-</span> beta) <span class="sc">&lt;=</span> quantile <span class="sc">*</span> res<span class="sc">$</span>erreur_type)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">student =</span> <span class="fu">couverture</span>(resultats, beta1, <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">normale =</span> <span class="fu">couverture</span>(resultats, beta1, <span class="fu">qnorm</span>(<span class="fl">0.975</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>student normale 
+ 0.9515  0.9180 </code></pre>
+</div>
+</div>
+<p>Avec <span class="math inline">\(B = 2000\)</span>, l’erreur-type de Monte Carlo sur ces proportions est d’environ <span class="math inline">\(0{,}005\)</span> pour l’intervalle de Student et <span class="math inline">\(0{,}006\)</span> pour celui basé sur la loi normale. Les intervalles de confiance à 95 % pour les couvertures réelles sont <span class="math inline">\([0{,}942\,;\ 0{,}961]\)</span> pour l’intervalle de Student et <span class="math inline">\([0{,}906\,;\ 0{,}930]\)</span> pour celui basé sur la loi normale. La couverture de l’intervalle de Student est bien compatible avec <span class="math inline">\(0{,}95\)</span>, alors que celle de l’intervalle basé sur la loi normale est nettement trop faible. Avec <span class="math inline">\(n = 10\)</span>, le quantile normal est trop petit, de sorte que les intervalles sont trop étroits.</p>
+</div>
+<p>Faisons maintenant varier la taille d’échantillon pour voir à partir de quand l’approximation normale devient acceptable.</p>
+<div class="env-exemple" data-titre="Couverture en fonction de $n$">
+<p><span class="env-titre">Exemple — Couverture en fonction de <span class="math inline">\(n\)</span></span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>couverture_n <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">B =</span> <span class="dv">2000</span>, <span class="at">beta1 =</span> <span class="dv">2</span>) {</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    dat <span class="ot">&lt;-</span> <span class="fu">simuler_lineaire</span>(n, <span class="at">beta1 =</span> beta1)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    coefs <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">summary</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat)))[<span class="st">"x"</span>, ]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="at">estimation =</span> coefs[[<span class="st">"Estimate"</span>]], <span class="at">erreur_type =</span> coefs[[<span class="st">"Std. Error"</span>]])</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(res))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> n,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">student =</span> <span class="fu">couverture</span>(res, beta1, <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">2</span>)),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">normale =</span> <span class="fu">couverture</span>(res, beta1, <span class="fu">qnorm</span>(<span class="fl">0.975</span>))</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4300</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">500</span>), couverture_n))</span></code></pre></div><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    n student normale
+1   5   0.956  0.8690
+2  10   0.954  0.9210
+3  20   0.951  0.9340
+4  50   0.949  0.9420
+5 100   0.957  0.9555
+6 500   0.953  0.9525</code></pre>
+</div>
+</div>
+<p>La couverture de l’intervalle de Student reste autour de <span class="math inline">\(0{,}95\)</span> quel que soit <span class="math inline">\(n\)</span>, aux erreurs de Monte Carlo près. Celle de l’intervalle basé sur la loi normale s’en approche seulement à mesure que <span class="math inline">\(n\)</span> augmente, ce qui est cohérent avec la convergence de la loi de Student vers la loi normale.</p>
+</div>
+</section>
+<section id="précautions" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="précautions"><span class="header-section-number">1.4</span> Précautions</h2>
+<p>Une simulation ne démontre rien. Elle décrit le comportement d’une méthode dans les configurations simulées, et seulement dans celles-là. Par exemple, une couverture de <span class="math inline">\(0{,}95\)</span> obtenue avec <span class="math inline">\(n = 100\)</span>, <span class="math inline">\(\sigma = 3\)</span> et des erreurs normales ne garantit rien avec des erreurs asymétriques, ni pour une autre taille d’échantillon. Il faut donc choisir des configurations représentatives de la situation qui nous intéresse et, dans la mesure du possible, en faire varier plusieurs.</p>
+<p>Il faut aussi garder en tête les limites suivantes :</p>
+<ul>
+<li><p>le choix du vrai modèle est arbitraire : les conclusions valent pour le modèle simulé, qui n’est jamais exactement celui des données réelles ;</p></li>
+<li><p>les résultats sont aléatoires : on rapporte toujours l’erreur de Monte Carlo, ou on prend <span class="math inline">\(B\)</span> assez grand pour qu’elle soit négligeable devant les différences qu’on cherche à détecter ;</p></li>
+<li><p>le code peut être faux : il faut d’abord le tester sur un cas dont la réponse est connue, comme on l’a fait ici avec l’intervalle de Student.</p></li>
+</ul>
+<div class="env-remarque" data-titre="À retenir">
+<p><span class="env-titre">Remarque — À retenir</span></p>
+<ul>
+<li>Principe : une quantité <span class="math inline">\(\theta = E[g(\boldsymbol{Y})]\)</span> (biais, erreur quadratique moyenne, couverture, taux de rejet) s’estime par la moyenne <span class="math inline">\(\hat\theta_B\)</span> de <span class="math inline">\(g\)</span> sur <span class="math inline">\(B\)</span> jeux de données simulés à partir d’un modèle entièrement spécifié. Sous <span class="math inline">\(H_0\)</span>, le taux de rejet estime le niveau réel d’un test, et sous une alternative, sa puissance ;</li>
+<li>Erreur de Monte Carlo : <span class="math inline">\(\hat\theta_B\)</span> est aléatoire. Pour une proportion, son erreur-type s’estime par <span class="math inline">\(\sqrt{\hat\theta_B(1-\hat\theta_B)/B}\)</span> et décroît comme <span class="math inline">\(1/\sqrt{B}\)</span>, de sorte qu’il faut multiplier <span class="math inline">\(B\)</span> par quatre pour la diviser par deux ;</li>
+<li><span class="math inline">\(B\)</span> ou <span class="math inline">\(n\)</span> : <span class="math inline">\(B\)</span> contrôle seulement la précision de la simulation, alors que la performance de la méthode dépend de la taille <span class="math inline">\(n\)</span> de chaque jeu de données simulé. Augmentez <span class="math inline">\(B\)</span> pour mieux estimer la performance à <span class="math inline">\(n\)</span> fixé, et faites varier <span class="math inline">\(n\)</span> pour voir comment elle change ;</li>
+<li>Recette en R : fixer le vrai modèle, écrire une fonction qui génère un jeu de données, répéter <span class="math inline">\(B\)</span> fois la méthode avec <code>replicate()</code> après avoir fixé la graine avec <code>set.seed()</code>, puis résumer par une moyenne et son erreur de Monte Carlo ;</li>
+<li>Précautions : une simulation ne démontre rien, puisque ses conclusions ne valent que pour les configurations simulées. Testez d’abord le code sur un cas dont la réponse est connue, comme l’intervalle de Student dans le modèle linéaire.</li>
+</ul>
+</div>
+</section>
+<section id="exo-monte-carlo" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="exo-monte-carlo"><span class="header-section-number">1.5</span> Exercices</h2>
+<p>Les exercices sont classés par niveau de difficulté, et les exercices appliqués de la fin demandent d’analyser un jeu de données en R. Leurs solutions sont regroupées dans l’annexe <a href="./solutions.html#sol-monte-carlo">Solutions des exercices</a> ; le lien « Voir la solution » sous chaque énoncé y mène directement.</p>
+<section id="niveau-facile" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="niveau-facile"><span class="header-section-number">1.5.1</span> Niveau facile</h3>
+<p><span id="exo-monte-carlo-facile-1"></span><strong>Exercice 1.</strong> Soit <span class="math inline">\(\hat\theta_B = \frac1B\sum_{b=1}^B g(\boldsymbol Y^{(b)})\)</span>, où les jeux de données <span class="math inline">\(\boldsymbol Y^{(1)},\ldots,\boldsymbol Y^{(B)}\)</span> sont indépendants et générés par le même modèle. Notons <span class="math inline">\(\theta = E[g(\boldsymbol Y)]\)</span> et <span class="math inline">\(\tau^2 = Var[g(\boldsymbol Y)] &lt; \infty\)</span>.</p>
+<ol type="a">
+<li><p>Montrez que <span class="math inline">\(\hat\theta_B\)</span> est sans biais pour <span class="math inline">\(\theta\)</span> et que <span class="math inline">\(Var[\hat\theta_B] = \tau^2/B\)</span>.</p></li>
+<li><p>Lorsque <span class="math inline">\(g\)</span> est une indicatrice, montrez que <span class="math inline">\(\tau^2 = \theta(1-\theta)\)</span> et que cette variance est au plus <span class="math inline">\(1/4\)</span>.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-monte-carlo-facile-1">Voir la solution</a></p>
+<p><span id="exo-monte-carlo-facile-2"></span><strong>Exercice 2.</strong> On veut estimer la couverture réelle d’un intervalle de confiance dont le niveau nominal est de 95 %.</p>
+<ol type="a">
+<li><p>Si la couverture réelle est proche de <span class="math inline">\(0{,}95\)</span>, combien de répétitions <span class="math inline">\(B\)</span> faut-il pour que l’erreur-type de Monte Carlo soit d’au plus <span class="math inline">\(0{,}005\)</span>?</p></li>
+<li><p>Combien en faudrait-il si on ne savait rien de la couverture réelle?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-monte-carlo-facile-2">Voir la solution</a></p>
+<p><span id="exo-monte-carlo-facile-3"></span><strong>Exercice 3.</strong> Une simulation de <span class="math inline">\(B = 1\,000\)</span> répétitions donne une couverture estimée de <span class="math inline">\(0{,}93\)</span> pour un intervalle de niveau nominal 95 %. Ce résultat est-il compatible avec une couverture réelle de <span class="math inline">\(0{,}95\)</span>? Construisez aussi un intervalle de confiance approximatif à 95 % pour la couverture réelle.</p>
+<p><a href="./solutions.html#sol-monte-carlo-facile-3">Voir la solution</a></p>
+</section>
+<section id="niveau-moyen" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="niveau-moyen"><span class="header-section-number">1.5.2</span> Niveau moyen</h3>
+<p><span id="exo-monte-carlo-moyen-1"></span><strong>Exercice 1.</strong> Notons <span class="math inline">\(\hat\beta^{(1)},\ldots,\hat\beta^{(B)}\)</span> les estimations obtenues sur <span class="math inline">\(B\)</span> jeux de données simulés, <span class="math inline">\(\bar\beta = \frac1B\sum_b\hat\beta^{(b)}\)</span> leur moyenne et <span class="math inline">\(\beta\)</span> la vraie valeur du paramètre.</p>
+<ol type="a">
+<li><p>Montrez que l’erreur quadratique moyenne estimée se décompose exactement en <span class="math display">\[\frac1B\sum_{b=1}^B\left(\hat\beta^{(b)}-\beta\right)^2 = \left(\bar\beta-\beta\right)^2 + \frac1B\sum_{b=1}^B\left(\hat\beta^{(b)}-\bar\beta\right)^2,\]</span> c’est-à-dire en un biais estimé au carré et une variance estimée.</p></li>
+<li><p>Donnez une estimation de l’erreur-type de Monte Carlo du biais estimé <span class="math inline">\(\bar\beta-\beta\)</span>.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-monte-carlo-moyen-1">Voir la solution</a></p>
+<p><span id="exo-monte-carlo-moyen-2"></span><strong>Exercice 2.</strong> Soit <span class="math inline">\(T\)</span> une statistique de test continue dont la fonction de répartition sous <span class="math inline">\(H_0\)</span>, notée <span class="math inline">\(F_0\)</span>, est continue et strictement croissante. On rejette <span class="math inline">\(H_0\)</span> pour les grandes valeurs de <span class="math inline">\(T\)</span>, avec la valeur-p <span class="math inline">\(p = 1 - F_0(T)\)</span>.</p>
+<ol type="a">
+<li><p>Montrez que, sous <span class="math inline">\(H_0\)</span>, la valeur-p suit une loi uniforme sur <span class="math inline">\([0,1]\)</span>.</p></li>
+<li><p>Déduisez-en que le taux de rejet calculé par simulation sous <span class="math inline">\(H_0\)</span> estime bien le niveau réel du test, et donnez son erreur-type de Monte Carlo pour <span class="math inline">\(\alpha = 0{,}05\)</span> et <span class="math inline">\(B = 2\,000\)</span> lorsque le test a le bon niveau.</p></li>
+<li><p>Que devient ce raisonnement lorsque <span class="math inline">\(F_0\)</span> n’est qu’une approximation asymptotique de la loi de <span class="math inline">\(T\)</span>, comme pour le test de Wald dans un GLM?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-monte-carlo-moyen-2">Voir la solution</a></p>
+<p><span id="exo-monte-carlo-moyen-3"></span><strong>Exercice 3.</strong> On veut comparer la couverture de deux intervalles, <span class="math inline">\(A\)</span> et <span class="math inline">\(B\)</span>, construits sur les mêmes jeux de données simulés. Notons <span class="math inline">\(G_A^{(b)}\)</span> et <span class="math inline">\(G_B^{(b)}\)</span> les indicatrices que chaque intervalle contient la vraie valeur pour le <span class="math inline">\(b^{\text{e}}\)</span> jeu de données, et <span class="math inline">\(\hat\theta_A\)</span> et <span class="math inline">\(\hat\theta_B\)</span> les couvertures estimées.</p>
+<ol type="a">
+<li><p>Montrez que <span class="math display">\[Var[\hat\theta_A - \hat\theta_B] = \frac{Var[G_A] + Var[G_B] - 2\,Cov[G_A, G_B]}{B}.\]</span></p></li>
+<li><p>Pourquoi vaut-il mieux évaluer les deux intervalles sur les mêmes jeux de données plutôt que sur des jeux simulés indépendamment pour chaque méthode? Faites le lien avec la remarque du <a href="05-prediction-validation-croisee.html" class="quarto-xref"><span>Chapitre 5</span></a> sur la réinitialisation de la graine avant chaque appel de <code>cv.glm</code>.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-monte-carlo-moyen-3">Voir la solution</a></p>
+</section>
+<section id="niveau-difficile" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="niveau-difficile"><span class="header-section-number">1.5.3</span> Niveau difficile</h3>
+<p><span id="exo-monte-carlo-difficile-1"></span><strong>Exercice 1.</strong> Pour une proportion binomiale, <span class="math inline">\(Y\sim\mathrm{Bin}(n,\pi)\)</span>, l’intervalle de Wald à 95 % est <span class="math inline">\(\hat\pi\pm 1{,}96\sqrt{\hat\pi(1-\hat\pi)/n}\)</span>, avec <span class="math inline">\(\hat\pi = Y/n\)</span>.</p>
+<ol type="a">
+<li><p>Expliquez pourquoi la couverture réelle de cet intervalle peut se calculer exactement, sans simulation, et écrivez-la sous la forme d’une somme sur les valeurs possibles de <span class="math inline">\(Y\)</span>.</p></li>
+<li><p>Calculez la couverture réelle pour <span class="math inline">\(n = 10\)</span> et <span class="math inline">\(\pi = 0{,}1\)</span>.</p></li>
+<li><p>Une simulation de Monte Carlo avec <span class="math inline">\(B = 10\,000\)</span> donnerait-elle une estimation proche de cette valeur? Avec quelle erreur-type?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-monte-carlo-difficile-1">Voir la solution</a></p>
+<p><span id="exo-monte-carlo-difficile-2"></span><strong>Exercice 2.</strong> On cherche <span class="math inline">\(\theta = E[g(U)] = \int_0^1 g(u)\,du\)</span>, avec <span class="math inline">\(U\sim\mathcal U(0,1)\)</span> et <span class="math inline">\(g\)</span> une fonction monotone. Considérez deux estimateurs qui utilisent chacun <span class="math inline">\(2B\)</span> évaluations de <span class="math inline">\(g\)</span> :</p>
+<ul>
+<li>l’estimateur usuel <span class="math inline">\(\hat\theta_{\text{ind}} = \frac{1}{2B}\sum_{b=1}^{2B} g(U_b)\)</span>, avec des <span class="math inline">\(U_b\)</span> indépendants ;</li>
+<li>l’estimateur antithétique <span class="math inline">\(\hat\theta_{\text{anti}} = \frac{1}{B}\sum_{b=1}^{B}\frac{g(U_b) + g(1-U_b)}{2}\)</span>.</li>
+</ul>
+<ol type="a">
+<li><p>Montrez que les deux estimateurs sont sans biais et que <span class="math display">\[Var[\hat\theta_{\text{anti}}] = \frac{Var[g(U)] + Cov[g(U), g(1-U)]}{2B}, \qquad Var[\hat\theta_{\text{ind}}] = \frac{Var[g(U)]}{2B}.\]</span></p></li>
+<li><p>Montrez que <span class="math inline">\(Cov[g(U), g(1-U)]\leq 0\)</span> lorsque <span class="math inline">\(g\)</span> est monotone. (Indice : si <span class="math inline">\(V\)</span> est une copie indépendante de <span class="math inline">\(U\)</span>, montrez que <span class="math inline">\(Cov[a(U), c(U)] = \frac12E[\{a(U)-a(V)\}\{c(U)-c(V)\}]\)</span>, puis étudiez le signe du produit lorsque <span class="math inline">\(a\)</span> est croissante et <span class="math inline">\(c\)</span> décroissante.)</p></li>
+<li><p>Calculez le facteur de réduction de variance <span class="math inline">\(Var[\hat\theta_{\text{ind}}]/Var[\hat\theta_{\text{anti}}]\)</span> pour <span class="math inline">\(g(u) = e^u\)</span>.</p></li>
+</ol>
+<p><a href="./solutions.html#sol-monte-carlo-difficile-2">Voir la solution</a></p>
+</section>
+<section id="exercices-appliqués" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="exercices-appliqués"><span class="header-section-number">1.5.4</span> Exercices appliqués</h3>
+<p><span id="exo-monte-carlo-app-1"></span><strong>Exercice appliqué 1.</strong> Couverture des intervalles quand la variance n’est pas constante. Le jeu de données <code>pipeline</code> de la librairie <code>faraway</code> <span class="citation" data-cites="faraway">(<a href="#ref-faraway" role="doc-biblioref">Faraway 2025</a>)</span> contient 107 défauts d’un oléoduc de l’Alaska. La profondeur de chaque défaut a d’abord été mesurée sur le terrain par ultrasons (<code>Field</code>), puis remesurée en laboratoire (<code>Lab</code>), de façon plus précise. On veut prédire la mesure de laboratoire à partir de la mesure sur le terrain.</p>
+<ol type="a">
+<li><p>Ajustez la régression linéaire simple de <code>Lab</code> sur <code>Field</code> et interprétez la pente. Tracez les résidus en fonction des valeurs ajustées, puis calculez l’écart-type des résidus dans chaque quart des valeurs de <code>Field</code>. L’hypothèse de variance constante est-elle plausible? Vérifiez qu’un modèle où l’écart-type de l’erreur est proportionnel à la mesure sur le terrain, <span class="math inline">\(\sigma_i = \gamma x_i\)</span>, décrit bien les données, et estimez <span class="math inline">\(\gamma\)</span> par <span class="math display">\[\hat\gamma = \left\{\frac{1}{n}\sum_{i=1}^n\left(\frac{e_i}{x_i}\right)^2\right\}^{1/2}.\]</span></p></li>
+<li><p>Écrivez une fonction qui simule <span class="math inline">\(B\)</span> jeux de données du modèle <span class="math inline">\(Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i\)</span>, en gardant les valeurs de <code>Field</code> des données et en prenant les estimations de a) comme vraies valeurs de <span class="math inline">\(\beta_0\)</span> et de <span class="math inline">\(\beta_1\)</span>. L’écart-type de l’erreur est un argument de la fonction. Pour chaque jeu simulé, la fonction ajuste la droite et vérifie si l’intervalle de confiance à 95 % pour <span class="math inline">\(\beta_1\)</span> contient la vraie pente, et si les intervalles de prédiction à 95 % pour <code>Field</code> = 10 et <code>Field</code> = 70 contiennent une nouvelle observation simulée. Utilisez-la d’abord avec des erreurs normales de variance constante, d’écart-type <span class="math inline">\(\hat\sigma\)</span>. Quelles couvertures attendez-vous? Vos estimations de Monte Carlo sont-elles compatibles avec ces valeurs?</p></li>
+<li><p>Reprenez la simulation avec <span class="math inline">\(\sigma_i = \hat\gamma x_i\)</span>. Comment les trois couvertures changent-elles? Montrez ensuite que <span class="math display">\[Var[\hat\beta_1] = \frac{\sum_{i=1}^n(x_i-\bar x)^2\sigma_i^2}{S_{xx}^2}, \qquad S_{xx} = \sum_{i=1}^n(x_i-\bar x)^2,\]</span> et comparez cette valeur à l’erreur-type que calcule typiquement <code>lm</code>. Servez-vous de cette comparaison pour approximer la couverture de l’intervalle de <span class="math inline">\(\beta_1\)</span>. (Indice : <span class="math inline">\(E[SSE] = \sum_i \sigma_i^2(1-h_i)\)</span>, où <span class="math inline">\(h_i\)</span> est le levier de l’observation <span class="math inline">\(i\)</span>.)</p></li>
+<li><p>Répétez c) en dupliquant quatre fois chaque valeur de <code>Field</code> (<span class="math inline">\(n = 428\)</span>). Le problème disparaît-il quand <span class="math inline">\(n\)</span> augmente? Quelles conséquences pratiques en tirez-vous, et comment corrigeriez-vous l’analyse?</p></li>
+</ol>
+<p><a href="./solutions.html#sol-monte-carlo-app-1">Voir la solution</a></p>
+</section>
+</section>
+<section id="références-complémentaires" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="références-complémentaires">Références complémentaires</h2>
+<p>La page <a href="./references-complementaires.html">Références complémentaires</a> décrit chacun de ces ouvrages.</p>
+<ul>
+<li><a href="./references-complementaires.html#cpl-morris2019simulation">Morris, White et Crowther (2019). « Using simulation studies to evaluate statistical methods »</a></li>
+</ul>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-faraway" class="csl-entry" role="listitem">
+Faraway, Julian. 2025. <em>faraway: Functions and Datasets for Books by Julian Faraway</em>. <a href="https://CRAN.R-project.org/package=faraway">https://CRAN.R-project.org/package=faraway</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const gifs = {
+    "index":                              "index_plot.gif",
+    "00-regression-lineaire":             "lineaire_plot.gif",
+    "01-monte-carlo":                     "monte_carlo_plot.gif",
+    "02-regression-logistique":           "logit_plot.gif",
+    "03-modeles-lineaires-generalises":   "glm_plot.gif",
+    "04-extensions-glm":                  "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "10-donnees-correlees":               "lineaire_plot.gif",
+    "11-autres-modeles":                  "glm_plot.gif",
+    "12-robustesse":                      "lineaire_plot.gif",
+    "exercices-theoriques":               "exercices_plot.gif",
+    "exercices-en-classe":                "exercices_plot.gif",
+    "references-complementaires":         "balles_plot.gif"
+  };
+
+  let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
+  if (page === "") page = "index";
+
+  const gif = gifs[page];
+  if (gif) {
+    // Date.now() change à chaque chargement de page → force le rechargement du gif
+    logo.src = logo.src.replace(/[^/]+$/, gif) + "?v=" + Date.now();
+  }
+});
+</script>
+<script>
+// Couleur du logo dérivée de la date et de l'heure, recalculée chaque minute.
+(function () {
+  var d = new Date();
+  var cle = (d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()) * 10000 + d.getHours() * 100 + d.getMinutes();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./00-regression-lineaire.html" class="pagination-link" aria-label="0\ Rappels de régression linéaire">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">0&nbsp;Rappels de régression linéaire</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./02-regression-logistique.html" class="pagination-link" aria-label="Modèles de régression pour données binaires">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="../index.html">Retour au site du cours</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.github.io/SitePerso/">Julien Miron</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

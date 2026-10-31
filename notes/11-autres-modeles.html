@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.20">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>11&nbsp; Au-delà des modèles de ce livre – Au-delà de la régression linéaire</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./12-robustesse.html" rel="next">
+<link href="./10-donnees-correlees.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-0ae969d3293726db143f6e9eb89af930.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5f7c4018a62884dba4278222211a5aa8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-a2d0651254f38fef5db59434ca454b6d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-5f7c4018a62884dba4278222211a5aa8.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Pas de résultats",
+    "search-matching-documents-text": "documents trouvés",
+    "search-copy-link-title": "Copier le lien vers la recherche",
+    "search-hide-matches-text": "Cacher les correspondances additionnelles",
+    "search-more-match-text": "correspondance de plus dans ce document",
+    "search-more-matches-text": "correspondances de plus dans ce document",
+    "search-clear-button-title": "Effacer",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Annuler",
+    "search-submit-button-title": "Envoyer",
+    "search-label": "Recherche"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+ <script>
+          window.MathJax = {
+            chtml: {
+              linebreaks: { inline: false }
+            },
+            tex: {
+              macros: {
+                bb: "\\boldsymbol\\beta",
+                hb: "\\hat{\\boldsymbol\\beta}",
+                hv: ["\\hat{\\text V}(#1)", 1],
+                hvar: ["\\widehat{\\text{Var}}(#1)", 1],
+                hbj: ["\\hat\\beta_{#1}", 1],
+                hpi: ["\\hat\\pi_{#1}", 1],
+                heta: ["\\hat\\eta_{#1}", 1],
+                hmu: ["\\hat\\mu_{#1}", 1]
+              }
+            }
+          };
+          </script>  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11-autres-modeles.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Au-delà des modèles de ce livre</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/logit_plot.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Au-delà de la régression linéaire</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="./../index.html" title="Retour au site du cours" class="quarto-navigation-tool px-1" aria-label="Retour au site du cours"><i class="bi bi-house-door"></i></a>
+    <a href="https://github.com/JulienMiron/STT-4300" title="Code source" class="quarto-navigation-tool px-1" aria-label="Code source"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Basculer le mode sombre"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Recherche"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Préface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./00-regression-lineaire.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">0&nbsp;Rappels de régression linéaire</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-monte-carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Simulations de Monte Carlo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-regression-logistique.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Modèles de régression pour données binaires</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-modeles-lineaires-generalises.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Modèles linéaires généralisés (GLM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-extensions-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Extensions des GLM : réponses catégorielles et excès de zéros</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-prediction-validation-croisee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prédiction, mesures de performance et validation croisée</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-selection-regularisation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Sélection de variables et régularisation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-knn-noyau.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Régression non paramétrique : <span class="math inline">\(k\)</span> plus proches voisins et estimateur à noyau</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Régression non linéaire : polynômes, fonctions par morceaux et splines</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-gam.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Modèles additifs et modèles additifs généralisés (GAM)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-donnees-correlees.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Données corrélées : modèles mixtes et GEE</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-autres-modeles.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Au-delà des modèles de ce livre</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-robustesse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Ouverture sur la statistique robuste</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./solutions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Solutions des exercices</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./exercices-en-classe.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exemples interactifs</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references-complementaires.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Références complémentaires</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#au-delà-de-lespérance-gamlss-et-régression-quantile" id="toc-au-delà-de-lespérance-gamlss-et-régression-quantile" class="nav-link active" data-scroll-target="#au-delà-de-lespérance-gamlss-et-régression-quantile"><span class="header-section-number">11.1</span> Au-delà de l’espérance : GAMLSS et régression quantile</a>
+  <ul class="collapse">
+  <li><a href="#gamlss" id="toc-gamlss" class="nav-link" data-scroll-target="#gamlss"><span class="header-section-number">11.1.1</span> GAMLSS</a></li>
+  <li><a href="#régression-quantile" id="toc-régression-quantile" class="nav-link" data-scroll-target="#régression-quantile"><span class="header-section-number">11.1.2</span> Régression quantile</a></li>
+  </ul></li>
+  <li><a href="#durées-de-vie-le-modèle-de-cox" id="toc-durées-de-vie-le-modèle-de-cox" class="nav-link" data-scroll-target="#durées-de-vie-le-modèle-de-cox"><span class="header-section-number">11.2</span> Durées de vie : le modèle de Cox</a></li>
+  <li><a href="#pour-aller-plus-loin" id="toc-pour-aller-plus-loin" class="nav-link" data-scroll-target="#pour-aller-plus-loin"><span class="header-section-number">11.3</span> Pour aller plus loin</a></li>
+  <li><a href="#vue-densemble-des-modèles" id="toc-vue-densemble-des-modèles" class="nav-link" data-scroll-target="#vue-densemble-des-modèles"><span class="header-section-number">11.4</span> Vue d’ensemble des modèles</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-autres-modeles" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Au-delà des modèles de ce livre</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Dernière modification</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">31 octobre 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Les chapitres précédents ont présenté une famille cohérente de modèles de régression : le modèle linéaire, les GLM (<a href="03-modeles-lineaires-generalises.html" class="quarto-xref"><span>Chapitre 3</span></a>) et leurs extensions aux réponses catégorielles et aux comptes avec excès de zéros (<a href="04-extensions-glm.html" class="quarto-xref"><span>Chapitre 4</span></a>), leurs versions pénalisées (<a href="06-selection-regularisation.html" class="quarto-xref"><span>Chapitre 6</span></a>), non paramétriques (<a href="07-knn-noyau.html" class="quarto-xref"><span>Chapitre 7</span></a>, <a href="08-splines.html" class="quarto-xref"><span>Chapitre 8</span></a>) ou additives (<a href="09-gam.html" class="quarto-xref"><span>Chapitre 9</span></a>), et enfin les modèles pour données corrélées (<a href="10-donnees-correlees.html" class="quarto-xref"><span>Chapitre 10</span></a>). Dans tous ces modèles, seule l’espérance de la réponse (ou une fonction de celle-ci) dépend des variables explicatives. Ce chapitre présente brièvement quelques modèles classiques qui relâchent cette hypothèse, ainsi qu’un type de réponse que le livre n’a pas couvert, les durées de vie. Je donne seulement l’idée générale de chacun et sa formulation mathématique la plus simple, même si chacun mériterait un cours à lui seul.</p>
+<section id="au-delà-de-lespérance-gamlss-et-régression-quantile" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="au-delà-de-lespérance-gamlss-et-régression-quantile"><span class="header-section-number">11.1</span> Au-delà de l’espérance : GAMLSS et régression quantile</h2>
+<section id="gamlss" class="level3" data-number="11.1.1">
+<h3 data-number="11.1.1" class="anchored" data-anchor-id="gamlss"><span class="header-section-number">11.1.1</span> GAMLSS</h3>
+<div class="env-definition" data-titre="GAMLSS">
+<p><span class="env-titre">Définition — GAMLSS</span></p>
+<p>Dans un GLM ou un GAM, seule l’espérance dépend des variables explicatives : la dispersion <span class="math inline">\(\phi\)</span> est constante. Les modèles additifs généralisés pour la position, l’échelle et la forme (GAMLSS) laissent chaque paramètre de la loi de <span class="math inline">\(Y_i\)</span> dépendre de ses propres covariables. Pour une loi <span class="math inline">\(\mathcal D(\mu,\sigma,\nu,\kappa)\)</span> à quatre paramètres (position, échelle, asymétrie, aplatissement), on pose</p>
+<p><span class="math display">\[
+Y_i \sim \mathcal D(\mu_i,\sigma_i,\nu_i,\kappa_i), \qquad
+g_k(\theta_{ki}) = \boldsymbol x_{ki}^\top\boldsymbol\beta_k + \sum_{j} f_{kj}(x_{kji}), \quad k = 1,\ldots,4,
+\]</span></p>
+<p>où <span class="math inline">\(\theta_{1i} = \mu_i\)</span>, <span class="math inline">\(\theta_{2i} = \sigma_i\)</span>, <span class="math inline">\(\theta_{3i} = \nu_i\)</span>, <span class="math inline">\(\theta_{4i} = \kappa_i\)</span>, chaque <span class="math inline">\(g_k\)</span> est une fonction de lien et les <span class="math inline">\(f_{kj}\)</span> sont des fonctions lisses comme dans un GAM.</p>
+<p>Le cas le plus simple est le modèle normal hétéroscédastique</p>
+<p><span class="math display">\[
+Y_i \sim \mathcal N(\mu_i,\sigma_i^2), \qquad \mu_i = \boldsymbol x_i^\top\boldsymbol\beta, \qquad \log\sigma_i = \boldsymbol z_i^\top\boldsymbol\gamma.
+\]</span></p>
+</div>
+<div class="env-remarque" data-titre="Une famille très large">
+<p><span class="env-titre">Remarque — Une famille très large</span></p>
+<p>La loi <span class="math inline">\(\mathcal D\)</span> n’est plus restreinte à la famille exponentielle, et la librairie <code>gamlss</code> propose plus d’une centaine de lois (continues, discrètes, mixtes, tronquées, avec excès de zéros). Le GLM et le GAM sont des cas particuliers où seul <span class="math inline">\(\mu\)</span> est modélisé. Ce cadre est utile pour construire des courbes de référence, comme les courbes de centiles de croissance, où la variabilité et l’asymétrie changent avec l’âge.</p>
+</div>
+</section>
+<section id="régression-quantile" class="level3" data-number="11.1.2">
+<h3 data-number="11.1.2" class="anchored" data-anchor-id="régression-quantile"><span class="header-section-number">11.1.2</span> Régression quantile</h3>
+<div class="env-definition" data-titre="Régression quantile">
+<p><span class="env-titre">Définition — Régression quantile</span></p>
+<p>Plutôt que l’espérance, on modélise le quantile d’ordre <span class="math inline">\(\tau \in (0,1)\)</span> de la réponse :</p>
+<p><span class="math display">\[
+Q_\tau(Y_i\mid \boldsymbol x_i) = \boldsymbol x_i^\top\boldsymbol\beta(\tau).
+\]</span></p>
+<p>L’estimateur <span class="math inline">\(\hb(\tau)\)</span> minimise</p>
+<p><span class="math display">\[
+\sum_{i=1}^n \rho_\tau\!\left(y_i - \boldsymbol x_i^\top\boldsymbol\beta\right), \qquad \rho_\tau(u) = u\,\{\tau - \mathbf{1}(u&lt;0)\},
+\]</span></p>
+<p>où <span class="math inline">\(\rho_\tau\)</span> est la fonction de perte quantile (<em>check function</em>, aussi appelée perte <em>pinball</em>). Le cas <span class="math inline">\(\tau = 1/2\)</span> correspond à la régression médiane, qui minimise la somme des valeurs absolues des résidus.</p>
+</div>
+<div class="env-remarque" data-titre="Pourquoi les quantiles ?">
+<p><span class="env-titre">Remarque — Pourquoi les quantiles ?</span></p>
+<p>La régression quantile ne fait aucune hypothèse de loi ni d’homoscédasticité. Sa perte est linéaire dans le résidu plutôt que quadratique, ce qui limite l’influence des grands résidus en <span class="math inline">\(Y\)</span> par rapport aux moindres carrés. Elle n’est pas robuste pour autant au sens du <a href="12-robustesse.html" class="quarto-xref"><span>Chapitre 12</span></a> : les points à fort levier (atypiques en <span class="math inline">\(\boldsymbol x\)</span>) peuvent toujours être très influents, et sa fonction d’influence n’est pas bornée. Ajuster le modèle pour plusieurs valeurs de <span class="math inline">\(\tau\)</span> donne une description beaucoup plus complète de la loi conditionnelle que la seule espérance, ce qui permet de détecter des effets qui diffèrent selon la queue de la distribution. Par exemple, une variable peut influencer les hauts salaires sans toucher les bas salaires. Le problème de minimisation est un programme linéaire, résolu en R par <code>rq</code> de la librairie <code>quantreg</code>.</p>
+</div>
+</section>
+</section>
+<section id="durées-de-vie-le-modèle-de-cox" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="durées-de-vie-le-modèle-de-cox"><span class="header-section-number">11.2</span> Durées de vie : le modèle de Cox</h2>
+<div class="env-definition" data-titre="Modèle à risques proportionnels de Cox">
+<p><span class="env-titre">Définition — Modèle à risques proportionnels de Cox</span></p>
+<p>Soit <span class="math inline">\(T_i\)</span> le temps jusqu’à un événement (décès, panne, rechute). Sa fonction de risque <span class="math inline">\(h(t\mid\boldsymbol x_i)\)</span> est le taux instantané d’occurrence au temps <span class="math inline">\(t\)</span>, sachant que l’événement n’a pas encore eu lieu. Le modèle de Cox pose</p>
+<p><span class="math display">\[
+h(t\mid\boldsymbol x_i) = h_0(t)\exp\!\left(\boldsymbol x_i^\top\boldsymbol\beta\right),
+\]</span></p>
+<p>où <span class="math inline">\(h_0(t)\)</span> est un risque de base commun, laissé entièrement non spécifié. Le rapport des risques de deux individus, <span class="math inline">\(\exp\{(\boldsymbol x_i - \boldsymbol x_j)^\top\boldsymbol\beta\}\)</span>, ne dépend pas de <span class="math inline">\(t\)</span>, d’où le nom de risques proportionnels.</p>
+</div>
+<div class="env-remarque" data-titre="Censure et vraisemblance partielle">
+<p><span class="env-titre">Remarque — Censure et vraisemblance partielle</span></p>
+<p>La particularité des données de survie est la censure : pour certains individus, on sait seulement que <span class="math inline">\(T_i\)</span> dépasse la durée observée. Le modèle de Cox traite la censure naturellement et estime <span class="math inline">\(\boldsymbol\beta\)</span> sans jamais estimer <span class="math inline">\(h_0\)</span>, en maximisant la vraisemblance partielle</p>
+<p><span class="math display">\[
+L_P(\boldsymbol\beta) = \prod_{i\,:\,\delta_i = 1}\frac{\exp(\boldsymbol x_i^\top\boldsymbol\beta)}{\sum_{j \in \mathcal R(t_i)}\exp(\boldsymbol x_j^\top\boldsymbol\beta)},
+\]</span></p>
+<p>où <span class="math inline">\(t_i = \min(T_i, C_i)\)</span> est la durée observée (<span class="math inline">\(C_i\)</span> : temps de censure), <span class="math inline">\(\delta_i = 1\)</span> si l’événement a été observé et <span class="math inline">\(\mathcal R(t_i)\)</span> est l’ensemble des individus encore à risque juste avant <span class="math inline">\(t_i\)</span>. En R, la fonction est <code>coxph</code> de la librairie <code>survival</code>. Il existe aussi des modèles paramétriques où la loi de <span class="math inline">\(T_i\)</span> est entièrement spécifiée (Weibull, log-normale), ajustés par <code>survreg</code> de <code>survival</code>.</p>
+</div>
+</section>
+<section id="pour-aller-plus-loin" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="pour-aller-plus-loin"><span class="header-section-number">11.3</span> Pour aller plus loin</h2>
+<p>Chacun des modèles de ce chapitre a son ouvrage de référence : <span class="citation" data-cites="stasinopoulos2017gamlss">Stasinopoulos et al. (<a href="#ref-stasinopoulos2017gamlss" role="doc-biblioref">2017</a>)</span> pour les GAMLSS, <span class="citation" data-cites="koenker2005quantile">Koenker (<a href="#ref-koenker2005quantile" role="doc-biblioref">2005</a>)</span> pour la régression quantile et <span class="citation" data-cites="therneau2000survival">Therneau et Grambsch (<a href="#ref-therneau2000survival" role="doc-biblioref">2000</a>)</span> pour le modèle de Cox. Les <a href="./references-complementaires.html">références complémentaires</a> donnent des lectures pour les chapitres du livre.</p>
+</section>
+<section id="vue-densemble-des-modèles" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="vue-densemble-des-modèles"><span class="header-section-number">11.4</span> Vue d’ensemble des modèles</h2>
+<p>La <a href="#fig-arbre-modeles" class="quarto-xref">Figure&nbsp;<span>11.1</span></a> donne un premier repère pour choisir un modèle selon la nature de la réponse et la structure des observations. Le tableau qui suit la complète.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `label.size` argument of `geom_label()` is deprecated as of ggplot2 3.5.0.
+ℹ Please use the `linewidth` argument instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-arbre-modeles" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arbre-modeles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="11-autres-modeles_files/figure-html/fig-arbre-modeles-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arbre-modeles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11.1: Quel modèle pour mes données? Premier choix selon la nature de la réponse et la dépendance entre les observations.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Quelle que soit la branche, quatre questions s’ajoutent :</p>
+<ul>
+<li>effets non linéaires : si la forme de l’effet d’une variable continue est inconnue, des splines ou un GAM (chapitres <a href="08-splines.html" class="quarto-xref"><span>8</span></a> et <a href="09-gam.html" class="quarto-xref"><span>9</span></a>) remplacent le terme linéaire, aussi dans un GLM ou un modèle mixte ;</li>
+<li>nombreuses variables explicatives : la régularisation (ridge, lasso, elastic net, <a href="06-selection-regularisation.html" class="quarto-xref"><span>Chapitre 6</span></a>) s’applique à toute réponse d’un GLM ;</li>
+<li>observations atypiques : les méthodes robustes (<a href="12-robustesse.html" class="quarto-xref"><span>Chapitre 12</span></a>) limitent leur influence ;</li>
+<li>quantité visée : si ce sont les quantiles de la réponse plutôt que sa moyenne, la régression quantile s’impose.</li>
+</ul>
+<p>Le tableau suivant récapitule les modèles vus dans ce livre et ceux présentés dans ce chapitre, en donnant pour chacun le type de réponse traité et les applications typiques. Les trois derniers ne sont présentés que dans ce chapitre.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modèle</th>
+<th>Réponse</th>
+<th>Idée clé</th>
+<th>Applications typiques</th>
+<th>Fonction R</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Régression linéaire</td>
+<td>Continue</td>
+<td><span class="math inline">\(E[Y] = \boldsymbol x^\top\boldsymbol\beta\)</span>, erreurs normales homoscédastiques</td>
+<td>Relations approximativement linéaires : prix, rendements, mesures physiques</td>
+<td><code>lm</code></td>
+</tr>
+<tr class="even">
+<td>Régression logistique</td>
+<td>Binaire</td>
+<td><span class="math inline">\(\text{logit}\,P(Y=1) = \boldsymbol x^\top\boldsymbol\beta\)</span></td>
+<td>Diagnostic, défaut de paiement, succès/échec, classification à deux classes</td>
+<td><code>glm(family = binomial)</code></td>
+</tr>
+<tr class="odd">
+<td>Régression de Poisson</td>
+<td>Comptage</td>
+<td><span class="math inline">\(\log E[Y] = \boldsymbol x^\top\boldsymbol\beta\)</span>, avec offset pour l’exposition</td>
+<td>Nombre d’accidents, de réclamations, de cas d’une maladie ; taux d’incidence</td>
+<td><code>glm(family = poisson)</code></td>
+</tr>
+<tr class="even">
+<td>Quasi-Poisson, binomiale négative</td>
+<td>Comptage surdispersé</td>
+<td>Variance supérieure à la moyenne (<a href="03-modeles-lineaires-generalises.html#sec-surdispersion" class="quarto-xref"><span>Section 3.6.5</span></a>)</td>
+<td>Mêmes applications que Poisson quand la variabilité est trop grande</td>
+<td><code>glm(family = quasipoisson)</code>, <code>MASS::glm.nb</code></td>
+</tr>
+<tr class="odd">
+<td>GLM gamma, inverse gaussienne</td>
+<td>Continue positive asymétrique</td>
+<td>Variance croissant avec la moyenne</td>
+<td>Montants de sinistres, durées, coûts, concentrations</td>
+<td><code>glm(family = Gamma)</code>, <code>glm(family = inverse.gaussian)</code></td>
+</tr>
+<tr class="even">
+<td>Régression multinomiale</td>
+<td>Catégorielle nominale</td>
+<td>Logit de chaque catégorie contre une référence</td>
+<td>Choix de produit, de mode de transport, classification à plusieurs classes</td>
+<td><code>nnet::multinom</code></td>
+</tr>
+<tr class="odd">
+<td>Régression ordinale</td>
+<td>Catégorielle ordonnée</td>
+<td>Logits cumulatifs à cotes proportionnelles</td>
+<td>Échelles de Likert, stades d’une maladie, niveaux de satisfaction</td>
+<td><code>MASS::polr</code>, <code>ordinal::clm</code></td>
+</tr>
+<tr class="even">
+<td>ZIP, modèle à barrière</td>
+<td>Comptage avec excès de zéros</td>
+<td>Mélange d’un zéro structurel et d’un modèle de comptage</td>
+<td>Nombre de visites, de consommations, d’espèces observées</td>
+<td><code>pscl::zeroinfl</code>, <code>pscl::hurdle</code></td>
+</tr>
+<tr class="odd">
+<td>Ridge, lasso</td>
+<td>Toute réponse d’un GLM</td>
+<td>Pénalisation de <span class="math inline">\(\boldsymbol\beta\)</span> pour réduire la variance</td>
+<td>Nombreuses variables explicatives, colinéarité, sélection automatique de variables</td>
+<td><code>glmnet::glmnet</code></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(k\)</span> plus proches voisins</td>
+<td>Continue ou catégorielle</td>
+<td>Moyenne locale des <span class="math inline">\(k\)</span> voisins</td>
+<td>Prédiction sans forme fonctionnelle, peu de variables explicatives</td>
+<td><code>class::knn</code>, <code>FNN::knn.reg</code></td>
+</tr>
+<tr class="odd">
+<td>Estimateur à noyau</td>
+<td>Continue</td>
+<td>Moyenne pondérée localement par un noyau</td>
+<td>Lissage d’une relation univariée ou bivariée</td>
+<td><code>KernSmooth::locpoly</code>, <code>ksmooth</code></td>
+</tr>
+<tr class="even">
+<td>Splines</td>
+<td>Continue ou GLM</td>
+<td>Polynômes par morceaux raccordés aux nœuds</td>
+<td>Effet non linéaire d’une variable (âge, dose, temps) dans un modèle paramétrique</td>
+<td><code>splines::bs</code>, <code>splines::ns</code>, <code>smooth.spline</code></td>
+</tr>
+<tr class="odd">
+<td>GAM</td>
+<td>Toute réponse d’un GLM</td>
+<td><span class="math inline">\(g(E[Y]) = \alpha + \sum_j f_j(x_j)\)</span></td>
+<td>Plusieurs effets non linéaires additifs, exploration de la forme des effets</td>
+<td><code>mgcv::gam</code></td>
+</tr>
+<tr class="even">
+<td>Modèle linéaire mixte</td>
+<td>Continue, données groupées</td>
+<td>Effets aléatoires par groupe</td>
+<td>Mesures répétées, données longitudinales, élèves dans des écoles</td>
+<td><code>lme4::lmer</code></td>
+</tr>
+<tr class="odd">
+<td>GLMM</td>
+<td>GLM, données groupées</td>
+<td>Effets aléatoires dans le prédicteur linéaire</td>
+<td>Réponses binaires ou de comptage répétées par sujet ; interprétation sujet-spécifique</td>
+<td><code>lme4::glmer</code></td>
+</tr>
+<tr class="even">
+<td>GEE</td>
+<td>GLM, données groupées</td>
+<td>Moyenne marginale et corrélation de travail</td>
+<td>Essais cliniques, enquêtes longitudinales ; interprétation populationnelle</td>
+<td><code>geepack::geeglm</code></td>
+</tr>
+<tr class="odd">
+<td>GAMLSS</td>
+<td>Toute loi, continue ou discrète</td>
+<td>Covariables dans chaque paramètre de la loi</td>
+<td>Hétéroscédasticité, courbes de centiles, lois hors famille exponentielle</td>
+<td><code>gamlss::gamlss</code></td>
+</tr>
+<tr class="even">
+<td>Régression quantile</td>
+<td>Continue</td>
+<td><span class="math inline">\(Q_\tau(Y) = \boldsymbol x^\top\boldsymbol\beta(\tau)\)</span></td>
+<td>Salaires, données hétéroscédastiques ou avec valeurs aberrantes, queues de distribution</td>
+<td><code>quantreg::rq</code></td>
+</tr>
+<tr class="odd">
+<td>Modèle de Cox</td>
+<td>Durée, avec censure</td>
+<td>Risques proportionnels, risque de base non spécifié</td>
+<td>Survie de patients, fiabilité, attrition de clients</td>
+<td><code>survival::coxph</code></td>
+</tr>
+</tbody>
+</table>
+<div class="env-remarque" data-titre="À retenir">
+<p><span class="env-titre">Remarque — À retenir</span></p>
+<ul>
+<li>Au-delà de l’espérance : dans les modèles des chapitres précédents, seule l’espérance de la réponse (ou une fonction de celle-ci) dépend des variables explicatives, et les GAMLSS et la régression quantile relâchent cette hypothèse ;</li>
+<li>GAMLSS : chaque paramètre de la loi de <span class="math inline">\(Y_i\)</span> (position, échelle, asymétrie, aplatissement) dépend de ses propres covariables, et la loi n’est plus restreinte à la famille exponentielle (librairie <code>gamlss</code>). Le cas le plus simple est le modèle normal hétéroscédastique, avec <span class="math inline">\(\log\sigma_i = \boldsymbol{z}_i^\top\boldsymbol{\gamma}\)</span> ;</li>
+<li>Régression quantile : <span class="math inline">\(Q_\tau(Y_i\mid\boldsymbol{x}_i) = \boldsymbol{x}_i^\top\boldsymbol{\beta}(\tau)\)</span>, estimé avec la perte <span class="math inline">\(\rho_\tau\)</span> par <code>rq</code> de <code>quantreg</code> (<span class="math inline">\(\tau = 1/2\)</span> donne la régression médiane). Elle ne suppose ni loi ni homoscédasticité et limite l’influence des grands résidus en <span class="math inline">\(Y\)</span>, mais elle n’est pas robuste aux points à fort levier ;</li>
+<li>Modèle de Cox : <span class="math inline">\(h(t\mid\boldsymbol{x}_i) = h_0(t)\exp(\boldsymbol{x}_i^\top\boldsymbol{\beta})\)</span>, avec un risque de base <span class="math inline">\(h_0(t)\)</span> non spécifié et un rapport des risques qui ne dépend pas de <span class="math inline">\(t\)</span>. La vraisemblance partielle tient compte de la censure et estime <span class="math inline">\(\boldsymbol{\beta}\)</span> sans estimer <span class="math inline">\(h_0\)</span> (<code>coxph</code> de <code>survival</code>).</li>
+</ul>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-koenker2005quantile" class="csl-entry" role="listitem">
+Koenker, Roger. 2005. <em>Quantile Regression</em>. Cambridge University Press.
+</div>
+<div id="ref-stasinopoulos2017gamlss" class="csl-entry" role="listitem">
+Stasinopoulos, Mikis D., Robert A. Rigby, Gillian Z. Heller, Vlasios Voudouris, et Fernanda De Bastiani. 2017. <em>Flexible Regression and Smoothing: Using GAMLSS in R</em>. CRC Press.
+</div>
+<div id="ref-therneau2000survival" class="csl-entry" role="listitem">
+Therneau, Terry M., et Patricia M. Grambsch. 2000. <em>Modeling Survival Data: Extending the Cox Model</em>. Springer.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const logo = document.querySelector(".sidebar-logo");
+  if (!logo) return;
+
+  const gifs = {
+    "index":                              "index_plot.gif",
+    "00-regression-lineaire":             "lineaire_plot.gif",
+    "01-monte-carlo":                     "monte_carlo_plot.gif",
+    "02-regression-logistique":           "logit_plot.gif",
+    "03-modeles-lineaires-generalises":   "glm_plot.gif",
+    "04-extensions-glm":                  "glm_plot.gif",
+    "05-prediction-validation-croisee":   "cv_plot.gif",
+    "06-selection-regularisation":        "regularisation_plot.gif",
+    "07-knn-noyau":                       "knn_noyau_plot.gif",
+    "08-splines":                         "splines_plot.gif",
+    "09-gam":                             "gam_plot.gif",
+    "10-donnees-correlees":               "lineaire_plot.gif",
+    "11-autres-modeles":                  "glm_plot.gif",
+    "12-robustesse":                      "lineaire_plot.gif",
+    "exercices-theoriques":               "exercices_plot.gif",
+    "exercices-en-classe":                "exercices_plot.gif",
+    "references-complementaires":         "balles_plot.gif"
+  };
+
+  let page = window.location.pathname.split("/").pop().replace(/\.html$/, "");
+  if (page === "") page = "index";
+
+  const gif = gifs[page];
+  if (gif) {
+    // Date.now() change à chaque chargement de page → force le rechargement du gif
+    logo.src = logo.src.replace(/[^/]+$/, gif) + "?v=" + Date.now();
+  }
+});
+</script>
+<script>
+// Couleur du logo dérivée de la date et de l'heure, recalculée chaque minute.
+(function () {
+  var d = new Date();
+  var cle = (d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()) * 10000 + d.getHours() * 100 + d.getMinutes();
+  var h = cle;
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  h ^= h >>> 16;
+  var teinte = (h >>> 0) % 360;
+  document.querySelectorAll('img.navbar-logo, img.sidebar-logo').forEach(function (img) {
+    img.style.filter = 'hue-rotate(' + teinte + 'deg)';
+  });
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copié");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copié");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./10-donnees-correlees.html" class="pagination-link" aria-label="Données corrélées : modèles mixtes et GEE">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Données corrélées : modèles mixtes et GEE</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./12-robustesse.html" class="pagination-link" aria-label="Ouverture sur la statistique robuste">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Ouverture sur la statistique robuste</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="../index.html">Retour au site du cours</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://julienmiron.ca/">Julien Miron</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/JulienMiron/STT-4300/issues/new" class="toc-action"><i class="bi bi-github"></i>Faire part d'un problème</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Généré avec Quarto</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

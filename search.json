@@ -1,0 +1,163 @@
+[
+  {
+    "objectID": "labo5-solutions.html",
+    "href": "labo5-solutions.html",
+    "title": "Solutions du labo 5",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nSolutions du labo 5\n\n\n\n\n\n\n\n\nNote\n\n\n\nCes solutions seront disponibles à partir du 15 avril 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "labo4-solutions.html",
+    "href": "labo4-solutions.html",
+    "title": "Solutions du labo 4",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nSolutions du labo 4\n\n\n\n\n\n\n\n\nNote\n\n\n\nCes solutions seront disponibles à partir du 8 avril 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "labo3-solutions.html",
+    "href": "labo3-solutions.html",
+    "title": "Solutions du labo 3",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nSolutions du labo 3\n\n\n\n\n\n\n\n\nNote\n\n\n\nCes solutions seront disponibles à partir du 1er avril 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "labo2-solutions.html",
+    "href": "labo2-solutions.html",
+    "title": "Solutions du labo 2",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nSolutions du labo 2\n\n\n\n\n\n\n\n\nNote\n\n\n\nCes solutions seront disponibles à partir du 25 mars 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "labo1-solutions.html",
+    "href": "labo1-solutions.html",
+    "title": "Solutions du labo 1",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nSolutions du labo 1\n\n\n\n\n\n\n\n\nNote\n\n\n\nCes solutions seront disponibles à partir du 18 mars 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "projet.html",
+    "href": "projet.html",
+    "title": "Projet de session",
+    "section": "",
+    "text": "STT-4300 — Régression II"
+  },
+  {
+    "objectID": "projet.html#projet-de-session-1",
+    "href": "projet.html#projet-de-session-1",
+    "title": "Projet de session",
+    "section": "Projet de session",
+    "text": "Projet de session\n\nVue d’ensemble\nLe projet de session consiste à mener, en équipe, une analyse complète d’un jeu de données à l’aide d’un GLM : une régression logistique (réponse binaire ou proportion) ou une régression de Poisson (réponse de comptage). Le choix du modèle et du jeu de données revient à votre équipe, sous réserve de mon approbation au Jalon 1 (voir plus bas).\nLe projet avance par étapes, en cinq jalons dont les échéances sont les dates des labos. Les jalons et les labos sont deux évaluations distinctes : les labos (7 % chacun) portent sur les méthodes des chapitres 7 à 9 et utilisent des jeux de données fournis, alors que les jalons (2 % chacun) font avancer votre projet sur vos propres données. Le jeudi d’un labo, vous remettez donc le labo et le jalon correspondant. Chaque jalon produit un livrable court qui s’intègre à votre rapport final, de sorte qu’il ne reste pas de gros bloc de travail à la fin de la session.\n\n\n\n\n\n\nNoteObjectif général\n\n\n\nAu terme du projet, vous devez être capables de passer d’une question concrète à un modèle défendable, c’est-à-dire un modèle dont vous savez expliquer le choix, vérifier l’ajustement, interpréter les coefficients et reconnaître les limites.\n\n\n\n\nModalités\n\nÉquipes : 3 ou 4 étudiants, formées au Jalon 1 ;\nDépôt : un dépôt GitHub par équipe, avec un projet R reproductible (renv recommandé), auquel je dois avoir accès ;\nLogiciels : tout le code est en R et le rapport est rédigé en Quarto ou en LaTeX. Le document doit se compiler de zéro, sans intervention manuelle.\n\n\n\nChoix du jeu de données\nVotre jeu de données doit respecter les critères suivants.\n\nUne variable réponse \\(Y\\) claire : binaire (ou proportion \\(y_i/n_i\\)) pour la régression logistique, ou comptage pour la régression de Poisson.\nAu moins \\(n = 200\\) observations et au moins 6 covariables potentielles, avec un mélange de variables quantitatives et qualitatives.\nUne question de recherche que vous pouvez énoncer en une phrase.\nDes données libres de droits et sans information permettant d’identifier des personnes.\nUn peu de désordre, si possible (valeurs manquantes, catégories rares, valeurs aberrantes) : le nettoyage fait partie de l’exercice.\n\nC’est à votre équipe de trouver le jeu de données. Vous pouvez chercher, par exemple, du côté de Données Bleues, Données Québec, de Statistique Canada, du dépôt UCI, de Kaggle ou des données ouvertes de la Ville de Québec (collisions, 311, bacs de recyclage, etc.).\n\n\nLivrable final\nLe projet se termine par une présentation en classe (15 minutes plus 5 minutes de questions) accompagnée d’un produit de communication, au choix de votre équipe :\n\nune application Shiny qui permet d’explorer le modèle (prédictions selon les valeurs des covariables, effet d’une variable, diagnostics) ;\nun site web Quarto (ou un tableau de bord) racontant l’analyse ;\nun poster scientifique (format 36 × 48 po) ;\nun autre format du même niveau, à me proposer (balado, bande dessinée statistique, vidéo de 5 minutes, etc.).\n\nQuel que soit le format, vous devez aussi remettre un rapport technique qui rassemble les livrables des jalons et la conclusion.\nLe produit de communication s’adresse à un public non statisticien, votre présentation doit donc traduire les résultats en langage clair : parlez de rapport de cotes ou de variation en pourcentage du taux, pas seulement de coefficients \\(\\hat\\beta_j\\).\n\n\nContenu attendu du rapport\n\nQuestion de recherche et description des données.\nNettoyage et analyse exploratoire.\nModèle retenu, avec sa justification.\nEstimation, intervalles de confiance et tests (valeur-p) pour les paramètres d’intérêt.\nSélection de variables et comparaison de modèles.\nDiagnostics et validation (résidus, observations influentes, surdispersion pour Poisson, calibration et courbe ROC pour la logistique, validation croisée).\nInterprétation, limites et ouverture vers d’autres modèles.\nUne section « Ce qui pourrait fausser nos conclusions » (biais de sélection, variables omises, différence entre corrélation et causalité). Si les données concernent des personnes, ajoutez une courte réflexion éthique : qui est dans les données et qui n’y est pas ?"
+  },
+  {
+    "objectID": "projet.html#jalons",
+    "href": "projet.html#jalons",
+    "title": "Projet de session",
+    "section": "Jalons",
+    "text": "Jalons\nLe projet comporte cinq jalons, qui donnent chacun lieu à un livrable court (une à deux pages ou un fichier source). La date de chaque labo sert d’échéance au jalon correspondant, mais le jalon ne fait pas partie du labo : il se fait en dehors des séances, et vous pouvez le terminer avant cette date.\n\nJalon 1 : choix du jeu de données\nObjectif : former les équipes, choisir une question de recherche et valider la faisabilité.\nTâches :\n\nexplorer au moins deux jeux de données candidats avec str(), summary() et skimr::skim() ;\nénoncer une question de recherche et identifier la variable réponse \\(Y\\) ainsi que les covariables potentielles ;\njustifier le choix entre logistique et Poisson ;\nvérifier les critères du choix de jeu de données ci-dessus.\n\n\n\n\n\n\n\nAstuceExemple\n\n\n\nPour un jeu de données de collisions routières par intersection, vous pourriez poser \\(Y_i \\sim \\text{Poisson}(\\mu_i)\\) avec \\[\n  \\log(\\mu_i) = \\log(t_i) + \\beta_0 + \\beta_1 x_{i1} + \\cdots + \\beta_p x_{ip},\n\\] où \\(t_i\\) est une mesure d’exposition (ici, le trafic moyen) qui entre dans le modèle comme décalage (offset).\n\n\nLivrable : une page de proposition (question, données, variable réponse, modèle envisagé, répartition des tâches). Je l’approuve ou je vous demande des ajustements.\n\n\nJalon 2 : nettoyage et analyse primaire\nObjectif : connaître vos données avant de modéliser.\nTâches :\n\ndocumenter les variables (type, unité, valeurs permises) dans un dictionnaire de données ;\ntraiter les valeurs manquantes (quantifier, comprendre le mécanisme, choisir une stratégie et la justifier) ;\nrecoder les variables qualitatives (niveaux rares, catégorie de référence) ;\nproduire des statistiques descriptives et des graphiques de \\(Y\\) en fonction de chaque covariable ;\nrepérer les valeurs aberrantes et les problèmes de colinéarité (corrélations, facteurs d’inflation de la variance) ;\nmettre de côté au hasard 20 % des observations (jeu de réserve) sans y toucher avant le Jalon 5 : elles serviront à évaluer honnêtement votre modèle final.\n\nFaites la mise de côté en premier, avant l’analyse exploratoire : les graphiques, les corrélations et les choix de recodage ne doivent s’appuyer que sur les 80 % restants (donnees_ent), sinon l’évaluation finale sur la réserve n’est plus honnête. Dans la suite, donnees_propres désigne les données nettoyées complètes et donnees_ent l’échantillon d’entraînement (80 %) utilisé aux jalons 3 et 4.\n\nlibrary(tidyverse)\ndonnees &lt;- read_csv(\"donnees.csv\")\n\n# nettoyage du jeu de données, qui crée `donnees_propres`\n\n# jeu de réserve (20 %) mis de côté en premier, graine fixée pour la reproductibilité\nset.seed(4300)\nid_reserve &lt;- sample(nrow(donnees_propres), size = round(0.2 * nrow(donnees_propres)))\ndonnees_reserve &lt;- donnees_propres[id_reserve, ]\ndonnees_ent &lt;- donnees_propres[-id_reserve, ]   # 80 % : exploration et jalons 3 et 4\n\n# proportion de Y selon une covariable qualitative\ndonnees_ent |&gt;\n  group_by(covariable) |&gt;\n  summarise(n = n(), prop = mean(y), .groups = \"drop\")\n\n# valeurs manquantes\ndonnees_ent |&gt; summarise(across(everything(), ~ mean(is.na(.x))))\n\nLivrable : un fichier source qui part des données brutes et produit les données nettoyées (donnees_propres), l’échantillon d’entraînement (donnees_ent) et le jeu de réserve, avec une section expliquant chaque décision prise.\nNotes de cours utiles : validation croisée (pour le rôle d’un jeu de réserve).\n\n\nJalon 3 : ajustement et début d’inférence\nObjectif : ajuster un premier GLM et interpréter les résultats.\nTâches :\n\najuster un modèle complet avec glm() ;\ninterpréter chaque coefficient sur l’échelle du prédicteur linéaire et sur l’échelle naturelle (rapport de cotes \\(e^{\\hat\\beta_j}\\) ou rapport de taux) ;\nconstruire des intervalles de confiance de Wald et par vraisemblance profilée (confint()), puis comparer ;\neffectuer des tests de Wald et des tests du rapport de vraisemblance, en précisant la valeur-p et l’hypothèse testée ;\ntracer l’effet d’une covariable sur la probabilité (ou le taux) prédite, les autres covariables étant fixées.\n\n\najust &lt;- glm(y ~ ., data = donnees_ent, family = binomial)   # ou poisson\nsummary(ajust)\n# RC : rapport de cotes (logistique) ou rapport de taux (Poisson)\nexp(cbind(RC = coef(ajust), confint(ajust)))\ndrop1(ajust, test = \"LRT\")\n\nLa fonction drop1 teste chaque variable par le rapport de vraisemblance en la retirant du modèle complet (les autres étant conservées), ce qui répond à la bonne question; anova(ajust, test = \"Chisq\") donnerait plutôt des tests séquentiels, qui dépendent de l’ordre des variables dans la formule.\n\n\n\n\n\n\nNoteRemarque\n\n\n\nAvec la régression de Poisson, vérifiez dès cette étape s’il y a de la surdispersion : comparez la déviance résiduelle à ses degrés de liberté et calculez l’estimateur de Pearson \\(\\tilde\\phi_P\\) (voir la section Surdispersion des notes). Si l’un ou l’autre est nettement supérieur à 1, passez à un modèle quasi-Poisson ou binomial négatif.\n\n\nLivrable : une page d’interprétation écrite pour un lecteur non statisticien.\nNotes de cours utiles : régression logistique et GLM et régression de Poisson.\n\n\nJalon 4 : sélection de variables\nObjectif : comparer des modèles de façon rigoureuse.\nTâches :\n\nsélection pas à pas (step()) avec l’AIC et le BIC, et discussion des limites de cette approche, notamment l’inférence faite après sélection ;\nrégularisation ridge et lasso avec glmnet, choix de \\(\\lambda\\) par validation croisée ;\ncomparaison du pouvoir prédictif par validation croisée sur donnees_ent (taux de bonne classification, AUC et déviance pour la logistique ; erreur quadratique et déviance pour Poisson) ; le jeu de réserve n’est pas touché à ce jalon ;\nexamen de la stabilité : les variables retenues changent-elles quand vous rééchantillonnez (bootstrap) ?\n\n\nlibrary(glmnet)\nX &lt;- model.matrix(y ~ ., donnees_ent)[, -1]\ncv &lt;- cv.glmnet(X, donnees_ent$y, family = \"binomial\", alpha = 1)   # alpha = 0 pour ridge\ncoef(cv, s = \"lambda.1se\")\n\nLivrable : un tableau comparatif d’au moins trois modèles (complet, sélectionné, lasso), avec un choix final justifié.\nNotes de cours utiles : validation croisée et sélection de variables et régularisation.\n\n\nJalon 5 : ouverture sur d’autres modèles\nObjectif : déterminer jusqu’où le GLM est adéquat et ce qui pourrait le remplacer ou le compléter.\nTâches (choisissez-en au moins une) :\n\najouter une relation non linéaire par splines ou par un GAM (mgcv::gam()) et comparer avec le GLM au moyen de l’AIC et de la validation croisée ;\nessayer une méthode de plus proches voisins ou à noyau pour la prédiction ;\ntester un modèle pour données surdispersées (quasi-Poisson, binomial négatif) ou avec excès de zéros (modèle à inflation de zéros) ;\ncomparer avec une méthode d’apprentissage automatique (forêt aléatoire, arbre de décision) et discuter du compromis entre interprétabilité et prédiction.\n\nC’est aussi à ce jalon que le jeu de réserve sert, une seule fois : évaluez-y le modèle final retenu au Jalon 4 (et, s’il y a lieu, le modèle concurrent) pour obtenir une estimation honnête de son erreur sur de nouvelles observations.\n\nlibrary(mgcv)\n# x1 et x2 : deux covariables quantitatives ; f : une covariable qualitative\ngam1 &lt;- gam(y ~ s(x1) + s(x2) + f, data = donnees_ent,\n            family = binomial, method = \"REML\")   # ou poisson\nplot(gam1, pages = 1)\nAIC(ajust, gam1)\n\nLivrable : une demi-page répondant à la question « le GLM suffit-il ? », appuyée par au moins une comparaison chiffrée.\nNotes de cours utiles : kNN et estimateur à noyau, splines et GAM."
+  },
+  {
+    "objectID": "projet.html#évaluation",
+    "href": "projet.html#évaluation",
+    "title": "Projet de session",
+    "section": "Évaluation",
+    "text": "Évaluation\nLe projet compte pour 30 % de la note finale.\n\n\n\nComposante\nPondération\n\n\n\n\nLivrables des jalons (5 × 2 %)\n10 %\n\n\nRapport technique\n10 %\n\n\nPrésentation et produit de communication\n7 %\n\n\nContribution individuelle (évaluation par les pairs)\n3 %\n\n\nTotal\n30 %\n\n\n\nCritères d’évaluation du rapport et de la présentation :\n\njustesse statistique (modèle adapté, hypothèses vérifiées, inférence correcte) ;\nqualité de l’interprétation (claire, nuancée, liée à la question de départ) ;\nreproductibilité (le document se compile sans intervention) ;\nclarté de la communication (graphiques lisibles, vulgarisation) ;\nprofondeur de l’analyse (diagnostics, sélection de modèle, ouverture)."
+  },
+  {
+    "objectID": "projet.html#échéances",
+    "href": "projet.html#échéances",
+    "title": "Projet de session",
+    "section": "Échéances",
+    "text": "Échéances\nChaque jalon est dû le jeudi du labo de même numéro (Jalon 1 le jeudi du labo 1, Jalon 2 le jeudi du labo 2, etc.) à 23 h 59 (heure de l’Est) : c’est l’état de la branche main du dépôt de votre équipe de projet à cette heure qui est corrigé (voir le calendrier du cours et l’onglet Labos). Vous pouvez remettre un jalon avant cette date. L’équipe du projet n’a pas à être la même que vos équipes de labo.\n\n\n\n\n\n\n\nJalon\nÉchéance\n\n\n\n\nJalon 1 : choix du jeu de données\n11 mars\n\n\nJalon 2 : nettoyage et analyse primaire\n18 mars\n\n\nJalon 3 : ajustement et début d’inférence\n25 mars\n\n\nJalon 4 : sélection de variables\n1er avril\n\n\nJalon 5 : ouverture sur d’autres modèles\n8 avril\n\n\nRapport technique et produit de communication\n16 avril\n\n\nPrésentations\n22 et 29 avril\n\n\nÉvaluation par les pairs\nÀ faire directement après chaque présentation"
+  },
+  {
+    "objectID": "plan-de-cours.html",
+    "href": "plan-de-cours.html",
+    "title": "Plan de cours",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\n\n\nPage à compléter — squelette fourni à titre indicatif."
+  },
+  {
+    "objectID": "plan-de-cours.html#description-du-cours",
+    "href": "plan-de-cours.html#description-du-cours",
+    "title": "Plan de cours",
+    "section": "Description du cours",
+    "text": "Description du cours"
+  },
+  {
+    "objectID": "plan-de-cours.html#objectifs-dapprentissage",
+    "href": "plan-de-cours.html#objectifs-dapprentissage",
+    "title": "Plan de cours",
+    "section": "Objectifs d’apprentissage",
+    "text": "Objectifs d’apprentissage"
+  },
+  {
+    "objectID": "plan-de-cours.html#évaluation",
+    "href": "plan-de-cours.html#évaluation",
+    "title": "Plan de cours",
+    "section": "Évaluation",
+    "text": "Évaluation\n\n\n\nÉvaluation\nPondération\nDate\n\n\n\n\nÉvaluations en classe (4 × 2,5 %)\n10 %\n28 janvier, 4 février, 11 février et 18 février\n\n\nExamen\n30 %\n25 février\n\n\nLabos (5 × 6 %)\n30 %\n11 mars, 18 mars, 25 mars, 1er avril et 8 avril\n\n\nProjet de session\n30 %\nvoir les échéances dans la page du projet\n\n\n\nLes labos et le projet sont évalués séparément. Les labos portent sur les méthodes des chapitres 7 à 9 (kNN et estimateur à noyau, splines, GAM) et utilisent des jeux de données fournis. Le projet avance par cinq jalons, remis aux mêmes jeudis que les labos, mais réalisés en dehors des séances, sur les données de votre équipe."
+  },
+  {
+    "objectID": "plan-de-cours.html#matériel",
+    "href": "plan-de-cours.html#matériel",
+    "title": "Plan de cours",
+    "section": "Matériel",
+    "text": "Matériel\n\n\nNotes de cours"
+  },
+  {
+    "objectID": "plan-de-cours.html#politiques-du-cours",
+    "href": "plan-de-cours.html#politiques-du-cours",
+    "title": "Plan de cours",
+    "section": "Politiques du cours",
+    "text": "Politiques du cours\nVous référez à la section Politiques et règlements sur Brio."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "STT-4300",
+    "section": "",
+    "text": "STT-4300\n\n\nRégression II\n\n\nNotes de cours, plan de cours et calendrier : régression linéaire, modèles linéaires généralisés, validation croisée, régularisation, méthodes non-paramétriques et modèles additifs généralisés.\n\n\nNotes de cours Calendrier Projet de session"
+  },
+  {
+    "objectID": "calendrier.html",
+    "href": "calendrier.html",
+    "title": "Calendrier",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nCalendrier\n\n\n\n\n\n\n\n\nAvertissementLa version Brio fait foi\n\n\n\nCe calendrier est fourni à titre indicatif. Les dates officielles des évaluations sont celles qui se trouvent sur Brio : en cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut.\n\n\n📄 Télécharger le calendrier, le projet et les labos (PDF)\n\n\n\n\n\n\n\n\n\nSemaine\nDate\nSujet\nNotes\n\n\n\n\n1\n14 janvier\nMC + régression logistique\n\n\n\n2\n21 janvier\nRégression logistique\n\n\n\n3\n28 janvier\nGLM + régression de Poisson\nÉvaluation en classe 1\n\n\n4\n4 février\nValidation croisée + régularisation\nÉvaluation en classe 2\n\n\n5\n11 février\nValidation croisée + régularisation\nÉvaluation en classe 3\n\n\n6\n18 février\nRévision\nÉvaluation en classe 4\n\n\n7\n25 février\nEXAMEN\n\n\n\n8\n4 mars\nSEMAINE DE LECTURE\n\n\n\n9\n11 mars\nLabo 1 : Régression non paramétrique : kNN et estimateur à noyau\nJalon 1 du projet : Choix du jeu de données\n\n\n10\n18 mars\nLabo 2 : Régression non linéaire : polynômes et splines\nJalon 2 du projet : Nettoyage et analyse primaire\n\n\n11\n25 mars\nLabo 3 : Modèles additifs généralisés (GAM)\nJalon 3 du projet : Ajustement et début d’inférence\n\n\n12\n1er avril\nLabo 4 : Synthèse : kNN, noyau, splines et GAM en compétition\nJalon 4 du projet : Sélection de variables\n\n\n13\n8 avril\nLabo 5 : Regard critique sur les réponses d’un assistant IA\nJalon 5 du projet : Ouverture sur d’autres modèles\n\n\n14\n15 avril\nTravail sur le projet\nFinalisation du projet\n\n\n15\n22 avril\nPRÉSENTATIONS\n\n\n\n16\n29 avril\nPRÉSENTATIONS"
+  },
+  {
+    "objectID": "labo1.html",
+    "href": "labo1.html",
+    "title": "Labo 1",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nLabo 1\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 11 mars 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "labo2.html",
+    "href": "labo2.html",
+    "title": "Labo 2",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nLabo 2\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 18 mars 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "labo3.html",
+    "href": "labo3.html",
+    "title": "Labo 3",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nLabo 3\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 25 mars 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "labo4.html",
+    "href": "labo4.html",
+    "title": "Labo 4",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nLabo 4\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 1er avril 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  },
+  {
+    "objectID": "labo5.html",
+    "href": "labo5.html",
+    "title": "Labo 5",
+    "section": "",
+    "text": "STT-4300 — Régression II\n\n\nLabo 5\n\n\n\n\n\n\n\n\nNote\n\n\n\nCe labo sera disponible à partir du 8 avril 2027. En cas de doute ou de différence entre les deux, c’est l’information sur Brio qui prévaut. Merci de m’avertir si vous constatez une incohérence."
+  }
+]
